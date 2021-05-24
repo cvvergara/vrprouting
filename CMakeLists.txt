@@ -22,8 +22,9 @@ project(VRPROUTING VERSION 0.1.0
 set(PROJECT_VERSION_DEV "")
 string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
 
-set(MINORS 0.1)
+set(MINORS 0.2 0.1)
 set(OLD_SIGNATURES
+    0.1.0
   )
 
 
@@ -49,7 +50,7 @@ include(pgr/Configure)
 #TODO define precisely which versions
 set(DOXYGEN_MINIMUM_VERSION "1.7")
 set(SPHINX_MINIMUM_VERSION "1.8")
-set(POSTGRESQL_MINIMUM_VERSION "10.0.0")
+set(POSTGRESQL_MINIMUM_VERSION "12.0")
 set(BOOST_MINIMUM_VERSION "1.65.0")
 
 message(STATUS "DOXYGEN_MINIMUM_VERSION=${DOXYGEN_MINIMUM_VERSION}")
@@ -128,6 +129,7 @@ find_package(Perl REQUIRED)
 # PostgreSQL
 #---------------------------------------------
 #---------------------------------------------
+set(PostgreSQL_ADDITIONAL_VERSIONS "12" "13")
 find_package(PostgreSQL ${POSTGRESQL_MINIMUM_VERSION} REQUIRED)
 if(POSTGRESQL_BIN)
   # Checking POSTGRESQL_PG_CONFIG
