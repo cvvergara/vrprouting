@@ -75,11 +75,15 @@ jobs:
 
       - name: Test documentation queries are up to date
         run: |
-          sudo -u postgres createdb -p ${PGPORT}  pgr_test__db__test
+          cd tools/testers
+          tar -xf matrix_new_values.tar.gz
+          cd ../..
+          sudo -u postgres createdb -p ${PGPORT}  ___vrp___test___
+
           TESTDIRS="version"
           for d in ${TESTDIRS}
           do
-            ./tools/testers/doc_queries_generator.pl -pgver "${PGVER}" -pguser runner -documentation -alg "${d}"
+            ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}" -documentation -alg "${d}"
           done
 
-          ./tools/testers/doc_queries_generator.pl -pgver "${PGVER}"
+          ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}"
