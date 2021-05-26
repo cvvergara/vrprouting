@@ -427,14 +427,13 @@ do_optimize(
     std::sort(shipments_arr, shipments_arr + total_shipments,
         [](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id < rhs.id;});
 
-    total_shipments =
-      std::unique(shipments_arr, shipments_arr + total_shipments,
-          [&](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id == rhs.id;})
-      - shipments_arr;
+    total_shipments =  static_cast<size_t>(std::distance(shipments_arr,
+        std::unique(shipments_arr, shipments_arr + total_shipments,
+          [&](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id == rhs.id;})));
 
-    total_shipments = std::remove_if(shipments_arr, shipments_arr + total_shipments,
-        [&](const PickDeliveryOrders_t& s){return !shipments_in_stops.has(s.id);})
-      - shipments_arr;
+    total_shipments = static_cast<size_t>(std::distance(shipments_arr,
+        std::remove_if(shipments_arr, shipments_arr + total_shipments,
+          [&](const PickDeliveryOrders_t& s){return !shipments_in_stops.has(s.id);})));
 
     /*
      * Verify shipments complete data
