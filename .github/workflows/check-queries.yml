@@ -73,11 +73,13 @@ jobs:
           tools/scripts/get_signatures.sh -p ${PGPORT}
           git diff --exit-code --quiet sql/sigs/*.sig
 
-      - name: Test documentation queries are up to date
+      - name: Unapck data
         run: |
           cd tools/testers
           tar -xf matrix_new_values.tar.gz
-          cd ../..
+
+      - name: Test documentation queries are up to date
+        run: |
           sudo -u postgres createdb -p ${PGPORT}  ___vrp___test___
 
           TESTDIRS="version"
