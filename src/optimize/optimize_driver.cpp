@@ -270,8 +270,8 @@ subdivide_processing(
       pgassert(shipments_in_stops.size() == static_cast<size_t>(shipments_to_process));
 
       auto new_stops = one_processing(
-          shipments_arr, shipments_to_process,
-          vehicles_arr, vehicles_to_process, the_stops,
+          shipments_arr, static_cast<size_t>(shipments_to_process),
+          vehicles_arr, static_cast<size_t>(vehicles_to_process), the_stops,
           time_matrix,
           max_cycles, execution_date);
 
