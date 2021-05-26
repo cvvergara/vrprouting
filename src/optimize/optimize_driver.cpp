@@ -401,15 +401,13 @@ do_optimize(
     std::sort(vehicles_arr, vehicles_arr + total_vehicles,
         [](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id < rhs.id;});
 
-    total_vehicles =
+    total_vehicles =  std::distance(vehicles_arr,
       std::unique(vehicles_arr, vehicles_arr + total_vehicles,
-          [&](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id == rhs.id;})
-      - static_cast<long>(vehicles_arr);
+          [&](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id == rhs.id;}));
 
-    total_vehicles =
+    total_vehicles = std::distance(vehicles_arr,
       std::remove_if(vehicles_arr, vehicles_arr + total_vehicles,
-          [&](const Vehicle_t& v){return v.end_close_t < execution_date;})
-      - static_cast<size_t>(vehicles_arr);
+          [&](const Vehicle_t& v){return v.end_close_t < execution_date;}));
 
     /*
      * Remove shipments not involved in optimization
