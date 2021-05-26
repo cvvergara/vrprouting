@@ -404,12 +404,12 @@ do_optimize(
     total_vehicles =
       std::unique(vehicles_arr, vehicles_arr + total_vehicles,
           [&](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id == rhs.id;})
-      - vehicles_arr;
+      - static_cast<long>(vehicles_arr);
 
     total_vehicles =
       std::remove_if(vehicles_arr, vehicles_arr + total_vehicles,
           [&](const Vehicle_t& v){return v.end_close_t < execution_date;})
-      - vehicles_arr;
+      - static_cast<size_t>(vehicles_arr);
 
     /*
      * Remove shipments not involved in optimization
