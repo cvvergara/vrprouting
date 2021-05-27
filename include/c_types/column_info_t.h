@@ -51,7 +51,7 @@ enum {
 typedef
 struct {
     int colNumber;
-    uint64_t type;
+    unsigned long type;
     bool strict;
     char *name;
     expectType eType;
