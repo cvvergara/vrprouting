@@ -35,6 +35,35 @@ jobs:
           make -j
           sudo make install
 
+      - name: Cache pgtap
+        id: cache-pgtap
+        uses: actions/cache@v2
+        with:
+          path: ./pgTapExtension/
+          key: ${{ runner.os }}-pgtap-${{ hashFiles('**/packages*.txt') }}
+
+      - name: Get pgtap repo
+        if: steps.cache-pgtap.outputs.cache-hit != 'true'
+        uses: actions/checkout@v2
+        with:
+          repository: theory/pgtap
+          path: ./pgTapExtension/
+
+      - name: Install pgTAP
+        if: steps.cache-pgtap.outputs.cache-hit != 'true'
+        run: |
+          cd ./pgTapExtension/
+          make -j
+          sudo make install
+          cpan TAP::Parser::SourceHandler::pgTAP
+
+      - name: Install pgTAP
+        if: steps.cache-pgtap.outputs.cache-hit == 'true'
+        run: |
+          cd ./pgTapExtension/
+          sudo make install
+          cpan TAP::Parser::SourceHandler::pgTAP
+
       - name: Test
         run: |
           export PATH=/usr/local/Cellar/perl/$(perl -e 'print substr($^V, 1)')/bin:$PATH
