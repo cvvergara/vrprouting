@@ -28,11 +28,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #pragma once
 
 /* for int64_t */
-#ifdef __cplusplus
-#   include <cstdint>
-#else
+#ifndef __cplusplus
 #   include <stdbool.h>
-#   include <stdint.h>
 #endif
 
 // used for getting the data
