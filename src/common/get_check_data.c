@@ -77,7 +77,7 @@ check_any_integer_type(Column_info_t info) {
         || info.type == INT8OID)) {
     ereport(ERROR,
         (errmsg_internal("Unexpected type in column '%s'.", info.name),
-         errhint("Found %ld", info.type)));
+         errhint("Found %llu", info.type)));
   }
 }
 
@@ -104,7 +104,7 @@ check_any_numerical_type(Column_info_t info) {
         || info.type == NUMERICOID)) {
     ereport(ERROR,
         (errmsg_internal("Unexpected type in column '%s'.", info.name),
-         errhint("Found: %ld\nExpected ANY-NUMERICAL", info.type)));
+         errhint("Found: %llu\nExpected ANY-NUMERICAL", info.type)));
   }
 }
 
@@ -167,7 +167,7 @@ spi_getBigInt(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info) {
     default:
     ereport(ERROR,
         (errmsg_internal("Unexpected type in column '%s'.", info.name),
-         errhint("Found: %ld\nExpected ANY-INTEGER", info.type)));
+         errhint("Found: %llu\nExpected ANY-INTEGER", info.type)));
   }
   return value;
 }
