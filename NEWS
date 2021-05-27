@@ -1,0 +1,15 @@
+
+v0.2.0 Release Notes
+*******************************************************************************
+
+v0.1.0 Release Notes
+*******************************************************************************
+
+*Extraction tasks*
+
+- Porting pgRouting's VRP functionality
+
+*New official functions*
+
+* vrp_version
+* vrp_full_version
