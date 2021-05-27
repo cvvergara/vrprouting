@@ -21,7 +21,6 @@ jobs:
       - name: install deps
         run: |
           brew install postgis boost pgrouting
-          brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/3c66798c39fdb6a7c8b15630035125cac63c3fa2/Formula/pgtap.rb
 
       - name: Configure
         run: |
