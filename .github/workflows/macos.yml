@@ -18,22 +18,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: install deps
-        run: |
-          brew install postgis boost pgrouting
-
-      - name: Configure
-        run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Release -DWITH_DOC=OFF ..
-
-      - name: Build
-        run: |
-          cd build
-          make -j
-          sudo make install
-
       - name: Cache pgtap
         id: cache-pgtap
         uses: actions/cache@v2
@@ -63,15 +47,33 @@ jobs:
           sudo make install
           cpan TAP::Parser::SourceHandler::pgTAP
 
+      - name: install deps
+        run: |
+          brew install postgis boost pgrouting
+
+      - name: Configure
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release -DWITH_DOC=OFF ..
+
+      - name: Build
+        run: |
+          cd build
+          make -j
+          sudo make install
+
       - name: Unapck data
         run: |
           cd tools/testers
           tar -xf matrix_new_values.tar.gz
 
-      - name: pgTap test
+      - name: Test
         run: |
-          sudo service postgresql start
-          sudo -u postgres createdb -p ${PGPORT}  ___vrp___test___
+          export PATH=/usr/local/Cellar/perl/$(perl -e 'print substr($^V, 1)')/bin:$PATH
+          pg_ctl -D /usr/local/var/postgres start
+          createuser -s postgres
+          createdb ___vrp___test___
           cd tools/testers
-          sudo -u postgres psql -p "${PGPORT}" -U postgres -d ___vrp___test___ -X -q -v ON_ERROR_STOP=1 --pset pager=off -f setup_db.sql
-          sudo -u postgres pg_prove --failures --quiet --recurse --ext .sql -p "${PGPORT}" -d ___vrp___test___ -U postgres ../../pgtap/
+          sudo -u postgres psql -p 5432 -U postgres -d ___vrp___test___ -X -q -v ON_ERROR_STOP=1 --pset pager=off -f setup_db.sql
+          sudo -u postgres pg_prove --failures --quiet --recurse --ext .sql -p 5432 -d ___vrp___test___ -U postgres ../../pgtap/
