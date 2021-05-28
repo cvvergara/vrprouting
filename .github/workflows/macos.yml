@@ -18,6 +18,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: install deps
+        run: |
+          brew install postgis boost pgrouting
+
       - name: Configure
         run: |
           mkdir build
@@ -58,10 +62,6 @@ jobs:
           cd ./pgTapExtension/
           sudo make install
           cpan TAP::Parser::SourceHandler::pgTAP
-
-      - name: install deps
-        run: |
-          brew install postgis boost pgrouting
 
       - name: Unapck data
         run: |
