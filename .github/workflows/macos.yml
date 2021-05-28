@@ -18,6 +18,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Configure
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release -DWITH_DOC=OFF ..
+
+      - name: Build
+        run: |
+          cd build
+          make -j
+          sudo make install
+
       - name: Cache pgtap
         id: cache-pgtap
         uses: actions/cache@v2
@@ -50,18 +62,6 @@ jobs:
       - name: install deps
         run: |
           brew install postgis boost pgrouting
-
-      - name: Configure
-        run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Release -DWITH_DOC=OFF ..
-
-      - name: Build
-        run: |
-          cd build
-          make -j
-          sudo make install
 
       - name: Unapck data
         run: |
