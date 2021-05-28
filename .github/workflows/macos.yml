@@ -63,10 +63,15 @@ jobs:
           sudo make install
           cpan TAP::Parser::SourceHandler::pgTAP
 
-      - name: Test
+      - name: Unapck data
         run: |
-          export PATH=/usr/local/Cellar/perl/$(perl -e 'print substr($^V, 1)')/bin:$PATH
-          pg_ctl -D /usr/local/var/postgres start
-          createuser -s postgres
-          createdb ___vrp___test___
-          bash ./tools/testers/pg_prove_tests.sh postgres 5432 Release
+          cd tools/testers
+          tar -xf matrix_new_values.tar.gz
+
+      - name: pgTap test
+        run: |
+          sudo service postgresql start
+          sudo -u postgres createdb -p ${PGPORT}  ___vrp___test___
+          cd tools/testers
+          sudo -u postgres psql -p "${PGPORT}" -U postgres -d ___vrp___test___ -X -q -v ON_ERROR_STOP=1 --pset pager=off -f setup_db.sql
+          sudo -u postgres pg_prove --failures --quiet --recurse --ext .sql -p "${PGPORT}" -d ___vrp___test___ -U postgres ../../pgtap/
