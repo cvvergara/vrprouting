@@ -230,15 +230,16 @@ subdivide_processing(
       /*
        * Get active vehicles at time t
        */
-      auto vehicles_to_process = static_cast<size_t>(std::distance(vehicles_arr,
+      auto vehicles_to_process =
         std::partition(
             vehicles_arr, vehicles_arr + total_vehicles,
             [&](const Vehicle_t& v)
-            {return v.start_open_t <= t && t <= v.end_close_t;})));
+            {return v.start_open_t <= t && t <= v.end_close_t;})
+        - vehicles_arr;
 
       /* Get shipments in stops of active vehicles */
       Identifiers<Id> shipments_in_stops;
-      for (size_t i = 0; i < vehicles_to_process; ++i) {
+      for (int64_t i = 0; i < vehicles_to_process; ++i) {
         auto v_id = vehicles_arr[i].id;
         auto v_to_modify = std::find_if(
             the_stops.begin(), the_stops.end(), [&]
@@ -260,9 +261,10 @@ subdivide_processing(
 
       prev_shipments_in_stops = shipments_in_stops;
 
-      auto shipments_to_process = static_cast<size_t>(std::distance(shipments_arr,
+      auto shipments_to_process =
         std::partition(shipments_arr, shipments_arr + total_shipments,
-            [&](const PickDeliveryOrders_t& s){return shipments_in_stops.has(s.id);})));
+            [&](const PickDeliveryOrders_t& s){return shipments_in_stops.has(s.id);})
+        - shipments_arr;
 
       pgassert(shipments_to_process > 0);
       pgassert(shipments_in_stops.size() == static_cast<size_t>(shipments_to_process));
@@ -399,13 +401,15 @@ do_optimize(
     std::sort(vehicles_arr, vehicles_arr + total_vehicles,
         [](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id < rhs.id;});
 
-    total_vehicles = static_cast<size_t>(std::distance(vehicles_arr,
+    total_vehicles =
       std::unique(vehicles_arr, vehicles_arr + total_vehicles,
-          [&](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id == rhs.id;})));
+          [&](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id == rhs.id;})
+      - vehicles_arr;
 
-    total_vehicles = static_cast<size_t>(std::distance(vehicles_arr,
+    total_vehicles =
       std::remove_if(vehicles_arr, vehicles_arr + total_vehicles,
-          [&](const Vehicle_t& v){return v.end_close_t < execution_date;})));
+          [&](const Vehicle_t& v){return v.end_close_t < execution_date;})
+      - vehicles_arr;
 
     /*
      * Remove shipments not involved in optimization
@@ -425,13 +429,14 @@ do_optimize(
     std::sort(shipments_arr, shipments_arr + total_shipments,
         [](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id < rhs.id;});
 
-    total_shipments = static_cast<size_t>(std::distance(shipments_arr,
+    total_shipments =
       std::unique(shipments_arr, shipments_arr + total_shipments,
-          [&](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id == rhs.id;})));
+          [&](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id == rhs.id;})
+      - shipments_arr;
 
-    total_shipments = static_cast<size_t>(std::distance(shipments_arr,
-        std::remove_if(shipments_arr, shipments_arr + total_shipments,
-        [&](const PickDeliveryOrders_t& s){return !shipments_in_stops.has(s.id);})));
+    total_shipments = std::remove_if(shipments_arr, shipments_arr + total_shipments,
+        [&](const PickDeliveryOrders_t& s){return !shipments_in_stops.has(s.id);})
+      - shipments_arr;
 
     /*
      * Verify shipments complete data

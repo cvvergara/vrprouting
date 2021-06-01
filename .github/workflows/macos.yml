@@ -26,7 +26,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release -DWITH_DOC=OFF ..
+          cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_DOC=OFF ..
 
       - name: Build
         run: |

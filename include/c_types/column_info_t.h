@@ -28,8 +28,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #pragma once
 
 /* for int64_t */
-#ifndef __cplusplus
+#ifdef __cplusplus
+#   include <cstdint>
+#else
 #   include <stdbool.h>
+#   include <stdint.h>
 #endif
 
 // used for getting the data
@@ -48,7 +51,7 @@ enum {
 typedef
 struct {
     int colNumber;
-    unsigned long type;
+    uint64_t type;
     bool strict;
     char *name;
     expectType eType;
