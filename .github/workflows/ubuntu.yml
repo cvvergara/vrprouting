@@ -19,12 +19,9 @@ jobs:
         fail-fast: false
         matrix:
           psql: [12, 13, 14]
-          postgis: [2.5,3]
+          postgis: [3]
           release: [Debug, Release]
           os: [ubuntu-latest]
-          exclude:
-            - postgis: 2.5
-              psql: 14
 
     steps:
       - uses: actions/checkout@v2
