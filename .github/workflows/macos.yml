@@ -98,7 +98,6 @@ jobs:
           pg_ctl -D /usr/local/var/postgres start
           createuser -s postgres
           createdb ___vrp___test___
-          cd tools/testers
-          psql -p 5432 -U postgres -d ___vrp___test___ -X -q -v ON_ERROR_STOP=1 --pset pager=off -f setup_db.sql
+          psql -p 5432 -U postgres -d ___vrp___test___ -X -q -v ON_ERROR_STOP=1 --pset pager=off -f tools/testers/setup_db.sql
           psql -p 5432 -U postgres -d ___vrp___test___ -c "SELECT * FROM pgr_full_version();"
-          pg_prove --failures --quiet --recurse --ext .sql -p 5432 -d ___vrp___test___ -U postgres ../../pgtap/
+          pg_prove --failures --quiet --recurse --ext .sql -p 5432 -d ___vrp___test___ -U postgres pgtap/
