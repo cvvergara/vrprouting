@@ -104,7 +104,15 @@ jobs:
       - name: pgTap test
         run: |
           sudo service postgresql start
-          sudo -u postgres createdb -p ${PGPORT}  ___vrp___test___
-          cd tools/testers
-          sudo -u postgres psql -p "${PGPORT}" -U postgres -d ___vrp___test___ -X -q -v ON_ERROR_STOP=1 --pset pager=off -f setup_db.sql
-          sudo -u postgres pg_prove --failures --quiet --recurse --ext .sql -p "${PGPORT}" -d ___vrp___test___ -U postgres ../../pgtap/
+          export PG_RUNNER_USER=`whoami`
+          sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS ___vrp___test___;"
+          sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS \"${PG_RUNNER_USER}\";"
+          sudo -u postgres psql -p ${PGPORT} -c "DROP ROLE IF EXISTS \"${PG_RUNNER_USER}\";"
+          sudo -u postgres psql -p ${PGPORT} -c "CREATE ROLE \"${PG_RUNNER_USER}\" WITH LOGIN SUPERUSER;"
+          sudo -u postgres psql -p ${PGPORT} -c "CREATE DATABASE \"${PG_RUNNER_USER}\";"
+          psql -c "CREATE DATABASE ___vrp___test___;"
+
+          psql -p "${PGPORT}" -d ___vrp___test___ -X -q -v ON_ERROR_STOP=1 --pset pager=off -f tools/testers/setup_db.sql
+          pg_prove --failures --quiet --recurse --ext .sql -p "${PGPORT}" -d ___vrp___test___ pgtap/
+
+          psql -c "DROP DATABASE IF EXISTS ___vrp___test___;"
