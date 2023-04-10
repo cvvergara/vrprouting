@@ -1,13 +1,32 @@
 name: Build for Ubuntu with clang
 
+
 on:
   push:
+    paths:
+      - '.github/workflows/clang.yml'
+      - 'src/**'
+      - 'include/**'
+      - 'pgtap/**'
+      - 'tools/testers/**'
+      - './CMakeLists.txt'
+
     branches-ignore:
-      - 'translations_*'
+      - 'gh-pages'
+
     tags: []
+
   pull_request:
-    paths-ignore:
-      - '**.po'
+    paths:
+      - '.github/workflows/clang.yml'
+      - 'src/**'
+      - 'include/**'
+      - 'pgtap/**'
+      - 'tools/testers/**'
+      - './CMakeLists.txt'
+
+    branches-ignore:
+      - 'gh-pages'
 
 
 jobs:

@@ -1,16 +1,40 @@
 name: Check queries
-# using
-# - the installed version on actions
-# - the latest postgis version
 
 on:
   push:
+    paths:
+      - '.github/workflows/check-queries.yml'
+      - 'src/**'
+      - 'include/**'
+      - 'sql/**'
+      - 'docqueries/**'
+      - 'tools/testers/**'
+      - 'CMakeLists.txt'
+
     branches-ignore:
-      - 'translations_*'
+      - 'gh-pages'
+
     tags: []
+
   pull_request:
-    paths-ignore:
-      - '**.po'
+    paths:
+      - '.github/workflows/check-queries.yml'
+      - 'src/**'
+      - 'include/**'
+      - 'sql/**'
+      - 'docqueries/**'
+      - 'tools/testers/**'
+      - 'CMakeLists.txt'
+
+    branches-ignore:
+      - 'gh-pages'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   build:
