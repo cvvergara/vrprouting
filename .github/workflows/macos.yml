@@ -11,15 +11,6 @@ concurrency:
 permissions:
   contents: read
 
-on:
-  push:
-    branches-ignore:
-      - 'translations_*'
-    tags: []
-  pull_request:
-    paths-ignore:
-      - '**.po'
-
 # TODO: Fix the macOS build for compiling and building VROOM with vrprouting.
 jobs:
   build:
