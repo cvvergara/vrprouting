@@ -51,13 +51,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install Requirements
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          repository: 'google/styleguide'
-          ref: "gh-pages"
-          path: "code_linter/styleguide"
+          repository: 'cpplint/cpplint'
+          ref: "develop"
+          path: "icode_linter/cpplint"
       - name: Run linter
         run: |
           bash ./tools/scripts/code_checker.sh
