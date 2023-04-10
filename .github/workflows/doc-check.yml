@@ -8,7 +8,35 @@ name: Check Documentation
 # - build Links
 # - English is always tested
 
-on: [push,pull_request]
+on:
+  push:
+    paths:
+      - '.github/workflows/doc-check.yml'
+      - 'doc/**'
+      - 'locale/**'
+      - 'CMakeLists.txt'
+
+    branches-ignore:
+      - 'gh-pages'
+
+    tags: []
+
+  pull_request:
+    paths:
+      - '.github/workflows/doc-check.yml'
+      - 'doc/**'
+      - 'locale/**'
+      - 'CMakeLists.txt'
+
+    branches-ignore:
+      - 'gh-pages'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   build:
