@@ -18,12 +18,12 @@ CREATE EXTENSION IF NOT EXISTS vrprouting CASCADE;
 
 BEGIN;
 
-    \i sampledata.sql
-    \i matrix_new_values.sql
-    \i vrppdtw_data.sql
-    \i solomon_100_rc101.data.sql
-    \i no_crash_test.sql
-    \i general_pgtap_tests.sql
-    \i vroomdata.sql
+    \i tools/testers/sampledata.sql
+    \i tools/testers/matrix_new_values.sql
+    \i tools/testers/vrppdtw_data.sql
+    \i tools/testers/solomon_100_rc101.data.sql
+    \i tools/testers/no_crash_test.sql
+    \i tools/testers/general_pgtap_tests.sql
+    \i tools/testers/vroomdata.sql
 
 END;
