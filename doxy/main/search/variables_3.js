@@ -1,12 +1,20 @@
 var searchData=
 [
-  ['deliver_5fclose_5ft_823',['deliver_close_t',['../structPickDeliveryOrders__t.html#a353af6b268cf3e4c4c47a0b244fd7928',1,'PickDeliveryOrders_t']]],
-  ['deliver_5fnode_5fid_824',['deliver_node_id',['../structPickDeliveryOrders__t.html#ae1c604516b9f8439bdd3f15a2442d67f',1,'PickDeliveryOrders_t']]],
-  ['deliver_5fopen_5ft_825',['deliver_open_t',['../structPickDeliveryOrders__t.html#a7f04597b7a43c58984e9815b604246b8',1,'PickDeliveryOrders_t']]],
-  ['deliver_5fservice_5ft_826',['deliver_service_t',['../structPickDeliveryOrders__t.html#af8c3366b6a7c4fa93c0c63af3ea7d544',1,'PickDeliveryOrders_t']]],
-  ['deliver_5fx_827',['deliver_x',['../structPickDeliveryOrders__t.html#ad618370b0b9e6cb8152b659889056cb1',1,'PickDeliveryOrders_t']]],
-  ['deliver_5fy_828',['deliver_y',['../structPickDeliveryOrders__t.html#af564444415ffabe4cbb2ffb5c9f3000b',1,'PickDeliveryOrders_t']]],
-  ['demand_829',['demand',['../structPickDeliveryOrders__t.html#aec56228fc0edd5812b5cf9ad882902de',1,'PickDeliveryOrders_t']]],
-  ['departuretime_830',['departureTime',['../structGeneral__vehicle__orders__t.html#ac44ca989c1127b3483936bd2ed3b62be',1,'General_vehicle_orders_t']]],
-  ['dnode_831',['Dnode',['../classvrprouting_1_1vrp_1_1Pgr__pickDeliver.html#ac45e03d7435467c11f59835fc2e5cfb1',1,'vrprouting::vrp::Pgr_pickDeliver']]]
+  ['d_5fdata_1307',['d_data',['../structVroom__shipment__t.html#a8cd25ddd81a91b0f46f38c7cdbbb3a94',1,'Vroom_shipment_t']]],
+  ['d_5flocation_5fid_1308',['d_location_id',['../structVroom__shipment__t.html#aac449b0a6d10800a5ab9952ab9a4649d',1,'Vroom_shipment_t']]],
+  ['d_5fservice_1309',['d_service',['../structVroom__shipment__t.html#a1dc67c09a6d0397aa6004f4d0a8338dd',1,'Vroom_shipment_t']]],
+  ['d_5fsetup_1310',['d_setup',['../structVroom__shipment__t.html#a182c9d37d5b76f8f707ad648a9a50711',1,'Vroom_shipment_t']]],
+  ['data_1311',['data',['../structVroom__break__t.html#aa0d028c0fcc8c617a2b3bf6e02c0728f',1,'Vroom_break_t::data()'],['../structVroom__job__t.html#af9cb994950e71859b878a639639bae7d',1,'Vroom_job_t::data()'],['../structVroom__vehicle__t.html#a0a3c0b0233a869fba3da38faa77824ae',1,'Vroom_vehicle_t::data()']]],
+  ['deliver_5fclose_5ft_1312',['deliver_close_t',['../structPickDeliveryOrders__t.html#a83d25b0b3e8f80aaf660f37ff6fa04dd',1,'PickDeliveryOrders_t']]],
+  ['deliver_5fnode_5fid_1313',['deliver_node_id',['../structPickDeliveryOrders__t.html#a85b6f27a53f6927f8a4947c21b11d9e1',1,'PickDeliveryOrders_t']]],
+  ['deliver_5fopen_5ft_1314',['deliver_open_t',['../structPickDeliveryOrders__t.html#ae039b0b1ec342b1b14a561ddace185ed',1,'PickDeliveryOrders_t']]],
+  ['deliver_5fservice_5ft_1315',['deliver_service_t',['../structPickDeliveryOrders__t.html#af944d79c3c30c29ce9034255e9bbe7b3',1,'PickDeliveryOrders_t']]],
+  ['deliver_5fx_1316',['deliver_x',['../structPickDeliveryOrders__t.html#a349fe464147fc476d1df625c714a87cc',1,'PickDeliveryOrders_t']]],
+  ['deliver_5fy_1317',['deliver_y',['../structPickDeliveryOrders__t.html#a8d69cfd802978fcebe43d7824d7a5f45',1,'PickDeliveryOrders_t']]],
+  ['delivery_1318',['delivery',['../structVroom__job__t.html#aae1ff96b62d08f0ce99966b0e03d9ce0',1,'Vroom_job_t']]],
+  ['delivery_5fsize_1319',['delivery_size',['../structVroom__job__t.html#a921ac2333087ef4f28ce298fb3d5c98b',1,'Vroom_job_t']]],
+  ['demand_1320',['demand',['../structPickDeliveryOrders__t.html#a8bda55c4a2862515067052788ae83d18',1,'PickDeliveryOrders_t']]],
+  ['departure_5ftime_1321',['departure_time',['../structVroom__rt.html#acebe411d3862c3809680490ef6903d33',1,'Vroom_rt']]],
+  ['departuretime_1322',['departureTime',['../structSolution__rt.html#a4a1170cef4f4a3c075d064835b83658c',1,'Solution_rt']]],
+  ['duration_1323',['duration',['../structVroom__matrix__t.html#ac114ef9310e6c253b7e0be74830c3cb0',1,'Vroom_matrix_t']]]
 ];

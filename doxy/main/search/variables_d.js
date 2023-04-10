@@ -1,7 +1,29 @@
 var searchData=
 [
-  ['to_5fvid_913',['to_vid',['../structmatrix__cell.html#af970a7b211030451819a6397501e685d',1,'matrix_cell']]],
-  ['traveltime_914',['travelTime',['../structGeneral__vehicle__orders__t.html#abb9a47ee3b44b9753cbffd940a76014d',1,'General_vehicle_orders_t']]],
-  ['trucks_915',['trucks',['../classvrprouting_1_1vrp_1_1Solution.html#ac70ea4ec40fef6236886044f39b3944e',1,'vrprouting::vrp::Solution']]],
-  ['type_916',['type',['../structColumn__info__t.html#aabe9ce1c2584f121ef9886ae81bfb748',1,'Column_info_t']]]
+  ['service_1432',['service',['../structVroom__job__t.html#a1cd4526dceab34ae35ca61d77aa3f0c0',1,'Vroom_job_t::service()'],['../structVroom__break__t.html#a882ead1e621cf4d75e9c154e1d61c5a1',1,'Vroom_break_t::service()']]],
+  ['service_5ftime_1433',['service_time',['../structVroom__rt.html#a99db2d646cb6628924cbce6ddda235e8',1,'Vroom_rt']]],
+  ['serviceduration_1434',['serviceDuration',['../structSolution__rt.html#a50b14d1bd77cc29132283555ac4b3e72',1,'Solution_rt']]],
+  ['setup_1435',['setup',['../structVroom__job__t.html#a62a3a6f1be545654d60fc7d11a2682b6',1,'Vroom_job_t']]],
+  ['setup_5ftime_1436',['setup_time',['../structVroom__rt.html#a3a7029ac6e3cf0fba16ec40f418728a8',1,'Vroom_rt']]],
+  ['skills_1437',['skills',['../structVroom__job__t.html#afe30e7ed5e21e48e18146b943f8e94bf',1,'Vroom_job_t::skills()'],['../structVroom__shipment__t.html#abae1f38c66c5dda3fc8a2b02ed34ccbc',1,'Vroom_shipment_t::skills()'],['../structVroom__vehicle__t.html#a06b7e321759fd71e8952d739c3991754',1,'Vroom_vehicle_t::skills()']]],
+  ['skills_5fsize_1438',['skills_size',['../structVroom__job__t.html#a52a20e47982cb6780cf498c835e64c79',1,'Vroom_job_t::skills_size()'],['../structVroom__shipment__t.html#a263e5dc9e1cb8db04922ecc6edc3801c',1,'Vroom_shipment_t::skills_size()'],['../structVroom__vehicle__t.html#ab8444ffa7fc3c9f9f3e4f3ccfffbbdc5',1,'Vroom_vehicle_t::skills_size()']]],
+  ['speed_1439',['speed',['../structVehicle__t.html#ac49145bdd525c16d8e5a428342a2f059',1,'Vehicle_t']]],
+  ['speed_5ffactor_1440',['speed_factor',['../structVroom__vehicle__t.html#ab157c264ecb220e3720c2ce840842aee',1,'Vroom_vehicle_t']]],
+  ['start_5fclose_5ft_1441',['start_close_t',['../structVehicle__t.html#a339ea7a9dc31e07152036f18e38d7aea',1,'Vehicle_t']]],
+  ['start_5fid_1442',['start_id',['../structVroom__vehicle__t.html#a089e53be721489464398bb27c0c64a6f',1,'Vroom_vehicle_t::start_id()'],['../structVroom__matrix__t.html#a81b363dd1c94342ed4d0245b541601a8',1,'Vroom_matrix_t::start_id()']]],
+  ['start_5fnode_5fid_1443',['start_node_id',['../structVehicle__t.html#aab1fbe5401dd1f5a0da72f25e950194a',1,'Vehicle_t']]],
+  ['start_5fopen_5ft_1444',['start_open_t',['../structVehicle__t.html#aaae6c02da558966811121f90706167cf',1,'Vehicle_t']]],
+  ['start_5fservice_5ft_1445',['start_service_t',['../structVehicle__t.html#aa34500522740c7022a125d3ec4495d9c',1,'Vehicle_t']]],
+  ['start_5ftime_1446',['start_time',['../structTime__multipliers__t.html#a714ddefffa730e8e4dd0eaacbce32245',1,'Time_multipliers_t']]],
+  ['start_5fx_1447',['start_x',['../structVehicle__t.html#a99a91c114b7ef776b385dc9f774539db',1,'Vehicle_t']]],
+  ['start_5fy_1448',['start_y',['../structVehicle__t.html#a5e231b258e96a4a28f4be0554c358a3f',1,'Vehicle_t']]],
+  ['step_5fseq_1449',['step_seq',['../structVroom__rt.html#a10514d87e15e8bb260ad6c1de5060bff',1,'Vroom_rt']]],
+  ['step_5ftype_1450',['step_type',['../structVroom__rt.html#a7e9406e2a79abcaae29b912bd5734f7b',1,'Vroom_rt']]],
+  ['stop_5fid_1451',['stop_id',['../structSolution__rt.html#ade6dd4bd64d57da50f98df8d69d0fdee',1,'Solution_rt']]],
+  ['stop_5fseq_1452',['stop_seq',['../structSolution__rt.html#ae562a039ea3c29e0d5c55f1a705e4fa0',1,'Solution_rt']]],
+  ['stop_5ftype_1453',['stop_type',['../structSolution__rt.html#afedf05ce47bdeb1e5894ee2dc428016d',1,'Solution_rt']]],
+  ['stops_1454',['stops',['../structShort__vehicle.html#ac71be9b6d5cfa7e03ef98468397697de',1,'Short_vehicle::stops()'],['../structVehicle__t.html#a326fa922f8a420c029d34dfb3899e40f',1,'Vehicle_t::stops()']]],
+  ['stops_5fsize_1455',['stops_size',['../structVehicle__t.html#adb30a4924911743b6fdf1801cec3c675',1,'Vehicle_t']]],
+  ['str_1456',['str',['../classAssertFailedException.html#ab979c89db58aa0e6f6bef73eabf39887',1,'AssertFailedException']]],
+  ['strict_1457',['strict',['../structColumn__info__t.html#a72833df7d9b7fd577a9e5c866c390518',1,'Column_info_t']]]
 ];

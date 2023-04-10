@@ -1,18 +1,14 @@
 var namespacevrprouting_1_1vrp =
 [
-    [ "Base_node", "classvrprouting_1_1vrp_1_1Base__node.html", "classvrprouting_1_1vrp_1_1Base__node" ],
-    [ "Dnode", "classvrprouting_1_1vrp_1_1Dnode.html", "classvrprouting_1_1vrp_1_1Dnode" ],
-    [ "Fleet", "classvrprouting_1_1vrp_1_1Fleet.html", "classvrprouting_1_1vrp_1_1Fleet" ],
     [ "Initial_solution", "classvrprouting_1_1vrp_1_1Initial__solution.html", "classvrprouting_1_1vrp_1_1Initial__solution" ],
-    [ "Node", "classvrprouting_1_1vrp_1_1Node.html", "classvrprouting_1_1vrp_1_1Node" ],
-    [ "Optimize", "classvrprouting_1_1vrp_1_1Optimize.html", "classvrprouting_1_1vrp_1_1Optimize" ],
-    [ "Order", "classvrprouting_1_1vrp_1_1Order.html", "classvrprouting_1_1vrp_1_1Order" ],
-    [ "PD_Orders", "classvrprouting_1_1vrp_1_1PD__Orders.html", "classvrprouting_1_1vrp_1_1PD__Orders" ],
-    [ "PD_problem", "classvrprouting_1_1vrp_1_1PD__problem.html", "classvrprouting_1_1vrp_1_1PD__problem" ],
-    [ "Pgr_pickDeliver", "classvrprouting_1_1vrp_1_1Pgr__pickDeliver.html", "classvrprouting_1_1vrp_1_1Pgr__pickDeliver" ],
-    [ "Solution", "classvrprouting_1_1vrp_1_1Solution.html", "classvrprouting_1_1vrp_1_1Solution" ],
-    [ "Tw_node", "classvrprouting_1_1vrp_1_1Tw__node.html", "classvrprouting_1_1vrp_1_1Tw__node" ],
-    [ "Vehicle", "classvrprouting_1_1vrp_1_1Vehicle.html", "classvrprouting_1_1vrp_1_1Vehicle" ],
-    [ "Vehicle_node", "classvrprouting_1_1vrp_1_1Vehicle__node.html", "classvrprouting_1_1vrp_1_1Vehicle__node" ],
-    [ "Vehicle_pickDeliver", "classvrprouting_1_1vrp_1_1Vehicle__pickDeliver.html", "classvrprouting_1_1vrp_1_1Vehicle__pickDeliver" ]
+    [ "Initials_code", "namespacevrprouting_1_1vrp.html#ab9a66ca0c8ef3cb8ba90c55a1620c30c", [
+      [ "OneTruck", "namespacevrprouting_1_1vrp.html#ab9a66ca0c8ef3cb8ba90c55a1620c30ca98c622e9551599e764a7c15244c26660", null ],
+      [ "OnePerTruck", "namespacevrprouting_1_1vrp.html#ab9a66ca0c8ef3cb8ba90c55a1620c30ca8e0d52775497705975284892e0d37be3", null ],
+      [ "FrontTruck", "namespacevrprouting_1_1vrp.html#ab9a66ca0c8ef3cb8ba90c55a1620c30ca4a5f8c6fca8f0942a8ac031693ed8802", null ],
+      [ "BackTruck", "namespacevrprouting_1_1vrp.html#ab9a66ca0c8ef3cb8ba90c55a1620c30ca1a7e371af3399fa84b29a5dc22c70645", null ],
+      [ "BestInsert", "namespacevrprouting_1_1vrp.html#ab9a66ca0c8ef3cb8ba90c55a1620c30ca484821f2d729597b94918e88fb9b2e1e", null ],
+      [ "BestBack", "namespacevrprouting_1_1vrp.html#ab9a66ca0c8ef3cb8ba90c55a1620c30caa54936442130cd226c706ad20e05b052", null ],
+      [ "BestFront", "namespacevrprouting_1_1vrp.html#ab9a66ca0c8ef3cb8ba90c55a1620c30ca4727e6a67ba120f5a3ca0792b1169e1b", null ],
+      [ "OneDepot", "namespacevrprouting_1_1vrp.html#ab9a66ca0c8ef3cb8ba90c55a1620c30caaf266da2afda1f55f22aa138c687a9d4", null ]
+    ] ]
 ];

@@ -1,7 +1,6 @@
 var classvrprouting_1_1Identifier =
 [
     [ "Identifier", "classvrprouting_1_1Identifier.html#abbe04e0f43e16d197ff720c4d9f03afb", null ],
-    [ "Identifier", "classvrprouting_1_1Identifier.html#a74ba23dcf70256c5bec3b117aa481022", null ],
     [ "Identifier", "classvrprouting_1_1Identifier.html#a28cc25c5cd0279c8e50492be0fae4324", null ],
     [ "id", "classvrprouting_1_1Identifier.html#a82216b73e871c0123836f73036957d01", null ],
     [ "idx", "classvrprouting_1_1Identifier.html#aced77fba627e8928115a378326ab94b6", null ],
