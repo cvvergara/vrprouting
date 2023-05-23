@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
-#include "c_common/matrixRows_input.h"
+#include "c_common/pgdata_getters.h"
 
 #include "c_types/column_info_t.h"
 #include "c_types/matrix_cell_t.h"
@@ -173,7 +173,7 @@ get_matrixRows_general(
  * @param [out] total_rows Total rows recieved
  */
 void
-get_matrixRows(
+vrp_get_matrixRows(
     char *sql,
     Matrix_cell_t **rows,
     size_t *total_rows) {
@@ -200,7 +200,7 @@ get_matrixRows(
  * @param [out] total_rows Total rows recieved
  */
 void
-get_matrixRows_plain(
+vrp_get_matrixRows_plain(
     char *sql,
     Matrix_cell_t **rows,
     size_t *total_rows) {

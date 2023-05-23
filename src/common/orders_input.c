@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
-#include "c_common/orders_input.h"
+#include "c_common/pgdata_getters.h"
 
 #include "c_types/pickDeliveryOrders_t.h"
 #include "c_types/column_info_t.h"
@@ -237,7 +237,7 @@ void fetch_timestamps(
 
 static
 void
-pgr_get_pd_orders_general(
+get_pd_orders_general(
         char *pd_orders_sql,
         PickDeliveryOrders_t **pd_orders,
         size_t *total_pd_orders,
@@ -328,7 +328,7 @@ pgr_get_pd_orders_general(
  * @param[out] total_rows Total rows recieved
  */
 void
-get_shipments(
+vrp_get_shipments(
     char *sql,
     PickDeliveryOrders_t **rows,
     size_t *total_rows) {
@@ -364,7 +364,7 @@ get_shipments(
   info[5].strict = false;
   info[9].strict = false;
 
-  pgr_get_pd_orders_general(sql, rows, total_rows, info, column_count, 0);
+  get_pd_orders_general(sql, rows, total_rows, info, column_count, 0);
 }
 
 /**
@@ -373,7 +373,7 @@ get_shipments(
  * @param[out] total_rows Total rows recieved
  */
 void
-get_shipments_raw(
+vrp_get_shipments_raw(
     char *sql,
     PickDeliveryOrders_t **rows,
     size_t *total_rows) {
@@ -402,7 +402,7 @@ get_shipments_raw(
   info[4].strict = false;
   info[7].strict = false;
 
-  pgr_get_pd_orders_general(sql, rows, total_rows, info, column_count, 1);
+  get_pd_orders_general(sql, rows, total_rows, info, column_count, 1);
 }
 
 /**
@@ -411,7 +411,7 @@ get_shipments_raw(
  * @param[out] total_rows Total rows recieved
  */
 void
-get_shipments_euclidean(
+vrp_get_shipments_euclidean(
     char *sql,
     PickDeliveryOrders_t **rows,
     size_t *total_rows) {
@@ -448,5 +448,5 @@ get_shipments_euclidean(
   info[10].eType = ANY_NUMERICAL;
   info[11].eType = ANY_NUMERICAL;
 
-  pgr_get_pd_orders_general(sql, rows, total_rows, info, column_count, 2);
+  get_pd_orders_general(sql, rows, total_rows, info, column_count, 2);
 }

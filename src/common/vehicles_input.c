@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
-#include "c_common/vehicles_input.h"
+#include "c_common/pgdata_getters.h"
 
 #include <limits.h>
 #include <float.h>
@@ -466,7 +466,7 @@ void db_get_vehicles(
  * @param[out] total_rows Total rows recieved
  */
 void
-get_vehicles(
+vrp_get_vehicles(
     char *sql,
     Vehicle_t **rows,
     size_t *total_rows,
@@ -519,7 +519,7 @@ get_vehicles(
  * @param[out] total_rows Total rows recieved
  */
 void
-get_vehicles_raw(
+vrp_get_vehicles_raw(
     char *sql,
     Vehicle_t **rows,
     size_t *total_rows,
@@ -566,7 +566,7 @@ get_vehicles_raw(
  * @param[out] total_rows Total rows recieved
  */
 void
-get_vehicles_euclidean(
+vrp_get_vehicles_euclidean(
     char *sql,
     Vehicle_t **rows,
     size_t *total_rows,

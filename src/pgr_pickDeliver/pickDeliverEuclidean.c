@@ -31,8 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_common/debug_macro.h"
 #include "c_common/e_report.h"
 #include "c_common/time_msg.h"
-#include "c_common/orders_input.h"
-#include "c_common/vehicles_input.h"
+#include "c_common/pgdata_getters.h"
 #include "c_types/pickDeliveryOrders_t.h"
 #include "c_types/solution_rt.h"
 
@@ -84,13 +83,13 @@ process(
     PGR_DBG("Load orders");
     struct PickDeliveryOrders_t *pd_orders_arr = NULL;
     size_t total_pd_orders = 0;
-    get_shipments_euclidean(pd_orders_sql,
+    vrp_get_shipments_euclidean(pd_orders_sql,
            &pd_orders_arr, &total_pd_orders);
 
     PGR_DBG("Load vehicles");
     Vehicle_t *vehicles_arr = NULL;
     size_t total_vehicles = 0;
-    get_vehicles_euclidean(vehicles_sql,
+    vrp_get_vehicles_euclidean(vehicles_sql,
            &vehicles_arr, &total_vehicles,
            false);
     PGR_DBG("total vehicles %ld", total_vehicles);
