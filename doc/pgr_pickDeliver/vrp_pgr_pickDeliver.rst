@@ -102,24 +102,24 @@ Inner Queries
 Orders SQL
 ................................................................................
 
-.. include:: ../../src/common/orders_input.c
-    :start-after: pgr_pickDeliver start
-    :end-before: pgr_pickDeliver end
+.. include:: concepts.rst
+    :start-after: pgr_orders_start
+    :end-before: pgr_orders_end
 
 Vehicles SQL
 ................................................................................
 
-.. include:: ../../src/common/vehicles_input.c
-    :start-after: pgr_pickDeliver start
-    :end-before: pgr_pickDeliver end
+.. include:: concepts.rst
+    :start-after: pgr_vehicles_start
+    :end-before: pgr_vehicles_end
 
 
 Time Matrix SQL
 .........................................................................................
 
-.. include:: ../../src/common/matrixRows_input.c
-    :start-after: pgr_pickDeliver start
-    :end-before: pgr_pickDeliver end
+.. include:: concepts.rst
+    :start-after: pgr_matrix_start
+    :end-before: pgr_matrix_end
 
 Result Columns
 -------------------------------------------------------------------------------

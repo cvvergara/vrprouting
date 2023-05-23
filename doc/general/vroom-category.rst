@@ -111,46 +111,46 @@ Inner Queries
 Jobs SQL
 ...............................................................................
 
-.. include:: ../../src/common/vroom/jobs_input.c
-   :start-after: vrp_vroom start
-   :end-before: vrp_vroom end
+.. include:: concepts.rst
+   :start-after: jobs_start
+   :end-before: jobs_end
 
 Shipments SQL
 ...............................................................................
 
-.. include:: ../../src/common/vroom/shipments_input.c
-   :start-after: vrp_vroom start
-   :end-before: vrp_vroom end
+.. include:: concepts.rst
+   :start-after: shipments_start
+   :end-before: shipments_end
 
 .. inner_queries_start
 
 Vehicles SQL
 ...............................................................................
 
-.. include:: ../../src/common/vroom/vehicles_input.c
-   :start-after: vrp_vroom start
-   :end-before: vrp_vroom end
+.. include:: concepts.rst
+   :start-after: vroom_vehicles_start
+   :end-before: vroom_vehicles_end
 
 Breaks SQL
 ...............................................................................
 
-.. include:: ../../src/common/vroom/breaks_input.c
-   :start-after: vrp_vroom start
-   :end-before: vrp_vroom end
+.. include:: concepts.rst
+   :start-after: breaks_start
+   :end-before: breaks_end
 
 Time Windows SQL
 ...............................................................................
 
-.. include:: ../../src/common/vroom/time_windows_input.c
-   :start-after: vrp_vroom start
-   :end-before: vrp_vroom end
+.. include:: concepts.rst
+   :start-after: time_windows_start
+   :end-before: time_windows_end
 
 Time Matrix SQL
 ...............................................................................
 
-.. include:: ../../src/common/vroom/matrix_input.c
-   :start-after: vrp_vroom start
-   :end-before: vrp_vroom end
+.. include:: concepts.rst
+   :start-after: vroom_matrix_start
+   :end-before: vroom_matrix_end
 
 .. inner_queries_end
 
