@@ -52,31 +52,7 @@ extern "C" {
 #include <stdbool.h>
 #endif
 
-#ifdef __cplusplus
-using Matrix_cell_t = struct Matrix_cell_t;
-using PickDeliveryOrders_t = struct PickDeliveryOrders_t PickDeliveryOrders_t;
-using Vehicle_t = struct Vehicle_t;
-using Time_multipliers_t = struct Time_multipliers_t Time_multipliers_t;
-using Vroom_break_t = struct Vroom_break_t;
-using Vroom_job_t = struct Vroom_job_t;
-using Vroom_matrix_t = struct Vroom_matrix_t;
-using Vroom_shipment_t = struct Vroom_shipment_t;
-using Vroom_time_window_t = struct Vroom_time_window_t;
-using Vroom_vehicle_t = struct Vroom_vehicle_t;
-#else
-typedef struct Matrix_cell_t Matrix_cell_t;
-typedef struct PickDeliveryOrders_t PickDeliveryOrders_t;
-typedef struct Vehicle_t Vehicle_t;
-typedef struct Time_multipliers_t Time_multipliers_t;
-typedef struct Vroom_break_t Vroom_break_t;
-typedef struct Vroom_job_t Vroom_job_t;
-typedef struct Vroom_matrix_t Vroom_matrix_t;
-typedef struct Vroom_shipment_t Vroom_shipment_t;
-typedef struct Vroom_time_window_t Vroom_time_window_t;
-typedef struct Vroom_vehicle_t Vroom_vehicle_t;
-#endif
-
-
+#include "c_types/typedefs.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -89,7 +65,7 @@ void vrp_get_matrixRows(char*, Matrix_cell_t **, size_t *);
 void vrp_get_matrixRows_plain(char*, Matrix_cell_t**, size_t*);
 
 /** @brief Reads the pick-Deliver shipments for timestams and intervals*/
-void vrp_get_shipments( char*, PickDeliveryOrders_t**, size_t*);
+void vrp_get_shipments(char*, PickDeliveryOrders_t**, size_t*);
 
 /** @brief Reads the pick-Deliver shipments for raw data*/
 void vrp_get_shipments_raw(char*, PickDeliveryOrders_t**, size_t*);
