@@ -26,7 +26,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
-#include "c_common/vroom/breaks_input.h"
+#include "c_common/pgdata_getters.h"
+
+#include "c_types/column_info_t.h"
+#include "c_types/vroom/vroom_break_t.h"
+
+#include "c_common/get_check_data.h"
 
 static
 void fetch_breaks(
@@ -132,7 +137,7 @@ void db_get_breaks(
  * @param[out] total_rows Total rows recieved
  */
 void
-get_vroom_breaks(
+vrp_get_vroom_breaks(
     char *sql,
     Vroom_break_t **rows,
     size_t *total_rows,

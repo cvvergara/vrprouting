@@ -53,12 +53,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_types/vroom/vroom_vehicle_t.h"
 #include "c_types/vroom/vroom_matrix_t.h"
 
-#include "c_common/vroom/jobs_input.h"
-#include "c_common/vroom/breaks_input.h"
-#include "c_common/vroom/time_windows_input.h"
-#include "c_common/vroom/shipments_input.h"
-#include "c_common/vroom/vehicles_input.h"
-#include "c_common/vroom/matrix_input.h"
+#include "c_common/pgdata_getters.h"
+#include "c_common/pgdata_getters.h"
+#include "c_common/pgdata_getters.h"
+#include "c_common/pgdata_getters.h"
+#include "c_common/pgdata_getters.h"
+#include "c_common/pgdata_getters.h"
 
 #include "drivers/vroom/vroom_driver.h"
 
@@ -118,13 +118,13 @@ process(
   Vroom_job_t *jobs = NULL;
   size_t total_jobs = 0;
   if (jobs_sql) {
-    get_vroom_jobs(jobs_sql, &jobs, &total_jobs, is_plain);
+    vrp_get_vroom_jobs(jobs_sql, &jobs, &total_jobs, is_plain);
   }
 
   Vroom_shipment_t *shipments = NULL;
   size_t total_shipments = 0;
   if (shipments_sql) {
-    get_vroom_shipments(shipments_sql, &shipments, &total_shipments, is_plain);
+    vrp_get_vroom_shipments(shipments_sql, &shipments, &total_shipments, is_plain);
   }
 
   if (total_jobs == 0 && total_shipments == 0) {
@@ -147,20 +147,20 @@ process(
   Vroom_time_window_t *jobs_tws = NULL;
   size_t total_jobs_tws = 0;
   if (jobs_tws_sql) {
-    get_vroom_time_windows(jobs_tws_sql, &jobs_tws, &total_jobs_tws,
+    vrp_get_vroom_time_windows(jobs_tws_sql, &jobs_tws, &total_jobs_tws,
                            is_plain);
   }
 
   Vroom_time_window_t *shipments_tws = NULL;
   size_t total_shipments_tws = 0;
   if (shipments_tws_sql) {
-    get_vroom_shipments_time_windows(shipments_tws_sql, &shipments_tws,
+    vrp_get_vroom_shipments_time_windows(shipments_tws_sql, &shipments_tws,
                                      &total_shipments_tws, is_plain);
   }
 
   Vroom_vehicle_t *vehicles = NULL;
   size_t total_vehicles = 0;
-  get_vroom_vehicles(vehicles_sql, &vehicles, &total_vehicles, is_plain);
+  vrp_get_vroom_vehicles(vehicles_sql, &vehicles, &total_vehicles, is_plain);
 
   if (total_vehicles == 0) {
     ereport(WARNING, (errmsg("Insufficient data found on Vehicles SQL query."),
@@ -174,19 +174,19 @@ process(
   Vroom_break_t *breaks = NULL;
   size_t total_breaks = 0;
   if (breaks_sql) {
-    get_vroom_breaks(breaks_sql, &breaks, &total_breaks, is_plain);
+    vrp_get_vroom_breaks(breaks_sql, &breaks, &total_breaks, is_plain);
   }
 
   Vroom_time_window_t *breaks_tws = NULL;
   size_t total_breaks_tws = 0;
   if (breaks_tws_sql) {
-    get_vroom_time_windows(breaks_tws_sql, &breaks_tws, &total_breaks_tws,
+    vrp_get_vroom_time_windows(breaks_tws_sql, &breaks_tws, &total_breaks_tws,
                            is_plain);
   }
 
   Vroom_matrix_t *matrix_rows = NULL;
   size_t total_matrix_rows = 0;
-  get_vroom_matrix(matrix_sql, &matrix_rows, &total_matrix_rows, is_plain);
+  vrp_get_vroom_matrix(matrix_sql, &matrix_rows, &total_matrix_rows, is_plain);
 
   if (total_matrix_rows == 0) {
     ereport(WARNING, (errmsg("Insufficient data found on Matrix SQL query."),

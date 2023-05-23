@@ -31,10 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_common/debug_macro.h"
 #include "c_common/e_report.h"
 #include "c_common/time_msg.h"
-#include "c_common/orders_input.h"
-#include "c_common/vehicles_input.h"
-#include "c_common/matrixRows_input.h"
-#include "c_common/time_multipliers_input.h"
+#include "c_common/pgdata_getters.h"
 #include "c_types/short_vehicle_rt.h"
 #include "c_types/pickDeliveryOrders_t.h"
 #include "drivers/optimize_driver.h"
@@ -91,9 +88,9 @@ process(
   PickDeliveryOrders_t *pd_orders_arr = NULL;
   size_t total_pd_orders = 0;
   if (use_timestamps) {
-    get_shipments(pd_orders_sql, &pd_orders_arr, &total_pd_orders);
+    vrp_get_shipments(pd_orders_sql, &pd_orders_arr, &total_pd_orders);
   } else {
-    get_shipments_raw(pd_orders_sql, &pd_orders_arr, &total_pd_orders);
+    vrp_get_shipments_raw(pd_orders_sql, &pd_orders_arr, &total_pd_orders);
   }
 
   if (total_pd_orders == 0) {
@@ -110,9 +107,9 @@ process(
   Vehicle_t *vehicles_arr = NULL;
   size_t total_vehicles = 0;
   if (use_timestamps) {
-    get_vehicles(vehicles_sql, &vehicles_arr, &total_vehicles, true);
+    vrp_get_vehicles(vehicles_sql, &vehicles_arr, &total_vehicles, true);
   } else {
-    get_vehicles_raw(vehicles_sql, &vehicles_arr, &total_vehicles, true);
+    vrp_get_vehicles_raw(vehicles_sql, &vehicles_arr, &total_vehicles, true);
   }
 
   if (total_vehicles == 0) {
@@ -134,9 +131,9 @@ process(
   Time_multipliers_t *multipliers_arr = NULL;
   size_t total_multipliers_arr = 0;
   if (use_timestamps) {
-    get_timeMultipliers(multipliers_sql, &multipliers_arr, &total_multipliers_arr);
+    vrp_get_timeMultipliers(multipliers_sql, &multipliers_arr, &total_multipliers_arr);
   } else {
-    get_timeMultipliers_raw(multipliers_sql, &multipliers_arr, &total_multipliers_arr);
+    vrp_get_timeMultipliers_raw(multipliers_sql, &multipliers_arr, &total_multipliers_arr);
   }
 
   if (total_multipliers_arr == 0) {
@@ -158,9 +155,9 @@ process(
   Matrix_cell_t *matrix_cells_arr = NULL;
   size_t total_cells = 0;
   if (use_timestamps) {
-    get_matrixRows(matrix_sql, &matrix_cells_arr, &total_cells);
+    vrp_get_matrixRows(matrix_sql, &matrix_cells_arr, &total_cells);
   } else {
-    get_matrixRows_plain(matrix_sql, &matrix_cells_arr, &total_cells);
+    vrp_get_matrixRows_plain(matrix_sql, &matrix_cells_arr, &total_cells);
   }
 
   if (total_cells == 0) {

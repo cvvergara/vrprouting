@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
-#include "c_common/time_multipliers_input.h"
+#include "c_common/pgdata_getters.h"
 
 #include "c_types/column_info_t.h"
 #include "c_types/time_multipliers_t.h"
@@ -146,7 +146,7 @@ void get_timeMultipliersGeneral(
   @param [out] rows C Container that holds all the multipliers rows
   @param [out] total_rows Total rows recieved
   */
-void get_timeMultipliers(
+void vrp_get_timeMultipliers(
     char *sql,
     Time_multipliers_t **rows,
     size_t *total_rows) {
@@ -172,7 +172,7 @@ void get_timeMultipliers(
   @param [out] rows C Container that holds all the multipliers
   @param [out] total_rows Total rows recieved
   */
-void get_timeMultipliers_raw(
+void vrp_get_timeMultipliers_raw(
     char *sql,
     Time_multipliers_t **rows,
     size_t *total_rows) {
