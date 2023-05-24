@@ -69,8 +69,10 @@ process(
 
     if (use_timestamps) {
       vrp_get_shipments(pd_orders_sql, &pd_orders_arr, &total_pd_orders, &err_msg);
+      throw_error(err_msg, pd_orders_sql);
     } else {
       vrp_get_shipments_raw(pd_orders_sql, &pd_orders_arr, &total_pd_orders, &err_msg);
+      throw_error(err_msg, pd_orders_sql);
     }
 
     if (total_pd_orders == 0) {
@@ -88,8 +90,10 @@ process(
     size_t total_vehicles = 0;
     if (use_timestamps) {
       vrp_get_vehicles(vehicles_sql, &vehicles_arr, &total_vehicles, false, &err_msg);
+      throw_error(err_msg, vehicles_sql);
     } else {
       vrp_get_vehicles_raw(vehicles_sql, &vehicles_arr, &total_vehicles, false, &err_msg);
+      throw_error(err_msg, vehicles_sql);
     }
 
     if (total_vehicles == 0) {
@@ -108,8 +112,10 @@ process(
     size_t total_multipliers_arr = 0;
     if (use_timestamps) {
       vrp_get_timeMultipliers(multipliers_sql, &multipliers_arr, &total_multipliers_arr, &err_msg);
+      throw_error(err_msg, multipliers_sql);
     } else {
       vrp_get_timeMultipliers_raw(multipliers_sql, &multipliers_arr, &total_multipliers_arr, &err_msg);
+      throw_error(err_msg, multipliers_sql);
     }
 
     if (total_multipliers_arr == 0) {
@@ -129,8 +135,10 @@ process(
     size_t total_cells = 0;
     if (use_timestamps) {
       vrp_get_matrixRows(matrix_sql, &matrix_cells_arr, &total_cells, &err_msg);
+      throw_error(err_msg, matrix_sql);
     } else {
       vrp_get_matrixRows_plain(matrix_sql, &matrix_cells_arr, &total_cells, &err_msg);
+      throw_error(err_msg, matrix_sql);
     }
 
     if (total_cells == 0) {

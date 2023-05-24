@@ -28,33 +28,46 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 void
 pgr_global_report(
-        char* log,
-        char* notice,
-        char* err) {
-    if (!notice && log) {
-        ereport(DEBUG1,
-                (errmsg_internal("%s", log)));
-    }
+    char* log,
+    char* notice,
+    char* err) {
+  if (!notice && log) {
+    ereport(DEBUG1,
+        (errmsg_internal("%s", log)));
+  }
 
-    if (notice) {
-        if (log) {
-            ereport(NOTICE,
-                    (errmsg_internal("%s", notice),
-                     errhint("%s", log)));
-        } else {
-            ereport(NOTICE,
-                    (errmsg_internal("%s", notice)));
-        }
+  if (notice) {
+    if (log) {
+      ereport(NOTICE,
+          (errmsg_internal("%s", notice),
+           errhint("%s", log)));
+    } else {
+      ereport(NOTICE,
+          (errmsg_internal("%s", notice)));
     }
+  }
 
-    if (err) {
-        if (log) {
-            ereport(ERROR,
-                    (errmsg_internal("%s", err),
-                     errhint("%s", log)));
-        } else {
-            ereport(ERROR,
-                    (errmsg_internal("%s", err)));
-        }
+  if (err) {
+    if (log) {
+      ereport(ERROR,
+          (errmsg_internal("%s", err),
+           errhint("%s", log)));
+    } else {
+      ereport(ERROR,
+          (errmsg_internal("%s", err)));
     }
+  }
+}
+
+/**
+ * @param[in] err string with an error message
+ * @param[in] hint string with the hint to be used
+ *
+ * Generates an ERROR on postgres when err in not null
+ */
+void
+throw_error(char *err, char *hint) {
+  if (err) {
+    ereport(ERROR, (errmsg("%s", err), errhint("%s", hint)));
+  }
 }

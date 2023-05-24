@@ -90,6 +90,7 @@ process(
     PickDeliveryOrders_t *pd_orders_arr = NULL;
     size_t total_pd_orders = 0;
     vrp_get_shipments_raw(pd_orders_sql, &pd_orders_arr, &total_pd_orders, &err_msg);
+      throw_error(err_msg, pd_orders_sql);
 
     if (total_pd_orders == 0) {
         (*result_count) = 0;
@@ -109,6 +110,7 @@ process(
     Vehicle_t *vehicles_arr = NULL;
     size_t total_vehicles = 0;
     vrp_get_vehicles_raw(vehicles_sql, &vehicles_arr, &total_vehicles, false, &err_msg);
+    throw_error(err_msg, vehicles_sql);
 
     if (total_vehicles == 0) {
         (*result_count) = 0;
@@ -173,6 +175,7 @@ process(
     Matrix_cell_t *matrix_cells_arr = NULL;
     size_t total_cells = 0;
     vrp_get_matrixRows_plain(matrix_sql, &matrix_cells_arr, &total_cells, &err_msg);
+    throw_error(err_msg, matrix_sql);
 
     PGR_DBG("total matrix rows %ld", total_cells);
 #if 0

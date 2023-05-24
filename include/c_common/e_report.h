@@ -70,5 +70,7 @@ pgr_global_report(
         char* notice_msg,
         char* error_msg);
 
+/* @brief throws postgres error when first string is not null */
+void throw_error(char*, char*);
 
 #endif  // INCLUDE_C_COMMON_E_REPORT_H_

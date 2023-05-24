@@ -87,11 +87,13 @@ process(
     struct PickDeliveryOrders_t *pd_orders_arr = NULL;
     size_t total_pd_orders = 0;
     vrp_get_shipments_euclidean(pd_orders_sql, &pd_orders_arr, &total_pd_orders, &err_msg);
+    throw_error(err_msg, pd_orders_sql);
 
     PGR_DBG("Load vehicles");
     Vehicle_t *vehicles_arr = NULL;
     size_t total_vehicles = 0;
     vrp_get_vehicles_euclidean(vehicles_sql, &vehicles_arr, &total_vehicles, false, &err_msg);
+    throw_error(err_msg, vehicles_sql);
     PGR_DBG("total vehicles %ld", total_vehicles);
 
 #if 0
