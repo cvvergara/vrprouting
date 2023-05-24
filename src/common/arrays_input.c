@@ -33,16 +33,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <catalog/pg_type.h>
 
 
-#ifdef PROFILE
-#include "c_common/debug_macro.h"
-#endif
-
 static
 int64_t*
-pgr_get_bigIntArr(ArrayType *v, size_t *arrlen, bool allow_empty) {
-#ifdef PROFILE
-    clock_t start_t = clock();
-#endif
+vrp_get_bigIntArr(ArrayType *v, size_t *arrlen, bool allow_empty) {
 
     int64_t *c_array = NULL;
 
@@ -118,19 +111,13 @@ pgr_get_bigIntArr(ArrayType *v, size_t *arrlen, bool allow_empty) {
 
     pfree(elements);
     pfree(nulls);
-#ifdef PROFILE
-    time_msg("reading Array", start_t, clock());
-#endif
     return c_array;
 }
 
 
 static
 uint32_t*
-pgr_get_positiveIntArr(ArrayType *v, size_t *arrlen, bool allow_empty) {
-#ifdef PROFILE
-    clock_t start_t = clock();
-#endif
+vrp_get_positiveIntArr(ArrayType *v, size_t *arrlen, bool allow_empty) {
 
     uint32_t *c_array = NULL;
 
@@ -207,24 +194,20 @@ pgr_get_positiveIntArr(ArrayType *v, size_t *arrlen, bool allow_empty) {
 
     pfree(elements);
     pfree(nulls);
-#ifdef PROFILE
-    time_msg("reading Array", start_t, clock());
-#endif
     return c_array;
 }
 
 
-int64_t* pgr_get_bigIntArray(size_t *arrlen, ArrayType *input) {
-    return pgr_get_bigIntArr(input, arrlen, false);
+#if 0
+int64_t* vrp_get_bigIntArray(size_t *arrlen, ArrayType *input) {
+    return vrp_get_bigIntArr(input, arrlen, false);
+}
+#endif
+
+int64_t* vrp_get_bigIntArray_allowEmpty(size_t *arrlen, ArrayType *input) {
+    return vrp_get_bigIntArr(input, arrlen, true);
 }
 
-
-
-int64_t* pgr_get_bigIntArray_allowEmpty(size_t *arrlen, ArrayType *input) {
-    return pgr_get_bigIntArr(input, arrlen, true);
-}
-
-
-uint32_t* pgr_get_positiveIntArray_allowEmpty(size_t *arrlen, ArrayType *input) {
-    return pgr_get_positiveIntArr(input, arrlen, true);
+uint32_t* vrp_get_positiveIntArray_allowEmpty(size_t *arrlen, ArrayType *input) {
+    return vrp_get_positiveIntArr(input, arrlen, true);
 }

@@ -32,35 +32,34 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_common/postgres_connection.h"
 #include "c_types/info_t.hpp"
 #include "cpp_common/get_check_data.hpp"
-#include "cpp_common/pgr_alloc.hpp"
+#include "c_common/pgr_alloc.hpp"
 
-namespace pgrouting {
+namespace vrprouting {
 
 template <typename Data_ptr, typename Func>
 void get_data(
         char *sql,
         Data_ptr **pgtuples,
         size_t *total_pgtuples,
-        bool normal,
+        bool flag,
         std::vector<Column_info_t> &info,
         Func func) {
     const int tuple_limit = 1000000;
 
     size_t total_tuples;
-    size_t valid_pgtuples;
 
     auto SPIplan = pgr_SPI_prepare(sql);
     auto SPIportal = pgr_SPI_cursor_open(SPIplan);
 
     bool moredata = true;
-    (*total_pgtuples) = total_tuples = valid_pgtuples = 0;
-
-    int64_t default_id = 0;
+    (*total_pgtuples) = total_tuples = 0;
 
     while (moredata == true) {
         SPI_cursor_fetch(SPIportal, true, tuple_limit);
+
         auto tuptable = SPI_tuptable;
         auto tupdesc = SPI_tuptable->tupdesc;
+
         if (total_tuples == 0) fetch_column_info(tupdesc, info);
 
         size_t ntuples = SPI_processed;
@@ -73,14 +72,13 @@ void get_data(
             }
 
             for (size_t t = 0; t < ntuples; t++) {
-                func(tuptable->vals[t], tupdesc, info,
-                        &default_id,
-                        &(*pgtuples)[total_tuples - ntuples + t],
-                        &valid_pgtuples, normal);
+              func(tuptable->vals[t], tupdesc, info,
+                  &(*pgtuples)[total_tuples - ntuples + t],
+                  flag);
             }
             SPI_freetuptable(tuptable);
         } else {
-            moredata = false;
+          moredata = false;
         }
     }
 
@@ -88,6 +86,6 @@ void get_data(
     (*total_pgtuples) = total_tuples;
 }
 
-}  // namespace pgrouting
+}  // namespace vrprouting
 
 #endif  // INCLUDE_CPP_COMMON_GET_DATA_HPP_

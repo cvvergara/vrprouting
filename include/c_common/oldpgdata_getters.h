@@ -59,55 +59,55 @@ extern "C" {
 #endif
 
 /** @brief Get the travel time matrix */
-void vrp_get_matrixRows(char*, Matrix_cell_t **, size_t*, char**);
+void vrp_get_matrixRows(char*, Matrix_cell_t **, size_t *);
 
 /** @brief Get the travel time matrix with numerical types*/
-void vrp_get_matrixRows_plain(char*, Matrix_cell_t**, size_t*, char**);
+void vrp_get_matrixRows_plain(char*, Matrix_cell_t**, size_t*);
 
 /** @brief Reads the pick-Deliver shipments for timestams and intervals*/
-void vrp_get_shipments(char*, PickDeliveryOrders_t**, size_t*, char**);
+void vrp_get_shipments(char*, PickDeliveryOrders_t**, size_t*);
 
 /** @brief Reads the pick-Deliver shipments for raw data*/
-void vrp_get_shipments_raw(char*, PickDeliveryOrders_t**, size_t*, char**);
+void vrp_get_shipments_raw(char*, PickDeliveryOrders_t**, size_t*);
 
 /** @brief Reads the pick-Deliver shipments for euclidean information*/
-void vrp_get_shipments_euclidean(char*, PickDeliveryOrders_t**, size_t*, char**);
+void vrp_get_shipments_euclidean(char*, PickDeliveryOrders_t**, size_t*);
 
 /** @brief Reads the vehicles information */
-void vrp_get_vehicles(char*, Vehicle_t**, size_t*, bool, char**);
+void vrp_get_vehicles(char*, Vehicle_t**, size_t*, bool);
 
 /** @brief Reads the vehicles information */
-void vrp_get_vehicles_raw(char*, Vehicle_t**, size_t*, bool, char**);
+void vrp_get_vehicles_raw(char*, Vehicle_t**, size_t*, bool);
 
 /** @brief Reads the vehicles information */
-void vrp_get_vehicles_euclidean(char*, Vehicle_t**, size_t*, bool, char**);
+void vrp_get_vehicles_euclidean(char*, Vehicle_t**, size_t*, bool);
 
 /** @brief Get the time multipliers using interval*/
-void vrp_get_timeMultipliers(char*, Time_multipliers_t**, size_t*, char**);
+void vrp_get_timeMultipliers(char*, Time_multipliers_t**, size_t*);
 
 /** @brief Get the time multipliers using bigint*/
-void vrp_get_timeMultipliers_raw(char*, Time_multipliers_t**, size_t*, char**);
+void vrp_get_timeMultipliers_raw(char*, Time_multipliers_t**, size_t*);
 
 /** @brief Reads the VROOM breaks */
-void vrp_get_vroom_breaks(char*, Vroom_break_t**, size_t*, bool, char**);
+void vrp_get_vroom_breaks(char*, Vroom_break_t**, size_t*, bool);
 
 /** @brief Reads the VROOM jobs */
-void vrp_get_vroom_jobs(char*,Vroom_job_t**, size_t*, bool, char**);
+void vrp_get_vroom_jobs(char*,Vroom_job_t**, size_t*, bool);
 
 /** @brief Reads the VROOM matrix */
-void vrp_get_vroom_matrix(char*, Vroom_matrix_t**,size_t*, bool, char**);
+void vrp_get_vroom_matrix(char*, Vroom_matrix_t**,size_t*,bool);
 
 /** @brief Reads the VROOM shipments */
-void vrp_get_vroom_shipments(char*, Vroom_shipment_t**,size_t*, bool, char**);
+void vrp_get_vroom_shipments(char*, Vroom_shipment_t**,size_t*,bool);
 
 /** @brief Reads the VROOM time windows */
-void vrp_get_vroom_time_windows(char*, Vroom_time_window_t**,size_t*, bool, char**);
+void vrp_get_vroom_time_windows(char*, Vroom_time_window_t**,size_t*,bool);
 
 /** @brief Reads the VROOM shipments time windows */
-void vrp_get_vroom_shipments_time_windows(char*, Vroom_time_window_t**,size_t*, bool, char**);
+void vrp_get_vroom_shipments_time_windows(char*, Vroom_time_window_t**,size_t*,bool);
 
 /** @brief Reads the VROOM vehicles */
-void vrp_get_vroom_vehicles(char*, Vroom_vehicle_t**, size_t*, bool, char**);
+void vrp_get_vroom_vehicles(char*, Vroom_vehicle_t**, size_t*, bool);
 
 #ifdef __cplusplus
 }

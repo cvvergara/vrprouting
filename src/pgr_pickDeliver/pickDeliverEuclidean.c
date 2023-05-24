@@ -51,6 +51,9 @@ process(
         int initial_solution_id,
         Solution_rt **result_tuples,
         size_t *result_count) {
+    char *log_msg = NULL;
+    char *notice_msg = NULL;
+    char *err_msg = NULL;
     if (factor <= 0) {
         ereport(ERROR,
                 (errcode(ERRCODE_INTERNAL_ERROR),
@@ -83,15 +86,12 @@ process(
     PGR_DBG("Load orders");
     struct PickDeliveryOrders_t *pd_orders_arr = NULL;
     size_t total_pd_orders = 0;
-    vrp_get_shipments_euclidean(pd_orders_sql,
-           &pd_orders_arr, &total_pd_orders);
+    vrp_get_shipments_euclidean(pd_orders_sql, &pd_orders_arr, &total_pd_orders, &err_msg);
 
     PGR_DBG("Load vehicles");
     Vehicle_t *vehicles_arr = NULL;
     size_t total_vehicles = 0;
-    vrp_get_vehicles_euclidean(vehicles_sql,
-           &vehicles_arr, &total_vehicles,
-           false);
+    vrp_get_vehicles_euclidean(vehicles_sql, &vehicles_arr, &total_vehicles, false, &err_msg);
     PGR_DBG("total vehicles %ld", total_vehicles);
 
 #if 0
@@ -153,9 +153,6 @@ process(
 
     PGR_DBG("Starting processing");
     clock_t start_t = clock();
-    char *log_msg = NULL;
-    char *notice_msg = NULL;
-    char *err_msg = NULL;
     do_pgr_pickDeliverEuclidean(
             pd_orders_arr, total_pd_orders,
             vehicles_arr, total_vehicles,

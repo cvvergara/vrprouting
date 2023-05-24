@@ -33,7 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_common/e_report.h"
 #include "c_common/time_msg.h"
 #include "c_common/pgdata_getters.h"
-#include "c_common/get_check_data.h"
+#include "c_common/timeconversion.h"
 #include "c_types/solution_rt.h"
 #include "c_types/pickDeliveryOrders_t.h"
 #include "drivers/pickDeliver_driver.h"
@@ -62,11 +62,14 @@ process(
 
         Solution_rt **result_tuples,
         size_t *result_count) {
+  char *log_msg = NULL;
+  char *notice_msg = NULL;
+  char *err_msg = NULL;
   /*
    * Adjusting timestamp data to timezone UTC
    */
   if (use_timestamps) {
-    execution_date = timestamp_without_timezone(execution_date);
+    execution_date = vrp_timestamp_without_timezone(execution_date);
   }
 
   PGR_DBG("execution_date: %ld ", execution_date);
@@ -92,9 +95,9 @@ process(
   PickDeliveryOrders_t *pd_orders_arr = NULL;
   size_t total_pd_orders = 0;
   if (use_timestamps) {
-    vrp_get_shipments(pd_orders_sql, &pd_orders_arr, &total_pd_orders);
+    vrp_get_shipments(pd_orders_sql, &pd_orders_arr, &total_pd_orders, &err_msg);
   } else {
-    vrp_get_shipments_raw(pd_orders_sql, &pd_orders_arr, &total_pd_orders);
+    vrp_get_shipments_raw(pd_orders_sql, &pd_orders_arr, &total_pd_orders, &err_msg);
   }
 
   if (total_pd_orders == 0) {
@@ -111,9 +114,9 @@ process(
   Vehicle_t *vehicles_arr = NULL;
   size_t total_vehicles = 0;
   if (use_timestamps) {
-    vrp_get_vehicles(vehicles_sql, &vehicles_arr, &total_vehicles, true);
+    vrp_get_vehicles(vehicles_sql, &vehicles_arr, &total_vehicles, true, &err_msg);
   } else {
-    vrp_get_vehicles_raw(vehicles_sql, &vehicles_arr, &total_vehicles, true);
+    vrp_get_vehicles_raw(vehicles_sql, &vehicles_arr, &total_vehicles, true, &err_msg);
   }
 
   if (total_vehicles == 0) {
@@ -135,11 +138,11 @@ process(
   Time_multipliers_t *multipliers_arr = NULL;
   size_t total_multipliers_arr = 0;
   if (use_timestamps) {
-    PGR_DBG("vrp_get_timeMultipliers");
-    vrp_get_timeMultipliers(multipliers_sql, &multipliers_arr, &total_multipliers_arr);
+    PGR_DBG("vrp_get_timeMultipliers", &err_msg);
+    vrp_get_timeMultipliers(multipliers_sql, &multipliers_arr, &total_multipliers_arr, &err_msg);
   } else {
-    PGR_DBG("vrp_get_timeMultipliers_raw");
-    vrp_get_timeMultipliers_raw(multipliers_sql, &multipliers_arr, &total_multipliers_arr);
+    PGR_DBG("vrp_get_timeMultipliers_raw", &err_msg);
+    vrp_get_timeMultipliers_raw(multipliers_sql, &multipliers_arr, &total_multipliers_arr, &err_msg);
   }
 
   if (total_multipliers_arr == 0) {
@@ -161,9 +164,9 @@ process(
   Matrix_cell_t *matrix_cells_arr = NULL;
   size_t total_cells = 0;
   if (use_timestamps) {
-    vrp_get_matrixRows(matrix_sql, &matrix_cells_arr, &total_cells);
+    vrp_get_matrixRows(matrix_sql, &matrix_cells_arr, &total_cells, &err_msg);
   } else {
-    vrp_get_matrixRows_plain(matrix_sql, &matrix_cells_arr, &total_cells);
+    vrp_get_matrixRows_plain(matrix_sql, &matrix_cells_arr, &total_cells, &err_msg);
   }
 
   if (total_cells == 0) {
@@ -189,9 +192,6 @@ process(
   PGR_DBG("Total %ld time dependant multipliers:", total_multipliers_arr);
 
   clock_t start_t = clock();
-  char *log_msg = NULL;
-  char *notice_msg = NULL;
-  char *err_msg = NULL;
 
   do_pickDeliver(
       pd_orders_arr,    total_pd_orders,

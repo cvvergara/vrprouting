@@ -52,6 +52,9 @@ process(
 
         CompatibleVehicles_rt **result_tuples,
         size_t *result_count) {
+    char *log_msg = NULL;
+    char *notice_msg = NULL;
+    char *err_msg = NULL;
     if (factor <= 0) {
         ereport(ERROR,
                 (errcode(ERRCODE_INTERNAL_ERROR),
@@ -65,9 +68,9 @@ process(
     size_t total_pd_orders = 0;
 
     if (use_timestamps) {
-      vrp_get_shipments(pd_orders_sql, &pd_orders_arr, &total_pd_orders);
+      vrp_get_shipments(pd_orders_sql, &pd_orders_arr, &total_pd_orders, &err_msg);
     } else {
-      vrp_get_shipments_raw(pd_orders_sql, &pd_orders_arr, &total_pd_orders);
+      vrp_get_shipments_raw(pd_orders_sql, &pd_orders_arr, &total_pd_orders, &err_msg);
     }
 
     if (total_pd_orders == 0) {
@@ -84,9 +87,9 @@ process(
     Vehicle_t *vehicles_arr = NULL;
     size_t total_vehicles = 0;
     if (use_timestamps) {
-      vrp_get_vehicles(vehicles_sql, &vehicles_arr, &total_vehicles, false);
+      vrp_get_vehicles(vehicles_sql, &vehicles_arr, &total_vehicles, false, &err_msg);
     } else {
-      vrp_get_vehicles_raw(vehicles_sql, &vehicles_arr, &total_vehicles, false);
+      vrp_get_vehicles_raw(vehicles_sql, &vehicles_arr, &total_vehicles, false, &err_msg);
     }
 
     if (total_vehicles == 0) {
@@ -104,9 +107,9 @@ process(
     Time_multipliers_t *multipliers_arr = NULL;
     size_t total_multipliers_arr = 0;
     if (use_timestamps) {
-      vrp_get_timeMultipliers(multipliers_sql, &multipliers_arr, &total_multipliers_arr);
+      vrp_get_timeMultipliers(multipliers_sql, &multipliers_arr, &total_multipliers_arr, &err_msg);
     } else {
-      vrp_get_timeMultipliers_raw(multipliers_sql, &multipliers_arr, &total_multipliers_arr);
+      vrp_get_timeMultipliers_raw(multipliers_sql, &multipliers_arr, &total_multipliers_arr, &err_msg);
     }
 
     if (total_multipliers_arr == 0) {
@@ -125,9 +128,9 @@ process(
     Matrix_cell_t *matrix_cells_arr = NULL;
     size_t total_cells = 0;
     if (use_timestamps) {
-      vrp_get_matrixRows(matrix_sql, &matrix_cells_arr, &total_cells);
+      vrp_get_matrixRows(matrix_sql, &matrix_cells_arr, &total_cells, &err_msg);
     } else {
-      vrp_get_matrixRows_plain(matrix_sql, &matrix_cells_arr, &total_cells);
+      vrp_get_matrixRows_plain(matrix_sql, &matrix_cells_arr, &total_cells, &err_msg);
     }
 
     if (total_cells == 0) {
@@ -152,9 +155,6 @@ process(
 #ifdef PROFILE
     clock_t start_t = clock();
 #endif
-    char *log_msg = NULL;
-    char *notice_msg = NULL;
-    char *err_msg = NULL;
 
     do_compatibleVehicles(
             pd_orders_arr, total_pd_orders,

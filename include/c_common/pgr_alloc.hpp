@@ -24,8 +24,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 /*! @file */
 
-#ifndef INCLUDE_C_COMMON_PGR_ALLOC_HPP_
-#define INCLUDE_C_COMMON_PGR_ALLOC_HPP_
+#ifndef INCLUDE_CPP_COMMON_PGR_ALLOC_HPP_
+#define INCLUDE_CPP_COMMON_PGR_ALLOC_HPP_
 #pragma once
 
 
@@ -33,17 +33,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 extern "C" {
 
-extern
-void* SPI_palloc(size_t size);
-
-extern void *
-SPI_repalloc(void *pointer, size_t size);
-
-extern void
-SPI_pfree(void *pointer);
+extern void* SPI_palloc(size_t size);
+extern void * SPI_repalloc(void *pointer, size_t size);
+extern void SPI_pfree(void *pointer);
 
 }
 
+
+namespace vrprouting {
 
 /*! \fn pgr_alloc(std::size_t size, T *ptr)
 
@@ -81,7 +78,8 @@ pgr_free(T* ptr) {
     return nullptr;
 }
 
-char *
-pgr_msg(const std::string &msg);
+char* pgr_msg(const std::string &msg);
 
-#endif  // INCLUDE_C_COMMON_PGR_ALLOC_HPP_
+}  // namespace vrprouting
+
+#endif  // INCLUDE_CPP_COMMON_PGR_ALLOC_HPP_

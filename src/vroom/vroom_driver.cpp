@@ -101,6 +101,10 @@ do_vrp_vroom(
     char ** log_msg,
     char ** notice_msg,
     char ** err_msg) {
+  using vrprouting::pgr_msg;
+  using vrprouting::pgr_free;
+  using vrprouting::pgr_alloc;
+
   std::ostringstream log;
   std::ostringstream err;
   std::ostringstream notice;

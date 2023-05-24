@@ -109,6 +109,9 @@ process(
 
     Vroom_rt **result_tuples,
     size_t *result_count) {
+  char *log_msg = NULL;
+  char *notice_msg = NULL;
+  char *err_msg = NULL;
   clock_t start_loading = clock();
   pgr_SPI_connect();
 
@@ -118,13 +121,13 @@ process(
   Vroom_job_t *jobs = NULL;
   size_t total_jobs = 0;
   if (jobs_sql) {
-    vrp_get_vroom_jobs(jobs_sql, &jobs, &total_jobs, is_plain);
+    vrp_get_vroom_jobs(jobs_sql, &jobs, &total_jobs, is_plain, &err_msg);
   }
 
   Vroom_shipment_t *shipments = NULL;
   size_t total_shipments = 0;
   if (shipments_sql) {
-    vrp_get_vroom_shipments(shipments_sql, &shipments, &total_shipments, is_plain);
+    vrp_get_vroom_shipments(shipments_sql, &shipments, &total_shipments, is_plain, &err_msg);
   }
 
   if (total_jobs == 0 && total_shipments == 0) {
@@ -147,20 +150,18 @@ process(
   Vroom_time_window_t *jobs_tws = NULL;
   size_t total_jobs_tws = 0;
   if (jobs_tws_sql) {
-    vrp_get_vroom_time_windows(jobs_tws_sql, &jobs_tws, &total_jobs_tws,
-                           is_plain);
+    vrp_get_vroom_time_windows(jobs_tws_sql, &jobs_tws, &total_jobs_tws, is_plain, &err_msg);
   }
 
   Vroom_time_window_t *shipments_tws = NULL;
   size_t total_shipments_tws = 0;
   if (shipments_tws_sql) {
-    vrp_get_vroom_shipments_time_windows(shipments_tws_sql, &shipments_tws,
-                                     &total_shipments_tws, is_plain);
+    vrp_get_vroom_shipments_time_windows(shipments_tws_sql, &shipments_tws, &total_shipments_tws, is_plain, &err_msg);
   }
 
   Vroom_vehicle_t *vehicles = NULL;
   size_t total_vehicles = 0;
-  vrp_get_vroom_vehicles(vehicles_sql, &vehicles, &total_vehicles, is_plain);
+  vrp_get_vroom_vehicles(vehicles_sql, &vehicles, &total_vehicles, is_plain, &err_msg);
 
   if (total_vehicles == 0) {
     ereport(WARNING, (errmsg("Insufficient data found on Vehicles SQL query."),
@@ -174,19 +175,18 @@ process(
   Vroom_break_t *breaks = NULL;
   size_t total_breaks = 0;
   if (breaks_sql) {
-    vrp_get_vroom_breaks(breaks_sql, &breaks, &total_breaks, is_plain);
+    vrp_get_vroom_breaks(breaks_sql, &breaks, &total_breaks, is_plain, &err_msg);
   }
 
   Vroom_time_window_t *breaks_tws = NULL;
   size_t total_breaks_tws = 0;
   if (breaks_tws_sql) {
-    vrp_get_vroom_time_windows(breaks_tws_sql, &breaks_tws, &total_breaks_tws,
-                           is_plain);
+    vrp_get_vroom_time_windows(breaks_tws_sql, &breaks_tws, &total_breaks_tws, is_plain, &err_msg);
   }
 
   Vroom_matrix_t *matrix_rows = NULL;
   size_t total_matrix_rows = 0;
-  vrp_get_vroom_matrix(matrix_sql, &matrix_rows, &total_matrix_rows, is_plain);
+  vrp_get_vroom_matrix(matrix_sql, &matrix_rows, &total_matrix_rows, is_plain, &err_msg);
 
   if (total_matrix_rows == 0) {
     ereport(WARNING, (errmsg("Insufficient data found on Matrix SQL query."),
@@ -198,9 +198,6 @@ process(
   }
 
   clock_t start_t = clock();
-  char *log_msg = NULL;
-  char *notice_msg = NULL;
-  char *err_msg = NULL;
 
   int32_t loading_time = (int)((clock() - start_loading) / CLOCKS_PER_SEC) * 1000;
 

@@ -51,6 +51,10 @@ process(
 
         Solution_rt **result_tuples,
         size_t *result_count) {
+    char *log_msg = NULL;
+    char *notice_msg = NULL;
+    char *err_msg = NULL;
+
     if (factor <= 0) {
         ereport(ERROR,
                 (errcode(ERRCODE_INTERNAL_ERROR),
@@ -85,8 +89,7 @@ process(
 
     PickDeliveryOrders_t *pd_orders_arr = NULL;
     size_t total_pd_orders = 0;
-    vrp_get_shipments_raw(pd_orders_sql,
-           &pd_orders_arr, &total_pd_orders);
+    vrp_get_shipments_raw(pd_orders_sql, &pd_orders_arr, &total_pd_orders, &err_msg);
 
     if (total_pd_orders == 0) {
         (*result_count) = 0;
@@ -105,9 +108,7 @@ process(
 
     Vehicle_t *vehicles_arr = NULL;
     size_t total_vehicles = 0;
-    vrp_get_vehicles_raw(vehicles_sql,
-           &vehicles_arr, &total_vehicles,
-           false);
+    vrp_get_vehicles_raw(vehicles_sql, &vehicles_arr, &total_vehicles, false, &err_msg);
 
     if (total_vehicles == 0) {
         (*result_count) = 0;
@@ -171,7 +172,7 @@ process(
 
     Matrix_cell_t *matrix_cells_arr = NULL;
     size_t total_cells = 0;
-    vrp_get_matrixRows_plain(matrix_sql, &matrix_cells_arr, &total_cells);
+    vrp_get_matrixRows_plain(matrix_sql, &matrix_cells_arr, &total_cells, &err_msg);
 
     PGR_DBG("total matrix rows %ld", total_cells);
 #if 0
@@ -207,9 +208,6 @@ process(
 
     PGR_DBG("Starting processing");
     clock_t start_t = clock();
-    char *log_msg = NULL;
-    char *notice_msg = NULL;
-    char *err_msg = NULL;
 
     do_pgr_pickDeliver(
             pd_orders_arr, total_pd_orders,
