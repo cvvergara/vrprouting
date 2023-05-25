@@ -437,7 +437,7 @@ void vrp_get_timeMultipliers(
     std::vector<Column_info_t> info{2};
 
     info[0] = {-1, 0, true, "start_time", vrprouting::TIMESTAMP};
-    info[1] = {-1, 0, true, "multiplier", vrprouting::ANY_INTEGER};
+    info[1] = {-1, 0, true, "multiplier", vrprouting::ANY_NUMERICAL};
     vrprouting::get_data(sql, rows, total_rows, true, info, &vrprouting::fetch_multipliers);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
