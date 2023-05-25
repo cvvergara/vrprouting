@@ -30,11 +30,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #ifndef NDEBUG
 
 #include "c_common/postgres_connection.h"
+#include "c_types/typedefs.h"
 
 #define PGR_DBG(...) \
     elog(DEBUG3, __VA_ARGS__)
 #else
 #define PGR_DBG(...) do { ; } while (0)
 #endif
+
+void DBG_PickDeliveryOrders_t(PickDeliveryOrders_t*, size_t, char*);
+void DBG_Vehicle_t(Vehicle_t*, size_t, char*);
+void DBG_Matrix_cell_t(Matrix_cell_t*, size_t, char*);
+void DBG_Vroom_shipment_t(Vroom_shipment_t*, size_t, char*);
+void DBG_Vroom_time_window_t(Vroom_time_window_t*, size_t, char*);
+void DBG_Vroom_vehicle_t(Vroom_vehicle_t*, size_t, char*);
+void DBG_Vroom_matrix_t(Vroom_matrix_t*, size_t, char*);
 
 #endif  // INCLUDE_C_COMMON_DEBUG_MACRO_H_

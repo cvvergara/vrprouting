@@ -153,17 +153,20 @@ void fetch_matrix_vroom(
     const std::vector<Column_info_t> &info,
     Vroom_matrix_t *matrix,
     bool is_plain) {
-  matrix->start_id = get_MatrixIndex(tuple, tupdesc, info[0], -1);
-  matrix->end_id = get_MatrixIndex(tuple, tupdesc, info[1], -1);
+    matrix->duration = 0;
+    matrix->cost = 0;
+  matrix->start_id = get_anyinteger(tuple, tupdesc, info[0], -1);
+  matrix->end_id = get_anyinteger(tuple, tupdesc, info[1], -1);
+  return;
 
   if (is_plain) {
-    matrix->duration = get_Duration(tuple, tupdesc, info[2], 0);
+    matrix->duration = get_unsignedint(tuple, tupdesc, info[2], 0);
   } else {
     matrix->duration = (Duration)get_PositiveTInterval(tuple, tupdesc, info[2], 0);
   }
 
   // If unspecified, cost is same as the duration
-  matrix->cost = get_Cost(tuple, tupdesc, info[3], matrix->duration);
+  matrix->cost = get_unsignedint(tuple, tupdesc, info[3], matrix->duration);
 }
 
 
@@ -344,6 +347,7 @@ void fetch_tw(
     bool is_plain) {
 
   time_window->id = get_Idx(tuple, tupdesc, info[0], 0);
+  time_window->kind = ' ';
   auto is_shipment = column_found(info[3].colNumber) && info[3].strict;
 
   if (is_shipment) {

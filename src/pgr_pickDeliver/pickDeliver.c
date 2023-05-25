@@ -128,57 +128,8 @@ process(
     }
 
 #if 0
-    for (size_t i = 0; i < total_pd_orders; i++) {
-      PGR_DBG("%ld %ld\n"
-          "  pick %ld x %f y %f - o %ld c %ld s %ld\n"
-          "  drop %ld x %f y %f - o %ld c %ld s %ld\n",
-
-          pd_orders_arr[i].id,
-          pd_orders_arr[i].demand,
-
-          pd_orders_arr[i].pick_node_id,
-          pd_orders_arr[i].pick_x,
-          pd_orders_arr[i].pick_y,
-
-          pd_orders_arr[i].pick_open_t,
-          pd_orders_arr[i].pick_close_t,
-          pd_orders_arr[i].pick_service_t,
-
-          pd_orders_arr[i].deliver_node_id,
-          pd_orders_arr[i].deliver_x,
-          pd_orders_arr[i].deliver_y,
-
-          pd_orders_arr[i].deliver_open_t,
-          pd_orders_arr[i].deliver_close_t,
-          pd_orders_arr[i].deliver_service_t);
-    }
-
-    PGR_DBG("total vehicles %ld", total_vehicles);
-    for (size_t i = 0; i < total_vehicles; i++) {
-        PGR_DBG("%ld capacity %ld speed %f cant %ld\n"
-            "  start %ld x %f y %f - o %ld c %ld s %ld"
-            "    end %ld x %f y %f - o %ld c %ld s %ld",
-               vehicles_arr[i].id,
-               vehicles_arr[i].capacity,
-               vehicles_arr[i].speed,
-               vehicles_arr[i].cant_v,
-
-               vehicles_arr[i].start_node_id,
-               vehicles_arr[i].start_x,
-               vehicles_arr[i].start_y,
-
-               vehicles_arr[i].start_open_t,
-               vehicles_arr[i].start_close_t,
-               vehicles_arr[i].start_service_t,
-
-               vehicles_arr[i].end_node_id,
-               vehicles_arr[i].end_x,
-               vehicles_arr[i].end_y,
-
-               vehicles_arr[i].end_open_t,
-               vehicles_arr[i].end_close_t,
-               vehicles_arr[i].end_service_t);
-    }
+    DBG_PickDeliveryOrders_t(pd_orders_arr, total_pd_orders, "orders");
+    DBG_Vehicle_t(vehicles_arr, total_vehicles, "vehicles");
 #endif
 
     Matrix_cell_t *matrix_cells_arr = NULL;
@@ -186,15 +137,7 @@ process(
     vrp_get_matrixRows_plain(matrix_sql, &matrix_cells_arr, &total_cells, &err_msg);
     throw_error(err_msg, matrix_sql);
 
-    PGR_DBG("total matrix rows %ld", total_cells);
-#if 0
-    for (size_t i = 0; i < total_cells; i++) {
-        PGR_DBG("%ld %ld %f",
-               matrix_cells_arr[i].from_vid,
-               matrix_cells_arr[i].to_vid,
-               matrix_cells_arr[i].cost);
-    }
-#endif
+    DBG_Matrix_cell_t(matrix_cells_arr, total_cells, "matrix cells");
 
     if (total_cells == 0) {
         (*result_count) = 0;
@@ -211,12 +154,6 @@ process(
         pgr_SPI_finish();
         return;
     }
-
-
-    PGR_DBG("Total %ld orders in query:", total_pd_orders);
-    PGR_DBG("Total %ld vehicles in query:", total_vehicles);
-    PGR_DBG("Total %ld matrix cells in query:", total_cells);
-
 
     PGR_DBG("Starting processing");
     clock_t start_t = clock();

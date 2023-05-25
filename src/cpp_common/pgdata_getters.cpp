@@ -137,7 +137,7 @@ vrp_get_vroom_matrix(
   using vrprouting::pgr_free;
   using vrprouting::Column_info_t;
   try {
-    std::vector<Column_info_t> info{3};
+    std::vector<Column_info_t> info{4};
 
     info[0] = {-1, 0, true, "start_id", vrprouting::ANY_INTEGER};
     info[1] = {-1, 0, true, "end_id", vrprouting::ANY_INTEGER};
@@ -389,16 +389,16 @@ vrp_get_vroom_shipments(
 
     info[0] = {-1, 0, true, "id", vrprouting::ANY_INTEGER};
     info[1] = {-1, 0, true, "p_location_id", vrprouting::ANY_INTEGER};
-    info[2] = {-1, 0, true, "p_setup", vrprouting::INTERVAL};
-    info[3] = {-1, 0, true, "p_service", vrprouting::INTERVAL};
-    info[4] = {-1, 0, false, "d_location_id", vrprouting::ANY_INTEGER};
-    info[5] = {-1, 0, true, "d_setup", vrprouting::INTERVAL};
-    info[6] = {-1, 0, true, "d_service", vrprouting::INTERVAL};
+    info[2] = {-1, 0, false, "p_setup", vrprouting::INTERVAL};
+    info[3] = {-1, 0, false, "p_service", vrprouting::INTERVAL};
+    info[4] = {-1, 0, true, "d_location_id", vrprouting::ANY_INTEGER};
+    info[5] = {-1, 0, false, "d_setup", vrprouting::INTERVAL};
+    info[6] = {-1, 0, false, "d_service", vrprouting::INTERVAL};
     info[7] = {-1, 0, false, "amount", vrprouting::ANY_INTEGER_ARRAY};
-    info[8] = {-1, 0, true, "skills", vrprouting::INTEGER_ARRAY};
-    info[9] = {-1, 0, true, "priority", vrprouting::INTEGER};
-    info[10] = {-1, 0, true, "p_data", vrprouting::JSONB};
-    info[11] = {-1, 0, true, "d_data", vrprouting::JSONB};
+    info[8] = {-1, 0, false, "skills", vrprouting::INTEGER_ARRAY};
+    info[9] = {-1, 0, false, "priority", vrprouting::INTEGER};
+    info[10] = {-1, 0, false, "p_data", vrprouting::JSONB};
+    info[11] = {-1, 0, false, "d_data", vrprouting::JSONB};
 
   if (is_plain) {
     info[2].eType = vrprouting::INTEGER;
@@ -549,7 +549,7 @@ vrp_get_vroom_shipments_time_windows(
     info[1].eType = vrprouting::INTEGER;
     info[2].eType = vrprouting::INTEGER;
   }
-    vrprouting::get_data(sql, rows, total_rows, is_plain, info, &vrprouting::fetch_tw);
+  vrprouting::get_data(sql, rows, total_rows, is_plain, info, &vrprouting::fetch_tw);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
     (*total_rows) = 0;
@@ -734,8 +734,8 @@ vrp_get_vroom_vehicles(
     info[9] = {-1, 0, false, "data", vrprouting::JSONB};
 
   if (is_plain) {
-    info[5].eType = vrprouting::ANY_INTEGER;        // tw_open
-    info[6].eType = vrprouting::ANY_INTEGER;        // tw_close
+    info[5].eType = vrprouting::INTEGER;        // tw_open
+    info[6].eType = vrprouting::INTEGER;        // tw_close
   }
 
   info[0].strict = true;

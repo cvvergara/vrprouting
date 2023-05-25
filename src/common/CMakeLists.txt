@@ -3,6 +3,7 @@ ADD_LIBRARY(common OBJECT
 
     arrays_input.c
     timeconversion.c
+    debug_macro.c
 
     time_msg.c
     e_report.c

@@ -168,6 +168,7 @@ process(
   vrp_get_vroom_vehicles(vehicles_sql, &vehicles, &total_vehicles, is_plain, &err_msg);
   throw_error(err_msg, vehicles_sql);
 
+
   if (total_vehicles == 0) {
     ereport(WARNING, (errmsg("Insufficient data found on Vehicles SQL query."),
                       errhint("%s", vehicles_sql)));
@@ -184,6 +185,7 @@ process(
     throw_error(err_msg, breaks_sql);
   }
 
+
   Vroom_time_window_t *breaks_tws = NULL;
   size_t total_breaks_tws = 0;
   if (breaks_tws_sql) {
@@ -195,6 +197,15 @@ process(
   size_t total_matrix_rows = 0;
   vrp_get_vroom_matrix(matrix_sql, &matrix_rows, &total_matrix_rows, is_plain, &err_msg);
   throw_error(err_msg, matrix_sql);
+
+#if 0
+  DBG_Vroom_shipment_t(shipments, total_shipments, "shipments");
+  DBG_Vroom_time_window_t(shipments_tws, total_shipments_tws, "shipments_tws");
+  DBG_Vroom_vehicle_t(vehicles, total_vehicles, "vehicles");
+  DBG_Vroom_break_t(breaks, total_breaks, "breaks");
+  DBG_Vroom_time_window_t(breaks_tws, total_breaks_tws, "breaks_tws");
+  DBG_Vroom_matrix_t(matrix_rows, total_matrix_rows, "matrix_rows");
+#endif
 
   if (total_matrix_rows == 0) {
     ereport(WARNING, (errmsg("Insufficient data found on Matrix SQL query."),
