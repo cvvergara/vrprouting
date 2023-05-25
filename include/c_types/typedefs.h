@@ -33,20 +33,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <cstring>
 using TTimestamp = int64_t;
 using TInterval = int64_t;
-using Coordinate = double;
 using Amount = int64_t;
-using PAmount = uint32_t;
-using Speed = double;
-using Multiplier = double;
 using Id = int64_t;
-using Idx = uint64_t;
 using MatrixIndex = int64_t;
+
+using StepType = int32_t;
+
+using PAmount = uint32_t;
 using Duration = uint32_t;
 using TravelCost = uint32_t;
 using Priority = uint32_t;
 using Distance = uint32_t;
 using Skill = uint32_t;
-using StepType = int32_t;
+
+using Idx = uint64_t;
+
+using Coordinate = double;
+using Speed = double;
+using Multiplier = double;
+
 using PickDeliveryOrders_t = struct PickDeliveryOrders_t;
 using Vehicle_t = struct Vehicle_t;
 using Matrix_cell_t = struct Matrix_cell_t;

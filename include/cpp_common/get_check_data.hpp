@@ -93,10 +93,13 @@ PAmount get_PositiveAmount(const HeapTuple, const TupleDesc&, const Column_info_
 
 TTimestamp get_TTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 TTimestamp get_TTimestamp_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
+int64_t get_anyinteger(const HeapTuple, const TupleDesc&, const Column_info_t&, int64_t);
+double get_anynumerical(const HeapTuple, const TupleDesc&, const Column_info_t&, double);
+uint32_t get_unsignedint(const HeapTuple, const TupleDesc&, const Column_info_t&, int64_t);
 TTimestamp get_PositiveTTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 TTimestamp get_PositiveTTimestamp_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 
-Coordinate get_Coordinates(const HeapTuple, const TupleDesc&, const Column_info_t&, Coordinate);
+Coordinate get_Coordinate(const HeapTuple, const TupleDesc&, const Column_info_t&, Coordinate);
 char get_twKind(const HeapTuple, const TupleDesc&, const Column_info_t&, char);
 
 }  // namespace vrprouting

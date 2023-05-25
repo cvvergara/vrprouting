@@ -37,6 +37,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <assert.h>
 #include "c_types/info_t.hpp"
 #include "cpp_common/get_check_data.hpp"
+#include "cpp_common/pgr_assert.h"
 
 #include "c_types/vroom/vroom_vehicle_t.h"
 #include "c_types/vroom/vroom_time_window_t.h"
@@ -51,11 +52,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 namespace {
 
-static
 void check_pairs(vrprouting::Column_info_t lhs, vrprouting::Column_info_t rhs) {
-    if (!(vrprouting::column_found(lhs.colNumber)) && vrprouting::column_found(rhs.colNumber)) {
-      throw std::string("Column found: '") + lhs.name + "', missing column: '" + rhs.name + "'";
-    }
+  if (!(vrprouting::column_found(lhs.colNumber)) && vrprouting::column_found(rhs.colNumber)) {
+    throw std::string("Column found: '") + rhs.name + "', missing column: '" + lhs.name + "'";
+  } else if (!(vrprouting::column_found(rhs.colNumber)) && vrprouting::column_found(lhs.colNumber)) {
+    throw std::string("Column found: '") + lhs.name + "', missing column: '" + rhs.name + "'";
+  };
 }
 
 }  // namespace
@@ -240,27 +242,27 @@ void fetch_orders_euclidean(
     const std::vector<Column_info_t> &info,
     PickDeliveryOrders_t *pd_order,
     bool) {
-  pd_order->id = get_Id(tuple, tupdesc, info[0], -1);
-  pd_order->demand = get_PositiveAmount(tuple, tupdesc, info[1], 0);
+  pd_order->id = get_anyinteger(tuple, tupdesc, info[0], -1);
+  pd_order->demand = get_unsignedint(tuple, tupdesc, info[1], 0);
 
   /*
    * the pickups
    */
-  pd_order->pick_open_t    = get_TTimestamp_plain(tuple, tupdesc, info[2], -1);
-  pd_order->pick_close_t   = get_TTimestamp_plain(tuple, tupdesc, info[3], -1);
-  pd_order->pick_service_t = get_TInterval_plain(tuple, tupdesc, info[4], 0);
+  pd_order->pick_open_t    = get_anyinteger(tuple, tupdesc, info[2], -1);
+  pd_order->pick_close_t   = get_anyinteger(tuple, tupdesc, info[3], -1);
+  pd_order->pick_service_t = get_anyinteger(tuple, tupdesc, info[4], 0);
 
   /*
    * the deliveries
    */
-  pd_order->deliver_open_t    = get_TTimestamp_plain(tuple, tupdesc, info[5], -1);
-  pd_order->deliver_close_t   = get_TTimestamp_plain(tuple, tupdesc, info[6], -1);
-  pd_order->deliver_service_t = get_TInterval_plain(tuple, tupdesc, info[7], 0);
+  pd_order->deliver_open_t    = get_anyinteger(tuple, tupdesc, info[5], -1);
+  pd_order->deliver_close_t   = get_anyinteger(tuple, tupdesc, info[6], -1);
+  pd_order->deliver_service_t = get_anyinteger(tuple, tupdesc, info[7], 0);
 
-  pd_order->pick_x =  get_Coordinates(tuple, tupdesc, info[8], 0);
-  pd_order->pick_y =  get_Coordinates(tuple, tupdesc, info[9], 0);
-  pd_order->deliver_x =  get_Coordinates(tuple, tupdesc, info[10], 0);
-  pd_order->deliver_y =  get_Coordinates(tuple, tupdesc, info[11], 0);
+  pd_order->pick_x =  get_anynumerical(tuple, tupdesc, info[8], 0);
+  pd_order->pick_y =  get_anynumerical(tuple, tupdesc, info[9], 0);
+  pd_order->deliver_x =  get_anynumerical(tuple, tupdesc, info[10], 0);
+  pd_order->deliver_y =  get_anynumerical(tuple, tupdesc, info[11], 0);
 
   /*
    * ignored information
@@ -372,46 +374,37 @@ void fetch_vehicles_euclidean(
     const std::vector<Column_info_t> &info,
     Vehicle_t *vehicle,
     bool with_stops) {
-  bool with_id = false;
-  /*
-   * s_tw_open, s_tw_close must exist or non at all
-   */
+  /*  s_open, s_close must exist or non at all */
   check_pairs(info[4], info[5]);
-  check_pairs(info[5], info[4]);
-  /*
-   * e_tw_open, e_tw_close must exist or non at all
-   */
+
+  /* e_open, e_close must exist or non at all */
   check_pairs(info[6], info[7]);
-  check_pairs(info[7], info[6]);
 
-  /*
-   * e_x, e_y must exist or non at all
-   */
+  /* e_x, e_y must exist or non at all */
   check_pairs(info[13], info[14]);
-  check_pairs(info[14], info[13]);
 
-  vehicle->id = get_Id(tuple, tupdesc, info[0], -1);
-  vehicle->capacity = get_PositiveAmount(tuple, tupdesc, info[1], 0);
-  vehicle->cant_v =  get_PositiveAmount(tuple, tupdesc, info[2], 1);
-  vehicle->speed  = column_found(info[3].colNumber) ?  getFloat8(tuple, tupdesc, info[3]) : 1;
+  vehicle->id = get_anyinteger(tuple, tupdesc, info[0], -1);
+  vehicle->capacity = get_unsignedint(tuple, tupdesc, info[1], 0);
+  vehicle->cant_v =  get_unsignedint(tuple, tupdesc, info[2], 1);
+  vehicle->speed  =  get_anynumerical(tuple, tupdesc, info[3], 1);
 
   /*
    * start values
    */
-  vehicle->start_open_t = get_TTimestamp_plain(tuple, tupdesc, info[4], 0);
-  vehicle->start_close_t = get_TTimestamp_plain(tuple, tupdesc, info[5], INT64_MAX);
+  vehicle->start_open_t = get_anyinteger(tuple, tupdesc, info[4], 0);
+  vehicle->start_close_t = get_anyinteger(tuple, tupdesc, info[5], INT64_MAX);
 
   /*
    * end values
    */
-  vehicle->end_open_t = get_TTimestamp_plain(tuple, tupdesc, info[6], vehicle->start_open_t);
-  vehicle->end_close_t = get_TTimestamp_plain(tuple, tupdesc, info[7], vehicle->start_close_t);
+  vehicle->end_open_t = get_anyinteger(tuple, tupdesc, info[6], vehicle->start_open_t);
+  vehicle->end_close_t = get_anyinteger(tuple, tupdesc, info[7], vehicle->start_close_t);
 
   /*
    * service time values
    */
-  vehicle->start_service_t = get_PositiveTInterval_plain(tuple, tupdesc, info[9], 0);
-  vehicle->end_service_t = get_PositiveTInterval_plain(tuple, tupdesc, info[10], 0);
+  vehicle->start_service_t = get_anyinteger(tuple, tupdesc, info[9], 0);
+  vehicle->end_service_t = get_anyinteger(tuple, tupdesc, info[10], 0);
 
   /*
    * stops
@@ -425,10 +418,16 @@ void fetch_vehicles_euclidean(
   /*
    * Values for eucledian
    */
-  vehicle->start_x = with_id ? 0 : get_Coordinates(tuple, tupdesc, info[11], 0);
-  vehicle->start_y = with_id ? 0 : get_Coordinates(tuple, tupdesc, info[12], 0);
-  vehicle->end_x =   with_id ? 0 : get_Coordinates(tuple, tupdesc, info[13], vehicle->start_x);
-  vehicle->end_y =   with_id ? 0 : get_Coordinates(tuple, tupdesc, info[14], vehicle->start_y);
+  vehicle->start_x = get_anynumerical(tuple, tupdesc, info[11], 0);
+  vehicle->start_y = get_anynumerical(tuple, tupdesc, info[12], 0);
+  vehicle->end_x =   get_anynumerical(tuple, tupdesc, info[13], vehicle->start_x);
+  vehicle->end_y =   get_anynumerical(tuple, tupdesc, info[14], vehicle->start_y);
+
+  /*
+   * Ignored values
+   */
+  vehicle->start_node_id = 0;
+  vehicle->end_node_id = 0;
 }
 
 void fetch_vehicles_raw(
@@ -440,17 +439,17 @@ void fetch_vehicles_raw(
    * s_tw_open, s_tw_close must exist or non at all
    */
   check_pairs(info[6], info[7]);
-  check_pairs(info[7], info[6]);
   /*
    * e_tw_open, e_tw_close must exist or non at all
    */
   check_pairs(info[10], info[11]);
-  check_pairs(info[10], info[11]);
 
+  vehicle->capacity = get_unsignedint(tuple, tupdesc, info[1], 0);
+  vehicle->cant_v =  get_unsignedint(tuple, tupdesc, info[2], 1);
+  vehicle->speed  =  get_anynumerical(tuple, tupdesc, info[3], 1);
   vehicle->id = get_Id(tuple, tupdesc, info[0], -1);
   vehicle->capacity = get_PositiveAmount(tuple, tupdesc, info[1], 0);
-  vehicle->cant_v =  get_PositiveAmount(tuple, tupdesc, info[2], 1);
-  vehicle->speed  = column_found(info[3].colNumber) ?  getFloat8(tuple, tupdesc, info[3]) : 1;
+
   vehicle->stops = NULL;
   vehicle->stops_size = 0;
   if (with_stops && column_found(info[4].colNumber)) {

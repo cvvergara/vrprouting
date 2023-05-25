@@ -353,8 +353,8 @@ vrp_get_shipments_euclidean(
     info[7] = {-1, 0, false, "d_service", vrprouting::ANY_INTEGER};
     info[8] = {-1, 0, true, "p_x", vrprouting::ANY_NUMERICAL};
     info[9] = {-1, 0, true, "p_y", vrprouting::ANY_NUMERICAL};
-    info[10] = {-1, 0, true, "p_x", vrprouting::ANY_NUMERICAL};
-    info[11] = {-1, 0, true, "p_y", vrprouting::ANY_NUMERICAL};
+    info[10] = {-1, 0, true, "d_x", vrprouting::ANY_NUMERICAL};
+    info[11] = {-1, 0, true, "d_y", vrprouting::ANY_NUMERICAL};
 
     vrprouting::get_data(sql, rows, total_rows, true, info, &vrprouting::fetch_orders_euclidean);
   } catch (const std::string &ex) {
@@ -420,85 +420,6 @@ vrp_get_vroom_shipments(
 }
 
 
-#if 0
-/**
- * param [in] sql multipliers SQL
- * param [in,out] rows catptured information
- * param [in,out] total_rows total information captured
- */
-static
-void get_timeMultipliersGeneral(
-    char *sql,
-    Column_info_t *info,
-    const int kind,
-    Time_multipliers_t **rows,
-    size_t *total_rows) {
-  const int tuple_limit = 1000000;
-  size_t total_tuples = 0;
-  const int column_count = 2;
-
-
-  auto SPIplan =pgr_SPI_prepare(sql);
-
-
-  auto SPIportal =pgr_SPI_cursor_open(SPIplan);
-
-
-  bool moredata = true;
-  (*total_rows) = total_tuples;
-
-  while (moredata == true) {
-    SPI_cursor_fetch(SPIportal, true, tuple_limit);
-    if (total_tuples == 0)
-      vrprouting::fetch_column_info(info, column_count);
-
-    size_t ntuples = SPI_processed;
-    total_tuples += ntuples;
-
-    if (ntuples > 0) {
-      if ((*rows) == NULL)
-        (*rows) = (Time_multipliers_t *)palloc0(
-            total_tuples * sizeof(Time_multipliers_t));
-      else
-        (*rows) = (Time_multipliers_t *)repalloc(
-            (*rows), total_tuples * sizeof(Time_multipliers_t));
-
-      if ((*rows) == NULL) {
-        elog(ERROR, "Out of memory");
-      }
-
-      SPITupleTable *tuptable = SPI_tuptable;
-      TupleDesc tupdesc = SPI_tuptable->tupdesc;
-
-      for (size_t t = 0; t < ntuples; t++) {
-        HeapTuple tuple = tuptable->vals[t];
-        switch (kind) {
-          case 0 : fetch_multipliers(&tuple, &tupdesc, info,
-                       &(*rows)[total_tuples - ntuples + t]);
-                   break;
-          case 1 : fetch_multipliers_raw(&tuple, &tupdesc, info,
-                       &(*rows)[total_tuples - ntuples + t]);
-                   break;
-        }
-      }
-      SPI_freetuptable(tuptable);
-    } else {
-      moredata = false;
-    }
-  }
-
-  SPI_cursor_close(SPIportal);
-
-
-  if (total_tuples == 0) {
-    (*total_rows) = 0;
-    return;
-  }
-
-  (*total_rows) = total_tuples;
-}
-#endif
-
 /**
   @param [in] sql query that has the following columns: start_time, multiplier
   @param [out] rows C Container that holds all the multipliers rows
@@ -559,78 +480,6 @@ void vrp_get_timeMultipliers_raw(
   }
 }
 
-
-#if 0
-static
-void db_get_time_windows(
-    char *time_windows_sql,
-    Vroom_time_window_t **time_windows,
-    size_t *total_time_windows,
-
-    Column_info_t *info,
-    const int column_count,
-    bool is_shipment,
-    bool is_plain) {
-
-  const int tuple_limit = 1000000;
-
-  size_t total_tuples;
-
-
-  auto SPIplan =pgr_SPI_prepare(time_windows_sql);
-
-  auto SPIportal =pgr_SPI_cursor_open(SPIplan);
-
-  bool moredata = true;
-  (*total_time_windows) = total_tuples = 0;
-
-  /* on the first tuple get the column numbers */
-
-  while (moredata == true) {
-    SPI_cursor_fetch(SPIportal, true, tuple_limit);
-    if (total_tuples == 0) {
-      vrprouting::fetch_column_info(info, column_count);
-    }
-    size_t ntuples = SPI_processed;
-    total_tuples += ntuples;
-    if (ntuples > 0) {
-      if ((*time_windows) == NULL)
-        (*time_windows) = (Vroom_time_window_t *)palloc0(
-            total_tuples * sizeof(Vroom_time_window_t));
-      else
-        (*time_windows) = (Vroom_time_window_t *)repalloc(
-            (*time_windows),
-            total_tuples * sizeof(Vroom_time_window_t));
-
-      if ((*time_windows) == NULL) {
-        elog(ERROR, "Out of memory");
-      }
-
-      size_t t;
-      SPITupleTable *tuptable = SPI_tuptable;
-      TupleDesc tupdesc = SPI_tuptable->tupdesc;
-      for (t = 0; t < ntuples; t++) {
-        HeapTuple tuple = tuptable->vals[t];
-        fetch_time_windows(&tuple, &tupdesc, info,
-            &(*time_windows)[total_tuples - ntuples + t],
-            is_shipment, is_plain);
-      }
-      SPI_freetuptable(tuptable);
-    } else {
-      moredata = false;
-    }
-  }
-
-  SPI_cursor_close(SPIportal);
-
-  if (total_tuples == 0) {
-    (*total_time_windows) = 0;
-    return;
-  }
-
-  (*total_time_windows) = total_tuples;
-}
-#endif
 
 
 /**
@@ -786,13 +635,13 @@ vrp_get_vehicles_raw(
     info[3] = {-1, 0, false, "speed", vrprouting::ANY_NUMERICAL};
     info[4] = {-1, 0, false, "stops", vrprouting::ANY_INTEGER_ARRAY};
     info[5] = {-1, 0, true, "s_id", vrprouting::ANY_INTEGER};
-    info[6] = {-1, 0, false, "s_open", vrprouting::TIMESTAMP};
-    info[7] = {-1, 0, false, "s_close", vrprouting::TIMESTAMP};
-    info[8] = {-1, 0, false, "s_service", vrprouting::INTERVAL};
+    info[6] = {-1, 0, false, "s_open", vrprouting::ANY_INTEGER};
+    info[7] = {-1, 0, false, "s_close", vrprouting::ANY_INTEGER};
+    info[8] = {-1, 0, false, "s_service", vrprouting::ANY_INTEGER};
     info[9] = {-1, 0, false, "e_id", vrprouting::ANY_INTEGER};
-    info[10] = {-1, 0, false, "e_open", vrprouting::TIMESTAMP};
-    info[11] = {-1, 0, false, "e_close", vrprouting::TIMESTAMP};
-    info[12] = {-1, 0, false, "e_service", vrprouting::INTERVAL};
+    info[10] = {-1, 0, false, "e_open", vrprouting::ANY_INTEGER};
+    info[11] = {-1, 0, false, "e_close", vrprouting::ANY_INTEGER};
+    info[12] = {-1, 0, false, "e_service", vrprouting::ANY_INTEGER};
 
     vrprouting::get_data(sql, rows, total_rows, with_stops, info, &vrprouting::fetch_vehicles_raw);
   } catch (const std::string &ex) {
@@ -829,13 +678,15 @@ vrp_get_vehicles_euclidean(
     info[1] = {-1, 0, true, "capacity", vrprouting::ANY_INTEGER};
     info[2] = {-1, 0, false, "number", vrprouting::ANY_INTEGER};
     info[3] = {-1, 0, false, "speed", vrprouting::ANY_NUMERICAL};
+
     info[4] = {-1, 0, false, "s_open", vrprouting::ANY_INTEGER};
     info[5] = {-1, 0, false, "s_close", vrprouting::ANY_INTEGER};
     info[6] = {-1, 0, false, "e_open", vrprouting::ANY_INTEGER};
     info[7] = {-1, 0, false, "e_close", vrprouting::ANY_INTEGER};
+
     info[8] = {-1, 0, false, "stops", vrprouting::ANY_INTEGER_ARRAY};
     info[9] = {-1, 0, false, "s_service", vrprouting::ANY_INTEGER};
-    info[10] = {-1, 0, false, "e_service", vrprouting::INTERVAL};
+    info[10] = {-1, 0, false, "e_service", vrprouting::ANY_INTEGER};
     info[11] = {-1, 0, true, "s_x", vrprouting::ANY_NUMERICAL};
     info[12] = {-1, 0, true, "s_y", vrprouting::ANY_NUMERICAL};
     info[13] = {-1, 0, false, "e_x", vrprouting::ANY_NUMERICAL};

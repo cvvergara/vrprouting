@@ -98,50 +98,56 @@ process(
 
 #if 0
     for (size_t i = 0; i < total_pd_orders; i++) {
-        PGR_DBG("%ld %f pick %f %f %ld - "
-                "%ld %ld %ld deliver %f %f %ld - %ld %ld %ld ",
-                pd_orders_arr[i].id,
-                pd_orders_arr[i].demand,
+      PGR_DBG("%ld %ld\n"
+          "  pick %ld x %f y %f - o %ld c %ld s %ld\n"
+          "  drop %ld x %f y %f - o %ld c %ld s %ld\n",
 
-                pd_orders_arr[i].pick_x,
-                pd_orders_arr[i].pick_y,
-                pd_orders_arr[i].pick_node_id,
+          pd_orders_arr[i].id,
+          pd_orders_arr[i].demand,
 
-                pd_orders_arr[i].pick_open_t,
-                pd_orders_arr[i].pick_close_t,
-                pd_orders_arr[i].pick_service_t,
+          pd_orders_arr[i].pick_node_id,
+          pd_orders_arr[i].pick_x,
+          pd_orders_arr[i].pick_y,
 
-                pd_orders_arr[i].deliver_x,
-                pd_orders_arr[i].deliver_y,
-                pd_orders_arr[i].deliver_node_id,
+          pd_orders_arr[i].pick_open_t,
+          pd_orders_arr[i].pick_close_t,
+          pd_orders_arr[i].pick_service_t,
 
-                pd_orders_arr[i].deliver_open_t,
-                pd_orders_arr[i].deliver_close_t,
-                pd_orders_arr[i].deliver_service_t);
+          pd_orders_arr[i].deliver_node_id,
+          pd_orders_arr[i].deliver_x,
+          pd_orders_arr[i].deliver_y,
+
+          pd_orders_arr[i].deliver_open_t,
+          pd_orders_arr[i].deliver_close_t,
+          pd_orders_arr[i].deliver_service_t);
     }
 
 
-
+    PGR_DBG("total vehicles %ld", total_vehicles);
     for (size_t i = 0; i < total_vehicles; i++) {
-        PGR_DBG("%ld %f %f , start %f %f %ld %ld %ld "
-                "end %f %f %ld %ld %ld number %ld ",
+        PGR_DBG("%ld cap %u speed %f cant %ld\n"
+            "  start %ld x %f y %f - o %ld c %ld s %ld\n"
+            "    end %ld x %f y %f - o %ld c %ld s %ld\n",
                vehicles_arr[i].id,
                vehicles_arr[i].capacity,
                vehicles_arr[i].speed,
+               vehicles_arr[i].cant_v,
 
+               vehicles_arr[i].start_node_id,
                vehicles_arr[i].start_x,
                vehicles_arr[i].start_y,
+
                vehicles_arr[i].start_open_t,
                vehicles_arr[i].start_close_t,
                vehicles_arr[i].start_service_t,
 
+               vehicles_arr[i].end_node_id,
                vehicles_arr[i].end_x,
                vehicles_arr[i].end_y,
+
                vehicles_arr[i].end_open_t,
                vehicles_arr[i].end_close_t,
-               vehicles_arr[i].end_service_t,
-
-               vehicles_arr[i].cant_v);
+               vehicles_arr[i].end_service_t);
     }
 #endif
 

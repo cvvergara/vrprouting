@@ -884,9 +884,7 @@ get_PositiveIntArr_allowEmpty(
 Amount
 get_Amount(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, Amount opt_value) {
-  return (Amount) column_found(info.colNumber)?
-    getBigInt(tuple, tupdesc, info)
-    : opt_value;
+  return (Amount) column_found(info.colNumber)? getBigInt(tuple, tupdesc, info) : opt_value;
 }
 
 /**
@@ -904,11 +902,42 @@ get_Amount(
 PAmount
 get_PositiveAmount(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, PAmount opt_value) {
-  Amount value = get_Amount(tuple, tupdesc, info, 0);
+  auto value = get_anyinteger(tuple, tupdesc, info, opt_value);
   if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
-  return column_found(info.colNumber)? (PAmount) value : opt_value;
+  return static_cast<PAmount>(value);
 }
 
+/**
+ * @params [in] tuple
+ * @params [in] tupdesc
+ * @params [in] info about the column been fetched
+ * @params [in] opt_value default value when the column does not exist
+ *
+ * @returns The value found
+ * @returns opt_value when the column does not exist
+ */
+TTimestamp
+get_TTimestamp_plain(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TTimestamp opt_value) {
+  return column_found(info.colNumber)?  (TTimestamp)getBigInt(tuple, tupdesc, info) : opt_value;
+}
+
+uint32_t
+get_unsignedint(
+    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, int64_t opt_value) {
+  auto value = get_anyinteger(tuple, tupdesc, info, opt_value);
+  if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
+  return static_cast<uint32_t>(value);
+}
+
+int64_t
+get_anyinteger(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, int64_t opt_value) {
+  return column_found(info.colNumber)? getBigInt(tuple, tupdesc, info) : opt_value;
+}
+
+double
+get_anynumerical(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, double opt_value) {
+  return column_found(info.colNumber)? getFloat8(tuple, tupdesc, info) : opt_value;
+}
 
 /**
  * @params [in] tuple
@@ -924,22 +953,6 @@ get_TTimestamp(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TTimestamp opt_value) {
   return column_found(info.colNumber)?
     getTimeStamp(tuple, tupdesc, info)
-    : opt_value;
-}
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- */
-TTimestamp
-get_TTimestamp_plain(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TTimestamp opt_value) {
-  return column_found(info.colNumber)?
-    (TTimestamp)getBigInt(tuple, tupdesc, info)
     : opt_value;
 }
 
@@ -985,7 +998,7 @@ get_PositiveTTimestamp_plain(
 
 
 Coordinate
-get_Coordinates(
+get_Coordinate(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, Coordinate opt_value) {
   return column_found(info.colNumber)? getFloat8(tuple, tupdesc, info) : opt_value;
 }
