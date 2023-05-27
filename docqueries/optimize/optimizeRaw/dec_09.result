@@ -4,6 +4,8 @@ SET client_min_messages TO NOTICE;
 SET
 SET search_path TO 'example2', 'public';
 SET
+CALL initial_solution();
+CALL
 DROP TABLE IF EXISTS tmp_vehicles;
 NOTICE:  table "tmp_vehicles" does not exist, skipping
 DROP TABLE
@@ -26,7 +28,7 @@ FROM vrp_optimizeRaw(
     check_triangle_inequality => true,
     subdivision_kind => 1
 ) GROUP BY vehicle_id;
-SELECT 160
+SELECT 165
 SELECT id, s_tw_open, v.stops, t.stops
 FROM vehicles v
 LEFT JOIN tmp_vehicles t
