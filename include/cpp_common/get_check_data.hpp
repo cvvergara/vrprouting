@@ -37,8 +37,10 @@ extern "C" {
 #include <vector>
 #include <string>
 #include <cstdint>
+#include <limits>
 
 #include "c_types/typedefs.h"
+#include "c_types/info_t.hpp"
 
 
 namespace vrprouting {
@@ -101,6 +103,16 @@ TTimestamp get_PositiveTTimestamp_plain(const HeapTuple, const TupleDesc&, const
 
 Coordinate get_Coordinate(const HeapTuple, const TupleDesc&, const Column_info_t&, Coordinate);
 char get_twKind(const HeapTuple, const TupleDesc&, const Column_info_t&, char);
+
+
+template <typename T>
+T get_positive(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, T opt_value) {
+  if (!column_found(info.colNumber)) return opt_value;
+  auto value = get_anyinteger(tuple, tupdesc, info, 0);
+  if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
+  if (value > std::numeric_limits<T>::max()) throw std::string("Value too big in column ") + info.name;
+  return static_cast<T>(value);
+}
 
 }  // namespace vrprouting
 

@@ -178,8 +178,8 @@ vrp_get_vroom_breaks(
   try {
     std::vector<Column_info_t> info{4};
 
-    info[0] = {-1, 0, true, "id", vrprouting::ANY_INTEGER};
-    info[1] = {-1, 0, true, "vehicle_id", vrprouting::ANY_INTEGER};
+    info[0] = {-1, 0, true, "id", vrprouting::IDX};
+    info[1] = {-1, 0, true, "vehicle_id", vrprouting::IDX};
     info[2] = {-1, 0, false, "service", vrprouting::INTERVAL};
     info[3] = {-1, 0, false, "data", vrprouting::JSONB};
 
@@ -218,8 +218,8 @@ vrp_get_vroom_jobs(
   try {
     std::vector<Column_info_t> info{9};
 
-    info[0] = {-1, 0, true, "id", vrprouting::ANY_INTEGER};
-    info[1] = {-1, 0, true, "location_id", vrprouting::ANY_INTEGER};
+    info[0] = {-1, 0, true, "id", vrprouting::IDX};
+    info[1] = {-1, 0, true, "location_id", vrprouting::MATRIX_INDEX};
     info[2] = {-1, 0, false, "setup", vrprouting::INTERVAL};
     info[3] = {-1, 0, false, "service", vrprouting::INTERVAL};
     info[4] = {-1, 0, false, "delivery", vrprouting::ANY_INTEGER_ARRAY};
@@ -387,7 +387,7 @@ vrp_get_vroom_shipments(
   try {
     std::vector<Column_info_t> info{12};
 
-    info[0] = {-1, 0, true, "id", vrprouting::ANY_INTEGER};
+    info[0] = {-1, 0, true, "id", vrprouting::IDX};
     info[1] = {-1, 0, true, "p_location_id", vrprouting::ANY_INTEGER};
     info[2] = {-1, 0, false, "p_setup", vrprouting::INTERVAL};
     info[3] = {-1, 0, false, "p_service", vrprouting::INTERVAL};
@@ -722,7 +722,7 @@ vrp_get_vroom_vehicles(
   try {
     std::vector<Column_info_t> info{10};
 
-    info[0] = {-1, 0, true, "id", vrprouting::ANY_INTEGER};
+    info[0] = {-1, 0, true, "id", vrprouting::IDX};
     info[1] = {-1, 0, false, "start_id", vrprouting::ANY_INTEGER};
     info[2] = {-1, 0, false, "end_id", vrprouting::ANY_INTEGER};
     info[3] = {-1, 0, false, "capacity", vrprouting::ANY_INTEGER_ARRAY};

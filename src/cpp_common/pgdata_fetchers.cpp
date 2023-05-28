@@ -70,7 +70,7 @@ void fetch_matrix_plain(
     bool) {
   row->from_vid = get_Id(tuple, tupdesc,  info[0], -1);
   row->to_vid = get_Id(tuple, tupdesc,  info[1], -1);
-  row->cost = get_PositiveTInterval_plain(tuple, tupdesc, info[2], 0);
+  row->cost = get_positive<TInterval>(tuple, tupdesc, info[2], 0);
 }
 
 void fetch_matrix_timestamps(
@@ -466,7 +466,7 @@ void fetch_vehicles_raw(
   vehicle->start_node_id = get_Id(tuple, tupdesc, info[5], -1);
   vehicle->start_open_t = get_TTimestamp_plain(tuple, tupdesc, info[6], 0);
   vehicle->start_close_t = get_TTimestamp_plain(tuple, tupdesc, info[7], INT64_MAX);
-  vehicle->start_service_t = get_PositiveTInterval_plain(tuple, tupdesc, info[8], 0);
+  vehicle->start_service_t = get_positive<TInterval>(tuple, tupdesc, info[8], 0);
 
   /*
    * end values
@@ -474,7 +474,7 @@ void fetch_vehicles_raw(
   vehicle->end_node_id   = get_Id(tuple, tupdesc, info[9], vehicle->start_node_id);
   vehicle->end_open_t = get_TTimestamp_plain(tuple, tupdesc, info[10], vehicle->start_open_t);
   vehicle->end_close_t = get_TTimestamp_plain(tuple, tupdesc, info[11], vehicle->start_close_t);
-  vehicle->end_service_t   = get_PositiveTInterval_plain(tuple, tupdesc, info[12], 0);
+  vehicle->end_service_t   = get_positive<TInterval>(tuple, tupdesc, info[12], 0);
 
   /*
    * Ignored values

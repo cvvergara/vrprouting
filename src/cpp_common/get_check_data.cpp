@@ -305,6 +305,8 @@ void fetch_column_info(
     if (get_column_info(tupdesc, coldata)) {
       switch (coldata.eType) {
         case ANY_INTEGER:
+        case MATRIX_INDEX:
+        case IDX:
           check_any_integer_type(coldata);
           break;
         case ANY_NUMERICAL:
@@ -629,7 +631,7 @@ get_PositiveTInterval(
 TInterval
 get_TInterval_plain(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TInterval opt_value) {
-  return column_found(info.colNumber)? (TInterval)getBigInt(tuple, tupdesc, info) : opt_value;
+  return get_anyinteger(tuple, tupdesc, info, opt_value);
 }
 
 /**
@@ -647,6 +649,7 @@ get_TInterval_plain(
 TInterval
 get_PositiveTInterval_plain(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TInterval opt_value) {
+  //return get_positive(tuple, tupdesc, info, opt_value);
   TInterval value = get_TInterval_plain(tuple, tupdesc, info, opt_value);
   if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
   return (TInterval) value;
@@ -667,6 +670,8 @@ get_Id(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &inf
 }
 
 /**
+ * Idx is a uint64_t
+ *
  * @params [in] tuple
  * @params [in] tupdesc
  * @params [in] info about the column been fetched
@@ -680,9 +685,10 @@ get_Id(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &inf
  */
 Idx
 get_Idx(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, Idx opt_value) {
-  Id value = get_Id(tuple, tupdesc, info, 0);
+  if (!column_found(info.colNumber)) return opt_value;
+  auto value = get_Id(tuple, tupdesc, info, 0);
   if (value <= 0) throw std::string("Unexpected negative value or Zero in column ") + info.name;
-  return column_found(info.colNumber)? (Idx) value : opt_value;
+  return static_cast<Idx>(value);
 }
 
 /**
@@ -812,16 +818,14 @@ get_Priority(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_
  *
  * exceptions when the value is not positive
  * @pre for positive values only
+ *
+ * vrpRouting::MATRIX_INDEX
  */
 MatrixIndex
 get_MatrixIndex(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, MatrixIndex opt_value) {
-  if (column_found(info.colNumber)) {
-    int64_t value = getBigInt(tuple, tupdesc, info);
-    if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
-    return (MatrixIndex) value;
-  }
-  return opt_value;
+  return get_positive(tuple, tupdesc, info, opt_value);
 }
+
 
 int64_t*
 get_BigIntArr_wEmpty(
@@ -921,6 +925,18 @@ get_TTimestamp_plain(const HeapTuple tuple, const TupleDesc &tupdesc, const Colu
   return column_found(info.colNumber)?  (TTimestamp)getBigInt(tuple, tupdesc, info) : opt_value;
 }
 
+
+/**
+ * @params [in] tuple from postgres
+ * @params [in] tupdesc from postgres
+ * @params [in] info about the column been fetched
+ * @params [in] opt_value default value when the column does not exist
+ *
+ * @returns The value found
+ * @returns opt_value when the column does not exist
+ *
+ * Used with vrprouting::UINT
+ */
 uint32_t
 get_unsignedint(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, int64_t opt_value) {
@@ -929,11 +945,33 @@ get_unsignedint(
   return static_cast<uint32_t>(value);
 }
 
+/**
+ * @params [in] tuple from postgres
+ * @params [in] tupdesc from postgres
+ * @params [in] info about the column been fetched
+ * @params [in] opt_value default value when the column does not exist
+ *
+ * @returns The value found
+ * @returns opt_value when the column does not exist
+ *
+ * Used with vrprouting::ANY_INTEGER
+ */
 int64_t
 get_anyinteger(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, int64_t opt_value) {
   return column_found(info.colNumber)? getBigInt(tuple, tupdesc, info) : opt_value;
 }
 
+/**
+ * @params [in] tuple from postgres
+ * @params [in] tupdesc from postgres
+ * @params [in] info about the column been fetched
+ * @params [in] opt_value default value when the column does not exist
+ *
+ * @returns The value found
+ * @returns opt_value when the column does not exist
+ *
+ * Used with vrprouting::ANY_NUMERICAL
+ */
 double
 get_anynumerical(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, double opt_value) {
   return column_found(info.colNumber)? getFloat8(tuple, tupdesc, info) : opt_value;
