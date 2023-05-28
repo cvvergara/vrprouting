@@ -276,6 +276,81 @@ getTimeStamp(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::
   return value;
 }
 
+/**
+ * @param[in] tuple   input row to be examined.
+ * @param[in] tupdesc  tuple descriptor
+ * @param[in] info    contain column information.
+ * @throw ERROR Unexpected Column type. Expected column type is ANY-INTEGER.
+ * @throw ERROR When value of column is NULL.
+ *
+ * @return Integer type of column value is returned.
+ */
+int64_t getBigInt(
+        const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column_info_t &info) {
+    Datum binval;
+    bool isnull;
+    int64_t value = 0;
+    binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isnull);
+    if (isnull)
+        throw std::string("Unexpected Null value in column ") + info.name;
+    switch (info.type) {
+        case INT2OID:
+            value = (int64_t) DatumGetInt16(binval);
+            break;
+        case INT4OID:
+            value = (int64_t) DatumGetInt32(binval);
+            break;
+        case INT8OID:
+            value = DatumGetInt64(binval);
+            break;
+        default:
+            throw std::string("Unexpected Column type of ") + info.name + ". Expected ANY-INTEGER";
+    }
+    return value;
+}
+
+/**
+ * @param[in] tuple   input row to be examined.
+ * @param[in] tupdesc  tuple descriptor
+ * @param[in] info    contain column information.
+ * @throw ERROR Unexpected Column type. Expected column type is ANY-NUMERICAL.
+ * @throw ERROR When value of column is NULL.
+ * @return Double type of column value is returned.
+ */
+double getFloat8(
+        const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column_info_t &info) {
+    Datum binval;
+    bool isnull = false;
+    binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isnull);
+    if (isnull)
+        throw std::string("Unexpected Null value in column ") + info.name;
+
+    switch (info.type) {
+        case INT2OID:
+            return static_cast<double>(DatumGetInt16(binval));
+            break;
+        case INT4OID:
+            return static_cast<double>(DatumGetInt32(binval));
+            break;
+        case INT8OID:
+            return static_cast<double>(DatumGetInt64(binval));
+            break;
+        case FLOAT4OID:
+            return static_cast<double>(DatumGetFloat4(binval));
+            break;
+        case FLOAT8OID:
+            return static_cast<double>(DatumGetFloat8(binval));
+            break;
+        case NUMERICOID:
+            /* Note: out-of-range values will be clamped to +-HUGE_VAL */
+            return static_cast<double>(DatumGetFloat8(DirectFunctionCall1(numeric_float8_no_overflow, binval)));
+            break;
+        default:
+            throw std::string("Unexpected Column type of ") + info.name + ". Expected ANY-NUMERICAL";
+    }
+    return 0.0;
+}
+
 }  // namespace
 
 namespace vrprouting {
@@ -509,81 +584,6 @@ int64_t* getBigIntArr(
 }
 
 /**
- * @param[in] tuple   input row to be examined.
- * @param[in] tupdesc  tuple descriptor
- * @param[in] info    contain column information.
- * @throw ERROR Unexpected Column type. Expected column type is ANY-INTEGER.
- * @throw ERROR When value of column is NULL.
- *
- * @return Integer type of column value is returned.
- */
-int64_t getBigInt(
-        const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column_info_t &info) {
-    Datum binval;
-    bool isnull;
-    int64_t value = 0;
-    binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isnull);
-    if (isnull)
-        throw std::string("Unexpected Null value in column ") + info.name;
-    switch (info.type) {
-        case INT2OID:
-            value = (int64_t) DatumGetInt16(binval);
-            break;
-        case INT4OID:
-            value = (int64_t) DatumGetInt32(binval);
-            break;
-        case INT8OID:
-            value = DatumGetInt64(binval);
-            break;
-        default:
-            throw std::string("Unexpected Column type of ") + info.name + ". Expected ANY-INTEGER";
-    }
-    return value;
-}
-
-/**
- * @param[in] tuple   input row to be examined.
- * @param[in] tupdesc  tuple descriptor
- * @param[in] info    contain column information.
- * @throw ERROR Unexpected Column type. Expected column type is ANY-NUMERICAL.
- * @throw ERROR When value of column is NULL.
- * @return Double type of column value is returned.
- */
-double getFloat8(
-        const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column_info_t &info) {
-    Datum binval;
-    bool isnull = false;
-    binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isnull);
-    if (isnull)
-        throw std::string("Unexpected Null value in column ") + info.name;
-
-    switch (info.type) {
-        case INT2OID:
-            return static_cast<double>(DatumGetInt16(binval));
-            break;
-        case INT4OID:
-            return static_cast<double>(DatumGetInt32(binval));
-            break;
-        case INT8OID:
-            return static_cast<double>(DatumGetInt64(binval));
-            break;
-        case FLOAT4OID:
-            return static_cast<double>(DatumGetFloat4(binval));
-            break;
-        case FLOAT8OID:
-            return static_cast<double>(DatumGetFloat8(binval));
-            break;
-        case NUMERICOID:
-            /* Note: out-of-range values will be clamped to +-HUGE_VAL */
-            return static_cast<double>(DatumGetFloat8(DirectFunctionCall1(numeric_float8_no_overflow, binval)));
-            break;
-        default:
-            throw std::string("Unexpected Column type of ") + info.name + ". Expected ANY-NUMERICAL";
-    }
-    return 0.0;
-}
-
-/**
  * @params [in] tuple
  * @params [in] tupdesc
  * @params [in] info about the column been fetched
@@ -655,66 +655,6 @@ get_PositiveTInterval_plain(
   return (TInterval) value;
 }
 
-#if 0
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- */
-Id
-get_Id(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, Id opt_value) {
-  return column_found(info.colNumber)? (Id)getBigInt(tuple, tupdesc, info) : opt_value;
-}
-
-/**
- * Idx is a uint64_t
- *
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is not positive
- * @pre for positive values only
- */
-Idx
-get_Idx(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, Idx opt_value) {
-  if (!column_found(info.colNumber)) return opt_value;
-  auto value = get_Id(tuple, tupdesc, info, 0);
-  if (value <= 0) throw std::string("Unexpected negative value or Zero in column ") + info.name;
-  return static_cast<Idx>(value);
-}
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for non-negative values only
- */
-Duration
-get_Duration(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, Duration opt_value) {
-  if (column_found(info.colNumber)) {
-    int32_t value = getInt(tuple, tupdesc, info);
-    if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
-    return (Duration) value;
-  }
-  return opt_value;
-}
-#endif
-
 int32_t
 get_MaxTasks(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info) {
   int32_t value = getInt(tuple, tupdesc, info);
@@ -742,51 +682,6 @@ get_StepType(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_
   return step_type;
 }
 
-#if 0
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for non-negative values only
- */
-TravelCost
-get_Cost(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TravelCost opt_value) {
-  if (column_found(info.colNumber)) {
-    int32_t value = getInt(tuple, tupdesc, info);
-    if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
-    return (TravelCost)value;
-  }
-  return opt_value;
-}
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for non-negative values only
- */
-Distance
-get_Distance(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, Distance opt_value) {
-  if (column_found(info.colNumber)) {
-    int32_t value = getInt(tuple, tupdesc, info);
-    if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
-    return (Distance) value;
-  }
-  return opt_value;
-}
-#endif
 
 /**
  * @params [in] tuple
@@ -880,42 +775,6 @@ get_PositiveIntArr_allowEmpty(
   return vrp_get_positiveIntArray_allowEmpty(the_size, pg_array);
 }
 
-#if 0
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- */
-Amount
-get_Amount(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, Amount opt_value) {
-  return (Amount) column_found(info.colNumber)? getBigInt(tuple, tupdesc, info) : opt_value;
-}
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for non-negative values only
- */
-PAmount
-get_PositiveAmount(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, PAmount opt_value) {
-  auto value = get_anyinteger(tuple, tupdesc, info, opt_value);
-  if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
-  return static_cast<PAmount>(value);
-}
-#endif
 
 /**
  * @params [in] tuple

@@ -65,11 +65,13 @@ int64_t* get_BigIntArr_wEmpty(const HeapTuple, const TupleDesc&, const Column_in
 int64_t* get_PosBigIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t*);
 uint32_t* get_PositiveIntArr_allowEmpty( const HeapTuple, const TupleDesc&, const Column_info_t&, size_t*);
 
+#if 0
 /** @brief Function returns the value of specified column in integer type.  */
 int64_t getBigInt(const HeapTuple, const TupleDesc&, const Column_info_t&);
 
 /** @brief Function returns the value of specified column in double type.  */
 double  getFloat8(const HeapTuple, const TupleDesc&, const Column_info_t&);
+#endif
 
 /** @brief Function returns the string representation of the value of specified column.  */
 char* getText(const HeapTuple, const TupleDesc&, const Column_info_t&);
@@ -80,24 +82,10 @@ TInterval get_TInterval_plain(const HeapTuple, const TupleDesc&, const Column_in
 TInterval get_PositiveTInterval(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
 TInterval get_PositiveTInterval_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
 
-#if 0
-Id get_Id(const HeapTuple, const TupleDesc&, const Column_info_t&, Id);
-Idx get_Idx(const HeapTuple, const TupleDesc&, const Column_info_t&, Idx);
-Duration   get_Duration(const HeapTuple, const TupleDesc&, const Column_info_t&, Duration);
-#endif
-
 int32_t    get_MaxTasks(const HeapTuple, const TupleDesc&, const Column_info_t&);
 StepType   get_StepType(const HeapTuple, const TupleDesc&, const Column_info_t&, StepType);
-#if 0
-TravelCost get_Cost(const HeapTuple, const TupleDesc&, const Column_info_t&, TravelCost);
-Distance   get_Distance(const HeapTuple, const TupleDesc&, const Column_info_t&, Distance);
-#endif
 Priority   get_Priority(const HeapTuple, const TupleDesc&, const Column_info_t&, Priority);
 MatrixIndex get_MatrixIndex(const HeapTuple, const TupleDesc&, const Column_info_t&, MatrixIndex);
-#if 0
-Amount get_Amount(const HeapTuple, const TupleDesc&, const Column_info_t&, Amount);
-PAmount get_PositiveAmount(const HeapTuple, const TupleDesc&, const Column_info_t&, PAmount);
-#endif
 
 TTimestamp get_TTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 TTimestamp get_TTimestamp_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
@@ -107,9 +95,6 @@ uint32_t get_unsignedint(const HeapTuple, const TupleDesc&, const Column_info_t&
 TTimestamp get_PositiveTTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 TTimestamp get_PositiveTTimestamp_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 
-#if 0
-Coordinate get_Coordinate(const HeapTuple, const TupleDesc&, const Column_info_t&, Coordinate);
-#endif
 char get_twKind(const HeapTuple, const TupleDesc&, const Column_info_t&, char);
 
 

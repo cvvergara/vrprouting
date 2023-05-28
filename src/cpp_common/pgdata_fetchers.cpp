@@ -327,7 +327,7 @@ void fetch_multipliers_raw(
     Time_multipliers_t *row,
     bool) {
   row->start_time = get_TTimestamp_plain(tuple, tupdesc, info[0], 0);
-  row->multiplier = getFloat8(tuple, tupdesc,  info[1]);
+  row->multiplier = get_anynumerical(tuple, tupdesc, info[1], 1);
 }
 
 void fetch_multipliers(
@@ -336,7 +336,7 @@ void fetch_multipliers(
     Time_multipliers_t *row,
     bool) {
   row->start_time = get_TTimestamp(tuple, tupdesc, info[0], 0);
-  row->multiplier = getFloat8(tuple, tupdesc,  info[1]);
+  row->multiplier = get_anynumerical(tuple, tupdesc,  info[1], 1);
 }
 
 
@@ -504,7 +504,7 @@ void fetch_vehicles_timestamps(
   vehicle->id = get_positive<Id>(tuple, tupdesc, info[0], -1);
   vehicle->capacity = get_positive<PAmount>(tuple, tupdesc, info[1], 0);
   vehicle->cant_v =  get_positive<PAmount>(tuple, tupdesc, info[2], 1);
-  vehicle->speed  = column_found(info[3].colNumber) ?  getFloat8(tuple, tupdesc, info[3]) : 1;
+  vehicle->speed  = get_anynumerical(tuple, tupdesc, info[3], 1);
   vehicle->stops = NULL;
   vehicle->stops_size = 0;
   if (with_stops && column_found(info[4].colNumber)) {
@@ -574,9 +574,7 @@ void fetch_vroom_vehicles(
              vehicle->tw_open, vehicle->tw_close)));
   }
 
-  vehicle->speed_factor = column_found(info[7].colNumber) ?
-    getFloat8(tuple, tupdesc, info[7])
-    : 1.0;
+  vehicle->speed_factor = get_anynumerical(tuple, tupdesc, info[7], 1.0);
 
   if (vehicle->speed_factor <= 0.0) {
     ereport(ERROR, (errmsg("Invalid speed_factor %lf", vehicle->speed_factor),
