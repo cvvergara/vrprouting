@@ -37,7 +37,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <assert.h>
 #include "c_types/info_t.hpp"
 #include "cpp_common/get_check_data.hpp"
-#include "cpp_common/pgr_assert.h"
 
 #include "c_types/vroom/vroom_vehicle_t.h"
 #include "c_types/vroom/vroom_time_window_t.h"
@@ -274,11 +273,12 @@ void fetch_orders_euclidean(
   pd_order->deliver_node_id = 0;
 }
 
-void fetch_shipments(
+void fetch_vroom_shipments(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
     Vroom_shipment_t *shipment,
     bool is_plain) {
+
   shipment->id = get_Idx(tuple, tupdesc, info[0], 0);
 
   shipment->p_location_id = get_MatrixIndex(tuple, tupdesc, info[1], 0);

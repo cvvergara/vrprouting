@@ -407,7 +407,7 @@ vrp_get_vroom_shipments(
     info[6].eType = vrprouting::INTEGER;
   }
 
-    vrprouting::get_data(sql, rows, total_rows, true, info, &vrprouting::fetch_shipments);
+    vrprouting::get_data(sql, rows, total_rows, is_plain, info, &vrprouting::fetch_vroom_shipments);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
     (*total_rows) = 0;
