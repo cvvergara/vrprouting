@@ -2,12 +2,11 @@
 
 #include "c_common/debug_macro.h"
 #include "c_types/vehicle_t.h"
-#include "c_types/matrix_cell_t.h"
+#include "c_types/matrix_types.h"
 #include "c_types/pickDeliveryOrders_t.h"
 #include "c_types/vroom/vroom_shipment_t.h"
 #include "c_types/vroom/vroom_time_window_t.h"
 #include "c_types/vroom/vroom_vehicle_t.h"
-#include "c_types/vroom/vroom_matrix_t.h"
 #include "c_types/vroom/vroom_break_t.h"
 
 void DBG_PickDeliveryOrders_t(PickDeliveryOrders_t *dataArr, size_t total, char* title) {

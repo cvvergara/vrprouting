@@ -61,11 +61,6 @@ extern "C" {
 /** @brief Get the travel time matrix */
 void vrp_get_matrixRows(char*, Matrix_cell_t **, size_t*, bool, char**);
 
-#if 0
-/** @brief Get the travel time matrix with numerical types*/
-void vrp_get_matrixRows_plain(char*, Matrix_cell_t**, size_t*, char**);
-#endif
-
 /** @brief Reads the pick-Deliver shipments for timestams and intervals*/
 void vrp_get_shipments(char*, PickDeliveryOrders_t**, size_t*, char**);
 

@@ -38,7 +38,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 
 #include "cpp_common/pgr_assert.h"
-#include "c_types/matrix_cell_t.h"
+#include "c_types/matrix_types.h"
 #include "c_types/time_multipliers_t.h"
 
 

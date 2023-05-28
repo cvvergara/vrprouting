@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: matrix_cell_t.h
+File: matrix_types.h
 
 Copyright (c) 2017 Celia Virginia Vergara Castillo
 Mail: vicky_vergara@hotmail.com
@@ -42,6 +42,24 @@ struct Matrix_cell_t {
   Id from_vid; /** @b departure node's identifier */
   Id to_vid;   /** @b arrival node's identifier */
   TInterval cost;      /** Travel Interval from departure to destination */
+};
+
+/** @brief Matrix's attributes
+
+@note C/C++/postgreSQL connecting structure for input
+name | description
+:----- | :-------
+start_id | Start node identifier
+end_id | End node identifier
+duration | Duration to travel from start to end
+cost | Cost to travel from start to end
+*/
+struct Vroom_matrix_t {
+  MatrixIndex start_id;  /** Start node identifier */
+  MatrixIndex end_id;    /** End node identifier */
+
+  Duration duration;     /** Duration to travel from start to end */
+  TravelCost cost;       /** Cost to travel from start to end */
 };
 
 #endif  // INCLUDE_C_TYPES_MATRIX_CELL_T_H_

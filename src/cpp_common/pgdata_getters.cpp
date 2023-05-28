@@ -46,47 +46,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_types/vroom/vroom_time_window_t.h"
 #include "c_types/vroom/vroom_break_t.h"
 #include "c_types/vroom/vroom_job_t.h"
-#include "c_types/vroom/vroom_matrix_t.h"
 #include "c_types/vroom/vroom_shipment_t.h"
-#include "c_types/matrix_cell_t.h"
+#include "c_types/matrix_types.h"
 #include "c_types/vehicle_t.h"
 #include "c_types/pickDeliveryOrders_t.h"
 #include "c_types/time_multipliers_t.h"
 
-
-#if 0
-/**
- * @param [in] sql SQL query that has the following columns: start_vid, end_vid, agg_cost
- * @param [out] rows C Container that holds all the matrix rows
- * @param [out] total_rows Total rows recieved
- */
-void
-vrp_get_matrixRows_plain(
-    char *sql,
-    Matrix_cell_t **rows,
-    size_t *total_rows,
-    char **err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_free;
-  using vrprouting::Column_info_t;
-  try {
-    std::vector<Column_info_t> info{3};
-
-    info[0] = {-1, 0, true, "start_vid", vrprouting::ANY_INTEGER};
-    info[1] = {-1, 0, true, "end_vid", vrprouting::ANY_INTEGER};
-    info[2] = {-1, 0, true, "agg_cost", vrprouting::TINTERVAL};
-    vrprouting::get_data(sql, rows, total_rows, true, info, &vrprouting::fetch_matrix_plain);
-  } catch (const std::string &ex) {
-    (*rows) = pgr_free(*rows);
-    (*total_rows) = 0;
-    *err_msg = pgr_msg(ex.c_str());
-  } catch(...) {
-    (*rows) = pgr_free(*rows);
-    (*total_rows) = 0;
-    *err_msg = pgr_msg("Caught unknown exception!");
-  }
-}
-#endif
 
 /**
  * @param [in] sql SQL query that has the following columns: start_vid, end_vid, agg_cost
@@ -633,21 +598,28 @@ vrp_get_vehicles_raw(
   using vrprouting::pgr_free;
   using vrprouting::Column_info_t;
   try {
-    std::vector<Column_info_t> info{13};
+    std::vector<Column_info_t> info{17};
 
     info[0] = {-1, 0, true, "id", vrprouting::ANY_INTEGER};
     info[1] = {-1, 0, true, "capacity", vrprouting::ANY_INTEGER};
     info[2] = {-1, 0, false, "number", vrprouting::ANY_INTEGER};
     info[3] = {-1, 0, false, "speed", vrprouting::ANY_NUMERICAL};
     info[4] = {-1, 0, false, "stops", vrprouting::ANY_INTEGER_ARRAY};
-    info[5] = {-1, 0, true, "s_id", vrprouting::ANY_INTEGER};
-    info[6] = {-1, 0, false, "s_open", vrprouting::ANY_INTEGER};
-    info[7] = {-1, 0, false, "s_close", vrprouting::ANY_INTEGER};
-    info[8] = {-1, 0, false, "s_service", vrprouting::ANY_INTEGER};
-    info[9] = {-1, 0, false, "e_id", vrprouting::ANY_INTEGER};
-    info[10] = {-1, 0, false, "e_open", vrprouting::ANY_INTEGER};
-    info[11] = {-1, 0, false, "e_close", vrprouting::ANY_INTEGER};
-    info[12] = {-1, 0, false, "e_service", vrprouting::ANY_INTEGER};
+
+    info[5] = {-1, 0, false, "s_open", vrprouting::ANY_INTEGER};
+    info[6] = {-1, 0, false, "s_close", vrprouting::ANY_INTEGER};
+    info[7] = {-1, 0, false, "s_service", vrprouting::ANY_INTEGER};
+    info[8] = {-1, 0, false, "e_open", vrprouting::ANY_INTEGER};
+    info[9] = {-1, 0, false, "e_close", vrprouting::ANY_INTEGER};
+    info[10] = {-1, 0, false, "e_service", vrprouting::ANY_INTEGER};
+
+    info[11] = {-1, 0, true, "s_id", vrprouting::ANY_INTEGER};
+    info[12] = {-1, 0, false, "e_id", vrprouting::ANY_INTEGER};
+
+    info[13] = {-1, 0, false, "s_x", vrprouting::ANY_NUMERICAL};
+    info[14] = {-1, 0, false, "s_y", vrprouting::ANY_NUMERICAL};
+    info[15] = {-1, 0, false, "e_x", vrprouting::ANY_NUMERICAL};
+    info[16] = {-1, 0, false, "e_y", vrprouting::ANY_NUMERICAL};
 
     vrprouting::get_data(sql, rows, total_rows, with_stops, info, &vrprouting::fetch_vehicles_raw);
   } catch (const std::string &ex) {

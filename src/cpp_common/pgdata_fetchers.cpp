@@ -42,9 +42,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_types/vroom/vroom_time_window_t.h"
 #include "c_types/vroom/vroom_break_t.h"
 #include "c_types/vroom/vroom_job_t.h"
-#include "c_types/vroom/vroom_matrix_t.h"
 #include "c_types/vroom/vroom_shipment_t.h"
-#include "c_types/matrix_cell_t.h"
+#include "c_types/matrix_types.h"
 #include "c_types/vehicle_t.h"
 #include "c_types/pickDeliveryOrders_t.h"
 #include "c_types/time_multipliers_t.h"
@@ -431,19 +430,19 @@ void fetch_vehicles_raw(
     Vehicle_t *vehicle,
     bool with_stops) {
   /*
-   * s_tw_open, s_tw_close must exist or non at all
+   * start: pen, close must exist or non at all
    */
-  check_pairs(info[6], info[7]);
+  check_pairs(info[5], info[6]);
   /*
-   * e_tw_open, e_tw_close must exist or non at all
+   * end: open, close must exist or non at all
    */
-  check_pairs(info[10], info[11]);
+  check_pairs(info[8], info[9]);
 
-  vehicle->capacity = get_unsignedint(tuple, tupdesc, info[1], 0);
-  vehicle->cant_v =  get_unsignedint(tuple, tupdesc, info[2], 1);
+  vehicle->id = get_value<Id>(tuple, tupdesc, info[0], -1);
+  vehicle->capacity = get_value<PAmount>(tuple, tupdesc, info[1], 0);
+  vehicle->cant_v =  get_value<PAmount>(tuple, tupdesc, info[2], 1);
   vehicle->speed  =  get_anynumerical(tuple, tupdesc, info[3], 1);
-  vehicle->id = get_positive<Id>(tuple, tupdesc, info[0], -1);
-  vehicle->capacity = get_positive<PAmount>(tuple, tupdesc, info[1], 0);
+  vehicle->capacity = get_value<PAmount>(tuple, tupdesc, info[1], 0);
 
   vehicle->stops = NULL;
   vehicle->stops_size = 0;
@@ -454,26 +453,29 @@ void fetch_vehicles_raw(
   /*
    * start values
    */
-  vehicle->start_node_id = get_positive<Id>(tuple, tupdesc, info[5], -1);
-  vehicle->start_open_t = get_TTimestamp_plain(tuple, tupdesc, info[6], 0);
-  vehicle->start_close_t = get_TTimestamp_plain(tuple, tupdesc, info[7], INT64_MAX);
-  vehicle->start_service_t = get_positive<TInterval>(tuple, tupdesc, info[8], 0);
+  vehicle->start_open_t = get_TTimestamp_plain(tuple, tupdesc, info[5], 0);
+  vehicle->start_close_t = get_TTimestamp_plain(tuple, tupdesc, info[6], INT64_MAX);
+  vehicle->start_service_t = get_value<TInterval>(tuple, tupdesc, info[7], 0);
 
   /*
    * end values
    */
-  vehicle->end_node_id   = get_positive<Id>(tuple, tupdesc, info[9], vehicle->start_node_id);
-  vehicle->end_open_t = get_TTimestamp_plain(tuple, tupdesc, info[10], vehicle->start_open_t);
-  vehicle->end_close_t = get_TTimestamp_plain(tuple, tupdesc, info[11], vehicle->start_close_t);
-  vehicle->end_service_t   = get_positive<TInterval>(tuple, tupdesc, info[12], 0);
+  vehicle->end_open_t = get_TTimestamp_plain(tuple, tupdesc, info[8], vehicle->start_open_t);
+  vehicle->end_close_t = get_TTimestamp_plain(tuple, tupdesc, info[9], vehicle->start_close_t);
+  vehicle->end_service_t   = get_value<TInterval>(tuple, tupdesc, info[10], 0);
 
+  /*
+   * values used in raw
+   */
+  vehicle->start_node_id = get_value<Id>(tuple, tupdesc, info[11], -1);
+  vehicle->end_node_id   = get_value<Id>(tuple, tupdesc, info[12], vehicle->start_node_id);
   /*
    * Ignored values
    */
-  vehicle->start_x = 0;
-  vehicle->start_y = 0;
-  vehicle->end_x =   0;
-  vehicle->end_y =   0;
+  vehicle->start_x = get_anynumerical(tuple, tupdesc, info[13], 0);
+  vehicle->start_y = get_anynumerical(tuple, tupdesc, info[14], 0);
+  vehicle->end_x =   get_anynumerical(tuple, tupdesc, info[15], vehicle->start_x);
+  vehicle->end_y =   get_anynumerical(tuple, tupdesc, info[16], vehicle->start_y);
 }
 
 void fetch_vehicles_timestamps(
