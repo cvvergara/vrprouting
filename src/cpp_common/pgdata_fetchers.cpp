@@ -68,8 +68,8 @@ void fetch_matrix_plain(
     const std::vector<Column_info_t> &info,
     Matrix_cell_t *row,
     bool) {
-  row->from_vid = get_Id(tuple, tupdesc,  info[0], -1);
-  row->to_vid = get_Id(tuple, tupdesc,  info[1], -1);
+  row->from_vid = get_positive<Id>(tuple, tupdesc,  info[0], -1);
+  row->to_vid = get_positive<Id>(tuple, tupdesc,  info[1], -1);
   row->cost = get_positive<TInterval>(tuple, tupdesc, info[2], 0);
 }
 
@@ -78,8 +78,8 @@ void fetch_matrix_timestamps(
     const std::vector<Column_info_t> &info,
     Matrix_cell_t *row,
     bool) {
-  row->from_vid = get_Id(tuple, tupdesc,  info[0], -1);
-  row->to_vid = get_Id(tuple, tupdesc,  info[1], -1);
+  row->from_vid = get_positive<Id>(tuple, tupdesc,  info[0], -1);
+  row->to_vid = get_positive<Id>(tuple, tupdesc,  info[1], -1);
   row->cost = get_PositiveTInterval(tuple, tupdesc, info[2], 0);
 }
 
@@ -89,10 +89,10 @@ void fetch_breaks(
     const std::vector<Column_info_t> &info,
     Vroom_break_t *vroom_break,
     bool is_plain) {
-  vroom_break->id = get_Idx(tuple, tupdesc, info[0], 0);
-  vroom_break->vehicle_id = get_Idx(tuple, tupdesc, info[1], 0);
+  vroom_break->id = get_positive<Idx>(tuple, tupdesc, info[0], 0);
+  vroom_break->vehicle_id = get_positive<Idx>(tuple, tupdesc, info[1], 0);
   if (is_plain) {
-    vroom_break->service = get_Duration(tuple, tupdesc, info[2], 0);
+    vroom_break->service = get_positive<Duration>(tuple, tupdesc, info[2], 0);
   } else {
     vroom_break->service =
         (Duration)get_PositiveTInterval(tuple, tupdesc, info[2], 0);
@@ -107,12 +107,12 @@ void fetch_jobs(
     const std::vector<Column_info_t> &info,
     Vroom_job_t *job,
     bool is_plain) {
-  job->id = get_Idx(tuple, tupdesc, info[0], 0);
+  job->id = get_positive<Idx>(tuple, tupdesc, info[0], 0);
   job->location_id = get_MatrixIndex(tuple, tupdesc, info[1], 0);
 
   if (is_plain) {
-    job->setup = get_Duration(tuple, tupdesc, info[2], 0);
-    job->service = get_Duration(tuple, tupdesc, info[3], 0);
+    job->setup = get_positive<Duration>(tuple, tupdesc, info[2], 0);
+    job->service = get_positive<Duration>(tuple, tupdesc, info[3], 0);
   } else {
     job->setup = (Duration)get_PositiveTInterval(tuple, tupdesc, info[2], 0);
     job->service = (Duration)get_PositiveTInterval(tuple, tupdesc, info[3], 0);
@@ -159,13 +159,13 @@ void fetch_matrix_vroom(
   return;
 
   if (is_plain) {
-    matrix->duration = get_unsignedint(tuple, tupdesc, info[2], 0);
+    matrix->duration = get_positive<Duration>(tuple, tupdesc, info[2], 0);
   } else {
     matrix->duration = (Duration)get_PositiveTInterval(tuple, tupdesc, info[2], 0);
   }
 
   // If unspecified, cost is same as the duration
-  matrix->cost = get_unsignedint(tuple, tupdesc, info[3], matrix->duration);
+  matrix->cost = get_positive<TravelCost>(tuple, tupdesc, info[3], matrix->duration);
 }
 
 
@@ -174,13 +174,13 @@ void fetch_vroom_orders_timestamps(
     const std::vector<Column_info_t> &info,
     PickDeliveryOrders_t *pd_order,
     bool) {
-  pd_order->id = get_Id(tuple, tupdesc, info[0], -1);
-  pd_order->demand = get_PositiveAmount(tuple, tupdesc, info[1], 0);
+  pd_order->id = get_positive<Id>(tuple, tupdesc, info[0], -1);
+  pd_order->demand = get_positive<PAmount>(tuple, tupdesc, info[1], 0);
 
   /*
    * the pickups
    */
-  pd_order->pick_node_id   = get_Id(tuple, tupdesc, info[2], -1);
+  pd_order->pick_node_id   = get_positive<Id>(tuple, tupdesc, info[2], -1);
   pd_order->pick_open_t    = get_TTimestamp(tuple, tupdesc, info[3], -1);
   pd_order->pick_close_t   = get_TTimestamp(tuple, tupdesc, info[4], -1);
   pd_order->pick_service_t = get_TInterval(tuple, tupdesc, info[5], 0);
@@ -188,7 +188,7 @@ void fetch_vroom_orders_timestamps(
   /*
    * the deliveries
    */
-  pd_order->deliver_node_id   = get_Id(tuple, tupdesc, info[6], -1);
+  pd_order->deliver_node_id   = get_positive<Id>(tuple, tupdesc, info[6], -1);
   pd_order->deliver_open_t    = get_TTimestamp(tuple, tupdesc, info[7], -1);
   pd_order->deliver_close_t   = get_TTimestamp(tuple, tupdesc, info[8], -1);
   pd_order->deliver_service_t = get_TInterval(tuple, tupdesc, info[9], 0);
@@ -210,13 +210,13 @@ void fetch_orders_raw(
     const std::vector<Column_info_t> &info,
     PickDeliveryOrders_t *pd_order,
     bool) {
-  pd_order->id = get_Id(tuple, tupdesc, info[0], -1);
-  pd_order->demand = get_PositiveAmount(tuple, tupdesc, info[1], 0);
+  pd_order->id = get_positive<Id>(tuple, tupdesc, info[0], -1);
+  pd_order->demand = get_positive<PAmount>(tuple, tupdesc, info[1], 0);
 
   /*
    * the pickups
    */
-  pd_order->pick_node_id   = get_Id(tuple, tupdesc, info[8], -1);
+  pd_order->pick_node_id   = get_positive<Id>(tuple, tupdesc, info[8], -1);
   pd_order->pick_open_t    = get_TTimestamp_plain(tuple, tupdesc, info[2], -1);
   pd_order->pick_close_t   = get_TTimestamp_plain(tuple, tupdesc, info[3], -1);
   pd_order->pick_service_t = get_TInterval_plain(tuple, tupdesc, info[4], 0);
@@ -224,7 +224,7 @@ void fetch_orders_raw(
   /*
    * the deliveries
    */
-  pd_order->deliver_node_id   = get_Id(tuple, tupdesc, info[9], -1);
+  pd_order->deliver_node_id   = get_positive<Id>(tuple, tupdesc, info[9], -1);
   pd_order->deliver_open_t    = get_TTimestamp_plain(tuple, tupdesc, info[5], -1);
   pd_order->deliver_close_t   = get_TTimestamp_plain(tuple, tupdesc, info[6], -1);
   pd_order->deliver_service_t = get_TInterval_plain(tuple, tupdesc, info[7], 0);
@@ -245,7 +245,7 @@ void fetch_orders_euclidean(
     PickDeliveryOrders_t *pd_order,
     bool) {
   pd_order->id = get_anyinteger(tuple, tupdesc, info[0], -1);
-  pd_order->demand = get_unsignedint(tuple, tupdesc, info[1], 0);
+  pd_order->demand = get_positive<PAmount>(tuple, tupdesc, info[1], 0);
 
   /*
    * the pickups
@@ -279,16 +279,16 @@ void fetch_vroom_shipments(
     Vroom_shipment_t *shipment,
     bool is_plain) {
 
-  shipment->id = get_Idx(tuple, tupdesc, info[0], 0);
+  shipment->id = get_positive<Idx>(tuple, tupdesc, info[0], 0);
 
   shipment->p_location_id = get_MatrixIndex(tuple, tupdesc, info[1], 0);
   shipment->d_location_id = get_MatrixIndex(tuple, tupdesc, info[4], 0);
 
   if (is_plain) {
-    shipment->p_setup = get_Duration(tuple, tupdesc, info[2], 0);
-    shipment->p_service = get_Duration(tuple, tupdesc, info[3], 0);
-    shipment->d_setup = get_Duration(tuple, tupdesc, info[5], 0);
-    shipment->d_service = get_Duration(tuple, tupdesc, info[6], 0);
+    shipment->p_setup = get_positive<Duration>(tuple, tupdesc, info[2], 0);
+    shipment->p_service = get_positive<Duration>(tuple, tupdesc, info[3], 0);
+    shipment->d_setup = get_positive<Duration>(tuple, tupdesc, info[5], 0);
+    shipment->d_service = get_positive<Duration>(tuple, tupdesc, info[6], 0);
   } else {
     shipment->p_setup =
         (Duration)get_PositiveTInterval(tuple, tupdesc, info[2], 0);
@@ -346,7 +346,7 @@ void fetch_tw(
     Vroom_time_window_t *time_window,
     bool is_plain) {
 
-  time_window->id = get_Idx(tuple, tupdesc, info[0], 0);
+  time_window->id = get_positive<Idx>(tuple, tupdesc, info[0], 0);
   time_window->kind = ' ';
   auto is_shipment = column_found(info[3].colNumber) && info[3].strict;
 
@@ -359,8 +359,8 @@ void fetch_tw(
   }
 
   if (is_plain) {
-    time_window->tw_open = get_Duration(tuple, tupdesc, info[1], 0);
-    time_window->tw_close = get_Duration(tuple, tupdesc, info[2], 0);
+    time_window->tw_open = get_positive<Duration>(tuple, tupdesc, info[1], 0);
+    time_window->tw_close = get_positive<Duration>(tuple, tupdesc, info[2], 0);
   } else {
     time_window->tw_open = (Duration)get_PositiveTTimestamp(tuple, tupdesc, info[1], 0);
     time_window->tw_close = (Duration)get_PositiveTTimestamp(tuple, tupdesc, info[2], 0);
@@ -451,8 +451,8 @@ void fetch_vehicles_raw(
   vehicle->capacity = get_unsignedint(tuple, tupdesc, info[1], 0);
   vehicle->cant_v =  get_unsignedint(tuple, tupdesc, info[2], 1);
   vehicle->speed  =  get_anynumerical(tuple, tupdesc, info[3], 1);
-  vehicle->id = get_Id(tuple, tupdesc, info[0], -1);
-  vehicle->capacity = get_PositiveAmount(tuple, tupdesc, info[1], 0);
+  vehicle->id = get_positive<Id>(tuple, tupdesc, info[0], -1);
+  vehicle->capacity = get_positive<PAmount>(tuple, tupdesc, info[1], 0);
 
   vehicle->stops = NULL;
   vehicle->stops_size = 0;
@@ -463,7 +463,7 @@ void fetch_vehicles_raw(
   /*
    * start values
    */
-  vehicle->start_node_id = get_Id(tuple, tupdesc, info[5], -1);
+  vehicle->start_node_id = get_positive<Id>(tuple, tupdesc, info[5], -1);
   vehicle->start_open_t = get_TTimestamp_plain(tuple, tupdesc, info[6], 0);
   vehicle->start_close_t = get_TTimestamp_plain(tuple, tupdesc, info[7], INT64_MAX);
   vehicle->start_service_t = get_positive<TInterval>(tuple, tupdesc, info[8], 0);
@@ -471,7 +471,7 @@ void fetch_vehicles_raw(
   /*
    * end values
    */
-  vehicle->end_node_id   = get_Id(tuple, tupdesc, info[9], vehicle->start_node_id);
+  vehicle->end_node_id   = get_positive<Id>(tuple, tupdesc, info[9], vehicle->start_node_id);
   vehicle->end_open_t = get_TTimestamp_plain(tuple, tupdesc, info[10], vehicle->start_open_t);
   vehicle->end_close_t = get_TTimestamp_plain(tuple, tupdesc, info[11], vehicle->start_close_t);
   vehicle->end_service_t   = get_positive<TInterval>(tuple, tupdesc, info[12], 0);
@@ -501,9 +501,9 @@ void fetch_vehicles_timestamps(
   check_pairs(info[10], info[11]);
   check_pairs(info[10], info[11]);
 
-  vehicle->id = get_Id(tuple, tupdesc, info[0], -1);
-  vehicle->capacity = get_PositiveAmount(tuple, tupdesc, info[1], 0);
-  vehicle->cant_v =  get_PositiveAmount(tuple, tupdesc, info[2], 1);
+  vehicle->id = get_positive<Id>(tuple, tupdesc, info[0], -1);
+  vehicle->capacity = get_positive<PAmount>(tuple, tupdesc, info[1], 0);
+  vehicle->cant_v =  get_positive<PAmount>(tuple, tupdesc, info[2], 1);
   vehicle->speed  = column_found(info[3].colNumber) ?  getFloat8(tuple, tupdesc, info[3]) : 1;
   vehicle->stops = NULL;
   vehicle->stops_size = 0;
@@ -514,7 +514,7 @@ void fetch_vehicles_timestamps(
   /*
    * start values
    */
-  vehicle->start_node_id   = get_Id(tuple, tupdesc, info[5], -1);
+  vehicle->start_node_id   = get_positive<Id>(tuple, tupdesc, info[5], -1);
   vehicle->start_open_t    = get_TTimestamp(tuple, tupdesc, info[6], 0);
   vehicle->start_close_t   = get_TTimestamp(tuple, tupdesc, info[7], INT64_MAX);
   vehicle->start_service_t = get_PositiveTInterval(tuple, tupdesc, info[8], 0);
@@ -522,7 +522,7 @@ void fetch_vehicles_timestamps(
   /*
    * end values
    */
-  vehicle->end_node_id   = get_Id(tuple, tupdesc, info[9], vehicle->start_node_id);
+  vehicle->end_node_id   = get_positive<Id>(tuple, tupdesc, info[9], vehicle->start_node_id);
   vehicle->end_open_t    = get_TTimestamp(tuple, tupdesc, info[10], vehicle->start_open_t);
   vehicle->end_close_t   = get_TTimestamp(tuple, tupdesc, info[11], vehicle->start_close_t);
   vehicle->end_service_t = get_PositiveTInterval(tuple, tupdesc, info[12], 0);
@@ -541,7 +541,7 @@ void fetch_vroom_vehicles(
     const std::vector<Column_info_t> &info,
     Vroom_vehicle_t *vehicle,
     bool is_plain) {
-  vehicle->id = get_Idx(tuple, tupdesc, info[0], 0);
+  vehicle->id = get_positive<Idx>(tuple, tupdesc, info[0], 0);
   vehicle->start_id = get_MatrixIndex(tuple, tupdesc, info[1], -1);
   vehicle->end_id = get_MatrixIndex(tuple, tupdesc, info[2], -1);
 
@@ -556,8 +556,8 @@ void fetch_vroom_vehicles(
     : NULL;
 
   if (is_plain) {
-    vehicle->tw_open = get_Duration(tuple, tupdesc, info[5], 0);
-    vehicle->tw_close = get_Duration(tuple, tupdesc, info[6], UINT_MAX);
+    vehicle->tw_open = get_positive<Duration>(tuple, tupdesc, info[5], 0);
+    vehicle->tw_close = get_positive<Duration>(tuple, tupdesc, info[6], UINT_MAX);
   } else {
     vehicle->tw_open =
         (Duration)get_PositiveTTimestamp(tuple, tupdesc, info[5], 0);

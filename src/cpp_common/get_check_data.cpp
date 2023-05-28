@@ -655,6 +655,7 @@ get_PositiveTInterval_plain(
   return (TInterval) value;
 }
 
+#if 0
 /**
  * @params [in] tuple
  * @params [in] tupdesc
@@ -712,6 +713,7 @@ get_Duration(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_
   }
   return opt_value;
 }
+#endif
 
 int32_t
 get_MaxTasks(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info) {
@@ -740,6 +742,7 @@ get_StepType(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_
   return step_type;
 }
 
+#if 0
 /**
  * @params [in] tuple
  * @params [in] tupdesc
@@ -783,6 +786,7 @@ get_Distance(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_
   }
   return opt_value;
 }
+#endif
 
 /**
  * @params [in] tuple
@@ -876,6 +880,7 @@ get_PositiveIntArr_allowEmpty(
   return vrp_get_positiveIntArray_allowEmpty(the_size, pg_array);
 }
 
+#if 0
 /**
  * @params [in] tuple
  * @params [in] tupdesc
@@ -910,6 +915,7 @@ get_PositiveAmount(
   if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
   return static_cast<PAmount>(value);
 }
+#endif
 
 /**
  * @params [in] tuple

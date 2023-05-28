@@ -41,7 +41,7 @@ using StepType = int32_t;
 
 using PAmount = uint32_t;
 using Duration = uint32_t;
-using TravelCost = uint32_t;
+using TravelCost = Duration;
 using Priority = uint32_t;
 using Distance = uint32_t;
 using Skill = uint32_t;
