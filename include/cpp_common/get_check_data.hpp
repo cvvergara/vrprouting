@@ -52,9 +52,6 @@ bool column_found(int);
 /** @brief Function tells expected type of each column and then check the correspondence type of each column.  */
 void fetch_column_info(const TupleDesc&, std::vector<Column_info_t>&);
 
-/** @brief Function return the value of specified column in char type. */
-char getChar(const HeapTuple, const TupleDesc&, const Column_info_t&, bool, char);
-
 /** @brief Enforces the input array to be @b NOT empty */
 int64_t* get_array(ArrayType*, size_t*, bool);
 
@@ -64,14 +61,6 @@ int64_t* get_BigIntArr_wEmpty(const HeapTuple, const TupleDesc&, const Column_in
 
 int64_t* get_PosBigIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t*);
 uint32_t* get_PositiveIntArr_allowEmpty( const HeapTuple, const TupleDesc&, const Column_info_t&, size_t*);
-
-#if 0
-/** @brief Function returns the value of specified column in integer type.  */
-int64_t getBigInt(const HeapTuple, const TupleDesc&, const Column_info_t&);
-
-/** @brief Function returns the value of specified column in double type.  */
-double  getFloat8(const HeapTuple, const TupleDesc&, const Column_info_t&);
-#endif
 
 /** @brief Function returns the string representation of the value of specified column.  */
 char* getText(const HeapTuple, const TupleDesc&, const Column_info_t&);
@@ -84,7 +73,9 @@ TInterval get_PositiveTInterval_plain(const HeapTuple, const TupleDesc&, const C
 
 int32_t    get_MaxTasks(const HeapTuple, const TupleDesc&, const Column_info_t&);
 StepType   get_StepType(const HeapTuple, const TupleDesc&, const Column_info_t&, StepType);
+#if 0
 Priority   get_Priority(const HeapTuple, const TupleDesc&, const Column_info_t&, Priority);
+#endif
 MatrixIndex get_MatrixIndex(const HeapTuple, const TupleDesc&, const Column_info_t&, MatrixIndex);
 
 TTimestamp get_TTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
@@ -95,7 +86,7 @@ uint32_t get_unsignedint(const HeapTuple, const TupleDesc&, const Column_info_t&
 TTimestamp get_PositiveTTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 TTimestamp get_PositiveTTimestamp_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 
-char get_twKind(const HeapTuple, const TupleDesc&, const Column_info_t&, char);
+char get_char(const HeapTuple, const TupleDesc&, const Column_info_t&, char);
 
 
 template <typename T>

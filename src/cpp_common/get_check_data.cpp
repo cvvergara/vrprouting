@@ -351,6 +351,43 @@ double getFloat8(
     return 0.0;
 }
 
+/**
+ * http://doxygen.postgresql.org/include_2catalog_2pg__type_8h.html;
+ * [SPI_getbinval](https://www.postgresql.org/docs/8.1/static/spi-spi-getbinval.html)
+ * [Datum](https://doxygen.postgresql.org/datum_8h.html)
+ * [DatumGetInt16](https://doxygen.postgresql.org/postgres_8h.html#aec991e04209850f29a8a63df0c78ba2d)
+ *
+ * @param[in]  tuple         input row to be examined.
+ * @param[in] tupdesc  tuple descriptor
+ * @param[in]  info          contain column information.
+ * @param[in]  strict        boolean value of strict.
+ * @param[in]  default_value returned when column contain NULL value.
+ * @throw ERROR Unexpected Column type. Expected column type is CHAR.
+ * @throw ERROR When value of column is NULL.
+ * @return Char type of column value is returned.
+ */
+char getChar(
+    const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column_info_t &info, char default_value) {
+  Datum binval;
+  bool isNull;
+  char value = default_value;
+
+  binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isNull);
+  if (!(info.type == BPCHAROID)) {
+    throw std::string("Unexpected Column type of ") + info.name + ". Expected CHAR";
+  }
+
+  if (!isNull) {
+    value =  reinterpret_cast<char*>(binval)[1];
+  } else {
+    if (info.strict) {
+      throw std::string("Unexpected Null value in column ") + info.name;
+    }
+    value = default_value;
+  }
+  return value;
+}
+
 }  // namespace
 
 namespace vrprouting {
@@ -416,44 +453,6 @@ void fetch_column_info(
       }
     }
   }
-}
-
-/**
- * http://doxygen.postgresql.org/include_2catalog_2pg__type_8h.html;
- * [SPI_getbinval](https://www.postgresql.org/docs/8.1/static/spi-spi-getbinval.html)
- * [Datum](https://doxygen.postgresql.org/datum_8h.html)
- * [DatumGetInt16](https://doxygen.postgresql.org/postgres_8h.html#aec991e04209850f29a8a63df0c78ba2d)
- *
- * @param[in]  tuple         input row to be examined.
- * @param[in] tupdesc  tuple descriptor
- * @param[in]  info          contain column information.
- * @param[in]  strict        boolean value of strict.
- * @param[in]  default_value returned when column contain NULL value.
- * @throw ERROR Unexpected Column type. Expected column type is CHAR.
- * @throw ERROR When value of column is NULL.
- * @return Char type of column value is returned.
- */
-char getChar(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column_info_t &info,
-    char default_value) {
-  Datum binval;
-  bool isNull;
-  char value = default_value;
-
-  binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isNull);
-  if (!(info.type == BPCHAROID)) {
-    throw std::string("Unexpected Column type of ") + info.name + ". Expected CHAR";
-  }
-
-  if (!isNull) {
-    value =  reinterpret_cast<char*>(binval)[1];
-  } else {
-    if (info.strict) {
-      throw std::string("Unexpected Null value in column ") + info.name;
-    }
-    value = default_value;
-  }
-  return value;
 }
 
 /** @brief get the array contents from postgres
@@ -683,6 +682,7 @@ get_StepType(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_
 }
 
 
+#if 0
 /**
  * @params [in] tuple
  * @params [in] tupdesc
@@ -705,6 +705,7 @@ get_Priority(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_
   }
   return opt_value;
 }
+#endif
 
 /**
  * @params [in] tuple
@@ -917,8 +918,8 @@ get_Coordinate(
  *
  */
 char
-get_twKind(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, char opt_value) {
-  return column_found(info.colNumber) ?  getChar(tuple, tupdesc, info, opt_value) : opt_value;
+get_char(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, char opt_value) {
+  return getChar(tuple, tupdesc, info, opt_value);
 }
 
 /*!

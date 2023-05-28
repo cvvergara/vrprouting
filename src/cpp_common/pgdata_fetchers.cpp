@@ -139,7 +139,7 @@ void fetch_jobs(
     get_PositiveIntArr_allowEmpty(tuple, tupdesc, info[6], &job->skills_size)
     : NULL;
 
-  job->priority = get_Priority(tuple, tupdesc, info[7], 0);
+  job->priority = get_positive<Priority>(tuple, tupdesc, info[7], 0);
 
   job->data = column_found(info[8].colNumber)
                   ? getText(tuple, tupdesc, info[8])
@@ -310,7 +310,7 @@ void fetch_vroom_shipments(
     get_PositiveIntArr_allowEmpty(tuple, tupdesc, info[8], &shipment->skills_size)
     : NULL;
 
-  shipment->priority = get_Priority(tuple, tupdesc, info[9], 0);
+  shipment->priority = get_positive<Priority>(tuple, tupdesc, info[9], 0);
 
   shipment->p_data = column_found(info[10].colNumber)
                          ? getText(tuple, tupdesc, info[10])
@@ -351,7 +351,7 @@ void fetch_tw(
   auto is_shipment = column_found(info[3].colNumber) && info[3].strict;
 
   if (is_shipment) {
-    char kind = get_twKind(tuple, tupdesc, info[3], ' ');
+    char kind = get_char(tuple, tupdesc, info[3], ' ');
     if (kind != 'p' && kind != 'd') {
       throw std::string("Invalid kind '") + kind + "', Expecting 'p' or 'd'";
     }
