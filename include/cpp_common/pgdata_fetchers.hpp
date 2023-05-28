@@ -51,11 +51,6 @@ void fetch_matrix_plain(
     const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
     Matrix_cell_t*, bool);
 
-/** @brief for matrix */
-void fetch_matrix_timestamps(
-    const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
-    Matrix_cell_t*, bool);
-
 void fetch_breaks(
     const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
     Vroom_break_t*, bool);

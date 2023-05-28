@@ -36,12 +36,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
   :----- | :-------
   from_vid | Departure node's identifier
   to_vid | Arrival node's identifier
-  cost | Travel cost from departure to arrival
+  cost | Travel cost from departure to destination
   */
 struct Matrix_cell_t {
   Id from_vid; /** @b departure node's identifier */
   Id to_vid;   /** @b arrival node's identifier */
-  TInterval cost;      /** Travel Interval from departure to arrival */
+  TInterval cost;      /** Travel Interval from departure to destination */
 };
 
 #endif  // INCLUDE_C_TYPES_MATRIX_CELL_T_H_

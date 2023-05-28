@@ -35,9 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <vector>
 #include <cfloat>
 
-#if 1
 #include "cpp_common/get_data.hpp"
-#endif
 #include "c_common/postgres_connection.h"
 #include "c_common/pgr_alloc.hpp"
 #include "cpp_common/get_check_data.hpp"
@@ -56,6 +54,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_types/time_multipliers_t.h"
 
 
+#if 0
 /**
  * @param [in] sql SQL query that has the following columns: start_vid, end_vid, agg_cost
  * @param [out] rows C Container that holds all the matrix rows
@@ -75,7 +74,7 @@ vrp_get_matrixRows_plain(
 
     info[0] = {-1, 0, true, "start_vid", vrprouting::ANY_INTEGER};
     info[1] = {-1, 0, true, "end_vid", vrprouting::ANY_INTEGER};
-    info[2] = {-1, 0, true, "agg_cost", vrprouting::ANY_NUMERICAL};
+    info[2] = {-1, 0, true, "agg_cost", vrprouting::TINTERVAL};
     vrprouting::get_data(sql, rows, total_rows, true, info, &vrprouting::fetch_matrix_plain);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
@@ -87,6 +86,7 @@ vrp_get_matrixRows_plain(
     *err_msg = pgr_msg("Caught unknown exception!");
   }
 }
+#endif
 
 /**
  * @param [in] sql SQL query that has the following columns: start_vid, end_vid, agg_cost
@@ -98,6 +98,7 @@ vrp_get_matrixRows(
     char *sql,
     Matrix_cell_t **rows,
     size_t *total_rows,
+    bool with_timestamps,
     char **err_msg) {
   using vrprouting::pgr_msg;
   using vrprouting::pgr_free;
@@ -107,8 +108,13 @@ vrp_get_matrixRows(
 
     info[0] = {-1, 0, true, "start_vid", vrprouting::ANY_INTEGER};
     info[1] = {-1, 0, true, "end_vid", vrprouting::ANY_INTEGER};
-    info[2] = {-1, 0, true, "travel_time", vrprouting::INTERVAL};
-    vrprouting::get_data(sql, rows, total_rows, true, info, &vrprouting::fetch_matrix_timestamps);
+    info[2] = {-1, 0, true, "agg_cost", vrprouting::TINTERVAL};
+
+    if (with_timestamps) {
+      info[2] = {-1, 0, true, "travel_time", vrprouting::INTERVAL};
+    }
+
+    vrprouting::get_data(sql, rows, total_rows, true, info, &vrprouting::fetch_matrix_plain);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
     (*total_rows) = 0;
@@ -141,8 +147,8 @@ vrp_get_vroom_matrix(
 
     info[0] = {-1, 0, true, "start_id", vrprouting::MATRIX_INDEX};
     info[1] = {-1, 0, true, "end_id", vrprouting::MATRIX_INDEX};
-    info[2] = {-1, 0, true, "duration", vrprouting::INTERVAL};
     info[3] = {-1, 0, false, "cost", vrprouting::INTEGER};
+    info[2] = {-1, 0, true, "duration", vrprouting::INTERVAL};
 
   if (is_plain) {
     info[2].eType = vrprouting::INTEGER;

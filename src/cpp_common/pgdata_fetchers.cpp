@@ -69,19 +69,9 @@ void fetch_matrix_plain(
     const std::vector<Column_info_t> &info,
     Matrix_cell_t *row,
     bool) {
-  row->from_vid = get_integral<Id>(tuple, tupdesc,  info[0], -1);
-  row->to_vid = get_integral<Id>(tuple, tupdesc,  info[1], -1);
-  row->cost = get_positive<TInterval>(tuple, tupdesc, info[2], 0);
-}
-
-void fetch_matrix_timestamps(
-    const HeapTuple tuple, const TupleDesc &tupdesc,
-    const std::vector<Column_info_t> &info,
-    Matrix_cell_t *row,
-    bool) {
-  row->from_vid = get_integral<Id>(tuple, tupdesc,  info[0], -1);
-  row->to_vid = get_integral<Id>(tuple, tupdesc,  info[1], -1);
-  row->cost = get_PositiveTInterval(tuple, tupdesc, info[2], 0);
+  row->from_vid = get_value<Id>(tuple, tupdesc,  info[0], -1);
+  row->to_vid = get_value<Id>(tuple, tupdesc,  info[1], -1);
+  row->cost = get_value<TInterval>(tuple, tupdesc, info[2], 0);
 }
 
 

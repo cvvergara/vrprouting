@@ -418,6 +418,7 @@ void fetch_column_info(
       switch (coldata.eType) {
         case ANY_INTEGER:
         case MATRIX_INDEX:
+        case TINTERVAL:
         case IDX:
           check_any_integer_type(coldata);
           break;
@@ -593,9 +594,7 @@ int64_t* getBigIntArr(
  */
 TInterval
 get_TInterval(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TInterval opt_value) {
-  return column_found(info.colNumber)?
-    (TInterval)getInterval(tuple, tupdesc, info)
-    : opt_value;
+  return column_found(info.colNumber)? getInterval(tuple, tupdesc, info) : opt_value;
 }
 
 /**

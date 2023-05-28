@@ -76,12 +76,12 @@ StepType   get_StepType(const HeapTuple, const TupleDesc&, const Column_info_t&,
 
 TTimestamp get_TTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 TTimestamp get_TTimestamp_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
-int64_t get_anyinteger(const HeapTuple, const TupleDesc&, const Column_info_t&, int64_t);
-double get_anynumerical(const HeapTuple, const TupleDesc&, const Column_info_t&, double);
 uint32_t get_unsignedint(const HeapTuple, const TupleDesc&, const Column_info_t&, int64_t);
 TTimestamp get_PositiveTTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 TTimestamp get_PositiveTTimestamp_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 
+int64_t get_anyinteger(const HeapTuple, const TupleDesc&, const Column_info_t&, int64_t);
+double get_anynumerical(const HeapTuple, const TupleDesc&, const Column_info_t&, double);
 char get_char(const HeapTuple, const TupleDesc&, const Column_info_t&, char);
 
 template <typename T>
@@ -102,8 +102,18 @@ T get_positive(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_inf
 template <typename T>
 T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, T opt_value) {
   switch (info.eType) {
-    case vrprouting::ID : return get_integral<Id>(tuple, tupdesc,  info, opt_value);
-                          break;
+    case ID :
+      return static_cast<T>(get_integral<Id>(tuple, tupdesc,  info, opt_value));
+      break;
+    case vrprouting::ANY_INTEGER :
+      return static_cast<T>(get_integral<int64_t>(tuple, tupdesc,  info, opt_value));
+      break;
+    case vrprouting::TINTERVAL :
+      return static_cast<T>(get_positive<TInterval>(tuple, tupdesc,  info, opt_value));
+      break;
+    case vrprouting::INTERVAL :
+      return static_cast<T>(get_PositiveTInterval(tuple, tupdesc,  info, opt_value));
+      break;
     default: return 0;
   }
 }

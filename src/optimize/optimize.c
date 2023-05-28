@@ -164,13 +164,8 @@ process(
 
   Matrix_cell_t *matrix_cells_arr = NULL;
   size_t total_cells = 0;
-  if (use_timestamps) {
-    vrp_get_matrixRows(matrix_sql, &matrix_cells_arr, &total_cells, &err_msg);
-    throw_error(err_msg, matrix_sql);
-  } else {
-    vrp_get_matrixRows_plain(matrix_sql, &matrix_cells_arr, &total_cells, &err_msg);
-    throw_error(err_msg, matrix_sql);
-  }
+  vrp_get_matrixRows(matrix_sql, &matrix_cells_arr, &total_cells, use_timestamps, &err_msg);
+  throw_error(err_msg, matrix_sql);
 
   if (total_cells == 0) {
     (*result_count) = 0;

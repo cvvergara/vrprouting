@@ -134,7 +134,7 @@ process(
 
     Matrix_cell_t *matrix_cells_arr = NULL;
     size_t total_cells = 0;
-    vrp_get_matrixRows_plain(matrix_sql, &matrix_cells_arr, &total_cells, &err_msg);
+    vrp_get_matrixRows(matrix_sql, &matrix_cells_arr, &total_cells, false, &err_msg);
     throw_error(err_msg, matrix_sql);
 
     DBG_Matrix_cell_t(matrix_cells_arr, total_cells, "matrix cells");

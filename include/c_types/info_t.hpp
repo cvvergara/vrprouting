@@ -46,6 +46,7 @@ enum expectType {
   INTEGER_ARRAY,
   ANY_INTEGER_ARRAY,
   TIMESTAMP,
+  TINTERVAL,  /** positive int64_t */
   INTERVAL
 };
 
