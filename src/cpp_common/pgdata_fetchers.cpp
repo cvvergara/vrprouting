@@ -63,13 +63,14 @@ void check_pairs(vrprouting::Column_info_t lhs, vrprouting::Column_info_t rhs) {
 
 namespace vrprouting {
 
+
 void fetch_matrix_plain(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
     Matrix_cell_t *row,
     bool) {
-  row->from_vid = get_positive<Id>(tuple, tupdesc,  info[0], -1);
-  row->to_vid = get_positive<Id>(tuple, tupdesc,  info[1], -1);
+  row->from_vid = get_integral<Id>(tuple, tupdesc,  info[0], -1);
+  row->to_vid = get_integral<Id>(tuple, tupdesc,  info[1], -1);
   row->cost = get_positive<TInterval>(tuple, tupdesc, info[2], 0);
 }
 
@@ -78,8 +79,8 @@ void fetch_matrix_timestamps(
     const std::vector<Column_info_t> &info,
     Matrix_cell_t *row,
     bool) {
-  row->from_vid = get_positive<Id>(tuple, tupdesc,  info[0], -1);
-  row->to_vid = get_positive<Id>(tuple, tupdesc,  info[1], -1);
+  row->from_vid = get_integral<Id>(tuple, tupdesc,  info[0], -1);
+  row->to_vid = get_integral<Id>(tuple, tupdesc,  info[1], -1);
   row->cost = get_PositiveTInterval(tuple, tupdesc, info[2], 0);
 }
 
@@ -108,7 +109,7 @@ void fetch_jobs(
     Vroom_job_t *job,
     bool is_plain) {
   job->id = get_positive<Idx>(tuple, tupdesc, info[0], 0);
-  job->location_id = get_MatrixIndex(tuple, tupdesc, info[1], 0);
+  job->location_id = get_positive<MatrixIndex>(tuple, tupdesc, info[1], 0);
 
   if (is_plain) {
     job->setup = get_positive<Duration>(tuple, tupdesc, info[2], 0);
@@ -281,8 +282,8 @@ void fetch_vroom_shipments(
 
   shipment->id = get_positive<Idx>(tuple, tupdesc, info[0], 0);
 
-  shipment->p_location_id = get_MatrixIndex(tuple, tupdesc, info[1], 0);
-  shipment->d_location_id = get_MatrixIndex(tuple, tupdesc, info[4], 0);
+  shipment->p_location_id = get_positive<MatrixIndex>(tuple, tupdesc, info[1], 0);
+  shipment->d_location_id = get_positive<MatrixIndex>(tuple, tupdesc, info[4], 0);
 
   if (is_plain) {
     shipment->p_setup = get_positive<Duration>(tuple, tupdesc, info[2], 0);
@@ -542,8 +543,8 @@ void fetch_vroom_vehicles(
     Vroom_vehicle_t *vehicle,
     bool is_plain) {
   vehicle->id = get_positive<Idx>(tuple, tupdesc, info[0], 0);
-  vehicle->start_id = get_MatrixIndex(tuple, tupdesc, info[1], -1);
-  vehicle->end_id = get_MatrixIndex(tuple, tupdesc, info[2], -1);
+  vehicle->start_id = get_positive<MatrixIndex>(tuple, tupdesc, info[1], -1);
+  vehicle->end_id = get_positive<MatrixIndex>(tuple, tupdesc, info[2], -1);
 
   vehicle->capacity_size = 0;
   vehicle->capacity = column_found(info[3].colNumber) ?

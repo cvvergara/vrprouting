@@ -139,8 +139,8 @@ vrp_get_vroom_matrix(
   try {
     std::vector<Column_info_t> info{4};
 
-    info[0] = {-1, 0, true, "start_id", vrprouting::ANY_INTEGER};
-    info[1] = {-1, 0, true, "end_id", vrprouting::ANY_INTEGER};
+    info[0] = {-1, 0, true, "start_id", vrprouting::MATRIX_INDEX};
+    info[1] = {-1, 0, true, "end_id", vrprouting::MATRIX_INDEX};
     info[2] = {-1, 0, true, "duration", vrprouting::INTERVAL};
     info[3] = {-1, 0, false, "cost", vrprouting::INTEGER};
 
@@ -388,10 +388,10 @@ vrp_get_vroom_shipments(
     std::vector<Column_info_t> info{12};
 
     info[0] = {-1, 0, true, "id", vrprouting::IDX};
-    info[1] = {-1, 0, true, "p_location_id", vrprouting::ANY_INTEGER};
+    info[1] = {-1, 0, true, "p_location_id", vrprouting::MATRIX_INDEX};
     info[2] = {-1, 0, false, "p_setup", vrprouting::INTERVAL};
     info[3] = {-1, 0, false, "p_service", vrprouting::INTERVAL};
-    info[4] = {-1, 0, true, "d_location_id", vrprouting::ANY_INTEGER};
+    info[4] = {-1, 0, true, "d_location_id", vrprouting::MATRIX_INDEX};
     info[5] = {-1, 0, false, "d_setup", vrprouting::INTERVAL};
     info[6] = {-1, 0, false, "d_service", vrprouting::INTERVAL};
     info[7] = {-1, 0, false, "amount", vrprouting::ANY_INTEGER_ARRAY};
@@ -723,8 +723,8 @@ vrp_get_vroom_vehicles(
     std::vector<Column_info_t> info{10};
 
     info[0] = {-1, 0, true, "id", vrprouting::IDX};
-    info[1] = {-1, 0, false, "start_id", vrprouting::ANY_INTEGER};
-    info[2] = {-1, 0, false, "end_id", vrprouting::ANY_INTEGER};
+    info[1] = {-1, 0, false, "start_id", vrprouting::MATRIX_INDEX};
+    info[2] = {-1, 0, false, "end_id", vrprouting::MATRIX_INDEX};
     info[3] = {-1, 0, false, "capacity", vrprouting::ANY_INTEGER_ARRAY};
     info[4] = {-1, 0, false, "skills", vrprouting::INTEGER_ARRAY};
     info[5] = {-1, 0, false, "tw_open", vrprouting::TIMESTAMP};

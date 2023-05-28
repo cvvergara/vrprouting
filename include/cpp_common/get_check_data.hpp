@@ -73,10 +73,6 @@ TInterval get_PositiveTInterval_plain(const HeapTuple, const TupleDesc&, const C
 
 int32_t    get_MaxTasks(const HeapTuple, const TupleDesc&, const Column_info_t&);
 StepType   get_StepType(const HeapTuple, const TupleDesc&, const Column_info_t&, StepType);
-#if 0
-Priority   get_Priority(const HeapTuple, const TupleDesc&, const Column_info_t&, Priority);
-#endif
-MatrixIndex get_MatrixIndex(const HeapTuple, const TupleDesc&, const Column_info_t&, MatrixIndex);
 
 TTimestamp get_TTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 TTimestamp get_TTimestamp_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
@@ -88,13 +84,28 @@ TTimestamp get_PositiveTTimestamp_plain(const HeapTuple, const TupleDesc&, const
 
 char get_char(const HeapTuple, const TupleDesc&, const Column_info_t&, char);
 
+template <typename T>
+T get_integral(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, T opt_value) {
+  static_assert(std::is_integral<T>::value, "Integral required.");
+  return static_cast<T>(get_anyinteger(tuple, tupdesc, info, opt_value));
+}
 
 template <typename T>
 T get_positive(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, T opt_value) {
+  static_assert(std::is_integral<T>::value, "Integral required.");
   if (!column_found(info.colNumber)) return opt_value;
   auto value = get_anyinteger(tuple, tupdesc, info, 0);
   if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
   return static_cast<T>(value);
+}
+
+template <typename T>
+T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, T opt_value) {
+  switch (info.eType) {
+    case vrprouting::ID : return get_integral<Id>(tuple, tupdesc,  info, opt_value);
+                          break;
+    default: return 0;
+  }
 }
 
 }  // namespace vrprouting

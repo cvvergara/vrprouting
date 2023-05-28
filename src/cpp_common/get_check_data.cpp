@@ -682,51 +682,6 @@ get_StepType(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_
 }
 
 
-#if 0
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for non-negative values only
- */
-Priority
-get_Priority(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, Priority opt_value) {
-  if (column_found(info.colNumber)) {
-    int32_t value = getInt(tuple, tupdesc, info);
-    if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
-    if (value > 0) throw std::string("Priority exceeds the max priority 100");
-    return (Priority) value;
-  }
-  return opt_value;
-}
-#endif
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is not positive
- * @pre for positive values only
- *
- * vrpRouting::MATRIX_INDEX
- */
-MatrixIndex
-get_MatrixIndex(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, MatrixIndex opt_value) {
-  return get_positive(tuple, tupdesc, info, opt_value);
-}
-
-
 int64_t*
 get_BigIntArr_wEmpty(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info,
