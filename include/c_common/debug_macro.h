@@ -45,5 +45,6 @@ void DBG_Vroom_shipment_t(Vroom_shipment_t*, size_t, char*);
 void DBG_Vroom_time_window_t(Vroom_time_window_t*, size_t, char*);
 void DBG_Vroom_vehicle_t(Vroom_vehicle_t*, size_t, char*);
 void DBG_Vroom_matrix_t(Vroom_matrix_t*, size_t, char*);
+void DBG_Vroom_break_t(Vroom_break_t*, size_t, char*);
 
 #endif  // INCLUDE_C_COMMON_DEBUG_MACRO_H_

@@ -8,6 +8,7 @@
 #include "c_types/vroom/vroom_time_window_t.h"
 #include "c_types/vroom/vroom_vehicle_t.h"
 #include "c_types/vroom/vroom_matrix_t.h"
+#include "c_types/vroom/vroom_break_t.h"
 
 void DBG_PickDeliveryOrders_t(PickDeliveryOrders_t *dataArr, size_t total, char* title) {
 #ifndef NDEBUG
@@ -168,6 +169,19 @@ void DBG_Vroom_matrix_t(Vroom_matrix_t *dataArr, size_t total, char* title ) {
         dataArr[i].end_id,
         dataArr[i].duration,
         dataArr[i].cost);
+  }
+#endif
+}
+
+void DBG_Vroom_break_t(Vroom_break_t *dataArr, size_t total, char* title ) {
+#ifndef NDEBUG
+  PGR_DBG("total %s %ld", title, total);
+  for (size_t i = 0; i < total; i++) {
+    PGR_DBG("s %ld e %ld d %ld c %s",
+        dataArr[i].id,
+        dataArr[i].vehicle_id,
+        dataArr[i].service,
+        dataArr[i].data);
   }
 #endif
 }
