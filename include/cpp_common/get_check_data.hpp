@@ -102,6 +102,9 @@ T get_positive(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_inf
 template <typename T>
 T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, T opt_value) {
   switch (info.eType) {
+    case TTIMESTAMP :
+      return static_cast<T>(get_integral<TTimestamp>(tuple, tupdesc,  info, opt_value));
+      break;
     case ID :
       return static_cast<T>(get_integral<Id>(tuple, tupdesc,  info, opt_value));
       break;
@@ -114,7 +117,9 @@ T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t
     case vrprouting::INTERVAL :
       return static_cast<T>(get_PositiveTInterval(tuple, tupdesc,  info, opt_value));
       break;
-    default: return 0;
+    default:
+      return static_cast<T>(get_integral<T>(tuple, tupdesc,  info, opt_value));
+      break;
   }
 }
 

@@ -369,10 +369,10 @@ void fetch_vehicles_euclidean(
     Vehicle_t *vehicle,
     bool with_stops) {
   /*  s_open, s_close must exist or non at all */
-  check_pairs(info[4], info[5]);
+  check_pairs(info[5], info[6]);
 
   /* e_open, e_close must exist or non at all */
-  check_pairs(info[6], info[7]);
+  check_pairs(info[8], info[9]);
 
   /* e_x, e_y must exist or non at all */
   check_pairs(info[13], info[14]);
@@ -383,52 +383,50 @@ void fetch_vehicles_euclidean(
   vehicle->speed  =  get_anynumerical(tuple, tupdesc, info[3], 1);
 
   /*
-   * start values
-   */
-  vehicle->start_open_t = get_anyinteger(tuple, tupdesc, info[4], 0);
-  vehicle->start_close_t = get_anyinteger(tuple, tupdesc, info[5], INT64_MAX);
-
-  /*
-   * end values
-   */
-  vehicle->end_open_t = get_anyinteger(tuple, tupdesc, info[6], vehicle->start_open_t);
-  vehicle->end_close_t = get_anyinteger(tuple, tupdesc, info[7], vehicle->start_close_t);
-
-  /*
-   * service time values
-   */
-  vehicle->start_service_t = get_anyinteger(tuple, tupdesc, info[9], 0);
-  vehicle->end_service_t = get_anyinteger(tuple, tupdesc, info[10], 0);
-
-  /*
    * stops
    */
   vehicle->stops = NULL;
   vehicle->stops_size = 0;
-  if (with_stops && column_found(info[8].colNumber)) {
-    vehicle->stops = get_BigIntArr_wEmpty(tuple, tupdesc, info[8], &vehicle->stops_size);
+  if (with_stops && column_found(info[4].colNumber)) {
+    vehicle->stops = get_BigIntArr_wEmpty(tuple, tupdesc, info[4], &vehicle->stops_size);
   }
+
+  /*
+   * start values
+   */
+  vehicle->start_open_t = get_anyinteger(tuple, tupdesc, info[5], 0);
+  vehicle->start_close_t = get_anyinteger(tuple, tupdesc, info[6], INT64_MAX);
+  vehicle->start_service_t = get_anyinteger(tuple, tupdesc, info[7], 0);
+
+  /*
+   * end values
+   */
+  vehicle->end_open_t = get_anyinteger(tuple, tupdesc, info[8], vehicle->start_open_t);
+  vehicle->end_close_t = get_anyinteger(tuple, tupdesc, info[9], vehicle->start_close_t);
+  vehicle->end_service_t = get_anyinteger(tuple, tupdesc, info[10], 0);
+
+
+  /*
+   * values used in raw
+   */
+  vehicle->start_node_id = 0;
+  vehicle->end_node_id   = 0;
 
   /*
    * Values for eucledian
    */
-  vehicle->start_x = get_anynumerical(tuple, tupdesc, info[11], 0);
-  vehicle->start_y = get_anynumerical(tuple, tupdesc, info[12], 0);
-  vehicle->end_x =   get_anynumerical(tuple, tupdesc, info[13], vehicle->start_x);
-  vehicle->end_y =   get_anynumerical(tuple, tupdesc, info[14], vehicle->start_y);
+  vehicle->start_x = get_anynumerical(tuple, tupdesc, info[13], 0);
+  vehicle->start_y = get_anynumerical(tuple, tupdesc, info[14], 0);
+  vehicle->end_x =   get_anynumerical(tuple, tupdesc, info[15], vehicle->start_x);
+  vehicle->end_y =   get_anynumerical(tuple, tupdesc, info[16], vehicle->start_y);
 
-  /*
-   * Ignored values
-   */
-  vehicle->start_node_id = 0;
-  vehicle->end_node_id = 0;
 }
 
 void fetch_vehicles_raw(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
     Vehicle_t *vehicle,
-    bool with_stops) {
+    bool is_euclidean) {
   /*
    * start: pen, close must exist or non at all
    */
@@ -442,36 +440,38 @@ void fetch_vehicles_raw(
   vehicle->capacity = get_value<PAmount>(tuple, tupdesc, info[1], 0);
   vehicle->cant_v =  get_value<PAmount>(tuple, tupdesc, info[2], 1);
   vehicle->speed  =  get_anynumerical(tuple, tupdesc, info[3], 1);
-  vehicle->capacity = get_value<PAmount>(tuple, tupdesc, info[1], 0);
 
   vehicle->stops = NULL;
   vehicle->stops_size = 0;
-  if (with_stops && column_found(info[4].colNumber)) {
+  if (column_found(info[4].colNumber)) {
     vehicle->stops = get_BigIntArr_wEmpty(tuple, tupdesc, info[4], &vehicle->stops_size);
   }
 
   /*
    * start values
    */
-  vehicle->start_open_t = get_TTimestamp_plain(tuple, tupdesc, info[5], 0);
-  vehicle->start_close_t = get_TTimestamp_plain(tuple, tupdesc, info[6], INT64_MAX);
+  vehicle->start_open_t = get_value<TTimestamp>(tuple, tupdesc, info[5], 0);
+  vehicle->start_close_t = get_value<TTimestamp>(tuple, tupdesc, info[6], INT64_MAX);
   vehicle->start_service_t = get_value<TInterval>(tuple, tupdesc, info[7], 0);
 
   /*
    * end values
    */
-  vehicle->end_open_t = get_TTimestamp_plain(tuple, tupdesc, info[8], vehicle->start_open_t);
-  vehicle->end_close_t = get_TTimestamp_plain(tuple, tupdesc, info[9], vehicle->start_close_t);
+  vehicle->end_open_t = get_value<TTimestamp>(tuple, tupdesc, info[8], vehicle->start_open_t);
+  vehicle->end_close_t = get_value<TTimestamp>(tuple, tupdesc, info[9], vehicle->start_close_t);
   vehicle->end_service_t   = get_value<TInterval>(tuple, tupdesc, info[10], 0);
 
   /*
-   * values used in raw
+   * values used with id's
    */
-  vehicle->start_node_id = get_value<Id>(tuple, tupdesc, info[11], -1);
-  vehicle->end_node_id   = get_value<Id>(tuple, tupdesc, info[12], vehicle->start_node_id);
+  vehicle->start_node_id = is_euclidean? 0 : get_value<Id>(tuple, tupdesc, info[11], -1);
+  vehicle->end_node_id   = is_euclidean? 0 : get_value<Id>(tuple, tupdesc, info[12], vehicle->start_node_id);
+
   /*
-   * Ignored values
+   * Values for eucledian
    */
+  /* e_x, e_y must exist or non at all */
+  if (is_euclidean) check_pairs(info[13], info[14]);
   vehicle->start_x = get_anynumerical(tuple, tupdesc, info[13], 0);
   vehicle->start_y = get_anynumerical(tuple, tupdesc, info[14], 0);
   vehicle->end_x =   get_anynumerical(tuple, tupdesc, info[15], vehicle->start_x);

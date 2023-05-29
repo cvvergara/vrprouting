@@ -74,10 +74,12 @@ void vrp_get_shipments_euclidean(char*, PickDeliveryOrders_t**, size_t*, char**)
 void vrp_get_vehicles(char*, Vehicle_t**, size_t*, bool, char**);
 
 /** @brief Reads the vehicles information */
-void vrp_get_vehicles_raw(char*, Vehicle_t**, size_t*, bool, char**);
+void vrp_get_vehicles_raw(char*, Vehicle_t**, size_t*, bool, bool, char**);
 
+#if 1
 /** @brief Reads the vehicles information */
 void vrp_get_vehicles_euclidean(char*, Vehicle_t**, size_t*, bool, char**);
+#endif
 
 /** @brief Get the time multipliers using interval*/
 void vrp_get_timeMultipliers(char*, Time_multipliers_t**, size_t*, char**);

@@ -33,10 +33,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 namespace vrprouting {
 
 enum expectType {
-  INTEGER,  /** int32_t **/
+  ANY_INTEGER = 0, /** int64_t **/
+  TTIMESTAMP = 0, /** int64_t **/
+  AMOUNT,     /** int64_t **/
   ID,           /** int64_t **/
   MATRIX_INDEX, /** int64_t **/
-  UINT,     /** uint32_t **/
+
+  TINTERVAL,  /** positive int64_t */
+  TIMESTAMP,
+  INTERVAL
+  STEP_TYPE  /* int32_t */
+
+  PAMOUNT,     /** uint32_t **/
+  DURATION,     /** uint32_t **/
+  INTEGER,  /** int32_t **/
   IDX,      /** uint64_t **/
   ANY_INTEGER, /** int64_t **/
   ANY_NUMERICAL, /** double **/
@@ -45,9 +55,6 @@ enum expectType {
   CHAR1,
   INTEGER_ARRAY,
   ANY_INTEGER_ARRAY,
-  TIMESTAMP,
-  TINTERVAL,  /** positive int64_t */
-  INTERVAL
 };
 
 

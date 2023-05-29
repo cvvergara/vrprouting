@@ -416,8 +416,13 @@ void fetch_column_info(
     if (get_column_info(tupdesc, coldata)) {
       switch (coldata.eType) {
         case ANY_INTEGER:
-        case MATRIX_INDEX:
+        case TTIMESTAMP:
         case TINTERVAL:
+        case AMOUNT:
+        case ID:
+        case MATRIX_INDEX:
+
+        case PAMOUNT:
         case IDX:
           check_any_integer_type(coldata);
           break;
@@ -434,6 +439,7 @@ void fetch_column_info(
           check_any_integerarray_type(coldata);
           break;
         case INTEGER:
+        case STEP_TYPE:
           check_integer_type(coldata);
           break;
         case JSONB:
@@ -449,7 +455,7 @@ void fetch_column_info(
           check_interval_type(coldata);
           break;
         default:
-          throw std::string("Unexpected type of column ") + coldata.name;
+          throw std::string("Case not found: Unexpected type of column ") + coldata.name;
       }
     }
   }
