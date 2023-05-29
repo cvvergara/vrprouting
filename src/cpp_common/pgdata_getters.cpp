@@ -571,7 +571,6 @@ vrp_get_vehicles(
     info[16] = {-1, 0, false, "e_y", vrprouting::COORDINATE};
 
     /* Difference is the name and type */
-    /** TODO call the same fetcher */
     if (is_timestamps) {
       info[5] = {-1, 0, false, "s_tw_open", vrprouting::TIMESTAMP};
       info[6] = {-1, 0, false, "s_tw_close", vrprouting::TIMESTAMP};
@@ -579,19 +578,16 @@ vrp_get_vehicles(
       info[8] = {-1, 0, false, "e_tw_open", vrprouting::TIMESTAMP};
       info[9] = {-1, 0, false, "e_tw_close", vrprouting::TIMESTAMP};
       info[10] = {-1, 0, false, "e_t_service", vrprouting::INTERVAL};
-
-      vrprouting::get_data(sql, rows, total_rows, with_stops, info, &vrprouting::fetch_vehicles_timestamps);
     } else {
-
       info[5] = {-1, 0, false, "s_open", vrprouting::TTIMESTAMP};
       info[6] = {-1, 0, false, "s_close", vrprouting::TTIMESTAMP};
       info[7] = {-1, 0, false, "s_service", vrprouting::TINTERVAL};
       info[8] = {-1, 0, false, "e_open", vrprouting::TTIMESTAMP};
       info[9] = {-1, 0, false, "e_close", vrprouting::TTIMESTAMP};
       info[10] = {-1, 0, false, "e_service", vrprouting::TINTERVAL};
-
-      vrprouting::get_data(sql, rows, total_rows, is_euclidean, info, &vrprouting::fetch_vehicles_raw);
     }
+
+    vrprouting::get_data(sql, rows, total_rows, is_euclidean, info, &vrprouting::fetch_vehicles_raw);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
     (*total_rows) = 0;

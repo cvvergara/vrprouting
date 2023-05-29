@@ -99,9 +99,11 @@ void fetch_vehicles_raw(
     const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
     Vehicle_t*, bool);
 
+#if 0
 void fetch_vehicles_timestamps(
     const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
     Vehicle_t*, bool);
+#endif
 
 void fetch_vroom_vehicles(
     const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
