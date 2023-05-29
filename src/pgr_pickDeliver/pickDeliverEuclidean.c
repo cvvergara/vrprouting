@@ -92,7 +92,9 @@ process(
     PGR_DBG("Load vehicles");
     Vehicle_t *vehicles_arr = NULL;
     size_t total_vehicles = 0;
-    vrp_get_vehicles_euclidean(vehicles_sql, &vehicles_arr, &total_vehicles, false, &err_msg);
+    bool with_stops = false;
+    bool is_euclidean = true;
+    vrp_get_vehicles_raw(vehicles_sql, &vehicles_arr, &total_vehicles, with_stops, is_euclidean, &err_msg);
     throw_error(err_msg, vehicles_sql);
     PGR_DBG("total vehicles %ld", total_vehicles);
 

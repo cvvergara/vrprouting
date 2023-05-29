@@ -603,26 +603,26 @@ vrp_get_vehicles_raw(
   try {
     std::vector<Column_info_t> info{17};
 
-    info[0] = {-1, 0, true, "id", vrprouting::ANY_INTEGER};
-    info[1] = {-1, 0, true, "capacity", vrprouting::ANY_INTEGER};
-    info[2] = {-1, 0, false, "number", vrprouting::ANY_INTEGER};
-    info[3] = {-1, 0, false, "speed", vrprouting::ANY_NUMERICAL};
+    info[0] = {-1, 0, true, "id", vrprouting::ID};
+    info[1] = {-1, 0, true, "capacity", vrprouting::PAMOUNT};
+    info[2] = {-1, 0, false, "number", vrprouting::PAMOUNT};
+    info[3] = {-1, 0, false, "speed", vrprouting::SPEED};
     info[4] = {-1, 0, with_stops, "stops", vrprouting::ANY_INTEGER_ARRAY};
 
-    info[5] = {-1, 0, false, "s_open", vrprouting::ANY_INTEGER};
-    info[6] = {-1, 0, false, "s_close", vrprouting::ANY_INTEGER};
-    info[7] = {-1, 0, false, "s_service", vrprouting::ANY_INTEGER};
-    info[8] = {-1, 0, false, "e_open", vrprouting::ANY_INTEGER};
-    info[9] = {-1, 0, false, "e_close", vrprouting::ANY_INTEGER};
-    info[10] = {-1, 0, false, "e_service", vrprouting::ANY_INTEGER};
+    info[5] = {-1, 0, false, "s_open", vrprouting::TTIMESTAMP};
+    info[6] = {-1, 0, false, "s_close", vrprouting::TTIMESTAMP};
+    info[7] = {-1, 0, false, "s_service", vrprouting::TINTERVAL};
+    info[8] = {-1, 0, false, "e_open", vrprouting::TTIMESTAMP};
+    info[9] = {-1, 0, false, "e_close", vrprouting::TTIMESTAMP};
+    info[10] = {-1, 0, false, "e_service", vrprouting::TINTERVAL};
 
-    info[11] = {-1, 0, !is_euclidean, "s_id", vrprouting::ANY_INTEGER};
-    info[12] = {-1, 0, false, "e_id", vrprouting::ANY_INTEGER};
+    info[11] = {-1, 0, !is_euclidean, "s_id", vrprouting::ID};
+    info[12] = {-1, 0, false, "e_id", vrprouting::ID};
 
-    info[13] = {-1, 0, is_euclidean, "s_x", vrprouting::ANY_NUMERICAL};
-    info[14] = {-1, 0, is_euclidean, "s_y", vrprouting::ANY_NUMERICAL};
-    info[15] = {-1, 0, false, "e_x", vrprouting::ANY_NUMERICAL};
-    info[16] = {-1, 0, false, "e_y", vrprouting::ANY_NUMERICAL};
+    info[13] = {-1, 0, is_euclidean, "s_x", vrprouting::COORDINATE};
+    info[14] = {-1, 0, is_euclidean, "s_y", vrprouting::COORDINATE};
+    info[15] = {-1, 0, false, "e_x", vrprouting::COORDINATE};
+    info[16] = {-1, 0, false, "e_y", vrprouting::COORDINATE};
 
     vrprouting::get_data(sql, rows, total_rows, is_euclidean, info, &vrprouting::fetch_vehicles_raw);
   } catch (const std::string &ex) {
@@ -658,8 +658,8 @@ vrp_get_vehicles_euclidean(
 
     info[0] = {-1, 0, true, "id", vrprouting::ID};
     info[1] = {-1, 0, true, "capacity", vrprouting::PAMOUNT};
-    info[2] = {-1, 0, false, "number", vrprouting::ANY_INTEGER};
-    info[3] = {-1, 0, false, "speed", vrprouting::ANY_NUMERICAL};
+    info[2] = {-1, 0, false, "number", vrprouting::PAMOUNT};
+    info[3] = {-1, 0, false, "speed", vrprouting::SPEED};
     info[4] = {-1, 0, with_stops, "stops", vrprouting::ANY_INTEGER_ARRAY};
 
     info[5] = {-1, 0, false, "s_open", vrprouting::TTIMESTAMP};
@@ -673,10 +673,10 @@ vrp_get_vehicles_euclidean(
     info[11] = {-1, 0, false, "s_id", vrprouting::ID};
     info[12] = {-1, 0, false, "e_id", vrprouting::ID};
 
-    info[13] = {-1, 0, true, "s_x", vrprouting::ANY_NUMERICAL};
-    info[14] = {-1, 0, true, "s_y", vrprouting::ANY_NUMERICAL};
-    info[15] = {-1, 0, false, "e_x", vrprouting::ANY_NUMERICAL};
-    info[16] = {-1, 0, false, "e_y", vrprouting::ANY_NUMERICAL};
+    info[13] = {-1, 0, true, "s_x", vrprouting::COORDINATE};
+    info[14] = {-1, 0, true, "s_y", vrprouting::COORDINATE};
+    info[15] = {-1, 0, false, "e_x", vrprouting::COORDINATE};
+    info[16] = {-1, 0, false, "e_y", vrprouting::COORDINATE};
 
     vrprouting::get_data(sql, rows, total_rows, with_stops, info, &vrprouting::fetch_vehicles_euclidean);
   } catch (const std::string &ex) {

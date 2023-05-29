@@ -472,10 +472,10 @@ void fetch_vehicles_raw(
    */
   /* e_x, e_y must exist or non at all */
   if (is_euclidean) check_pairs(info[13], info[14]);
-  vehicle->start_x = get_anynumerical(tuple, tupdesc, info[13], 0);
-  vehicle->start_y = get_anynumerical(tuple, tupdesc, info[14], 0);
-  vehicle->end_x =   get_anynumerical(tuple, tupdesc, info[15], vehicle->start_x);
-  vehicle->end_y =   get_anynumerical(tuple, tupdesc, info[16], vehicle->start_y);
+  vehicle->start_x = is_euclidean? get_anynumerical(tuple, tupdesc, info[13], 0) : 0;
+  vehicle->start_y = is_euclidean? get_anynumerical(tuple, tupdesc, info[14], 0) : 0;
+  vehicle->end_x =   is_euclidean? get_anynumerical(tuple, tupdesc, info[15], vehicle->start_x) : 0;
+  vehicle->end_y =   is_euclidean? get_anynumerical(tuple, tupdesc, info[16], vehicle->start_y) : 0;
 }
 
 void fetch_vehicles_timestamps(

@@ -76,7 +76,7 @@ void vrp_get_vehicles(char*, Vehicle_t**, size_t*, bool, char**);
 /** @brief Reads the vehicles information */
 void vrp_get_vehicles_raw(char*, Vehicle_t**, size_t*, bool, bool, char**);
 
-#if 1
+#if 0
 /** @brief Reads the vehicles information */
 void vrp_get_vehicles_euclidean(char*, Vehicle_t**, size_t*, bool, char**);
 #endif

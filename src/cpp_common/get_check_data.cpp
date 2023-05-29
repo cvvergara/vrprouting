@@ -416,14 +416,8 @@ void fetch_column_info(
     if (get_column_info(tupdesc, coldata)) {
       switch (coldata.eType) {
         case ANY_INTEGER:
-        case TTIMESTAMP:
         case TINTERVAL:
-        case AMOUNT:
-        case ID:
-        case MATRIX_INDEX:
-
-        case PAMOUNT:
-        case IDX:
+        case ANY_UINT:
           check_any_integer_type(coldata);
           break;
         case ANY_NUMERICAL:
@@ -439,7 +433,6 @@ void fetch_column_info(
           check_any_integerarray_type(coldata);
           break;
         case INTEGER:
-        case STEP_TYPE:
           check_integer_type(coldata);
           break;
         case JSONB:
