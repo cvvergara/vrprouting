@@ -636,60 +636,6 @@ vrp_get_vehicles_raw(
   }
 }
 
-#if 1
-/**
- * @param[in] sql SQL query to execute
- * @param[in] with_stops do not ignore stops column
- * @param[out] rows C Container that holds the data
- * @param[out] total_rows Total rows recieved
- */
-void
-vrp_get_vehicles_euclidean(
-    char *sql,
-    Vehicle_t **rows,
-    size_t *total_rows,
-    bool with_stops,
-    char **err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_free;
-  using vrprouting::Column_info_t;
-  try {
-    std::vector<Column_info_t> info{17};
-
-    info[0] = {-1, 0, true, "id", vrprouting::ID};
-    info[1] = {-1, 0, true, "capacity", vrprouting::PAMOUNT};
-    info[2] = {-1, 0, false, "number", vrprouting::PAMOUNT};
-    info[3] = {-1, 0, false, "speed", vrprouting::SPEED};
-    info[4] = {-1, 0, with_stops, "stops", vrprouting::ANY_INTEGER_ARRAY};
-
-    info[5] = {-1, 0, false, "s_open", vrprouting::TTIMESTAMP};
-    info[6] = {-1, 0, false, "s_close", vrprouting::TTIMESTAMP};
-    info[7] = {-1, 0, false, "s_service", vrprouting::TINTERVAL};
-
-    info[7] = {-1, 0, false, "e_open", vrprouting::TTIMESTAMP};
-    info[9] = {-1, 0, false, "e_close", vrprouting::TTIMESTAMP};
-    info[10] = {-1, 0, false, "e_service", vrprouting::TINTERVAL};
-
-    info[11] = {-1, 0, false, "s_id", vrprouting::ID};
-    info[12] = {-1, 0, false, "e_id", vrprouting::ID};
-
-    info[13] = {-1, 0, true, "s_x", vrprouting::COORDINATE};
-    info[14] = {-1, 0, true, "s_y", vrprouting::COORDINATE};
-    info[15] = {-1, 0, false, "e_x", vrprouting::COORDINATE};
-    info[16] = {-1, 0, false, "e_y", vrprouting::COORDINATE};
-
-    vrprouting::get_data(sql, rows, total_rows, with_stops, info, &vrprouting::fetch_vehicles_euclidean);
-  } catch (const std::string &ex) {
-    (*rows) = pgr_free(*rows);
-    (*total_rows) = 0;
-    *err_msg = pgr_msg(ex.c_str());
-  } catch(...) {
-    (*rows) = pgr_free(*rows);
-    (*total_rows) = 0;
-    *err_msg = pgr_msg("Caught unknown exception!");
-  }
-}
-#endif
 
 /**
  * @param[in] sql SQL query to execute
