@@ -587,7 +587,7 @@ vrp_get_vehicles(
       info[10] = {-1, 0, false, "e_service", vrprouting::TINTERVAL};
     }
 
-    vrprouting::get_data(sql, rows, total_rows, is_euclidean, info, &vrprouting::fetch_vehicles_raw);
+    vrprouting::get_data(sql, rows, total_rows, is_euclidean, info, &vrprouting::fetch_vehicles);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
     (*total_rows) = 0;
