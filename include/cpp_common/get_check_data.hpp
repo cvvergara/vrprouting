@@ -102,17 +102,23 @@ T get_positive(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_inf
 template <typename T>
 T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, T opt_value) {
   switch (info.eType) {
-    case vrprouting::ANY_INTEGER :
+    case ANY_INTEGER :
       return static_cast<T>(get_integral<int64_t>(tuple, tupdesc,  info, opt_value));
       break;
-    case vrprouting::TINTERVAL :
+    case ANY_UINT :
+      return static_cast<T>(get_positive<int64_t>(tuple, tupdesc,  info, opt_value));
+      break;
+    case TINTERVAL :
       return static_cast<T>(get_positive<TInterval>(tuple, tupdesc,  info, opt_value));
       break;
-    case vrprouting::INTERVAL :
+    case TIMESTAMP :
+      return static_cast<T>(get_TTimestamp(tuple, tupdesc,  info, opt_value));
+      break;
+    case INTERVAL :
       return static_cast<T>(get_PositiveTInterval(tuple, tupdesc,  info, opt_value));
       break;
     default:
-      return static_cast<T>(get_integral<T>(tuple, tupdesc,  info, opt_value));
+      throw std::string("Missing case value ") + info.name;
       break;
   }
 }

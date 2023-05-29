@@ -430,7 +430,7 @@ void fetch_vehicles_raw(
     Vehicle_t *vehicle,
     bool is_euclidean) {
   /*
-   * start: pen, close must exist or non at all
+   * start: open, close must exist or non at all
    */
   check_pairs(info[5], info[6]);
   /*
@@ -448,7 +448,6 @@ void fetch_vehicles_raw(
   if (column_found(info[4].colNumber)) {
     vehicle->stops = get_BigIntArr_wEmpty(tuple, tupdesc, info[4], &vehicle->stops_size);
   }
-
   /*
    * start values
    */
@@ -484,21 +483,21 @@ void fetch_vehicles_timestamps(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
     Vehicle_t *vehicle,
-    bool with_stops) {
+    bool) {
+  fetch_vehicles_raw(tuple, tupdesc, info, vehicle, false);
+#if 0
   /*
    * s_tw_open, s_tw_close must exist or non at all
    */
-  check_pairs(info[6], info[7]);
-  check_pairs(info[7], info[6]);
+  check_pairs(info[5], info[6]);
   /*
    * e_tw_open, e_tw_close must exist or non at all
    */
-  check_pairs(info[10], info[11]);
-  check_pairs(info[10], info[11]);
+  check_pairs(info[8], info[9]);
 
-  vehicle->id = get_positive<Id>(tuple, tupdesc, info[0], -1);
-  vehicle->capacity = get_positive<PAmount>(tuple, tupdesc, info[1], 0);
-  vehicle->cant_v =  get_positive<PAmount>(tuple, tupdesc, info[2], 1);
+  vehicle->id = get_value<Id>(tuple, tupdesc, info[0], -1);
+  vehicle->capacity = get_value<PAmount>(tuple, tupdesc, info[1], 0);
+  vehicle->cant_v =  get_value<PAmount>(tuple, tupdesc, info[2], 1);
   vehicle->speed  = get_anynumerical(tuple, tupdesc, info[3], 1);
   vehicle->stops = NULL;
   vehicle->stops_size = 0;
@@ -511,7 +510,7 @@ void fetch_vehicles_timestamps(
    */
   vehicle->start_open_t    = get_TTimestamp(tuple, tupdesc, info[5], 0);
   vehicle->start_close_t   = get_TTimestamp(tuple, tupdesc, info[6], INT64_MAX);
-  vehicle->start_service_t = get_PositiveTInterval(tuple, tupdesc, info[7], 0);
+  vehicle->start_service_t = get_value<TInterval>(tuple, tupdesc, info[7], 0);
 
   /*
    * end values
@@ -522,6 +521,7 @@ void fetch_vehicles_timestamps(
 
   vehicle->start_node_id   = get_positive<Id>(tuple, tupdesc, info[11], -1);
   vehicle->end_node_id   = get_positive<Id>(tuple, tupdesc, info[12], vehicle->start_node_id);
+
   /*
    * Ignored values
    */
@@ -529,6 +529,7 @@ void fetch_vehicles_timestamps(
   vehicle->start_y = 0;
   vehicle->end_x =   0;
   vehicle->end_y =   0;
+#endif
 }
 
 void fetch_vroom_vehicles(

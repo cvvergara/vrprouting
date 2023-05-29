@@ -795,6 +795,7 @@ get_anynumerical(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_i
   return column_found(info.colNumber)? getFloat8(tuple, tupdesc, info) : opt_value;
 }
 
+// TODO change to get_timestamp
 /**
  * @params [in] tuple
  * @params [in] tupdesc
@@ -807,9 +808,7 @@ get_anynumerical(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_i
 TTimestamp
 get_TTimestamp(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TTimestamp opt_value) {
-  return column_found(info.colNumber)?
-    getTimeStamp(tuple, tupdesc, info)
-    : opt_value;
+  return column_found(info.colNumber)?  getTimeStamp(tuple, tupdesc, info) : opt_value;
 }
 
 /**
