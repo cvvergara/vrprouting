@@ -118,7 +118,7 @@ process(
   Vehicle_t *vehicles_arr = NULL;
   size_t total_vehicles = 0;
   if (use_timestamps) {
-    vrp_get_vehicles(vehicles_sql, &vehicles_arr, &total_vehicles, true, &err_msg);
+    vrp_get_vehicles(vehicles_sql, &vehicles_arr, &total_vehicles, with_stops, is_euclidean, use_timestamps, &err_msg);
     throw_error(err_msg, vehicles_sql);
   } else {
     vrp_get_vehicles_raw(vehicles_sql, &vehicles_arr, &total_vehicles, with_stops, is_euclidean, &err_msg);

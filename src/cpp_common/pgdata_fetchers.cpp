@@ -363,6 +363,7 @@ void fetch_tw(
 
 
 
+#if 0
 void fetch_vehicles_euclidean(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
@@ -421,6 +422,7 @@ void fetch_vehicles_euclidean(
   vehicle->end_y =   get_anynumerical(tuple, tupdesc, info[16], vehicle->start_y);
 
 }
+#endif
 
 void fetch_vehicles_raw(
     const HeapTuple tuple, const TupleDesc &tupdesc,
@@ -507,19 +509,19 @@ void fetch_vehicles_timestamps(
   /*
    * start values
    */
-  vehicle->start_node_id   = get_positive<Id>(tuple, tupdesc, info[5], -1);
-  vehicle->start_open_t    = get_TTimestamp(tuple, tupdesc, info[6], 0);
-  vehicle->start_close_t   = get_TTimestamp(tuple, tupdesc, info[7], INT64_MAX);
-  vehicle->start_service_t = get_PositiveTInterval(tuple, tupdesc, info[8], 0);
+  vehicle->start_open_t    = get_TTimestamp(tuple, tupdesc, info[5], 0);
+  vehicle->start_close_t   = get_TTimestamp(tuple, tupdesc, info[6], INT64_MAX);
+  vehicle->start_service_t = get_PositiveTInterval(tuple, tupdesc, info[7], 0);
 
   /*
    * end values
    */
-  vehicle->end_node_id   = get_positive<Id>(tuple, tupdesc, info[9], vehicle->start_node_id);
-  vehicle->end_open_t    = get_TTimestamp(tuple, tupdesc, info[10], vehicle->start_open_t);
-  vehicle->end_close_t   = get_TTimestamp(tuple, tupdesc, info[11], vehicle->start_close_t);
-  vehicle->end_service_t = get_PositiveTInterval(tuple, tupdesc, info[12], 0);
+  vehicle->end_open_t    = get_TTimestamp(tuple, tupdesc, info[8], vehicle->start_open_t);
+  vehicle->end_close_t   = get_TTimestamp(tuple, tupdesc, info[9], vehicle->start_close_t);
+  vehicle->end_service_t = get_PositiveTInterval(tuple, tupdesc, info[10], 0);
 
+  vehicle->start_node_id   = get_positive<Id>(tuple, tupdesc, info[11], -1);
+  vehicle->end_node_id   = get_positive<Id>(tuple, tupdesc, info[12], vehicle->start_node_id);
   /*
    * Ignored values
    */

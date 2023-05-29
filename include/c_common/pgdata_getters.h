@@ -99,7 +99,7 @@ void vrp_get_vroom_shipments_time_windows(char*, Vroom_time_window_t**,size_t*, 
 
 /** Vehicles **/
 /** @brief Reads the vehicles information */
-void vrp_get_vehicles(char*, Vehicle_t**, size_t*, bool, char**);
+void vrp_get_vehicles(char*, Vehicle_t**, size_t*, bool, bool, bool, char**);
 
 /** @brief Reads the vehicles information */
 void vrp_get_vehicles_raw(char*, Vehicle_t**, size_t*, bool, bool, char**);
