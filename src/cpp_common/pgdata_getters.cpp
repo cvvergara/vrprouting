@@ -612,6 +612,7 @@ vrp_get_vehicles(
 }
 
 
+#if 0
 /**
  * @param[in] sql SQL query to execute
  * @param[in] with_stops do not ignore stops column
@@ -666,7 +667,7 @@ vrp_get_vehicles_raw(
     *err_msg = pgr_msg("Caught unknown exception!");
   }
 }
-
+#endif
 
 /**
  * @param[in] sql SQL query to execute

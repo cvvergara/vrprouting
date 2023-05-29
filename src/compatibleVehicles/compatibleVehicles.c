@@ -90,13 +90,8 @@ process(
     size_t total_vehicles = 0;
     bool with_stops = false;
     bool is_euclidean = false;
-    if (use_timestamps) {
-      vrp_get_vehicles(vehicles_sql, &vehicles_arr, &total_vehicles, with_stops, is_euclidean, use_timestamps, &err_msg);
-      throw_error(err_msg, vehicles_sql);
-    } else {
-      vrp_get_vehicles_raw(vehicles_sql, &vehicles_arr, &total_vehicles, with_stops, is_euclidean, &err_msg);
-      throw_error(err_msg, vehicles_sql);
-    }
+    vrp_get_vehicles(vehicles_sql, &vehicles_arr, &total_vehicles, with_stops, is_euclidean, use_timestamps, &err_msg);
+    throw_error(err_msg, vehicles_sql);
 
     if (total_vehicles == 0) {
         (*result_count) = 0;
