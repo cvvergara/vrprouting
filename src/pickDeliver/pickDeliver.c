@@ -65,6 +65,10 @@ process(
   char *log_msg = NULL;
   char *notice_msg = NULL;
   char *err_msg = NULL;
+
+  bool with_stops = true;
+  bool is_euclidean = false;
+
   /*
    * Adjusting timestamp data to timezone UTC
    */
@@ -98,7 +102,7 @@ process(
     vrp_get_shipments(pd_orders_sql, &pd_orders_arr, &total_pd_orders, &err_msg);
     throw_error(err_msg, pd_orders_sql);
   } else {
-    vrp_get_shipments_raw(pd_orders_sql, &pd_orders_arr, &total_pd_orders, &err_msg);
+    vrp_get_shipments_raw(pd_orders_sql, &pd_orders_arr, &total_pd_orders, is_euclidean, &err_msg);
     throw_error(err_msg, pd_orders_sql);
   }
 
@@ -113,8 +117,6 @@ process(
     return;
   }
 
-  bool with_stops = true;
-  bool is_euclidean = false;
   Vehicle_t *vehicles_arr = NULL;
   size_t total_vehicles = 0;
   vrp_get_vehicles(vehicles_sql, &vehicles_arr, &total_vehicles, with_stops, is_euclidean, use_timestamps, &err_msg);

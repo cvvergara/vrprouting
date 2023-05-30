@@ -69,10 +69,12 @@ void vrp_get_vroom_matrix(char*, Vroom_matrix_t**,size_t*, bool, char**);
 void vrp_get_shipments(char*, PickDeliveryOrders_t**, size_t*, char**);
 
 /** @brief Reads the pick-Deliver shipments for raw data*/
-void vrp_get_shipments_raw(char*, PickDeliveryOrders_t**, size_t*, char**);
+void vrp_get_shipments_raw(char*, PickDeliveryOrders_t**, size_t*, bool, char**);
 
+#if 0
 /** @brief Reads the pick-Deliver shipments for euclidean information*/
 void vrp_get_shipments_euclidean(char*, PickDeliveryOrders_t**, size_t*, char**);
+#endif
 
 
 /** @brief Get the time multipliers using interval*/
