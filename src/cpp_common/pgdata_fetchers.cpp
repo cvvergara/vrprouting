@@ -77,15 +77,10 @@ void fetch_breaks(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
     Vroom_break_t *vroom_break,
-    bool is_plain) {
-  vroom_break->id = get_positive<Idx>(tuple, tupdesc, info[0], 0);
-  vroom_break->vehicle_id = get_positive<Idx>(tuple, tupdesc, info[1], 0);
-  if (is_plain) {
-    vroom_break->service = get_positive<Duration>(tuple, tupdesc, info[2], 0);
-  } else {
-    vroom_break->service =
-        (Duration)get_PositiveTInterval(tuple, tupdesc, info[2], 0);
-  }
+    bool) {
+  vroom_break->id = get_value<Idx>(tuple, tupdesc, info[0], 0);
+  vroom_break->vehicle_id = get_value<Idx>(tuple, tupdesc, info[1], 0);
+  vroom_break->service = get_value<Duration>(tuple, tupdesc, info[2], 0);
   vroom_break->data = get_jsonb(tuple, tupdesc, info[3]);
 }
 
@@ -93,17 +88,12 @@ void fetch_jobs(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
     Vroom_job_t *job,
-    bool is_plain) {
-  job->id = get_positive<Idx>(tuple, tupdesc, info[0], 0);
-  job->location_id = get_positive<MatrixIndex>(tuple, tupdesc, info[1], 0);
+    bool) {
+  job->id = get_value<Idx>(tuple, tupdesc, info[0], 0);
+  job->location_id = get_value<MatrixIndex>(tuple, tupdesc, info[1], 0);
 
-  if (is_plain) {
-    job->setup = get_positive<Duration>(tuple, tupdesc, info[2], 0);
-    job->service = get_positive<Duration>(tuple, tupdesc, info[3], 0);
-  } else {
-    job->setup = (Duration)get_PositiveTInterval(tuple, tupdesc, info[2], 0);
-    job->service = (Duration)get_PositiveTInterval(tuple, tupdesc, info[3], 0);
-  }
+  job->setup = get_value<Duration>(tuple, tupdesc, info[2], 0);
+  job->service = get_value<Duration>(tuple, tupdesc, info[3], 0);
 
   /*
    * The deliveries
@@ -137,10 +127,7 @@ void fetch_matrix_vroom(
     matrix->cost = 0;
   matrix->start_id = get_value<MatrixIndex>(tuple, tupdesc, info[0], -1);
   matrix->end_id = get_value<MatrixIndex>(tuple, tupdesc, info[1], -1);
-
   matrix->duration = get_value<Duration>(tuple, tupdesc, info[2], 0);
-
-  // If unspecified, cost is same as the duration
   matrix->cost = get_value<TravelCost>(tuple, tupdesc, info[3], matrix->duration);
 }
 
