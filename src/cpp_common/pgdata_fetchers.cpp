@@ -95,25 +95,15 @@ void fetch_jobs(
   job->setup = get_value<Duration>(tuple, tupdesc, info[2], 0);
   job->service = get_value<Duration>(tuple, tupdesc, info[3], 0);
 
-  /*
-   * The deliveries
-   */
   job->delivery_size = 0;
-  job->delivery = get_PosBigIntArr_allowEmpty(tuple, tupdesc, info[4], job->delivery_size);
+  job->delivery = get_array<Amount>(tuple, tupdesc, info[4], job->delivery_size);
 
-  /*
-   * The pickups
-   */
   job->pickup_size = 0;
-  job->pickup = get_PosBigIntArr_allowEmpty(tuple, tupdesc, info[5], job->pickup_size);
+  job->pickup = get_array<Amount>(tuple, tupdesc, info[5], job->pickup_size);
 
   job->skills_size = 0;
-  job->skills = column_found(info[6].colNumber) ?
-    get_PositiveIntArr_allowEmpty(tuple, tupdesc, info[6], job->skills_size)
-    : NULL;
-
-  job->priority = get_positive<Priority>(tuple, tupdesc, info[7], 0);
-
+  job->skills = get_uint_array<Skill>(tuple, tupdesc, info[6], job->skills_size);
+  job->priority = get_value<Priority>(tuple, tupdesc, info[7], 0);
   job->data = get_jsonb(tuple, tupdesc, info[8]);
 }
 
@@ -137,13 +127,13 @@ void fetch_vroom_orders_timestamps(
     const std::vector<Column_info_t> &info,
     PickDeliveryOrders_t *pd_order,
     bool) {
-  pd_order->id = get_positive<Id>(tuple, tupdesc, info[0], -1);
-  pd_order->demand = get_positive<PAmount>(tuple, tupdesc, info[1], 0);
+  pd_order->id = get_value<Id>(tuple, tupdesc, info[0], -1);
+  pd_order->demand = get_value<PAmount>(tuple, tupdesc, info[1], 0);
 
   /*
    * the pickups
    */
-  pd_order->pick_node_id   = get_positive<Id>(tuple, tupdesc, info[2], -1);
+  pd_order->pick_node_id   = get_value<Id>(tuple, tupdesc, info[2], -1);
   pd_order->pick_open_t    = get_TTimestamp(tuple, tupdesc, info[3], -1);
   pd_order->pick_close_t   = get_TTimestamp(tuple, tupdesc, info[4], -1);
   pd_order->pick_service_t = get_TInterval(tuple, tupdesc, info[5], 0);
@@ -151,7 +141,7 @@ void fetch_vroom_orders_timestamps(
   /*
    * the deliveries
    */
-  pd_order->deliver_node_id   = get_positive<Id>(tuple, tupdesc, info[6], -1);
+  pd_order->deliver_node_id   = get_value<Id>(tuple, tupdesc, info[6], -1);
   pd_order->deliver_open_t    = get_TTimestamp(tuple, tupdesc, info[7], -1);
   pd_order->deliver_close_t   = get_TTimestamp(tuple, tupdesc, info[8], -1);
   pd_order->deliver_service_t = get_TInterval(tuple, tupdesc, info[9], 0);
@@ -179,7 +169,7 @@ void fetch_orders_raw(
   /*
    * the pickups
    */
-  pd_order->pick_node_id   = get_positive<Id>(tuple, tupdesc, info[8], -1);
+  pd_order->pick_node_id   = get_value<Id>(tuple, tupdesc, info[8], -1);
   pd_order->pick_open_t    = get_TTimestamp_plain(tuple, tupdesc, info[2], -1);
   pd_order->pick_close_t   = get_TTimestamp_plain(tuple, tupdesc, info[3], -1);
   pd_order->pick_service_t = get_TInterval_plain(tuple, tupdesc, info[4], 0);
@@ -187,7 +177,7 @@ void fetch_orders_raw(
   /*
    * the deliveries
    */
-  pd_order->deliver_node_id   = get_positive<Id>(tuple, tupdesc, info[9], -1);
+  pd_order->deliver_node_id   = get_value<Id>(tuple, tupdesc, info[9], -1);
   pd_order->deliver_open_t    = get_TTimestamp_plain(tuple, tupdesc, info[5], -1);
   pd_order->deliver_close_t   = get_TTimestamp_plain(tuple, tupdesc, info[6], -1);
   pd_order->deliver_service_t = get_TInterval_plain(tuple, tupdesc, info[7], 0);

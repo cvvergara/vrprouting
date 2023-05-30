@@ -182,10 +182,10 @@ vrp_get_vroom_jobs(
     info[1] = {-1, 0, true, "location_id", vrprouting::MATRIX_INDEX};
     info[2] = {-1, 0, false, "setup",   is_plain? vrprouting::TINTERVAL : vrprouting::INTERVAL};
     info[3] = {-1, 0, false, "service", is_plain? vrprouting::TINTERVAL : vrprouting::INTERVAL};
-    info[4] = {-1, 0, false, "delivery", vrprouting::ANY_INTEGER_ARRAY};
-    info[5] = {-1, 0, false, "pickup", vrprouting::ANY_INTEGER_ARRAY};
-    info[6] = {-1, 0, false, "skills", vrprouting::INTEGER_ARRAY};
-    info[7] = {-1, 0, false, "priority", vrprouting::INTEGER};
+    info[4] = {-1, 0, false, "delivery", vrprouting::ANY_POSITIVE_ARRAY};
+    info[5] = {-1, 0, false, "pickup", vrprouting::ANY_POSITIVE_ARRAY};
+    info[6] = {-1, 0, false, "skills", vrprouting::ANY_UINT_ARRAY};
+    info[7] = {-1, 0, false, "priority", vrprouting::ANY_UINT};
     info[8] = {-1, 0, false, "data", vrprouting::JSONB};
 
   vrprouting::get_data(sql, rows, total_rows, is_plain, info, &vrprouting::fetch_jobs);
