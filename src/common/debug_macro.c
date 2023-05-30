@@ -6,7 +6,7 @@
 #include "c_types/pickDeliveryOrders_t.h"
 #include "c_types/vroom/vroom_shipment_t.h"
 #include "c_types/vroom/vroom_time_window_t.h"
-#include "c_types/vroom/vroom_break_t.h"
+#include "c_types/break_types.h"
 
 void DBG_PickDeliveryOrders_t(PickDeliveryOrders_t *dataArr, size_t total, char* title) {
 #ifndef NDEBUG

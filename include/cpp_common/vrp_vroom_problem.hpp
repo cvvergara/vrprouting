@@ -37,7 +37,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "c_types/matrix_types.h"
 #include "c_types/vehicle_types.h"
-#include "c_types/vroom/vroom_break_t.h"
+#include "c_types/break_types.h"
 #include "c_types/vroom/vroom_job_t.h"
 #include "c_types/vroom/vroom_rt.h"
 #include "c_types/vroom/vroom_shipment_t.h"

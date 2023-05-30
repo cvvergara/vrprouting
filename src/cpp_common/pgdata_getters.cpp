@@ -43,7 +43,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "c_types/info_t.hpp"
 #include "c_types/vroom/vroom_time_window_t.h"
-#include "c_types/vroom/vroom_break_t.h"
+#include "c_types/break_types.h"
 #include "c_types/vroom/vroom_job_t.h"
 #include "c_types/vroom/vroom_shipment_t.h"
 #include "c_types/matrix_types.h"
@@ -150,12 +150,8 @@ vrp_get_vroom_breaks(
 
     info[0] = {-1, 0, true, "id", vrprouting::IDX};
     info[1] = {-1, 0, true, "vehicle_id", vrprouting::IDX};
-    info[2] = {-1, 0, false, "service", vrprouting::INTERVAL};
+    info[2] = {-1, 0, false, "service", is_plain? vrprouting::TINTERVAL : vrprouting::INTERVAL};
     info[3] = {-1, 0, false, "data", vrprouting::JSONB};
-
-  if (is_plain) {
-    info[2].eType = vrprouting::INTEGER;  // service
-  }
 
   vrprouting::get_data(sql, rows, total_rows, is_plain, info, &vrprouting::fetch_breaks);
   } catch (const std::string &ex) {
@@ -190,18 +186,14 @@ vrp_get_vroom_jobs(
 
     info[0] = {-1, 0, true, "id", vrprouting::IDX};
     info[1] = {-1, 0, true, "location_id", vrprouting::MATRIX_INDEX};
-    info[2] = {-1, 0, false, "setup", vrprouting::INTERVAL};
-    info[3] = {-1, 0, false, "service", vrprouting::INTERVAL};
+    info[2] = {-1, 0, false, "setup",   is_plain? vrprouting::TINTERVAL : vrprouting::INTERVAL};
+    info[3] = {-1, 0, false, "service", is_plain? vrprouting::TINTERVAL : vrprouting::INTERVAL};
     info[4] = {-1, 0, false, "delivery", vrprouting::ANY_INTEGER_ARRAY};
     info[5] = {-1, 0, false, "pickup", vrprouting::ANY_INTEGER_ARRAY};
     info[6] = {-1, 0, false, "skills", vrprouting::INTEGER_ARRAY};
     info[7] = {-1, 0, false, "priority", vrprouting::INTEGER};
     info[8] = {-1, 0, false, "data", vrprouting::JSONB};
 
-  if (is_plain) {
-    info[2].eType = vrprouting::INTEGER;         // setup
-    info[3].eType = vrprouting::INTEGER;         // service
-  }
   vrprouting::get_data(sql, rows, total_rows, is_plain, info, &vrprouting::fetch_jobs);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
