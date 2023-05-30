@@ -71,12 +71,6 @@ void fetch_orders_raw(
     const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
     PickDeliveryOrders_t*, bool);
 
-#if 0
-void fetch_orders_euclidean(
-    const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
-    PickDeliveryOrders_t*, bool);
-#endif
-
 void fetch_vroom_shipments(
     const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
     Vroom_shipment_t*, bool);

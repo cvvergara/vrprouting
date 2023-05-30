@@ -289,49 +289,6 @@ vrp_get_shipments_raw(
   }
 }
 
-#if 0
-/**
- * @param[in] sql SQL query to execute
- * @param[out] rows C Container that holds the data
- * @param[out] total_rows Total rows recieved
- */
-void
-vrp_get_shipments_euclidean(
-    char *sql,
-    PickDeliveryOrders_t **rows,
-    size_t *total_rows,
-    char **err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_free;
-  using vrprouting::Column_info_t;
-  try {
-    std::vector<Column_info_t> info{12};
-
-    info[0] = {-1, 0, true, "id", vrprouting::ANY_INTEGER};
-    info[1] = {-1, 0, true, "amount", vrprouting::ANY_INTEGER};
-    info[2] = {-1, 0, true, "p_open", vrprouting::ANY_INTEGER};
-    info[3] = {-1, 0, true, "p_close", vrprouting::ANY_INTEGER};
-    info[4] = {-1, 0, false, "p_service", vrprouting::ANY_INTEGER};
-    info[5] = {-1, 0, true, "d_open", vrprouting::ANY_INTEGER};
-    info[6] = {-1, 0, true, "d_close", vrprouting::ANY_INTEGER};
-    info[7] = {-1, 0, false, "d_service", vrprouting::ANY_INTEGER};
-    info[8] = {-1, 0, true, "p_x", vrprouting::ANY_NUMERICAL};
-    info[9] = {-1, 0, true, "p_y", vrprouting::ANY_NUMERICAL};
-    info[10] = {-1, 0, true, "d_x", vrprouting::ANY_NUMERICAL};
-    info[11] = {-1, 0, true, "d_y", vrprouting::ANY_NUMERICAL};
-
-    vrprouting::get_data(sql, rows, total_rows, true, info, &vrprouting::fetch_orders_euclidean);
-  } catch (const std::string &ex) {
-    (*rows) = pgr_free(*rows);
-    (*total_rows) = 0;
-    *err_msg = pgr_msg(ex.c_str());
-  } catch(...) {
-    (*rows) = pgr_free(*rows);
-    (*total_rows) = 0;
-    *err_msg = pgr_msg("Caught unknown exception!");
-  }
-}
-#endif
 
 /**
  * @param[in] sql SQL query to execute
