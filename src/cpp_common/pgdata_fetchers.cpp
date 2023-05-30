@@ -87,9 +87,7 @@ void fetch_breaks(
     vroom_break->service =
         (Duration)get_PositiveTInterval(tuple, tupdesc, info[2], 0);
   }
-  vroom_break->data = column_found(info[3].colNumber)
-                          ? getText(tuple, tupdesc, info[3])
-                          : strdup("{}");
+  vroom_break->data = get_jsonb(tuple, tupdesc, info[3]);
 }
 
 void fetch_jobs(
@@ -127,9 +125,7 @@ void fetch_jobs(
 
   job->priority = get_positive<Priority>(tuple, tupdesc, info[7], 0);
 
-  job->data = column_found(info[8].colNumber)
-                  ? getText(tuple, tupdesc, info[8])
-                  : strdup("{}");
+  job->data = get_jsonb(tuple, tupdesc, info[8]);
 }
 
 
@@ -296,12 +292,8 @@ void fetch_vroom_shipments(
 
   shipment->priority = get_positive<Priority>(tuple, tupdesc, info[9], 0);
 
-  shipment->p_data = column_found(info[10].colNumber)
-                         ? getText(tuple, tupdesc, info[10])
-                         : strdup("{}");
-  shipment->d_data = column_found(info[11].colNumber)
-                         ? getText(tuple, tupdesc, info[11])
-                         : strdup("{}");
+  shipment->p_data = get_jsonb(tuple, tupdesc, info[10]);
+  shipment->d_data = get_jsonb(tuple, tupdesc, info[11]);
 }
 
 
@@ -431,6 +423,11 @@ void fetch_vroom_vehicles(
   vehicle->tw_open = get_value<Duration>(tuple, tupdesc, info[5], 0);
   vehicle->tw_close = get_value<Duration>(tuple, tupdesc, info[6], UINT_MAX);
 
+  vehicle->speed_factor = get_anynumerical(tuple, tupdesc, info[7], 1.0);
+  vehicle->max_tasks = get_value<int32_t>(tuple, tupdesc, info[8], INT_MAX);
+  vehicle->data = get_jsonb(tuple, tupdesc, info[9]);
+
+  /* TODO throw? */
   if (vehicle->tw_open > vehicle->tw_close) {
     ereport(ERROR,
         (errmsg("Invalid time window (%d, %d)",
@@ -440,20 +437,11 @@ void fetch_vroom_vehicles(
              vehicle->tw_open, vehicle->tw_close)));
   }
 
-  vehicle->speed_factor = get_anynumerical(tuple, tupdesc, info[7], 1.0);
 
   if (vehicle->speed_factor <= 0.0) {
     ereport(ERROR, (errmsg("Invalid speed_factor %lf", vehicle->speed_factor),
                     errhint("Speed factor must be greater than 0")));
   }
-
-  vehicle->max_tasks = column_found(info[8].colNumber)
-                           ? get_MaxTasks(tuple, tupdesc, info[8])
-                           : INT_MAX;  // 2147483647
-
-  vehicle->data = column_found(info[9].colNumber)
-                      ? getText(tuple, tupdesc, info[9])
-                      : strdup("{}");
 }
 
 }   // namespace vrprouting

@@ -64,7 +64,7 @@ int64_t* get_PosBigIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Co
 uint32_t* get_PositiveIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
 
 /** @brief Function returns the string representation of the value of specified column.  */
-char* getText(const HeapTuple, const TupleDesc&, const Column_info_t&);
+char* get_jsonb(const HeapTuple, const TupleDesc&, const Column_info_t&);
 
 TInterval get_TInterval(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
 TInterval get_TInterval_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
@@ -117,6 +117,9 @@ T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t
       break;
     case INTERVAL :
       return static_cast<T>(get_PositiveTInterval(tuple, tupdesc,  info, static_cast<TInterval>(opt_value)));
+      break;
+    case POSITIVE_INTEGER:
+      return static_cast<T>(get_positive<int32_t>(tuple, tupdesc,  info, static_cast<int32_t>(opt_value)));
       break;
     default:
       throw std::string("Missing case value ") + info.name;

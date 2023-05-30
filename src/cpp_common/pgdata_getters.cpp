@@ -626,7 +626,7 @@ vrp_get_vroom_vehicles(
     info[5] = {-1, 0, false, "tw_open", vrprouting::TIMESTAMP};
     info[6] = {-1, 0, false, "tw_close", vrprouting::TIMESTAMP};
     info[7] = {-1, 0, false, "speed_factor", vrprouting::ANY_NUMERICAL};
-    info[8] = {-1, 0, false, "max_tasks", vrprouting::INTEGER};
+    info[8] = {-1, 0, false, "max_tasks", vrprouting::POSITIVE_INTEGER};
     info[9] = {-1, 0, false, "data", vrprouting::JSONB};
 
   if (is_plain) {

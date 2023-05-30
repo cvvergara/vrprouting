@@ -435,6 +435,7 @@ void fetch_column_info(
           check_any_integerarray_type(coldata);
           break;
         case INTEGER:
+        case POSITIVE_INTEGER:
           check_integer_type(coldata);
           break;
         case JSONB:
@@ -870,16 +871,9 @@ get_char(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &i
   return getChar(tuple, tupdesc, info, opt_value);
 }
 
-/*!
- * [DatumGetCString](https://doxygen.postgresql.org/postgres_8h.html#ae401c8476d1a12b420e3061823a206a7)
- * @note under development Not used, not tested
- * @param[in] tuple   input row to be examined.
- * @param[in]  tupdesc  tuple descriptor
- * @param[in]  info    contain column information.
- * @return Pointer of string is returned.
- */
-char* getText(const HeapTuple tuple, const TupleDesc &tupdesc,  const vrprouting::Column_info_t &info) {
-    return DatumGetCString(SPI_getvalue(tuple, tupdesc, info.colNumber));
+
+char* get_jsonb(const HeapTuple tuple, const TupleDesc &tupdesc,  const vrprouting::Column_info_t &info) {
+  return column_found(info.colNumber)?  DatumGetCString(SPI_getvalue(tuple, tupdesc, info.colNumber)) : strdup("{}");
 }
 
 }  // namespace vrprouting
