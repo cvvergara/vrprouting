@@ -415,38 +415,6 @@ void vrp_get_timeMultipliers(
   }
 }
 
-#if 0
-/**
-  @param [in] sql query that has the following columns: start_time, multiplier
-  @param [out] rows C Container that holds all the multipliers
-  @param [out] total_rows Total rows recieved
-  */
-void vrp_get_timeMultipliers_raw(
-    char *sql,
-    Time_multipliers_t **rows,
-    size_t *total_rows,
-    char **err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_free;
-  using vrprouting::Column_info_t;
-  try {
-    std::vector<Column_info_t> info{2};
-
-    info[0] = {-1, 0, true, "start_value", vrprouting::ANY_INTEGER};
-    info[1] = {-1, 0, true, "multiplier", vrprouting::ANY_NUMERICAL};
-    vrprouting::get_data(sql, rows, total_rows, true, info, &vrprouting::fetch_multipliers_raw);
-  } catch (const std::string &ex) {
-    (*rows) = pgr_free(*rows);
-    (*total_rows) = 0;
-    *err_msg = pgr_msg(ex.c_str());
-  } catch(...) {
-    (*rows) = pgr_free(*rows);
-    (*total_rows) = 0;
-    *err_msg = pgr_msg("Caught unknown exception!");
-  }
-}
-#endif
-
 
 /**
  * @param[in] sql SQL query to execute
