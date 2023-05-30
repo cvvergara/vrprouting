@@ -132,21 +132,16 @@ void fetch_matrix_vroom(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
     Vroom_matrix_t *matrix,
-    bool is_plain) {
+    bool) {
     matrix->duration = 0;
     matrix->cost = 0;
-  matrix->start_id = get_anyinteger(tuple, tupdesc, info[0], -1);
-  matrix->end_id = get_anyinteger(tuple, tupdesc, info[1], -1);
-  return;
+  matrix->start_id = get_value<MatrixIndex>(tuple, tupdesc, info[0], -1);
+  matrix->end_id = get_value<MatrixIndex>(tuple, tupdesc, info[1], -1);
 
-  if (is_plain) {
-    matrix->duration = get_positive<Duration>(tuple, tupdesc, info[2], 0);
-  } else {
-    matrix->duration = (Duration)get_PositiveTInterval(tuple, tupdesc, info[2], 0);
-  }
+  matrix->duration = get_value<Duration>(tuple, tupdesc, info[2], 0);
 
   // If unspecified, cost is same as the duration
-  matrix->cost = get_positive<TravelCost>(tuple, tupdesc, info[3], matrix->duration);
+  matrix->cost = get_value<TravelCost>(tuple, tupdesc, info[3], matrix->duration);
 }
 
 

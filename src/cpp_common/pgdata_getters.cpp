@@ -62,7 +62,7 @@ vrp_get_matrixRows(
     char *sql,
     Matrix_cell_t **rows,
     size_t *total_rows,
-    bool with_timestamps,
+    bool use_timestamps,
     char **err_msg) {
   using vrprouting::pgr_msg;
   using vrprouting::pgr_free;
@@ -72,11 +72,9 @@ vrp_get_matrixRows(
 
     info[0] = {-1, 0, true, "start_vid", vrprouting::ANY_INTEGER};
     info[1] = {-1, 0, true, "end_vid", vrprouting::ANY_INTEGER};
-    info[2] = {-1, 0, true, "agg_cost", vrprouting::TINTERVAL};
-
-    if (with_timestamps) {
-      info[2] = {-1, 0, true, "travel_time", vrprouting::INTERVAL};
-    }
+    info[2] = {-1, 0, true,
+      use_timestamps? "travel_time" : "agg_cost",
+      use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL};
 
     vrprouting::get_data(sql, rows, total_rows, true, info, &vrprouting::fetch_matrix_plain);
   } catch (const std::string &ex) {
@@ -111,12 +109,8 @@ vrp_get_vroom_matrix(
 
     info[0] = {-1, 0, true, "start_id", vrprouting::MATRIX_INDEX};
     info[1] = {-1, 0, true, "end_id", vrprouting::MATRIX_INDEX};
+    info[2] = {-1, 0, true, "duration", is_plain? vrprouting::TINTERVAL : vrprouting::INTERVAL};
     info[3] = {-1, 0, false, "cost", vrprouting::INTEGER};
-    info[2] = {-1, 0, true, "duration", vrprouting::INTERVAL};
-
-  if (is_plain) {
-    info[2].eType = vrprouting::INTEGER;
-  }
 
   vrprouting::get_data(sql, rows, total_rows, is_plain, info, &vrprouting::fetch_matrix_vroom);
   } catch (const std::string &ex) {

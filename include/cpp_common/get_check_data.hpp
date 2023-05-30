@@ -106,6 +106,9 @@ T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t
     case ANY_INTEGER :
       return static_cast<T>(get_integral<int64_t>(tuple, tupdesc,  info, static_cast<int64_t>(opt_value)));
       break;
+    case INTEGER:
+      return static_cast<T>(get_integral<int32_t>(tuple, tupdesc,  info, static_cast<int32_t>(opt_value)));
+      break;
     case ANY_UINT :
       return static_cast<T>(get_positive<int64_t>(tuple, tupdesc,  info, static_cast<int64_t>(opt_value)));
       break;
