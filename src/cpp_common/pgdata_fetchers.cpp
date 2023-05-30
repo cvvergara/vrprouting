@@ -188,38 +188,25 @@ void fetch_vroom_shipments(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
     Vroom_shipment_t *shipment,
-    bool is_plain) {
+    bool) {
 
-  shipment->id = get_positive<Idx>(tuple, tupdesc, info[0], 0);
+  shipment->id = get_value<Idx>(tuple, tupdesc, info[0], 0);
 
-  shipment->p_location_id = get_positive<MatrixIndex>(tuple, tupdesc, info[1], 0);
+  shipment->p_location_id = get_value<MatrixIndex>(tuple, tupdesc, info[1], 0);
   shipment->d_location_id = get_positive<MatrixIndex>(tuple, tupdesc, info[4], 0);
 
-  if (is_plain) {
-    shipment->p_setup = get_positive<Duration>(tuple, tupdesc, info[2], 0);
-    shipment->p_service = get_positive<Duration>(tuple, tupdesc, info[3], 0);
-    shipment->d_setup = get_positive<Duration>(tuple, tupdesc, info[5], 0);
-    shipment->d_service = get_positive<Duration>(tuple, tupdesc, info[6], 0);
-  } else {
-    shipment->p_setup =
-        (Duration)get_PositiveTInterval(tuple, tupdesc, info[2], 0);
-    shipment->p_service =
-        (Duration)get_PositiveTInterval(tuple, tupdesc, info[3], 0);
-    shipment->d_setup =
-        (Duration)get_PositiveTInterval(tuple, tupdesc, info[5], 0);
-    shipment->d_service =
-        (Duration)get_PositiveTInterval(tuple, tupdesc, info[6], 0);
-  }
+  shipment->p_setup = get_value<Duration>(tuple, tupdesc, info[2], 0);
+  shipment->p_service = get_value<Duration>(tuple, tupdesc, info[3], 0);
+  shipment->d_setup = get_value<Duration>(tuple, tupdesc, info[5], 0);
+  shipment->d_service = get_value<Duration>(tuple, tupdesc, info[6], 0);
 
   shipment->amount_size = 0;
   shipment->amount = get_PosBigIntArr_allowEmpty(tuple, tupdesc, info[7], shipment->amount_size);
 
   shipment->skills_size = 0;
-  shipment->skills = column_found(info[8].colNumber) ?
-    get_PositiveIntArr_allowEmpty(tuple, tupdesc, info[8], shipment->skills_size)
-    : NULL;
+  shipment->skills = get_uint_array<Skill>(tuple, tupdesc, info[8], shipment->skills_size);
 
-  shipment->priority = get_positive<Priority>(tuple, tupdesc, info[9], 0);
+  shipment->priority = get_value<Priority>(tuple, tupdesc, info[9], 0);
 
   shipment->p_data = get_jsonb(tuple, tupdesc, info[10]);
   shipment->d_data = get_jsonb(tuple, tupdesc, info[11]);

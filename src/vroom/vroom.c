@@ -110,6 +110,9 @@ process(
   char *log_msg = NULL;
   char *notice_msg = NULL;
   char *err_msg = NULL;
+
+  bool use_timestamps = !is_plain;
+
   clock_t start_loading = clock();
   pgr_SPI_connect();
 
@@ -126,7 +129,7 @@ process(
   Vroom_shipment_t *shipments = NULL;
   size_t total_shipments = 0;
   if (shipments_sql) {
-    vrp_get_vroom_shipments(shipments_sql, &shipments, &total_shipments, is_plain, &err_msg);
+    vrp_get_vroom_shipments(shipments_sql, &shipments, &total_shipments, use_timestamps, &err_msg);
     throw_error(err_msg, shipments_sql);
   }
 

@@ -300,7 +300,7 @@ vrp_get_vroom_shipments(
     char *sql,
     Vroom_shipment_t **rows,
     size_t *total_rows,
-    bool is_plain,
+    bool use_timestamps,
     char **err_msg) {
   using vrprouting::pgr_msg;
   using vrprouting::pgr_free;
@@ -310,25 +310,18 @@ vrp_get_vroom_shipments(
 
     info[0] = {-1, 0, true, "id", vrprouting::IDX};
     info[1] = {-1, 0, true, "p_location_id", vrprouting::MATRIX_INDEX};
-    info[2] = {-1, 0, false, "p_setup", vrprouting::INTERVAL};
-    info[3] = {-1, 0, false, "p_service", vrprouting::INTERVAL};
+    info[2] = {-1, 0, false, "p_setup", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL};
+    info[3] = {-1, 0, false, "p_service", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL};
     info[4] = {-1, 0, true, "d_location_id", vrprouting::MATRIX_INDEX};
-    info[5] = {-1, 0, false, "d_setup", vrprouting::INTERVAL};
-    info[6] = {-1, 0, false, "d_service", vrprouting::INTERVAL};
+    info[5] = {-1, 0, false, "d_setup", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL};
+    info[6] = {-1, 0, false, "d_service", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL};
     info[7] = {-1, 0, false, "amount", vrprouting::ANY_INTEGER_ARRAY};
-    info[8] = {-1, 0, false, "skills", vrprouting::INTEGER_ARRAY};
-    info[9] = {-1, 0, false, "priority", vrprouting::INTEGER};
+    info[8] = {-1, 0, false, "skills", vrprouting::ANY_UINT_ARRAY};
+    info[9] = {-1, 0, false, "priority", vrprouting::ANY_UINT};
     info[10] = {-1, 0, false, "p_data", vrprouting::JSONB};
     info[11] = {-1, 0, false, "d_data", vrprouting::JSONB};
 
-  if (is_plain) {
-    info[2].eType = vrprouting::INTEGER;
-    info[3].eType = vrprouting::INTEGER;
-    info[5].eType = vrprouting::INTEGER;
-    info[6].eType = vrprouting::INTEGER;
-  }
-
-    vrprouting::get_data(sql, rows, total_rows, is_plain, info, &vrprouting::fetch_vroom_shipments);
+    vrprouting::get_data(sql, rows, total_rows, use_timestamps, info, &vrprouting::fetch_vroom_shipments);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
     (*total_rows) = 0;
