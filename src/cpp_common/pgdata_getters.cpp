@@ -261,26 +261,23 @@ vrp_get_shipments_raw(
     std::vector<Column_info_t> info{14};
 
 
-      info[0] = {-1, 0, true, "id", vrprouting::ID};
-      info[1] = {-1, 0, true, "amount", vrprouting::PAMOUNT};
-      info[2] = {-1, 0, true, "p_open", vrprouting::TTIMESTAMP};
-      info[3] = {-1, 0, true, "p_close", vrprouting::TTIMESTAMP};
-      info[4] = {-1, 0, false, "p_service", vrprouting::TINTERVAL};
-      info[5] = {-1, 0, true, "d_open", vrprouting::TTIMESTAMP};
-      info[6] = {-1, 0, true, "d_close", vrprouting::TTIMESTAMP};
-      info[7] = {-1, 0, false, "d_service", vrprouting::TINTERVAL};
-      info[8] = {-1, 0, !is_euclidean, "p_id", vrprouting::ID};
-      info[9] = {-1, 0, !is_euclidean, "d_id", vrprouting::ID};
-      info[10] = {-1, 0, is_euclidean, "p_x", vrprouting::COORDINATE};
-      info[11] = {-1, 0, is_euclidean, "p_y", vrprouting::COORDINATE};
-      info[12] = {-1, 0, is_euclidean, "d_x", vrprouting::COORDINATE};
-      info[13] = {-1, 0, is_euclidean, "d_y", vrprouting::COORDINATE};
+    info[0] = {-1, 0, true, "id", vrprouting::ID};
+    info[1] = {-1, 0, true, "amount", vrprouting::PAMOUNT};
+    info[2] = {-1, 0, true, "p_open", vrprouting::TTIMESTAMP};
+    info[3] = {-1, 0, true, "p_close", vrprouting::TTIMESTAMP};
+    info[4] = {-1, 0, false, "p_service", vrprouting::TINTERVAL};
+    info[5] = {-1, 0, true, "d_open", vrprouting::TTIMESTAMP};
+    info[6] = {-1, 0, true, "d_close", vrprouting::TTIMESTAMP};
+    info[7] = {-1, 0, false, "d_service", vrprouting::TINTERVAL};
+    info[8] = {-1, 0, !is_euclidean, "p_id", vrprouting::ID};
+    info[9] = {-1, 0, !is_euclidean, "d_id", vrprouting::ID};
+    info[10] = {-1, 0, is_euclidean, "p_x", vrprouting::COORDINATE};
+    info[11] = {-1, 0, is_euclidean, "p_y", vrprouting::COORDINATE};
+    info[12] = {-1, 0, is_euclidean, "d_x", vrprouting::COORDINATE};
+    info[13] = {-1, 0, is_euclidean, "d_y", vrprouting::COORDINATE};
 
-    if (is_euclidean) {
-      vrprouting::get_data(sql, rows, total_rows, true, info, &vrprouting::fetch_orders_euclidean);
-    } else {
-      vrprouting::get_data(sql, rows, total_rows, true, info, &vrprouting::fetch_orders_raw);
-    }
+    vrprouting::get_data(sql, rows, total_rows, is_euclidean, info, &vrprouting::fetch_orders_raw);
+    vrprouting::get_data(sql, rows, total_rows, is_euclidean, info, &vrprouting::fetch_orders_raw);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
     (*total_rows) = 0;
