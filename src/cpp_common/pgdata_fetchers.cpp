@@ -296,6 +296,7 @@ void fetch_vroom_shipments(
 }
 
 
+#if 0
 void fetch_multipliers_raw(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
@@ -304,13 +305,14 @@ void fetch_multipliers_raw(
   row->start_time = get_TTimestamp_plain(tuple, tupdesc, info[0], 0);
   row->multiplier = get_anynumerical(tuple, tupdesc, info[1], 1);
 }
+#endif
 
 void fetch_multipliers(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
     Time_multipliers_t *row,
     bool) {
-  row->start_time = get_TTimestamp(tuple, tupdesc, info[0], 0);
+  row->start_time = get_value<TTimestamp>(tuple, tupdesc, info[0], 0);
   row->multiplier = get_anynumerical(tuple, tupdesc,  info[1], 1);
 }
 

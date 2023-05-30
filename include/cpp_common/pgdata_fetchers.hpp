@@ -79,9 +79,11 @@ void fetch_vroom_shipments(
     const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
     Vroom_shipment_t*, bool);
 
+#if 0
 void fetch_multipliers_raw(
     const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
     Time_multipliers_t*, bool);
+#endif
 
 void fetch_multipliers(
     const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,

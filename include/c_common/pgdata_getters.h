@@ -75,12 +75,9 @@ void vrp_get_shipments_raw(char*, PickDeliveryOrders_t**, size_t*, char**);
 void vrp_get_shipments_euclidean(char*, PickDeliveryOrders_t**, size_t*, char**);
 
 
-
 /** @brief Get the time multipliers using interval*/
-void vrp_get_timeMultipliers(char*, Time_multipliers_t**, size_t*, char**);
+void vrp_get_timeMultipliers(char*, Time_multipliers_t**, size_t*, bool, char**);
 
-/** @brief Get the time multipliers using bigint*/
-void vrp_get_timeMultipliers_raw(char*, Time_multipliers_t**, size_t*, char**);
 
 /** @brief Reads the VROOM breaks */
 void vrp_get_vroom_breaks(char*, Vroom_break_t**, size_t*, bool, char**);

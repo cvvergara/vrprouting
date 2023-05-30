@@ -138,15 +138,8 @@ process(
 
   Time_multipliers_t *multipliers_arr = NULL;
   size_t total_multipliers_arr = 0;
-  if (use_timestamps) {
-    PGR_DBG("vrp_get_timeMultipliers", &err_msg);
-    vrp_get_timeMultipliers(multipliers_sql, &multipliers_arr, &total_multipliers_arr, &err_msg);
-    throw_error(err_msg, multipliers_sql);
-  } else {
-    PGR_DBG("vrp_get_timeMultipliers_raw", &err_msg);
-    vrp_get_timeMultipliers_raw(multipliers_sql, &multipliers_arr, &total_multipliers_arr, &err_msg);
-    throw_error(err_msg, multipliers_sql);
-  }
+  vrp_get_timeMultipliers(multipliers_sql, &multipliers_arr, &total_multipliers_arr, use_timestamps, &err_msg);
+  throw_error(err_msg, multipliers_sql);
 
   if (total_multipliers_arr == 0) {
     ereport(WARNING,
