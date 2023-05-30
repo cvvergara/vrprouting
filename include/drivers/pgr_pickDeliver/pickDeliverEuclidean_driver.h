@@ -39,9 +39,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #   include <stddef.h>
 #endif
 
-#include "c_types/vehicle_t.h"
-typedef struct PickDeliveryOrders_t PickDeliveryOrders_t;
-typedef struct Solution_rt Solution_rt;
+#include "c_types/typedefs.h"
 
 #ifdef __cplusplus
 extern "C" {

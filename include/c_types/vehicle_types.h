@@ -1,12 +1,11 @@
 /*PGR-GNU*****************************************************************
-File: vroom_vehicle_t.h
+File: vehicle_types.h
 
-Copyright (c) 2021 pgRouting developers
-Mail: project@pgrouting.org
+Copyright (c) 2015 Celia Virginia Vergara Castillo
+Mail: vicky at erosion.dev
 
-Function's developer:
 Copyright (c) 2021 Ashish Kumar
-Mail: ashishkr23438@gmail.com
+Mail: ashishkr23438 at gmail.com
 
 ------
 
@@ -25,15 +24,56 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
-/*! @file */
+/** @file */
 
-#ifndef INCLUDE_C_TYPES_VROOM_VROOM_VEHICLE_T_H_
-#define INCLUDE_C_TYPES_VROOM_VROOM_VEHICLE_T_H_
+#ifndef INCLUDE_C_TYPES_VEHICLE_T_H_
+#define INCLUDE_C_TYPES_VEHICLE_T_H_
 #pragma once
 
 #include "c_types/typedefs.h"
 
-/** @brief Vehicles's attributes
+/** @brief vehicles's attributes
+
+@note C/C++/postgreSQL connecting structure for input
+name | description
+:----- | :-------
+id | Vehicle's identifier
+capacity | Vehicle's capacity
+start_node_id | Pickup open time
+start_open_t | Start open time
+start_close_t | Start close time
+start_service_t | Start service duration
+end_node_id | End node's identifier
+end_open_t | End open time
+end_close_t | End close time
+end_service_t | End service time
+stops | Vehicle's stops
+stops_size | Stops size
+*/
+struct Vehicle_t {
+  Id id; /** Vehicle's identifier */
+  PAmount capacity; /** Vehicle's capacity */
+  Speed speed;
+  PAmount cant_v;   /** Number of vehicles with same description **/
+  Id *stops; /** Stops */
+  size_t stops_size; /** Stops size */
+
+  Id start_node_id; /** Start node's identifier */
+  TTimestamp start_open_t; /** Start open time */
+  TTimestamp start_close_t; /** Start close time */
+  TInterval  start_service_t; /** Start service duration */
+  Coordinate start_x;
+  Coordinate start_y;
+
+  Id end_node_id; /** End node's identifier */
+  TTimestamp end_open_t; /** End open time */
+  TTimestamp end_close_t; /** End close time */
+  TInterval  end_service_t; /** End service time */
+  Coordinate end_x;
+  Coordinate end_y;
+};
+
+/** @brief Vroom's Vehicles's attributes
 
 @note C/C++/postgreSQL connecting structure for input
 name | description
@@ -72,5 +112,4 @@ struct Vroom_vehicle_t {
   char *data; /** Metadata information of vehicle */
 };
 
-
-#endif  // INCLUDE_C_TYPES_VROOM_VROOM_VEHICLE_T_H_
+#endif  // INCLUDE_C_TYPES_VEHICLE_T_H_

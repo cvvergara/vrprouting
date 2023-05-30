@@ -36,12 +36,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <vector>
 
 #include "c_types/matrix_types.h"
+#include "c_types/vehicle_types.h"
 #include "c_types/vroom/vroom_break_t.h"
 #include "c_types/vroom/vroom_job_t.h"
 #include "c_types/vroom/vroom_rt.h"
 #include "c_types/vroom/vroom_shipment_t.h"
 #include "c_types/vroom/vroom_time_window_t.h"
-#include "c_types/vroom/vroom_vehicle_t.h"
 #include "cpp_common/base_matrix.h"
 #include "cpp_common/interruption.h"
 #include "cpp_common/pgr_messages.h"

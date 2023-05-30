@@ -49,13 +49,12 @@ extern "C" {
 #include "c_common/pgr_alloc.hpp"
 
 #include "c_types/info_t.hpp"
-#include "c_types/vroom/vroom_vehicle_t.h"
 #include "c_types/vroom/vroom_time_window_t.h"
 #include "c_types/vroom/vroom_break_t.h"
 #include "c_types/vroom/vroom_job_t.h"
 #include "c_types/vroom/vroom_shipment_t.h"
 #include "c_types/matrix_types.h"
-#include "c_types/vehicle_t.h"
+#include "c_types/vehicle_types.h"
 #include "c_types/pickDeliveryOrders_t.h"
 #include "c_types/time_multipliers_t.h"
 

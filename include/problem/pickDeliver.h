@@ -36,7 +36,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_types/compatibleVehicles_rt.h"
 #include "c_types/solution_rt.h"
 #include "c_types/pickDeliveryOrders_t.h"
-#include "c_types/vehicle_t.h"
+#include "c_types/vehicle_types.h"
 #include "cpp_common/pgr_messages.h"
 #include "problem/vehicle_node.h"
 #include "problem/orders.h"
