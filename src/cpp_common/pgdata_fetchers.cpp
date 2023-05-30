@@ -112,17 +112,13 @@ void fetch_jobs(
    * The deliveries
    */
   job->delivery_size = 0;
-  job->delivery = column_found(info[4].colNumber) ?
-    get_PosBigIntArr_allowEmpty(tuple, tupdesc, info[4], &job->delivery_size)
-    : NULL;
+  job->delivery = get_PosBigIntArr_allowEmpty(tuple, tupdesc, info[4], job->delivery_size);
 
   /*
    * The pickups
    */
   job->pickup_size = 0;
-  job->pickup = column_found(info[5].colNumber) ?
-    get_PosBigIntArr_allowEmpty(tuple, tupdesc, info[5], &job->pickup_size)
-    : NULL;
+  job->pickup = get_PosBigIntArr_allowEmpty(tuple, tupdesc, info[5], job->pickup_size);
 
   job->skills_size = 0;
   job->skills = column_found(info[6].colNumber) ?
@@ -291,9 +287,7 @@ void fetch_vroom_shipments(
   }
 
   shipment->amount_size = 0;
-  shipment->amount = column_found(info[7].colNumber) ?
-    get_PosBigIntArr_allowEmpty(tuple, tupdesc, info[7], &shipment->amount_size)
-    : NULL;
+  shipment->amount = get_PosBigIntArr_allowEmpty(tuple, tupdesc, info[7], shipment->amount_size);
 
   shipment->skills_size = 0;
   shipment->skills = column_found(info[8].colNumber) ?
@@ -385,7 +379,7 @@ void fetch_vehicles(
   vehicle->stops = NULL;
   vehicle->stops_size = 0;
   if (column_found(info[4].colNumber)) {
-    vehicle->stops = get_BigIntArr_wEmpty(tuple, tupdesc, info[4], &vehicle->stops_size);
+    vehicle->stops = get_BigIntArr_wEmpty(tuple, tupdesc, info[4], vehicle->stops_size);
   }
   /*
    * start values
@@ -424,14 +418,12 @@ void fetch_vroom_vehicles(
     const std::vector<Column_info_t> &info,
     Vroom_vehicle_t *vehicle,
     bool is_plain) {
-  vehicle->id = get_positive<Idx>(tuple, tupdesc, info[0], 0);
+  vehicle->id = get_value<Idx>(tuple, tupdesc, info[0], 0);
   vehicle->start_id = get_positive<MatrixIndex>(tuple, tupdesc, info[1], -1);
   vehicle->end_id = get_positive<MatrixIndex>(tuple, tupdesc, info[2], -1);
 
   vehicle->capacity_size = 0;
-  vehicle->capacity = column_found(info[3].colNumber) ?
-    get_PosBigIntArr_allowEmpty(tuple, tupdesc, info[3], &vehicle->capacity_size)
-    : NULL;
+  vehicle->capacity = get_PosBigIntArr_allowEmpty(tuple, tupdesc, info[3], vehicle->capacity_size);
 
   vehicle->skills_size = 0;
   vehicle->skills = column_found(info[4].colNumber) ?

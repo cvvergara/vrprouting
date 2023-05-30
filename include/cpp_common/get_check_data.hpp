@@ -57,9 +57,11 @@ int64_t* get_array(ArrayType*, size_t*, bool);
 
 /** @brief Function returns the values of specified columns in array. */
 int64_t* get_BigIntArr(const HeapTuple, const TupleDesc&, const Column_info_t&, uint64_t*);
-int64_t* get_BigIntArr_wEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t*);
 
-int64_t* get_PosBigIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t*);
+/** using **/
+int64_t* get_BigIntArr_wEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
+int64_t* get_PosBigIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
+
 uint32_t* get_PositiveIntArr_allowEmpty( const HeapTuple, const TupleDesc&, const Column_info_t&, size_t*);
 
 /** @brief Function returns the string representation of the value of specified column.  */
@@ -103,19 +105,19 @@ template <typename T>
 T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, T opt_value) {
   switch (info.eType) {
     case ANY_INTEGER :
-      return static_cast<T>(get_integral<int64_t>(tuple, tupdesc,  info, opt_value));
+      return static_cast<T>(get_integral<int64_t>(tuple, tupdesc,  info, static_cast<int64_t>(opt_value)));
       break;
     case ANY_UINT :
-      return static_cast<T>(get_positive<int64_t>(tuple, tupdesc,  info, opt_value));
+      return static_cast<T>(get_positive<int64_t>(tuple, tupdesc,  info, static_cast<int64_t>(opt_value)));
       break;
     case TINTERVAL :
-      return static_cast<T>(get_positive<TInterval>(tuple, tupdesc,  info, opt_value));
+      return static_cast<T>(get_positive<TInterval>(tuple, tupdesc,  info, static_cast<TInterval>(opt_value)));
       break;
     case TIMESTAMP :
-      return static_cast<T>(get_TTimestamp(tuple, tupdesc,  info, opt_value));
+      return static_cast<T>(get_TTimestamp(tuple, tupdesc,  info, static_cast<TTimestamp>(opt_value)));
       break;
     case INTERVAL :
-      return static_cast<T>(get_PositiveTInterval(tuple, tupdesc,  info, opt_value));
+      return static_cast<T>(get_PositiveTInterval(tuple, tupdesc,  info, static_cast<TInterval>(opt_value)));
       break;
     default:
       throw std::string("Missing case value ") + info.name;

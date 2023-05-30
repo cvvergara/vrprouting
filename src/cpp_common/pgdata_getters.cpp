@@ -630,8 +630,8 @@ vrp_get_vroom_vehicles(
     info[9] = {-1, 0, false, "data", vrprouting::JSONB};
 
   if (is_plain) {
-    info[5].eType = vrprouting::INTEGER;        // tw_open
-    info[6].eType = vrprouting::INTEGER;        // tw_close
+    info[5].eType = vrprouting::TTIMESTAMP;        // tw_open
+    info[6].eType = vrprouting::TTIMESTAMP;        // tw_close
   }
 
   info[0].strict = true;

@@ -681,31 +681,28 @@ get_StepType(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_
 
 int64_t*
 get_BigIntArr_wEmpty(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info,
-    size_t *the_size) {
+    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, size_t &the_size) {
   bool is_null = false;
+  the_size = 0;
 
   Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
   /*
    * [DatumGetArrayTypeP](https://doxygen.postgresql.org/array_8h.html#aa1b8e77c103863862e06a7b7c07ec532)
    * [pgr_get_bigIntArray](http://docs.vrprouting.org/doxy/2.2/arrays__input_8c_source.html)
    */
-  if (!raw_array) {
-    *the_size = 0;
-    return  NULL;
-  }
+  if (!raw_array) return  nullptr;
 
   ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
 
-  return vrp_get_bigIntArray_allowEmpty(the_size, pg_array);
+  return vrp_get_bigIntArray_allowEmpty(&the_size, pg_array);
 }
 
 int64_t*
 get_PosBigIntArr_allowEmpty(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info,
-    size_t *the_size) {
+    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, size_t &the_size) {
+  if (!column_found(info.colNumber)) return nullptr;
   int64_t *array = get_BigIntArr_wEmpty(tuple, tupdesc, info, the_size);
-  for (size_t i = 0; i < *the_size; i++) {
+  for (size_t i = 0; i < the_size; i++) {
     if (array[i] < 0) throw std::string("Unexpected negative value in array ") + info.name;
   }
   return array;
