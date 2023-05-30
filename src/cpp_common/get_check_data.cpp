@@ -430,6 +430,8 @@ void fetch_column_info(
           check_char_type(coldata);
           break;
         case ANY_INTEGER_ARRAY:
+        case ANY_POSITIVE_ARRAY:
+        case ANY_UINT_ARRAY:
           check_any_integerarray_type(coldata);
           break;
         case INTEGER:
@@ -448,7 +450,7 @@ void fetch_column_info(
           check_interval_type(coldata);
           break;
         default:
-          throw std::string("Case not found: Unexpected type of column ") + coldata.name;
+          throw std::string("Case not found on getting info: Unexpected type of column ") + coldata.name;
       }
     }
   }
@@ -697,6 +699,21 @@ get_BigIntArr_wEmpty(
   return vrp_get_bigIntArray_allowEmpty(&the_size, pg_array);
 }
 
+uint32_t*
+get_PositiveIntArr_allowEmpty(
+    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info,
+    size_t &the_size) {
+  bool is_null = false;
+  the_size = 0;
+
+  Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
+  if (!raw_array) return  nullptr;
+
+  ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
+
+  return vrp_get_positiveIntArray_allowEmpty(&the_size, pg_array);
+}
+
 int64_t*
 get_PosBigIntArr_allowEmpty(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, size_t &the_size) {
@@ -706,23 +723,6 @@ get_PosBigIntArr_allowEmpty(
     if (array[i] < 0) throw std::string("Unexpected negative value in array ") + info.name;
   }
   return array;
-}
-
-uint32_t*
-get_PositiveIntArr_allowEmpty(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info,
-    size_t *the_size) {
-  bool is_null = false;
-
-  Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
-  if (!raw_array) {
-    *the_size = 0;
-    return  NULL;
-  }
-
-  ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
-
-  return vrp_get_positiveIntArray_allowEmpty(the_size, pg_array);
 }
 
 

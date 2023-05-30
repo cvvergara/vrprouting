@@ -621,8 +621,8 @@ vrp_get_vroom_vehicles(
     info[0] = {-1, 0, true, "id", vrprouting::IDX};
     info[1] = {-1, 0, false, "start_id", vrprouting::MATRIX_INDEX};
     info[2] = {-1, 0, false, "end_id", vrprouting::MATRIX_INDEX};
-    info[3] = {-1, 0, false, "capacity", vrprouting::ANY_INTEGER_ARRAY};
-    info[4] = {-1, 0, false, "skills", vrprouting::INTEGER_ARRAY};
+    info[3] = {-1, 0, false, "capacity", vrprouting::ANY_POSITIVE_ARRAY};
+    info[4] = {-1, 0, false, "skills", vrprouting::ANY_UINT_ARRAY};
     info[5] = {-1, 0, false, "tw_open", vrprouting::TIMESTAMP};
     info[6] = {-1, 0, false, "tw_close", vrprouting::TIMESTAMP};
     info[7] = {-1, 0, false, "speed_factor", vrprouting::ANY_NUMERICAL};

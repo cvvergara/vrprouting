@@ -61,8 +61,7 @@ int64_t* get_BigIntArr(const HeapTuple, const TupleDesc&, const Column_info_t&, 
 /** using **/
 int64_t* get_BigIntArr_wEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
 int64_t* get_PosBigIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
-
-uint32_t* get_PositiveIntArr_allowEmpty( const HeapTuple, const TupleDesc&, const Column_info_t&, size_t*);
+uint32_t* get_PositiveIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
 
 /** @brief Function returns the string representation of the value of specified column.  */
 char* getText(const HeapTuple, const TupleDesc&, const Column_info_t&);
@@ -124,6 +123,31 @@ T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t
       break;
   }
 }
+
+template <typename T>
+T* get_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, size_t &size) {
+  switch (info.eType) {
+    case ANY_POSITIVE_ARRAY:
+      return get_PosBigIntArr_allowEmpty(tuple, tupdesc, info, size);
+      break;
+    default:
+      throw std::string("Missing case value on array") + info.name;
+      break;
+  }
+}
+
+template <typename T>
+T* get_uint_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, size_t &size) {
+  switch (info.eType) {
+    case ANY_UINT_ARRAY:
+      return get_PositiveIntArr_allowEmpty(tuple, tupdesc, info, size);
+      break;
+    default:
+      throw std::string("Missing case value on Uint array") + info.name;
+      break;
+  }
+}
+
 
 }  // namespace vrprouting
 

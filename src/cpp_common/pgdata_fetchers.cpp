@@ -122,7 +122,7 @@ void fetch_jobs(
 
   job->skills_size = 0;
   job->skills = column_found(info[6].colNumber) ?
-    get_PositiveIntArr_allowEmpty(tuple, tupdesc, info[6], &job->skills_size)
+    get_PositiveIntArr_allowEmpty(tuple, tupdesc, info[6], job->skills_size)
     : NULL;
 
   job->priority = get_positive<Priority>(tuple, tupdesc, info[7], 0);
@@ -291,7 +291,7 @@ void fetch_vroom_shipments(
 
   shipment->skills_size = 0;
   shipment->skills = column_found(info[8].colNumber) ?
-    get_PositiveIntArr_allowEmpty(tuple, tupdesc, info[8], &shipment->skills_size)
+    get_PositiveIntArr_allowEmpty(tuple, tupdesc, info[8], shipment->skills_size)
     : NULL;
 
   shipment->priority = get_positive<Priority>(tuple, tupdesc, info[9], 0);
@@ -417,28 +417,19 @@ void fetch_vroom_vehicles(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
     Vroom_vehicle_t *vehicle,
-    bool is_plain) {
+    bool) {
   vehicle->id = get_value<Idx>(tuple, tupdesc, info[0], 0);
   vehicle->start_id = get_positive<MatrixIndex>(tuple, tupdesc, info[1], -1);
   vehicle->end_id = get_positive<MatrixIndex>(tuple, tupdesc, info[2], -1);
 
   vehicle->capacity_size = 0;
-  vehicle->capacity = get_PosBigIntArr_allowEmpty(tuple, tupdesc, info[3], vehicle->capacity_size);
+  vehicle->capacity = get_array<Amount>(tuple, tupdesc, info[3], vehicle->capacity_size);
 
   vehicle->skills_size = 0;
-  vehicle->skills = column_found(info[4].colNumber) ?
-    get_PositiveIntArr_allowEmpty(tuple, tupdesc, info[4], &vehicle->skills_size)
-    : NULL;
+  vehicle->skills = get_uint_array<Skill>(tuple, tupdesc, info[4], vehicle->skills_size);
 
-  if (is_plain) {
-    vehicle->tw_open = get_positive<Duration>(tuple, tupdesc, info[5], 0);
-    vehicle->tw_close = get_positive<Duration>(tuple, tupdesc, info[6], UINT_MAX);
-  } else {
-    vehicle->tw_open =
-        (Duration)get_PositiveTTimestamp(tuple, tupdesc, info[5], 0);
-    vehicle->tw_close =
-        (Duration)get_PositiveTTimestamp(tuple, tupdesc, info[6], UINT_MAX);
-  }
+  vehicle->tw_open = get_value<Duration>(tuple, tupdesc, info[5], 0);
+  vehicle->tw_close = get_value<Duration>(tuple, tupdesc, info[6], UINT_MAX);
 
   if (vehicle->tw_open > vehicle->tw_close) {
     ereport(ERROR,

@@ -42,6 +42,10 @@ enum expectType {
 
   INTEGER_ARRAY,
   ANY_INTEGER_ARRAY,
+  ANY_POSITIVE_ARRAY, /** allows empty **/
+  /** saved in unit* */
+  UINT_ARRAY,     /** does not allow empty **/
+  ANY_UINT_ARRAY, /** allows empty **/
 
   TIMESTAMP,
   INTERVAL,
