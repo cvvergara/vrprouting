@@ -63,7 +63,7 @@ extern "C" {
 void vrp_get_matrixRows(char*, Matrix_cell_t **, size_t*, bool, char**);
 
 /** @brief Reads the VROOM matrix */
-void vrp_get_vroom_matrix(char*, Vroom_matrix_t**,size_t*, bool, char**);
+void vrp_get_vroom_matrix(char*, Vroom_matrix_t**, size_t*, bool, char**);
 
 /** @brief Reads the pick-Deliver shipments for timestams and intervals*/
 void vrp_get_orders(char*, PickDeliveryOrders_t**, size_t*, bool, bool, char**);
@@ -76,16 +76,16 @@ void vrp_get_timeMultipliers(char*, Time_multipliers_t**, size_t*, bool, char**)
 void vrp_get_vroom_breaks(char*, Vroom_break_t**, size_t*, bool, char**);
 
 /** @brief Reads the VROOM jobs */
-void vrp_get_vroom_jobs(char*,Vroom_job_t**, size_t*, bool, char**);
+void vrp_get_vroom_jobs(char*, Vroom_job_t**, size_t*, bool, char**);
 
 /** @brief Reads the VROOM shipments */
-void vrp_get_vroom_shipments(char*, Vroom_shipment_t**,size_t*, bool, char**);
+void vrp_get_vroom_shipments(char*, Vroom_shipment_t**, size_t*, bool, char**);
 
 /** @brief Reads the VROOM time windows */
-void vrp_get_vroom_time_windows(char*, Vroom_time_window_t**,size_t*, bool, char**);
+void vrp_get_vroom_time_windows(char*, Vroom_time_window_t**, size_t*, bool, char**);
 
 /** @brief Reads the VROOM shipments time windows */
-void vrp_get_vroom_shipments_time_windows(char*, Vroom_time_window_t**,size_t*, bool, char**);
+void vrp_get_vroom_shipments_time_windows(char*, Vroom_time_window_t**, size_t*, bool, char**);
 
 /** Vehicles **/
 /** @brief Reads the vehicles information */

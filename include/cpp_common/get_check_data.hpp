@@ -73,7 +73,7 @@ namespace detail {
       return static_cast<T>(value);
     }
 
-}
+}  // namespace detail
 
 
 

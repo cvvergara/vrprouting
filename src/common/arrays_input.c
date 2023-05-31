@@ -36,7 +36,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 static
 int64_t*
 vrp_get_bigIntArr(ArrayType *v, size_t *arrlen, bool allow_empty) {
-
     int64_t *c_array = NULL;
 
     Oid     element_type = ARR_ELEMTYPE(v);
@@ -118,7 +117,6 @@ vrp_get_bigIntArr(ArrayType *v, size_t *arrlen, bool allow_empty) {
 static
 uint32_t*
 vrp_get_positiveIntArr(ArrayType *v, size_t *arrlen, bool allow_empty) {
-
     uint32_t *c_array = NULL;
 
     Oid     element_type = ARR_ELEMTYPE(v);

@@ -54,7 +54,7 @@ void check_pairs(vrprouting::Column_info_t lhs, vrprouting::Column_info_t rhs) {
     throw std::string("Column found: '") + rhs.name + "', missing column: '" + lhs.name + "'";
   } else if (!(vrprouting::column_found(rhs)) && vrprouting::column_found(lhs)) {
     throw std::string("Column found: '") + lhs.name + "', missing column: '" + rhs.name + "'";
-  };
+  }
 }
 
 }  // namespace

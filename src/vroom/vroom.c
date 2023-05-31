@@ -52,12 +52,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_types/vroom/vroom_shipment_t.h"
 
 #include "c_common/pgdata_getters.h"
-#include "c_common/pgdata_getters.h"
-#include "c_common/pgdata_getters.h"
-#include "c_common/pgdata_getters.h"
-#include "c_common/pgdata_getters.h"
-#include "c_common/pgdata_getters.h"
-
 #include "drivers/vroom/vroom_driver.h"
 
 PGDLLEXPORT Datum _vrp_vroom(PG_FUNCTION_ARGS);
@@ -158,7 +152,8 @@ process(
   Vroom_time_window_t *shipments_tws = NULL;
   size_t total_shipments_tws = 0;
   if (shipments_tws_sql) {
-    vrp_get_vroom_shipments_time_windows(shipments_tws_sql, &shipments_tws, &total_shipments_tws, use_timestamps, &err_msg);
+    vrp_get_vroom_shipments_time_windows(
+        shipments_tws_sql, &shipments_tws, &total_shipments_tws, use_timestamps, &err_msg);
     throw_error(err_msg, shipments_tws_sql);
   }
 

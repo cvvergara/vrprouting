@@ -353,8 +353,6 @@ Optimize::tabu_search() {
 
         if (!moved) {
             no_moves += 1;
-            if (neighborhood == "spi") {
-            }
             if (neighborhood == "sbr") {
                 intensify();
             }

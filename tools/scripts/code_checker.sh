@@ -33,11 +33,13 @@ set -e
 if ! test -d code_linter; then
     # Get our fork of codespell that adds --words-white-list and full filename support for -S option
     mkdir code_linter
-    cd code_linter || exit 1
-    git clone https://github.com/google/styleguide
-    cd styleguide || exit 1
-    git checkout gh-pages
-    cd ../.. || exit 1
+    pushd code_linter || exit 1
+    git clone --branch develop https://github.com/cpplint/cpplint
+    # cd styleguide || exit 1
+    # git checkout gh-pages
+    popd || exit 1
+    ls code_linter
+    ls code_linter/cpplint
     echo code_linter installed
 fi
 
@@ -46,7 +48,7 @@ function test_c_files {
         echo "--------------------"
         echo "------   *.c  ------"
         echo "--------------------"
-        python2 code_linter/styleguide/cpplint/cpplint.py --extensions=c  --linelength=120 --filter=-readability/casting $1
+        code_linter/cpplint/cpplint.py --extensions=c  --linelength=120 --filter=-readability/casting $1
     fi
 }
 
@@ -55,7 +57,7 @@ function test_cpp_files {
         echo "--------------------"
         echo "------ *.cpp  ------"
         echo "--------------------"
-        python2 code_linter/styleguide/cpplint/cpplint.py --linelength=120 $1
+        code_linter/cpplint/cpplint.py --linelength=120 --filter=-runtime/references $1
     fi
 }
 
@@ -64,7 +66,7 @@ function test_headers {
         echo "--------------------"
         echo "----- HEADERS  -----"
         echo "--------------------"
-        python2 code_linter/styleguide/cpplint/cpplint.py --extensions=hpp,h --headers=hpp,h  --linelength=120 --filter=-runtime/references $1
+        code_linter/cpplint/cpplint.py --extensions=hpp,h --headers=hpp,h  --linelength=120 --filter=-runtime/references $1
     fi
 }
 

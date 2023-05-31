@@ -69,7 +69,6 @@ enum expectType {
   ANY_UINT, /* uint64_t */
   IDX = ANY_UINT,
   PAMOUNT = ANY_UINT
-
 };
 
 

@@ -230,7 +230,7 @@ getInterval(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::C
 
   return interval->time / 1000000
     + interval->day * SECS_PER_DAY
-    + (int64_t)(interval->month * ((DAYS_PER_YEAR / (double) MONTHS_PER_YEAR) * SECS_PER_DAY));
+    + (int64_t)(interval->month * ((DAYS_PER_YEAR / static_cast<double>(MONTHS_PER_YEAR)) * SECS_PER_DAY));
 }
 
 TTimestamp
