@@ -58,15 +58,19 @@ TInterval get_TInterval(const HeapTuple, const TupleDesc&, const Column_info_t&,
 TInterval get_TInterval_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
 
 TInterval get_PositiveTInterval(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
+
+#if 0
 TInterval get_PositiveTInterval_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
 
 int32_t    get_MaxTasks(const HeapTuple, const TupleDesc&, const Column_info_t&);
 StepType   get_StepType(const HeapTuple, const TupleDesc&, const Column_info_t&, StepType);
+#endif
 
 TTimestamp get_TTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 #if 0
 TTimestamp get_TTimestamp_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 uint32_t get_unsignedint(const HeapTuple, const TupleDesc&, const Column_info_t&, int64_t);
+int64_t* get_BigIntArr_wEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
 #endif
 
 /** @brief  Function will check whether the colNumber represent any specific column or NULL (SPI_ERROR_NOATTRIBUTE).  */
@@ -76,7 +80,6 @@ bool column_found(const Column_info_t&);
 void fetch_column_info(const TupleDesc&, std::vector<Column_info_t>&);
 
 /** using **/
-int64_t* get_BigIntArr_wEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
 int64_t* get_PosBigIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
 uint32_t* get_PositiveIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
 

@@ -233,6 +233,7 @@ getInterval(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::C
     + (int64_t)(interval->month * ((DAYS_PER_YEAR / (double) MONTHS_PER_YEAR) * SECS_PER_DAY));
 }
 
+#if 0
 int32_t
 getInt(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column_info_t &info) {
   Datum binval;
@@ -254,6 +255,7 @@ getInt(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column
   }
   return value;
 }
+#endif
 
 TTimestamp
 getTimeStamp(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column_info_t &info) {
@@ -384,6 +386,24 @@ char getChar(
     value = default_value;
   }
   return value;
+}
+
+int64_t*
+get_BigIntArr_wEmpty(
+    const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column_info_t &info, size_t &the_size) {
+  bool is_null = false;
+  the_size = 0;
+
+  Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
+  /*
+   * [DatumGetArrayTypeP](https://doxygen.postgresql.org/array_8h.html#aa1b8e77c103863862e06a7b7c07ec532)
+   * [pgr_get_bigIntArray](http://docs.vrprouting.org/doxy/2.2/arrays__input_8c_source.html)
+   */
+  if (!raw_array) return  nullptr;
+
+  ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
+
+  return vrp_get_bigIntArray_allowEmpty(&the_size, pg_array);
 }
 
 }  // namespace
@@ -632,6 +652,7 @@ get_TInterval_plain(
   return get_anyinteger(tuple, tupdesc, info, opt_value);
 }
 
+#if 0
 /**
  * @params [in] tuple
  * @params [in] tupdesc
@@ -659,7 +680,9 @@ get_MaxTasks(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_
   if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
   return value;
 }
+#endif
 
+#if 0
 /**
  * @params [in] tuple
  * @params [in] tupdesc
@@ -679,25 +702,7 @@ get_StepType(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_
   }
   return step_type;
 }
-
-
-int64_t*
-get_BigIntArr_wEmpty(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, size_t &the_size) {
-  bool is_null = false;
-  the_size = 0;
-
-  Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
-  /*
-   * [DatumGetArrayTypeP](https://doxygen.postgresql.org/array_8h.html#aa1b8e77c103863862e06a7b7c07ec532)
-   * [pgr_get_bigIntArray](http://docs.vrprouting.org/doxy/2.2/arrays__input_8c_source.html)
-   */
-  if (!raw_array) return  nullptr;
-
-  ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
-
-  return vrp_get_bigIntArray_allowEmpty(&the_size, pg_array);
-}
+#endif
 
 uint32_t*
 get_PositiveIntArr_allowEmpty(
@@ -725,42 +730,6 @@ get_PosBigIntArr_allowEmpty(
   return array;
 }
 
-
-#if 0
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- */
-TTimestamp
-get_TTimestamp_plain(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TTimestamp opt_value) {
-  return column_found(info)?  (TTimestamp)getBigInt(tuple, tupdesc, info) : opt_value;
-}
-
-
-/**
- * @params [in] tuple from postgres
- * @params [in] tupdesc from postgres
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * Used with vrprouting::UINT
- */
-uint32_t
-get_unsignedint(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, int64_t opt_value) {
-  auto value = get_anyinteger(tuple, tupdesc, info, opt_value);
-  if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
-  return static_cast<uint32_t>(value);
-}
-#endif
 
 /**
  * @params [in] tuple from postgres
