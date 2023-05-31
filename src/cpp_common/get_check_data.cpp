@@ -389,7 +389,7 @@ namespace vrprouting {
 namespace detail {
 
 int64_t*
-get_PosBigIntArr_allowEmpty(
+get_any_positive_array(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, size_t &the_size) {
   if (!column_found(info)) return nullptr;
   int64_t *array = get_BigIntArr_wEmpty(tuple, tupdesc, info, the_size);
@@ -400,7 +400,7 @@ get_PosBigIntArr_allowEmpty(
 }
 
 uint32_t*
-get_PositiveIntArr_allowEmpty(
+get_uint_array(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info,
     size_t &the_size) {
   bool is_null = false;
@@ -427,7 +427,7 @@ get_PositiveIntArr_allowEmpty(
  * @pre for positive values only
  */
 TInterval
-get_PositiveTInterval(
+get_interval(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TInterval opt_value) {
   TInterval value = column_found(info)? getInterval(tuple, tupdesc, info) : opt_value;
   if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
@@ -444,7 +444,7 @@ get_PositiveTInterval(
  * @returns opt_value when the column does not exist
  */
 TTimestamp
-get_pg_timestamp(
+get_timestamp(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TTimestamp opt_value) {
   return column_found(info)?  getTimeStamp(tuple, tupdesc, info) : opt_value;
 }

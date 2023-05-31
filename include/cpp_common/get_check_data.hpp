@@ -50,16 +50,16 @@ using Column_info_t = struct Column_info_t;
 bool column_found(const Column_info_t&);
 
 namespace detail {
-  int64_t* get_PosBigIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
-  uint32_t* get_PositiveIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
-  TInterval get_PositiveTInterval(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
-  TTimestamp get_pg_timestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
+  int64_t* get_any_positive_array(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
+  uint32_t* get_uint_array(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
+  TInterval get_interval(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
+  TTimestamp get_timestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
   int64_t get_anyinteger(const HeapTuple, const TupleDesc&, const Column_info_t&, int64_t);
 
   template <typename T>
     T get_integral(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, T opt_value) {
       static_assert(std::is_integral<T>::value, "Integral required.");
-      return static_cast<T>(get_anyinteger(tuple, tupdesc, info, opt_value));
+      return static_cast<T>(get_anyinteger(tuple, tupdesc, info, static_cast<int64_t>(opt_value)));
     }
 
   template <typename T>
@@ -92,22 +92,18 @@ T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t
       return static_cast<T>(detail::get_integral<int64_t>(tuple, tupdesc,  info, static_cast<int64_t>(opt_value)));
       break;
     case INTEGER:
-      return static_cast<T>(detail::get_integral<int32_t>(tuple, tupdesc,  info, static_cast<int32_t>(opt_value)));
+      return static_cast<T>(detail::get_integral<T>(tuple, tupdesc,  info, opt_value));
       break;
     case ANY_UINT :
-      return static_cast<T>(detail::get_positive<int64_t>(tuple, tupdesc,  info, static_cast<int64_t>(opt_value)));
-      break;
+    case POSITIVE_INTEGER:
     case TINTERVAL :
-      return static_cast<T>(detail::get_positive<TInterval>(tuple, tupdesc,  info, static_cast<TInterval>(opt_value)));
+      return static_cast<T>(detail::get_positive<T>(tuple, tupdesc,  info, opt_value));
       break;
     case TIMESTAMP :
       return static_cast<T>(detail::get_pg_timestamp(tuple, tupdesc,  info, static_cast<TTimestamp>(opt_value)));
       break;
     case INTERVAL :
-      return static_cast<T>(detail::get_PositiveTInterval(tuple, tupdesc,  info, static_cast<TInterval>(opt_value)));
-      break;
-    case POSITIVE_INTEGER:
-      return static_cast<T>(detail::get_positive<int32_t>(tuple, tupdesc,  info, static_cast<int32_t>(opt_value)));
+      return static_cast<T>(detail::get_pg_interval(tuple, tupdesc,  info, static_cast<TInterval>(opt_value)));
       break;
     default:
       throw std::string("Missing case value ") + info.name;
@@ -119,10 +115,10 @@ template <typename T>
 T* get_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, size_t &size) {
   switch (info.eType) {
     case ANY_POSITIVE_ARRAY:
-      return detail::get_PosBigIntArr_allowEmpty(tuple, tupdesc, info, size);
+      return detail::get_any_positive_array(tuple, tupdesc, info, size);
       break;
     default:
-      throw std::string("Missing case value on array") + info.name;
+      throw std::string("Missing case value on array ") + info.name;
       break;
   }
 }
@@ -131,10 +127,10 @@ template <typename T>
 T* get_uint_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, size_t &size) {
   switch (info.eType) {
     case ANY_UINT_ARRAY:
-      return detail::get_PositiveIntArr_allowEmpty(tuple, tupdesc, info, size);
+      return detail::get_uint_array(tuple, tupdesc, info, size);
       break;
     default:
-      throw std::string("Missing case value on Uint array") + info.name;
+      throw std::string("Missing case value on Uint array ") + info.name;
       break;
   }
 }
