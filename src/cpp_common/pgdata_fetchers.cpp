@@ -157,7 +157,7 @@ void fetch_vroom_shipments(
   shipment->id = get_value<Idx>(tuple, tupdesc, info[0], 0);
 
   shipment->p_location_id = get_value<MatrixIndex>(tuple, tupdesc, info[1], 0);
-  shipment->d_location_id = get_positive<MatrixIndex>(tuple, tupdesc, info[4], 0);
+  shipment->d_location_id = get_value<MatrixIndex>(tuple, tupdesc, info[4], 0);
 
   shipment->p_setup = get_value<Duration>(tuple, tupdesc, info[2], 0);
   shipment->p_service = get_value<Duration>(tuple, tupdesc, info[3], 0);
@@ -193,7 +193,7 @@ void fetch_tw(
     Vroom_time_window_t *time_window,
     bool) {
 
-  time_window->id = get_positive<Idx>(tuple, tupdesc, info[0], 0);
+  time_window->id = get_value<Idx>(tuple, tupdesc, info[0], 0);
   time_window->kind = ' ';
   auto is_shipment = column_found(info[3]) && info[3].strict;
 
@@ -275,8 +275,8 @@ void fetch_vroom_vehicles(
     Vroom_vehicle_t *vehicle,
     bool) {
   vehicle->id = get_value<Idx>(tuple, tupdesc, info[0], 0);
-  vehicle->start_id = get_positive<MatrixIndex>(tuple, tupdesc, info[1], -1);
-  vehicle->end_id = get_positive<MatrixIndex>(tuple, tupdesc, info[2], -1);
+  vehicle->start_id = get_value<MatrixIndex>(tuple, tupdesc, info[1], -1);
+  vehicle->end_id = get_value<MatrixIndex>(tuple, tupdesc, info[2], -1);
 
   vehicle->capacity_size = 0;
   vehicle->capacity = get_array<Amount>(tuple, tupdesc, info[3], vehicle->capacity_size);
