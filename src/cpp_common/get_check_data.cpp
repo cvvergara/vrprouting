@@ -502,7 +502,6 @@ void fetch_column_info(
           break;
         case ANY_INTEGER_ARRAY:
         case ANY_POSITIVE_ARRAY:
-        case ANY_UINT_ARRAY:
           check_any_integerarray_type(coldata);
           break;
         case INTEGER:
@@ -512,6 +511,7 @@ void fetch_column_info(
           check_jsonb_type(coldata);
           break;
         case INTEGER_ARRAY:
+        case ANY_UINT_ARRAY:
           check_integerarray_type(coldata);
           break;
         case TIMESTAMP:
