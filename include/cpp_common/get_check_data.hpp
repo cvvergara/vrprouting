@@ -100,10 +100,10 @@ T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t
       return static_cast<T>(detail::get_positive<T>(tuple, tupdesc,  info, opt_value));
       break;
     case TIMESTAMP :
-      return static_cast<T>(detail::get_pg_timestamp(tuple, tupdesc,  info, static_cast<TTimestamp>(opt_value)));
+      return static_cast<T>(detail::get_timestamp(tuple, tupdesc,  info, static_cast<TTimestamp>(opt_value)));
       break;
     case INTERVAL :
-      return static_cast<T>(detail::get_pg_interval(tuple, tupdesc,  info, static_cast<TInterval>(opt_value)));
+      return static_cast<T>(detail::get_interval(tuple, tupdesc,  info, static_cast<TInterval>(opt_value)));
       break;
     default:
       throw std::string("Missing case value ") + info.name;
