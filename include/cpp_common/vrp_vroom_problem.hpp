@@ -295,7 +295,8 @@ class Vrp_vroom_problem : public vrprouting::Pgr_messages {
   /**
    * @brief      Gets the vehicle breaks from C-style breaks struct
    *
-   * @param[in]  v_break  The vehicle break struct
+   * @param[in] v_break   The vehicle break
+   * @param[in] break_tws The time windows of the breaks
    *
    * @return     The vroom vehicle break.
    */
@@ -335,8 +336,9 @@ class Vrp_vroom_problem : public vrprouting::Pgr_messages {
   /**
    * @brief      Gets the vroom vehicles.
    *
-   * @param[in]  vehicle        The vehicle C-style struct
-   * @param[in]  breaks_tws     The breaks time windows
+   * @param [in] vehicle   The vehicle
+   * @param [in] breaks    The vehicle breaks
+   * @param [in] breaks_tws The time windows of the breaks
    *
    * @return     The vroom vehicle.
    */

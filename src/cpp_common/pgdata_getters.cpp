@@ -51,9 +51,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 
 /**
- * @param [in] sql SQL query that has the following columns: start_vid, end_vid, agg_cost
+ * @param [in] sql SQL query corresponding to Matrix_cell_t
  * @param [out] rows C Container that holds all the matrix rows
  * @param [out] total_rows Total rows recieved
+ * @param [in] use_timestamps When true postgres Time datatypes are used
+ * @param [out] err_msg When not empty there was an error
  */
 void
 vrp_get_matrixRows(
@@ -87,10 +89,11 @@ vrp_get_matrixRows(
 }
 
 /**
- * @param [in] sql SQL query that has the following columns: start_id, end_id, duration, cost
- * @param [in] use_timestamps Whether the plain or timestamp function is used
+ * @param [in]  sql Query for Vroom_matrix_t
  * @param [out] rows C Container that holds all the matrix rows
  * @param [out] total_rows Total rows recieved
+ * @param [in]  use_timestamps When true postgres Time datatypes are used
+ * @param [out] err_msg When not empty there was an error
  */
 void
 vrp_get_vroom_matrix(
@@ -126,6 +129,8 @@ vrp_get_vroom_matrix(
  * @param[in] sql SQL query to execute
  * @param[out] rows C Container that holds the data
  * @param[out] total_rows Total rows recieved
+ * @param [in] use_timestamps When true postgres Time datatypes are used
+ * @param [out] err_msg When not empty there was an error
  */
 void
 vrp_get_vroom_breaks(
@@ -162,6 +167,8 @@ vrp_get_vroom_breaks(
  * @param[in] sql SQL query to execute
  * @param[out] rows C Container that holds the data
  * @param[out] total_rows Total rows recieved
+ * @param [in] use_timestamps When true postgres Time datatypes are used
+ * @param [out] err_msg When not empty there was an error
  */
 void
 vrp_get_vroom_jobs(
@@ -199,11 +206,13 @@ vrp_get_vroom_jobs(
 }
 
 
-
 /**
- * @param[in] sql SQL query to execute
- * @param[out] rows C Container that holds the data
- * @param[out] total_rows Total rows recieved
+ * @param [in]  sql SQL query to execute
+ * @param [out] rows C Container that holds the data
+ * @param [out] total_rows Total rows recieved
+ * @param [in]  is_euclidean When true coordintes are going to be used
+ * @param [in]  use_timestamps When true postgres Time datatypes are used
+ * @param [out] err_msg When not empty there was an error
  */
 void
 vrp_get_orders(
@@ -261,6 +270,8 @@ vrp_get_orders(
  * @param[in] sql SQL query to execute
  * @param[out] rows C Container that holds the data
  * @param[out] total_rows Total rows recieved
+ * @param [in] use_timestamps When true postgres Time datatypes are used
+ * @param [out] err_msg When not empty there was an error
  */
 void
 vrp_get_vroom_shipments(
@@ -302,10 +313,12 @@ vrp_get_vroom_shipments(
 
 
 /**
-  @param [in] sql query that has the following columns: start_time, multiplier
-  @param [out] rows C Container that holds all the multipliers rows
-  @param [out] total_rows Total rows recieved
-  */
+ * @param [in] sql query that has the following columns: start_time, multiplier
+ * @param [out] rows C Container that holds all the multipliers rows
+ * @param [out] total_rows Total rows recieved
+ * @param [in] use_timestamps When true postgres Time datatypes are used
+ * @param [out] err_msg When not empty there was an error
+*/
 void vrp_get_timeMultipliers(
     char *sql,
     Time_multipliers_t **rows,
@@ -339,6 +352,8 @@ void vrp_get_timeMultipliers(
  * @param[in] sql SQL query to execute
  * @param[out] rows C Container that holds the data
  * @param[out] total_rows Total rows recieved
+ * @param [in] use_timestamps When true postgres Time datatypes are used
+ * @param [out] err_msg When not empty there was an error
  */
 void
 vrp_get_vroom_time_windows(
@@ -374,6 +389,8 @@ vrp_get_vroom_time_windows(
  * @param[in] sql SQL query to execute
  * @param[out] rows C Container that holds the data
  * @param[out] total_rows Total rows recieved
+ * @param [in] use_timestamps When true postgres Time datatypes are used
+ * @param [out] err_msg When not empty there was an error
  */
 void
 vrp_get_vroom_shipments_time_windows(
@@ -409,10 +426,13 @@ vrp_get_vroom_shipments_time_windows(
 
 
 /**
- * @param[in] sql SQL query to execute
- * @param[in] with_stops do not ignore stops column
- * @param[out] rows C Container that holds the data
- * @param[out] total_rows Total rows recieved
+ * @param[in]   sql SQL query to execute
+ * @param[out]  rows C Container that holds the data
+ * @param[out]  total_rows Total rows recieved
+ * @param[in]   with_stops do not ignore stops column
+ * @param [in]  is_euclidean When true coordintes are going to be used
+ * @param [in]  use_timestamps When true postgres Time datatypes are used
+ * @param [out] err_msg When not empty there was an error
  */
 void
 vrp_get_vehicles(
@@ -421,7 +441,7 @@ vrp_get_vehicles(
     size_t *total_rows,
     bool with_stops,
     bool is_euclidean,
-    bool is_timestamps,
+    bool use_timestamps,
     char **err_msg) {
   using vrprouting::pgr_msg;
   using vrprouting::pgr_free;
@@ -444,7 +464,7 @@ vrp_get_vehicles(
     info[16] = {-1, 0, false, "e_y", vrprouting::COORDINATE};
 
     /* Difference is the name and type */
-    if (is_timestamps) {
+    if (use_timestamps) {
       info[5] = {-1, 0, false, "s_tw_open", vrprouting::TIMESTAMP};
       info[6] = {-1, 0, false, "s_tw_close", vrprouting::TIMESTAMP};
       info[7] = {-1, 0, false, "s_t_service", vrprouting::INTERVAL};
@@ -477,6 +497,8 @@ vrp_get_vehicles(
  * @param[in] sql SQL query to execute
  * @param[out] rows C Container that holds the data
  * @param[out] total_rows Total rows recieved
+ * @param [in] use_timestamps When true postgres Time datatypes are used
+ * @param [out] err_msg When not empty there was an error
  */
 void
 vrp_get_vroom_vehicles(

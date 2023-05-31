@@ -198,16 +198,17 @@ update_stops(std::vector<Short_vehicle>& the_stops,  // NOLINT [runtime/referenc
 
 /** @brief Executes an optimization by subdivision of data
  *
- *  @param[in] shipments_arr A C Array of pickup and dropoff shipments
- *  @param[in] total_shipments size of the shipments_arr
- *  @param[in] vehicles_arr A C Array of vehicles
- *  @param[in] total_vehicles size of the vehicles_arr
- *  @param[in] new_stops stops that override the original stops.
- *  @param[in] time_matrix The unique time matrix
- *  @param[in] max_cycles number of cycles to perform during the optimization phase
- *  @param[in] execution_date Value used for not moving shipments that are before this date
+ *  @param [in] shipments_arr      C Array of pickup and dropoff shipments
+ *  @param [in] total_shipments    size of the shipments_arr
+ *  @param [in] vehicles_arr       C Array of vehicles
+ *  @param [in] total_vehicles     size of the vehicles_arr
+ *  @param [in] time_matrix        The unique time matrix
+ *  @param [in] max_cycles         number of cycles to perform during the optimization phase
+ *  @param [in] execution_date     Value used for not moving shipments that are before this date
+ *  @param [in] subdivide_by_vehicle @todo
+ *  @param [in,out] log            log of function
  *
- *  @returns (vehicle id, stops vector) pair which hold the the new stops structure
+ *  @returns vector[vehicle id] = stops which hold the the new stops structure
  */
 std::vector<Short_vehicle>
 subdivide_processing(
@@ -288,26 +289,25 @@ subdivide_processing(
 
 /**
  *
- *  @param[in] shipments_arr A C Array of pickup and dropoff shipments
- *  @param[in] total_shipments size of the shipments_arr
- *  @param[in] vehicles_arr A C Array of vehicles
- *  @param[in] total_vehicles size of the vehicles_arr
+ *  @param[in] shipments_arr    A C Array of pickup and dropoff shipments
+ *  @param[in] total_shipments  size of the shipments_arr
+ *  @param[in] vehicles_arr     A C Array of vehicles
+ *  @param[in] total_vehicles   size of the vehicles_arr
  *  @param[in] matrix_cells_arr A C Array of the (time) matrix cells
- *  @param[in] total_cells size of the matrix_cells_arr
- *  @param[in] multipliers_arr A C Array of the multipliers
+ *  @param[in] total_cells      size of the matrix_cells_arr
+ *  @param[in] multipliers_arr  A C Array of the multipliers
  *  @param[in] total_multipliers size of the multipliers_arr
- *  @param[in] optimize flag to control optimization
- *  @param[in] factor A global multiplier for the (time) matrix cells
- *  @param[in] max_cycles number of cycles to perform during the optimization phase
- *  @param[in] stop_on_all_served Indicator to stop optimization when all shipments are served
- *  @param[in] execution_date Value used for not moving shipments that are before this date
- *  @param[out] return_tuples C array of contents to be returned to postgres
- *  @param[out] return_count number of tuples returned
+ *  @param[in] factor           A global multiplier for the (time) matrix cells
+ *  @param[in] max_cycles       number of cycles to perform during the optimization phase
+ *  @param[in] execution_date   Value used for not moving shipments that are before this date
+ *  @param[in] check_triangle_inequality When true tirangle inequality will be checked
+ *  @param[in] subdivide        @todo
+ *  @param[in] subdivide_by_vehicle @todo
+ *  @param[out] return_tuples   C array of contents to be returned to postgres
+ *  @param[out] return_count    number of tuples returned
  *  @param[out] log_msg special log message pointer
- *  @param[out] notice_msg special message pointer to be returned as NOTICE
+ *  @param[out] notice_msg      special message pointer to be returned as NOTICE
  *  @param[out] err_msg special message pointer to be returned as ERROR
- *  @return void
- *
  *
  * @pre The messages: log_msg, notice_msg, err_msg must be empty (=nullptr)
  * @pre The C arrays: shipments_arr, vehicles_arr, matrix_cells_arr must not be empty

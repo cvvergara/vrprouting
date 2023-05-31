@@ -80,9 +80,13 @@ namespace detail {
 /** @brief Function tells expected type of each column and then check the correspondence type of each column.  */
 void fetch_column_info(const TupleDesc&, std::vector<Column_info_t>&);
 
-/** @brief Function returns the string representation of the value of specified column.  */
+/** @brief Function gets the C string of a JSONB */
 char* get_jsonb(const HeapTuple, const TupleDesc&, const Column_info_t&);
+
+/** @brief Function gets the @b double of a Postgres floating point */
 double get_anynumerical(const HeapTuple, const TupleDesc&, const Column_info_t&, double);
+
+/** @brief Function gets a char of a CHAR*/
 char get_char(const HeapTuple, const TupleDesc&, const Column_info_t&, char);
 
 template <typename T>

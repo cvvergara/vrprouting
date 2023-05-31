@@ -71,6 +71,8 @@ void vrp_get_orders(char*, PickDeliveryOrders_t**, size_t*, bool, bool, char**);
 /** @brief Get the time multipliers using interval*/
 void vrp_get_timeMultipliers(char*, Time_multipliers_t**, size_t*, bool, char**);
 
+/** @brief Reads the vehicles information */
+void vrp_get_vehicles(char*, Vehicle_t**, size_t*, bool, bool, bool, char**);
 
 /** @brief Reads the VROOM breaks */
 void vrp_get_vroom_breaks(char*, Vroom_break_t**, size_t*, bool, char**);
@@ -86,10 +88,6 @@ void vrp_get_vroom_time_windows(char*, Vroom_time_window_t**, size_t*, bool, cha
 
 /** @brief Reads the VROOM shipments time windows */
 void vrp_get_vroom_shipments_time_windows(char*, Vroom_time_window_t**, size_t*, bool, char**);
-
-/** Vehicles **/
-/** @brief Reads the vehicles information */
-void vrp_get_vehicles(char*, Vehicle_t**, size_t*, bool, bool, bool, char**);
 
 /** @brief Reads the VROOM vehicles */
 void vrp_get_vroom_vehicles(char*, Vroom_vehicle_t**, size_t*, bool, char**);

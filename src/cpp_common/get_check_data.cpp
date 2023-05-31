@@ -330,11 +330,10 @@ double getFloat8(
  * [Datum](https://doxygen.postgresql.org/datum_8h.html)
  * [DatumGetInt16](https://doxygen.postgresql.org/postgres_8h.html#aec991e04209850f29a8a63df0c78ba2d)
  *
- * @param[in]  tuple         input row to be examined.
- * @param[in] tupdesc  tuple descriptor
- * @param[in]  info          contain column information.
- * @param[in]  strict        boolean value of strict.
- * @param[in]  default_value returned when column contain NULL value.
+ * @param[in] tuple         input row to be examined.
+ * @param[in] tupdesc       tuple descriptor
+ * @param[in] info          contain column information.
+ * @param[in] default_value returned when column contain NULL value.
  * @throw ERROR Unexpected Column type. Expected column type is CHAR.
  * @throw ERROR When value of column is NULL.
  * @return Char type of column value is returned.
@@ -412,10 +411,10 @@ get_uint_array(
 }
 
 /**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
+ * @param [in] tuple
+ * @param [in] tupdesc
+ * @param [in] info about the column been fetched
+ * @param [in] opt_value default value when the column does not exist
  *
  * @returns The value found
  * @returns opt_value when the column does not exist
@@ -432,10 +431,10 @@ get_interval(
 }
 
 /**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
+ * @param [in] tuple
+ * @param [in] tupdesc
+ * @param [in] info about the column been fetched
+ * @param [in] opt_value default value when the column does not exist
  *
  * @returns The value found
  * @returns opt_value when the column does not exist
@@ -447,10 +446,10 @@ get_timestamp(
 }
 
 /**
- * @params [in] tuple from postgres
- * @params [in] tupdesc from postgres
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
+ * @param [in] tuple from postgres
+ * @param [in] tupdesc from postgres
+ * @param [in] info about the column been fetched
+ * @param [in] opt_value default value when the column does not exist
  *
  * @returns The value found
  * @returns opt_value when the column does not exist
@@ -464,7 +463,7 @@ get_anyinteger(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_inf
 }  // namespace detail
 
 /**
- * @param[in] colNumber Column number (count starts at 1).
+ * @param[in] info column information
  * @return @b TRUE when colNumber exist.
  *         @b FALSE when colNumber was not found.
  *
@@ -534,10 +533,10 @@ void fetch_column_info(
 
 
 /**
- * @params [in] tuple from postgres
- * @params [in] tupdesc from postgres
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
+ * @param [in] tuple from postgres
+ * @param [in] tupdesc from postgres
+ * @param [in] info about the column been fetched
+ * @param [in] opt_value default value when the column does not exist
  *
  * @returns The value found
  * @returns opt_value when the column does not exist
@@ -551,14 +550,13 @@ get_anynumerical(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_i
 
 
 /**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
+ * @param [in] tuple
+ * @param [in] tupdesc
+ * @param [in] info about the column been fetched
+ * @param [in] opt_value default value when the column does not exist
  *
  * @returns The value found
  * @returns opt_value when the column does not exist
- *
  */
 char
 get_char(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, char opt_value) {
@@ -566,8 +564,15 @@ get_char(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &i
 }
 
 
+/**
+ * @param [in] tuple
+ * @param [in] tupdesc
+ * @param [in] info about the column been fetched
+ *
+ * @returns "{}" (empty jsonb) when when the column does not exist
+ */
 char* get_jsonb(const HeapTuple tuple, const TupleDesc &tupdesc,  const vrprouting::Column_info_t &info) {
-  return column_found(info)?  DatumGetCString(SPI_getvalue(tuple, tupdesc, info.colNumber)) : strdup("{}");
+  return column_found(info)? DatumGetCString(SPI_getvalue(tuple, tupdesc, info.colNumber)) : strdup("{}");
 }
 
 }  // namespace vrprouting

@@ -63,22 +63,20 @@ PG_FUNCTION_INFO_V1(_vrp_vroom);
  * in the `vroom_driver.h` file for further processing.
  * Finally, it frees the memory and disconnects the C function to the SPI manager.
  *
- * @param jobs_sql          SQL query describing the jobs
- * @param jobs_tw_sql       SQL query describing the time window for jobs
- * @param shipments_sql     SQL query describing the shipments
- * @param shipments_tw_sql  SQL query describing the time windows for shipment
- * @param vehicles_sql      SQL query describing the vehicles
- * @param breaks_sql        SQL query describing the driver breaks.
- * @param breaks_tws_sql    SQL query describing the time windows for break start.
- * @param matrix_sql        SQL query describing the cells of the cost matrix
- * @param exploration_level Exploration level to use while solving.
- * @param timeout           Timeout value to stop the solving process.
- * @param fn                Value denoting the function used.
- * @param is_plain          Value denoting whether the plain/timestamp function is used.
- * @param result_tuples     the rows in the result
- * @param result_count      the count of rows in the result
- *
- * @returns void
+ * @param [in] jobs_sql          SQL query describing the jobs
+ * @param [in] jobs_tws_sql      SQL query describing the time window for jobs
+ * @param [in] shipments_sql     SQL query describing the shipments
+ * @param [in] shipments_tws_sql SQL query describing the time windows for shipment
+ * @param [in] vehicles_sql      SQL query describing the vehicles
+ * @param [in] breaks_sql        SQL query describing the driver breaks.
+ * @param [in] breaks_tws_sql    SQL query describing the time windows for break start.
+ * @param [in] matrix_sql        SQL query describing the cells of the cost matrix
+ * @param [in] exploration_level Exploration level to use while solving.
+ * @param [in] timeout           Timeout value to stop the solving process.
+ * @param [in] fn                Value denoting the function used.
+ * @param [in] use_timestamps    When true Postgres time data is used.
+ * @param [out] result_tuples    the rows in the result
+ * @param [out] result_count     the count of rows in the result
  */
 static
 void
