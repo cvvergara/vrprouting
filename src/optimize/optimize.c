@@ -94,7 +94,7 @@ process(
 
   PickDeliveryOrders_t *pd_orders_arr = NULL;
   size_t total_pd_orders = 0;
-  vrp_get_shipments(pd_orders_sql, &pd_orders_arr, &total_pd_orders, is_euclidean, use_timestamps, &err_msg);
+  vrp_get_orders(pd_orders_sql, &pd_orders_arr, &total_pd_orders, is_euclidean, use_timestamps, &err_msg);
   throw_error(err_msg, pd_orders_sql);
 
   if (total_pd_orders == 0) {

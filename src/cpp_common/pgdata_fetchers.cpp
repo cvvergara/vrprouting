@@ -122,36 +122,7 @@ void fetch_matrix_vroom(
 }
 
 
-#if 0
-void fetch_vroom_orders_timestamps(
-    const HeapTuple tuple, const TupleDesc &tupdesc,
-    const std::vector<Column_info_t> &info,
-    PickDeliveryOrders_t *pd_order,
-    bool is_euclidean) {
-  pd_order->id = get_value<Id>(tuple, tupdesc, info[0], -1);
-  pd_order->demand = get_value<PAmount>(tuple, tupdesc, info[1], 0);
-
-  pd_order->pick_open_t    = get_value<TTimestamp>(tuple, tupdesc, info[2], -1);
-  pd_order->pick_close_t   = get_value<TTimestamp>(tuple, tupdesc, info[3], -1);
-  pd_order->pick_service_t = get_value<TInterval>(tuple, tupdesc, info[4], 0);
-
-  pd_order->deliver_open_t    = get_value<TTimestamp>(tuple, tupdesc, info[5], -1);
-  pd_order->deliver_close_t   = get_value<TTimestamp>(tuple, tupdesc, info[6], -1);
-  pd_order->deliver_service_t = get_value<TInterval>(tuple, tupdesc, info[7], 0);
-
-  pd_order->pick_node_id   = get_value<Id>(tuple, tupdesc, info[8], -1);
-  pd_order->deliver_node_id   = get_value<Id>(tuple, tupdesc, info[9], -1);
-
-  pd_order->pick_x = is_euclidean? get_anynumerical(tuple, tupdesc, info[10], 0) : 0;
-  pd_order->pick_y = is_euclidean? get_anynumerical(tuple, tupdesc, info[11], 0) : 0;
-  pd_order->deliver_x =   is_euclidean? get_anynumerical(tuple, tupdesc, info[12], pd_order->pick_x) : 0;
-  pd_order->deliver_y =   is_euclidean? get_anynumerical(tuple, tupdesc, info[13], pd_order->pick_y) : 0;
-}
-#endif
-
-
-
-void fetch_orders_raw(
+void fetch_orders(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
     PickDeliveryOrders_t *pd_order,
