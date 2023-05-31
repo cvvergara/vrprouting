@@ -233,30 +233,6 @@ getInterval(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::C
     + (int64_t)(interval->month * ((DAYS_PER_YEAR / (double) MONTHS_PER_YEAR) * SECS_PER_DAY));
 }
 
-#if 0
-int32_t
-getInt(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column_info_t &info) {
-  Datum binval;
-  bool isnull;
-  int32_t value = 0;
-  binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isnull);
-
-  if (isnull) throw std::string("Unexpected Null value in column ") + info.name;
-
-  switch (info.type) {
-    case INT2OID:
-      value = (int32_t) DatumGetInt16(binval);
-      break;
-    case INT4OID:
-      value = (int32_t) DatumGetInt32(binval);
-      break;
-    default:
-      throw std::string("Unexpected type value in column '") + info.name + "'. Expected INTEGER";
-  }
-  return value;
-}
-#endif
-
 TTimestamp
 getTimeStamp(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column_info_t &info) {
   Datum binval;
@@ -603,6 +579,7 @@ int64_t* getBigIntArr(
     return get_array(pg_array, the_size, true);
 }
 
+#if 0
 /**
  * @params [in] tuple
  * @params [in] tupdesc
@@ -616,6 +593,7 @@ TInterval
 get_TInterval(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TInterval opt_value) {
   return column_found(info)? getInterval(tuple, tupdesc, info) : opt_value;
 }
+#endif
 
 /**
  * @params [in] tuple
@@ -632,11 +610,12 @@ get_TInterval(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info
 TInterval
 get_PositiveTInterval(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TInterval opt_value) {
-  TInterval value = get_TInterval(tuple, tupdesc, info, opt_value);
+  TInterval value = column_found(info)? getInterval(tuple, tupdesc, info) : opt_value;
   if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
   return (TInterval) value;
 }
 
+#if 0
 /**
  * @params [in] tuple
  * @params [in] tupdesc
@@ -650,57 +629,6 @@ TInterval
 get_TInterval_plain(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TInterval opt_value) {
   return get_anyinteger(tuple, tupdesc, info, opt_value);
-}
-
-#if 0
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for positive values only
- */
-TInterval
-get_PositiveTInterval_plain(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TInterval opt_value) {
-  //return get_positive(tuple, tupdesc, info, opt_value);
-  TInterval value = get_TInterval_plain(tuple, tupdesc, info, opt_value);
-  if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
-  return (TInterval) value;
-}
-
-int32_t
-get_MaxTasks(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info) {
-  int32_t value = getInt(tuple, tupdesc, info);
-  if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
-  return value;
-}
-#endif
-
-#if 0
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- */
-StepType
-get_StepType(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, StepType opt_value) {
-  StepType step_type = column_found(info) ? getInt(tuple, tupdesc, info) : opt_value;
-  StepType min_value = 1;
-  StepType max_value = 6;
-  if (step_type < min_value || step_type > max_value) {
-    throw std::string("Step value should lie between 1 and 6");
-  }
-  return step_type;
 }
 #endif
 
