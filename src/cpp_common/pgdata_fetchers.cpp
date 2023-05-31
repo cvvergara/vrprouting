@@ -234,11 +234,9 @@ void fetch_vehicles(
   vehicle->cant_v =  get_value<PAmount>(tuple, tupdesc, info[2], 1);
   vehicle->speed  =  get_anynumerical(tuple, tupdesc, info[3], 1);
 
-  vehicle->stops = NULL;
   vehicle->stops_size = 0;
-  if (column_found(info[4].colNumber)) {
-    vehicle->stops = get_BigIntArr_wEmpty(tuple, tupdesc, info[4], vehicle->stops_size);
-  }
+  vehicle->stops = get_array<Id>(tuple, tupdesc, info[4], vehicle->stops_size);
+
   /*
    * start values
    */

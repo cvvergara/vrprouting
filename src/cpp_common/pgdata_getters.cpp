@@ -435,7 +435,7 @@ vrp_get_vehicles(
     info[1] = {-1, 0, true, "capacity", vrprouting::PAMOUNT};
     info[2] = {-1, 0, false, "number", vrprouting::PAMOUNT};
     info[3] = {-1, 0, false, "speed", vrprouting::SPEED};
-    info[4] = {-1, 0, with_stops, "stops", vrprouting::ANY_INTEGER_ARRAY};
+    info[4] = {-1, 0, with_stops, "stops", vrprouting::ANY_POSITIVE_ARRAY};
 
     info[11] = {-1, 0, !is_euclidean, "s_id", vrprouting::ID};
     info[12] = {-1, 0, false, "e_id", vrprouting::ID};
