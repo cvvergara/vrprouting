@@ -90,7 +90,7 @@ vrp_get_matrixRows(
 
 /**
  * @param [in] sql SQL query that has the following columns: start_id, end_id, duration, cost
- * @param[in] is_plain Whether the plain or timestamp function is used
+ * @param [in] use_timestamps Whether the plain or timestamp function is used
  * @param [out] rows C Container that holds all the matrix rows
  * @param [out] total_rows Total rows recieved
  */
@@ -99,7 +99,7 @@ vrp_get_vroom_matrix(
     char *sql,
     Vroom_matrix_t **rows,
     size_t *total_rows,
-    bool is_plain,
+    bool use_timestamps,
     char **err_msg) {
   using vrprouting::pgr_msg;
   using vrprouting::pgr_free;
@@ -109,10 +109,10 @@ vrp_get_vroom_matrix(
 
     info[0] = {-1, 0, true, "start_id", vrprouting::MATRIX_INDEX};
     info[1] = {-1, 0, true, "end_id", vrprouting::MATRIX_INDEX};
-    info[2] = {-1, 0, true, "duration", is_plain? vrprouting::TINTERVAL : vrprouting::INTERVAL};
+    info[2] = {-1, 0, true, "duration", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL};
     info[3] = {-1, 0, false, "cost", vrprouting::INTEGER};
 
-  vrprouting::get_data(sql, rows, total_rows, is_plain, info, &vrprouting::fetch_matrix_vroom);
+  vrprouting::get_data(sql, rows, total_rows, use_timestamps, info, &vrprouting::fetch_matrix_vroom);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
     (*total_rows) = 0;
@@ -134,7 +134,7 @@ vrp_get_vroom_breaks(
     char *sql,
     Vroom_break_t **rows,
     size_t *total_rows,
-    bool is_plain,
+    bool use_timestamps,
     char **err_msg) {
   using vrprouting::pgr_msg;
   using vrprouting::pgr_free;
@@ -144,10 +144,10 @@ vrp_get_vroom_breaks(
 
     info[0] = {-1, 0, true, "id", vrprouting::IDX};
     info[1] = {-1, 0, true, "vehicle_id", vrprouting::IDX};
-    info[2] = {-1, 0, false, "service", is_plain? vrprouting::TINTERVAL : vrprouting::INTERVAL};
+    info[2] = {-1, 0, false, "service", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL};
     info[3] = {-1, 0, false, "data", vrprouting::JSONB};
 
-  vrprouting::get_data(sql, rows, total_rows, is_plain, info, &vrprouting::fetch_breaks);
+  vrprouting::get_data(sql, rows, total_rows, use_timestamps, info, &vrprouting::fetch_breaks);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
     (*total_rows) = 0;
@@ -170,7 +170,7 @@ vrp_get_vroom_jobs(
     char *sql,
     Vroom_job_t **rows,
     size_t *total_rows,
-    bool is_plain,
+    bool use_timestamps,
     char **err_msg) {
   using vrprouting::pgr_msg;
   using vrprouting::pgr_free;
@@ -180,15 +180,15 @@ vrp_get_vroom_jobs(
 
     info[0] = {-1, 0, true, "id", vrprouting::IDX};
     info[1] = {-1, 0, true, "location_id", vrprouting::MATRIX_INDEX};
-    info[2] = {-1, 0, false, "setup",   is_plain? vrprouting::TINTERVAL : vrprouting::INTERVAL};
-    info[3] = {-1, 0, false, "service", is_plain? vrprouting::TINTERVAL : vrprouting::INTERVAL};
+    info[2] = {-1, 0, false, "setup",   use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL};
+    info[3] = {-1, 0, false, "service", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL};
     info[4] = {-1, 0, false, "delivery", vrprouting::ANY_POSITIVE_ARRAY};
     info[5] = {-1, 0, false, "pickup", vrprouting::ANY_POSITIVE_ARRAY};
     info[6] = {-1, 0, false, "skills", vrprouting::ANY_UINT_ARRAY};
     info[7] = {-1, 0, false, "priority", vrprouting::ANY_UINT};
     info[8] = {-1, 0, false, "data", vrprouting::JSONB};
 
-  vrprouting::get_data(sql, rows, total_rows, is_plain, info, &vrprouting::fetch_jobs);
+  vrprouting::get_data(sql, rows, total_rows, use_timestamps, info, &vrprouting::fetch_jobs);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
     (*total_rows) = 0;
@@ -347,7 +347,7 @@ vrp_get_vroom_time_windows(
     char *sql,
     Vroom_time_window_t **rows,
     size_t *total_rows,
-    bool is_plain,
+    bool use_timestamps,
     char **err_msg) {
   using vrprouting::pgr_msg;
   using vrprouting::pgr_free;
@@ -356,16 +356,11 @@ vrp_get_vroom_time_windows(
     std::vector<Column_info_t> info{4};
 
     info[0] = {-1, 0, true, "id", vrprouting::ANY_INTEGER};
-    info[1] = {-1, 0, true, "tw_open", vrprouting::TIMESTAMP};
-    info[2] = {-1, 0, true, "tw_close", vrprouting::TIMESTAMP};
+    info[1] = {-1, 0, true, "tw_open", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP};
+    info[2] = {-1, 0, true, "tw_close", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP};
     info[3] = {-1, 0, false, "kind", vrprouting::CHAR1};
 
-
-  if (is_plain) {
-    info[1].eType = vrprouting::INTEGER;
-    info[2].eType = vrprouting::INTEGER;
-  }
-    vrprouting::get_data(sql, rows, total_rows, is_plain, info, &vrprouting::fetch_tw);
+    vrprouting::get_data(sql, rows, total_rows, use_timestamps, info, &vrprouting::fetch_tw);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
     (*total_rows) = 0;
@@ -387,7 +382,7 @@ vrp_get_vroom_shipments_time_windows(
     char *sql,
     Vroom_time_window_t **rows,
     size_t *total_rows,
-    bool is_plain,
+    bool use_timestamps,
     char **err_msg) {
   using vrprouting::pgr_msg;
   using vrprouting::pgr_free;
@@ -396,15 +391,11 @@ vrp_get_vroom_shipments_time_windows(
     std::vector<Column_info_t> info{4};
 
     info[0] = {-1, 0, true, "id", vrprouting::ANY_INTEGER};
-    info[1] = {-1, 0, true, "tw_open", vrprouting::TIMESTAMP};
-    info[2] = {-1, 0, true, "tw_close", vrprouting::TIMESTAMP};
+    info[1] = {-1, 0, true, "tw_open", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP};
+    info[2] = {-1, 0, true, "tw_close", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP};
     info[3] = {-1, 0, true, "kind", vrprouting::CHAR1};
 
-  if (is_plain) {
-    info[1].eType = vrprouting::INTEGER;
-    info[2].eType = vrprouting::INTEGER;
-  }
-  vrprouting::get_data(sql, rows, total_rows, is_plain, info, &vrprouting::fetch_tw);
+  vrprouting::get_data(sql, rows, total_rows, use_timestamps, info, &vrprouting::fetch_tw);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
     (*total_rows) = 0;
@@ -494,7 +485,7 @@ vrp_get_vroom_vehicles(
     char *sql,
     Vroom_vehicle_t **rows,
     size_t *total_rows,
-    bool is_plain,
+    bool use_timestamps,
     char **err_msg) {
   using vrprouting::pgr_msg;
   using vrprouting::pgr_free;
@@ -507,20 +498,13 @@ vrp_get_vroom_vehicles(
     info[2] = {-1, 0, false, "end_id", vrprouting::MATRIX_INDEX};
     info[3] = {-1, 0, false, "capacity", vrprouting::ANY_POSITIVE_ARRAY};
     info[4] = {-1, 0, false, "skills", vrprouting::ANY_UINT_ARRAY};
-    info[5] = {-1, 0, false, "tw_open", vrprouting::TIMESTAMP};
-    info[6] = {-1, 0, false, "tw_close", vrprouting::TIMESTAMP};
+    info[5] = {-1, 0, false, "tw_open", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP};
+    info[6] = {-1, 0, false, "tw_close", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP};
     info[7] = {-1, 0, false, "speed_factor", vrprouting::ANY_NUMERICAL};
     info[8] = {-1, 0, false, "max_tasks", vrprouting::POSITIVE_INTEGER};
     info[9] = {-1, 0, false, "data", vrprouting::JSONB};
 
-  if (is_plain) {
-    info[5].eType = vrprouting::TTIMESTAMP;        // tw_open
-    info[6].eType = vrprouting::TTIMESTAMP;        // tw_close
-  }
-
-  info[0].strict = true;
-
-  vrprouting::get_data(sql, rows, total_rows, is_plain, info, &vrprouting::fetch_vroom_vehicles);
+  vrprouting::get_data(sql, rows, total_rows, use_timestamps, info, &vrprouting::fetch_vroom_vehicles);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
     (*total_rows) = 0;

@@ -103,15 +103,13 @@ process(
     int32_t exploration_level,
     int32_t timeout,
     int16_t fn,
-    bool is_plain,
+    bool use_timestamps,
 
     Vroom_rt **result_tuples,
     size_t *result_count) {
   char *log_msg = NULL;
   char *notice_msg = NULL;
   char *err_msg = NULL;
-
-  bool use_timestamps = !is_plain;
 
   clock_t start_loading = clock();
   pgr_SPI_connect();
@@ -122,7 +120,7 @@ process(
   Vroom_job_t *jobs = NULL;
   size_t total_jobs = 0;
   if (jobs_sql) {
-    vrp_get_vroom_jobs(jobs_sql, &jobs, &total_jobs, is_plain, &err_msg);
+    vrp_get_vroom_jobs(jobs_sql, &jobs, &total_jobs, use_timestamps, &err_msg);
     throw_error(err_msg, jobs_sql);
   }
 
@@ -153,20 +151,20 @@ process(
   Vroom_time_window_t *jobs_tws = NULL;
   size_t total_jobs_tws = 0;
   if (jobs_tws_sql) {
-    vrp_get_vroom_time_windows(jobs_tws_sql, &jobs_tws, &total_jobs_tws, is_plain, &err_msg);
+    vrp_get_vroom_time_windows(jobs_tws_sql, &jobs_tws, &total_jobs_tws, use_timestamps, &err_msg);
     throw_error(err_msg, jobs_tws_sql);
   }
 
   Vroom_time_window_t *shipments_tws = NULL;
   size_t total_shipments_tws = 0;
   if (shipments_tws_sql) {
-    vrp_get_vroom_shipments_time_windows(shipments_tws_sql, &shipments_tws, &total_shipments_tws, is_plain, &err_msg);
+    vrp_get_vroom_shipments_time_windows(shipments_tws_sql, &shipments_tws, &total_shipments_tws, use_timestamps, &err_msg);
     throw_error(err_msg, shipments_tws_sql);
   }
 
   Vroom_vehicle_t *vehicles = NULL;
   size_t total_vehicles = 0;
-  vrp_get_vroom_vehicles(vehicles_sql, &vehicles, &total_vehicles, is_plain, &err_msg);
+  vrp_get_vroom_vehicles(vehicles_sql, &vehicles, &total_vehicles, use_timestamps, &err_msg);
   throw_error(err_msg, vehicles_sql);
 
 
@@ -182,7 +180,7 @@ process(
   Vroom_break_t *breaks = NULL;
   size_t total_breaks = 0;
   if (breaks_sql) {
-    vrp_get_vroom_breaks(breaks_sql, &breaks, &total_breaks, is_plain, &err_msg);
+    vrp_get_vroom_breaks(breaks_sql, &breaks, &total_breaks, use_timestamps, &err_msg);
     throw_error(err_msg, breaks_sql);
   }
 
@@ -190,13 +188,13 @@ process(
   Vroom_time_window_t *breaks_tws = NULL;
   size_t total_breaks_tws = 0;
   if (breaks_tws_sql) {
-    vrp_get_vroom_time_windows(breaks_tws_sql, &breaks_tws, &total_breaks_tws, is_plain, &err_msg);
+    vrp_get_vroom_time_windows(breaks_tws_sql, &breaks_tws, &total_breaks_tws, use_timestamps, &err_msg);
     throw_error(err_msg, breaks_tws_sql);
   }
 
   Vroom_matrix_t *matrix_rows = NULL;
   size_t total_matrix_rows = 0;
-  vrp_get_vroom_matrix(matrix_sql, &matrix_rows, &total_matrix_rows, is_plain, &err_msg);
+  vrp_get_vroom_matrix(matrix_sql, &matrix_rows, &total_matrix_rows, use_timestamps, &err_msg);
   throw_error(err_msg, matrix_sql);
 
 #if 0
@@ -347,7 +345,7 @@ PGDLLEXPORT Datum _vrp_vroom(PG_FUNCTION_ARGS) {
         exploration_level,
         timeout,
         fn,
-        is_plain,
+        !is_plain,
         &result_tuples,
         &result_count);
 
