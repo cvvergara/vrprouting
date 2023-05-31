@@ -212,25 +212,42 @@ vrp_get_shipments(
     char *sql,
     PickDeliveryOrders_t **rows,
     size_t *total_rows,
+    bool is_euclidean,
+    bool use_timestamps,
     char **err_msg) {
   using vrprouting::pgr_msg;
   using vrprouting::pgr_free;
   using vrprouting::Column_info_t;
   try {
-    std::vector<Column_info_t> info{10};
+      std::vector<Column_info_t> info{14};
 
-    info[0] = {-1, 0, true, "id", vrprouting::ANY_INTEGER};
-    info[1] = {-1, 0, true, "amount", vrprouting::ANY_INTEGER};
-    info[2] = {-1, 0, true, "p_id", vrprouting::ANY_INTEGER};
-    info[3] = {-1, 0, true, "p_tw_open", vrprouting::TIMESTAMP};
-    info[4] = {-1, 0, true, "p_tw_close", vrprouting::TIMESTAMP};
-    info[5] = {-1, 0, false, "p_t_service", vrprouting::INTERVAL};
-    info[6] = {-1, 0, true, "d_id", vrprouting::ANY_INTEGER};
-    info[7] = {-1, 0, true, "d_tw_open", vrprouting::TIMESTAMP};
-    info[8] = {-1, 0, true, "d_tw_close", vrprouting::TIMESTAMP};
-    info[9] = {-1, 0, false, "d_t_service", vrprouting::INTERVAL};
+      info[0] = {-1, 0, true, "id", vrprouting::ID};
+      info[1] = {-1, 0, true, "amount", vrprouting::PAMOUNT};
 
-  vrprouting::get_data(sql, rows, total_rows, true, info, &vrprouting::fetch_vroom_orders_timestamps);
+      info[2] = {-1, 0, true, "p_open", vrprouting::TTIMESTAMP};
+      info[3] = {-1, 0, true, "p_close", vrprouting::TTIMESTAMP};
+      info[4] = {-1, 0, false, "p_service", vrprouting::TINTERVAL};
+      info[5] = {-1, 0, true, "d_open", vrprouting::TTIMESTAMP};
+      info[6] = {-1, 0, true, "d_close", vrprouting::TTIMESTAMP};
+      info[7] = {-1, 0, false, "d_service", vrprouting::TINTERVAL};
+
+      info[8] = {-1, 0, !is_euclidean, "p_id", vrprouting::ID};
+      info[9] = {-1, 0, !is_euclidean, "d_id", vrprouting::ID};
+      info[10] = {-1, 0, is_euclidean, "p_x", vrprouting::COORDINATE};
+      info[11] = {-1, 0, is_euclidean, "p_y", vrprouting::COORDINATE};
+      info[12] = {-1, 0, is_euclidean, "d_x", vrprouting::COORDINATE};
+      info[13] = {-1, 0, is_euclidean, "d_y", vrprouting::COORDINATE};
+
+    if (use_timestamps) {
+      info[2] = {-1, 0, true, "p_tw_open", vrprouting::TIMESTAMP};
+      info[3] = {-1, 0, true, "p_tw_close", vrprouting::TIMESTAMP};
+      info[4] = {-1, 0, false, "p_t_service", vrprouting::INTERVAL};
+      info[5] = {-1, 0, true, "d_tw_open", vrprouting::TIMESTAMP};
+      info[6] = {-1, 0, true, "d_tw_close", vrprouting::TIMESTAMP};
+      info[7] = {-1, 0, false, "d_t_service", vrprouting::INTERVAL};
+    }
+
+    vrprouting::get_data(sql, rows, total_rows, is_euclidean, info, &vrprouting::fetch_orders_raw);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
     (*total_rows) = 0;
@@ -242,6 +259,7 @@ vrp_get_shipments(
   }
 }
 
+#if 0
 /**
  * @param[in] sql SQL query to execute
  * @param[out] rows C Container that holds the data
@@ -260,7 +278,6 @@ vrp_get_shipments_raw(
   try {
     std::vector<Column_info_t> info{14};
 
-
     info[0] = {-1, 0, true, "id", vrprouting::ID};
     info[1] = {-1, 0, true, "amount", vrprouting::PAMOUNT};
     info[2] = {-1, 0, true, "p_open", vrprouting::TTIMESTAMP};
@@ -277,7 +294,6 @@ vrp_get_shipments_raw(
     info[13] = {-1, 0, is_euclidean, "d_y", vrprouting::COORDINATE};
 
     vrprouting::get_data(sql, rows, total_rows, is_euclidean, info, &vrprouting::fetch_orders_raw);
-    vrprouting::get_data(sql, rows, total_rows, is_euclidean, info, &vrprouting::fetch_orders_raw);
   } catch (const std::string &ex) {
     (*rows) = pgr_free(*rows);
     (*total_rows) = 0;
@@ -288,7 +304,7 @@ vrp_get_shipments_raw(
     *err_msg = pgr_msg("Caught unknown exception!");
   }
 }
-
+#endif
 
 /**
  * @param[in] sql SQL query to execute

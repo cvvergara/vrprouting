@@ -66,10 +66,12 @@ void vrp_get_matrixRows(char*, Matrix_cell_t **, size_t*, bool, char**);
 void vrp_get_vroom_matrix(char*, Vroom_matrix_t**,size_t*, bool, char**);
 
 /** @brief Reads the pick-Deliver shipments for timestams and intervals*/
-void vrp_get_shipments(char*, PickDeliveryOrders_t**, size_t*, char**);
+void vrp_get_shipments(char*, PickDeliveryOrders_t**, size_t*, bool, bool, char**);
 
+#if 0
 /** @brief Reads the pick-Deliver shipments for raw data*/
 void vrp_get_shipments_raw(char*, PickDeliveryOrders_t**, size_t*, bool, char**);
+#endif
 
 /** @brief Get the time multipliers using interval*/
 void vrp_get_timeMultipliers(char*, Time_multipliers_t**, size_t*, bool, char**);

@@ -94,13 +94,8 @@ process(
 
   PickDeliveryOrders_t *pd_orders_arr = NULL;
   size_t total_pd_orders = 0;
-  if (use_timestamps) {
-    vrp_get_shipments(pd_orders_sql, &pd_orders_arr, &total_pd_orders, &err_msg);
-      throw_error(err_msg, pd_orders_sql);
-  } else {
-    vrp_get_shipments_raw(pd_orders_sql, &pd_orders_arr, &total_pd_orders, is_euclidean, &err_msg);
-      throw_error(err_msg, pd_orders_sql);
-  }
+  vrp_get_shipments(pd_orders_sql, &pd_orders_arr, &total_pd_orders, is_euclidean, use_timestamps, &err_msg);
+  throw_error(err_msg, pd_orders_sql);
 
   if (total_pd_orders == 0) {
     (*result_count) = 0;
