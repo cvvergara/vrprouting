@@ -35,7 +35,7 @@ namespace vrprouting {
 enum expectType {
   INTEGER, /** int32_t **/
   STEP_TYPE = INTEGER,
-  POSITIVE_INTEGER,
+  POSITIVE_INTEGER = INTEGER,
 
   TEXT,
   JSONB,

@@ -49,10 +49,10 @@ int64_t* vrp_get_bigIntArray(size_t *arrlen, ArrayType *input);
 #endif
 
 /** @brief Allows the input array to be empty */
-int64_t* vrp_get_bigIntArray_allowEmpty(size_t *arrlen, ArrayType *input);
+int64_t* vrp_get_bigIntArray_allowEmpty(size_t *arrlen, ArrayType *input, const char*);
 
 /** @brief Allows the input array, with non-negative elements to be empty */
-uint32_t* vrp_get_positiveIntArray_allowEmpty(size_t *arrlen, ArrayType *input);
+uint32_t* vrp_get_positiveIntArray_allowEmpty(size_t*, ArrayType*, const char*);
 
 #ifdef __cplusplus
 }

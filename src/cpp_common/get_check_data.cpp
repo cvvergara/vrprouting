@@ -82,7 +82,7 @@ check_integer_type(vrprouting::Column_info_t info) {
 void
 check_integerarray_type(vrprouting::Column_info_t info) {
   if (!(info.type == INT2ARRAYOID || info.type == INT4ARRAYOID)) {
-    throw std::string("Unexpected type in column '") + info.name + "'. Expected SMALLINT-ARRAY or INTEGER-ARRAY";
+    throw std::string("Unexpected type in column '") + info.name + "'. Expected INTEGER-ARRAY";
   }
 }
 
@@ -375,7 +375,7 @@ get_BigIntArr_wEmpty(
 
   ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
 
-  return vrp_get_bigIntArray_allowEmpty(&the_size, pg_array);
+  return vrp_get_bigIntArray_allowEmpty(&the_size, pg_array, info.name.c_str());
 }
 
 }  // namespace
@@ -407,7 +407,7 @@ get_uint_array(
 
   ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
 
-  return vrp_get_positiveIntArray_allowEmpty(&the_size, pg_array);
+  return vrp_get_positiveIntArray_allowEmpty(&the_size, pg_array, info.name.c_str());
 }
 
 /**
@@ -506,7 +506,6 @@ void fetch_column_info(
           check_any_integerarray_type(coldata);
           break;
         case INTEGER:
-        case POSITIVE_INTEGER:
           check_integer_type(coldata);
           break;
         case JSONB:

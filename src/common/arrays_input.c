@@ -35,7 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 static
 int64_t*
-vrp_get_bigIntArr(ArrayType *v, size_t *arrlen, bool allow_empty) {
+vrp_get_bigIntArr(ArrayType *v, size_t *arrlen, bool allow_empty, const char* name) {
     int64_t *c_array = NULL;
 
     Oid     element_type = ARR_ELEMTYPE(v);
@@ -74,7 +74,7 @@ vrp_get_bigIntArr(ArrayType *v, size_t *arrlen, bool allow_empty) {
         case INT8OID:
             break;
         default:
-            elog(ERROR, "Expected array of ANY-INTEGER");
+            elog(ERROR, "Unexpected type in column '%s'. Expected ANY-INTEGER-ARRAY", name);
     }
 
     deconstruct_array(v, element_type, typlen, typbyval,
@@ -116,7 +116,7 @@ vrp_get_bigIntArr(ArrayType *v, size_t *arrlen, bool allow_empty) {
 
 static
 uint32_t*
-vrp_get_positiveIntArr(ArrayType *v, size_t *arrlen, bool allow_empty) {
+vrp_get_positiveIntArr(ArrayType *v, size_t *arrlen, bool allow_empty, const char* name) {
     uint32_t *c_array = NULL;
 
     Oid     element_type = ARR_ELEMTYPE(v);
@@ -152,9 +152,10 @@ vrp_get_positiveIntArr(ArrayType *v, size_t *arrlen, bool allow_empty) {
     switch (element_type) {
         case INT2OID:
         case INT4OID:
+        case INT8OID:
             break;
         default:
-            elog(ERROR, "Expected array of INTEGER");
+            elog(ERROR, "Unexpected type in column '%s'. Expected INTEGER-ARRAY", name);
     }
 
     deconstruct_array(v, element_type, typlen, typbyval,
@@ -202,10 +203,10 @@ int64_t* vrp_get_bigIntArray(size_t *arrlen, ArrayType *input) {
 }
 #endif
 
-int64_t* vrp_get_bigIntArray_allowEmpty(size_t *arrlen, ArrayType *input) {
-    return vrp_get_bigIntArr(input, arrlen, true);
+int64_t* vrp_get_bigIntArray_allowEmpty(size_t *arrlen, ArrayType *input, const char* name) {
+    return vrp_get_bigIntArr(input, arrlen, true, name);
 }
 
-uint32_t* vrp_get_positiveIntArray_allowEmpty(size_t *arrlen, ArrayType *input) {
-    return vrp_get_positiveIntArr(input, arrlen, true);
+uint32_t* vrp_get_positiveIntArray_allowEmpty(size_t *arrlen, ArrayType *input, const char* name) {
+    return vrp_get_positiveIntArr(input, arrlen, true, name);
 }

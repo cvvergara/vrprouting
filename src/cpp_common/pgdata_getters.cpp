@@ -190,7 +190,7 @@ vrp_get_vroom_jobs(
     info[4] = {-1, 0, false, "delivery", vrprouting::ANY_POSITIVE_ARRAY};
     info[5] = {-1, 0, false, "pickup", vrprouting::ANY_POSITIVE_ARRAY};
     info[6] = {-1, 0, false, "skills", vrprouting::ANY_UINT_ARRAY};
-    info[7] = {-1, 0, false, "priority", vrprouting::ANY_UINT};
+    info[7] = {-1, 0, false, "priority", vrprouting::POSITIVE_INTEGER};
     info[8] = {-1, 0, false, "data", vrprouting::JSONB};
 
   vrprouting::get_data(sql, rows, total_rows, use_timestamps, info, &vrprouting::fetch_jobs);
@@ -295,7 +295,7 @@ vrp_get_vroom_shipments(
     info[6] = {-1, 0, false, "d_service", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL};
     info[7] = {-1, 0, false, "amount", vrprouting::ANY_POSITIVE_ARRAY};
     info[8] = {-1, 0, false, "skills", vrprouting::ANY_UINT_ARRAY};
-    info[9] = {-1, 0, false, "priority", vrprouting::ANY_UINT};
+    info[9] = {-1, 0, false, "priority", vrprouting::POSITIVE_INTEGER};
     info[10] = {-1, 0, false, "p_data", vrprouting::JSONB};
     info[11] = {-1, 0, false, "d_data", vrprouting::JSONB};
 

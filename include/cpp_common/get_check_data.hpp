@@ -99,7 +99,6 @@ T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t
       return static_cast<T>(detail::get_integral<T>(tuple, tupdesc,  info, opt_value));
       break;
     case ANY_UINT :
-    case POSITIVE_INTEGER:
     case TINTERVAL :
       return static_cast<T>(detail::get_positive<T>(tuple, tupdesc,  info, opt_value));
       break;
