@@ -1,8 +1,12 @@
 /*PGR-GNU*****************************************************************
-File: solution_rt.h
+File: compatibleVehicles_rt.h
 
-Copyright (c) 2017 Celia Virginia Vergara Castillo
-Mail: vicky_vergara@hotmail.com
+Copyright (c) 2021 pgRouting developers
+Mail: project@pgrouting.org
+
+Developer:
+Copyright (c) 2021 Celia Virginia Vergara Castillo
+Copyright (c) 2021 Joseph Emile Honour Percival
 
 ------
 
@@ -23,16 +27,42 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 /*! @file */
 
-#ifndef INCLUDE_C_TYPES_SOLUTION_RT_H_
-#define INCLUDE_C_TYPES_SOLUTION_RT_H_
+#ifndef INCLUDE_C_TYPES_RETURN_TYPES_H_
+#define INCLUDE_C_TYPES_RETURN_TYPES_H_
 #pragma once
 
-/* for int64_t */
 #ifdef __cplusplus
-#   include <cstdint>
+#include <cstdint>
 #else
-#   include <stdint.h>
+#include <stdint.h>
 #endif
+
+/** @brief order-vehicle compatability relationship
+
+  @note C/C++/postgreSQL connecting structure for output
+  name | description
+  :----- | :-------
+  order_id | Order's identifier
+  vehicle_id | Vehicle's identifier
+  */
+
+struct CompatibleVehicles_rt {
+  int64_t order_id;    /** order's identifier */
+  int64_t vehicle_id;  /** vehicle's identifier */
+};
+
+/** @brief short_vehicle
+
+@note C/C++/postgreSQL connecting structure for input
+name | description
+:----- | :-------
+id | Vehicle's identifier
+stops | Vehicle's stops
+*/
+struct Short_vehicle_rt{
+  Id  vehicle_id; /** Vehicle's identifier */
+  Id  order_id;   /** Stop */
+};
 
 /** @brief Solution schedule when twv & cw are hard restrictions
 
@@ -71,6 +101,4 @@ struct Solution_rt {
     int twvTot;              /** Total Time Window Violations */
 };
 
-/*************************************************************************/
-
-#endif  // INCLUDE_C_TYPES_SOLUTION_RT_H_
+#endif  // INCLUDE_C_TYPES_RETURN_TYPES_H_

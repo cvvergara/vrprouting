@@ -73,43 +73,4 @@ struct Vehicle_t {
   Coordinate end_y;
 };
 
-/** @brief Vroom's Vehicles's attributes
-
-@note C/C++/postgreSQL connecting structure for input
-name | description
-:----- | :-------
-id | The vehicle's identifier
-start_id | Start location index in matrix
-end_id | End location index in matrix
-capacity | Vehicle's capacity array
-capacity_size | Vehicle's capacity array size
-skills | Vehicle's skills
-skills_size | Number of vehicle's skills
-tw_open | Time window start time
-tw_close | Time window end time
-speed_factor | Vehicle travel time multiplier
-max_tasks | Max number of tasks in a route for the vehicle
-data | Metadata information of vehicle
-*/
-struct Vroom_vehicle_t {
-  Idx id; /** The vehicle's identifier */
-  MatrixIndex start_id; /** Start location index in matrix */
-  MatrixIndex end_id; /** End location index in matrix */
-
-  Amount *capacity; /** Vehicle's capacity array */
-  size_t capacity_size; /** Vehicle's capacity array size */
-
-  Skill *skills; /** Vehicle's skills */
-  size_t skills_size; /** Number of vehicle's skills */
-
-  Duration tw_open; /** Time window start time */
-  Duration tw_close; /** Time window end time */
-
-  double speed_factor; /** Vehicle travel time multiplier */
-
-  int32_t max_tasks; /** Max number of tasks in a route for the vehicle */
-
-  char *data; /** Metadata information of vehicle */
-};
-
 #endif  // INCLUDE_C_TYPES_VEHICLE_T_H_
