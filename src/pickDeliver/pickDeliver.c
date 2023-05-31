@@ -58,7 +58,7 @@ process(
         bool stop_on_all_served,
         int64_t execution_date,
 
-        bool  use_timestamps,
+        bool use_timestamps,
 
         Solution_rt **result_tuples,
         size_t *result_count) {
@@ -66,7 +66,7 @@ process(
   char *notice_msg = NULL;
   char *err_msg = NULL;
 
-  bool with_stops = true;
+  bool with_stops = false;
   bool is_euclidean = false;
 
   /*
