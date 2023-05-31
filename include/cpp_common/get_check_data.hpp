@@ -47,16 +47,12 @@ namespace vrprouting {
 using Column_info_t = struct Column_info_t;
 
 
+#if 0
 /** @brief Enforces the input array to be @b NOT empty */
 int64_t* get_array(ArrayType*, size_t*, bool);
 
 /** @brief Function returns the values of specified columns in array. */
 int64_t* get_BigIntArr(const HeapTuple, const TupleDesc&, const Column_info_t&, uint64_t*);
-
-
-#if 0
-TInterval get_TInterval(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
-TInterval get_TInterval_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
 #endif
 
 

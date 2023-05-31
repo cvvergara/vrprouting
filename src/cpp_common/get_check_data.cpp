@@ -551,6 +551,7 @@ get_array(ArrayType *v, size_t *arrlen, bool allow_empty) {
     return c_array;
 }
 
+#if 0
 /**
  * [DatumGetArrayTypeP](https://doxygen.postgresql.org/array_8h.html#aa1b8e77c103863862e06a7b7c07ec532)
  * [vrprouting::get_bigIntArray](http://docs.pgrouting.org/doxy/2.2/arrays__input_8c_source.html)
@@ -578,22 +579,8 @@ int64_t* getBigIntArr(
     ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
     return get_array(pg_array, the_size, true);
 }
-
-#if 0
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- */
-TInterval
-get_TInterval(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TInterval opt_value) {
-  return column_found(info)? getInterval(tuple, tupdesc, info) : opt_value;
-}
 #endif
+
 
 /**
  * @params [in] tuple
@@ -615,22 +602,6 @@ get_PositiveTInterval(
   return (TInterval) value;
 }
 
-#if 0
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- */
-TInterval
-get_TInterval_plain(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TInterval opt_value) {
-  return get_anyinteger(tuple, tupdesc, info, opt_value);
-}
-#endif
 
 uint32_t*
 get_PositiveIntArr_allowEmpty(
