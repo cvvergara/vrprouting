@@ -53,13 +53,6 @@ int64_t* get_array(ArrayType*, size_t*, bool);
 /** @brief Function returns the values of specified columns in array. */
 int64_t* get_BigIntArr(const HeapTuple, const TupleDesc&, const Column_info_t&, uint64_t*);
 
-/** using **/
-int64_t* get_BigIntArr_wEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
-int64_t* get_PosBigIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
-uint32_t* get_PositiveIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
-
-/** @brief Function returns the string representation of the value of specified column.  */
-char* get_jsonb(const HeapTuple, const TupleDesc&, const Column_info_t&);
 
 TInterval get_TInterval(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
 TInterval get_TInterval_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
@@ -73,14 +66,24 @@ StepType   get_StepType(const HeapTuple, const TupleDesc&, const Column_info_t&,
 TTimestamp get_TTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 TTimestamp get_TTimestamp_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 uint32_t get_unsignedint(const HeapTuple, const TupleDesc&, const Column_info_t&, int64_t);
+#if 0
 TTimestamp get_PositiveTTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 TTimestamp get_PositiveTTimestamp_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
+#endif
 
 /** @brief  Function will check whether the colNumber represent any specific column or NULL (SPI_ERROR_NOATTRIBUTE).  */
 bool column_found(const Column_info_t&);
 
 /** @brief Function tells expected type of each column and then check the correspondence type of each column.  */
 void fetch_column_info(const TupleDesc&, std::vector<Column_info_t>&);
+
+/** using **/
+int64_t* get_BigIntArr_wEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
+int64_t* get_PosBigIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
+uint32_t* get_PositiveIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
+
+/** @brief Function returns the string representation of the value of specified column.  */
+char* get_jsonb(const HeapTuple, const TupleDesc&, const Column_info_t&);
 int64_t get_anyinteger(const HeapTuple, const TupleDesc&, const Column_info_t&, int64_t);
 double get_anynumerical(const HeapTuple, const TupleDesc&, const Column_info_t&, double);
 char get_char(const HeapTuple, const TupleDesc&, const Column_info_t&, char);

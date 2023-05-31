@@ -828,6 +828,7 @@ get_PositiveTTimestamp(
   return value;
 }
 
+#if 0
 /**
  * @params [in] tuple
  * @params [in] tupdesc
@@ -854,6 +855,7 @@ get_Coordinate(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, Coordinate opt_value) {
   return column_found(info)? getFloat8(tuple, tupdesc, info) : opt_value;
 }
+#endif
 
 /**
  * @params [in] tuple
