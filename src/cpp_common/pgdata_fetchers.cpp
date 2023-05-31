@@ -165,7 +165,7 @@ void fetch_vroom_shipments(
   shipment->d_service = get_value<Duration>(tuple, tupdesc, info[6], 0);
 
   shipment->amount_size = 0;
-  shipment->amount = get_PosBigIntArr_allowEmpty(tuple, tupdesc, info[7], shipment->amount_size);
+  shipment->amount = get_array<Amount>(tuple, tupdesc, info[7], shipment->amount_size);
 
   shipment->skills_size = 0;
   shipment->skills = get_uint_array<Skill>(tuple, tupdesc, info[8], shipment->skills_size);

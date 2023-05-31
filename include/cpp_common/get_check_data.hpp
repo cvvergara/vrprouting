@@ -64,8 +64,10 @@ int32_t    get_MaxTasks(const HeapTuple, const TupleDesc&, const Column_info_t&)
 StepType   get_StepType(const HeapTuple, const TupleDesc&, const Column_info_t&, StepType);
 
 TTimestamp get_TTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
+#if 0
 TTimestamp get_TTimestamp_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 uint32_t get_unsignedint(const HeapTuple, const TupleDesc&, const Column_info_t&, int64_t);
+#endif
 
 /** @brief  Function will check whether the colNumber represent any specific column or NULL (SPI_ERROR_NOATTRIBUTE).  */
 bool column_found(const Column_info_t&);

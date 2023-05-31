@@ -284,7 +284,7 @@ vrp_get_vroom_shipments(
     info[4] = {-1, 0, true, "d_location_id", vrprouting::MATRIX_INDEX};
     info[5] = {-1, 0, false, "d_setup", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL};
     info[6] = {-1, 0, false, "d_service", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL};
-    info[7] = {-1, 0, false, "amount", vrprouting::ANY_INTEGER_ARRAY};
+    info[7] = {-1, 0, false, "amount", vrprouting::ANY_POSITIVE_ARRAY};
     info[8] = {-1, 0, false, "skills", vrprouting::ANY_UINT_ARRAY};
     info[9] = {-1, 0, false, "priority", vrprouting::ANY_UINT};
     info[10] = {-1, 0, false, "p_data", vrprouting::JSONB};

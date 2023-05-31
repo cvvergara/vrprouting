@@ -726,6 +726,7 @@ get_PosBigIntArr_allowEmpty(
 }
 
 
+#if 0
 /**
  * @params [in] tuple
  * @params [in] tupdesc
@@ -759,6 +760,7 @@ get_unsignedint(
   if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
   return static_cast<uint32_t>(value);
 }
+#endif
 
 /**
  * @params [in] tuple from postgres
@@ -807,55 +809,6 @@ get_TTimestamp(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TTimestamp opt_value) {
   return column_found(info)?  getTimeStamp(tuple, tupdesc, info) : opt_value;
 }
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for positive values only
- */
-TTimestamp
-get_PositiveTTimestamp(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TTimestamp opt_value) {
-  TTimestamp value = get_TTimestamp(tuple, tupdesc, info, opt_value);
-  if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
-  return value;
-}
-
-#if 0
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for positive values only
- */
-TTimestamp
-get_PositiveTTimestamp_plain(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TTimestamp opt_value) {
-  TTimestamp value = get_TTimestamp_plain(tuple, tupdesc, info, opt_value);
-  if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
-  return value;
-}
-
-
-Coordinate
-get_Coordinate(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, Coordinate opt_value) {
-  return column_found(info)? getFloat8(tuple, tupdesc, info) : opt_value;
-}
-#endif
 
 /**
  * @params [in] tuple
