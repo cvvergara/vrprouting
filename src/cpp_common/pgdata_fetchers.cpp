@@ -50,9 +50,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 namespace {
 
 void check_pairs(vrprouting::Column_info_t lhs, vrprouting::Column_info_t rhs) {
-  if (!(vrprouting::column_found(lhs.colNumber)) && vrprouting::column_found(rhs.colNumber)) {
+  if (!(vrprouting::column_found(lhs)) && vrprouting::column_found(rhs)) {
     throw std::string("Column found: '") + rhs.name + "', missing column: '" + lhs.name + "'";
-  } else if (!(vrprouting::column_found(rhs.colNumber)) && vrprouting::column_found(lhs.colNumber)) {
+  } else if (!(vrprouting::column_found(rhs)) && vrprouting::column_found(lhs)) {
     throw std::string("Column found: '") + lhs.name + "', missing column: '" + rhs.name + "'";
   };
 }
@@ -195,7 +195,7 @@ void fetch_tw(
 
   time_window->id = get_positive<Idx>(tuple, tupdesc, info[0], 0);
   time_window->kind = ' ';
-  auto is_shipment = column_found(info[3].colNumber) && info[3].strict;
+  auto is_shipment = column_found(info[3]) && info[3].strict;
 
   if (is_shipment) {
     char kind = get_char(tuple, tupdesc, info[3], ' ');

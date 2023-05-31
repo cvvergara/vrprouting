@@ -46,11 +46,6 @@ extern "C" {
 namespace vrprouting {
 using Column_info_t = struct Column_info_t;
 
-/** @brief  Function will check whether the colNumber represent any specific column or NULL (SPI_ERROR_NOATTRIBUTE).  */
-bool column_found(int);
-
-/** @brief Function tells expected type of each column and then check the correspondence type of each column.  */
-void fetch_column_info(const TupleDesc&, std::vector<Column_info_t>&);
 
 /** @brief Enforces the input array to be @b NOT empty */
 int64_t* get_array(ArrayType*, size_t*, bool);
@@ -81,6 +76,11 @@ uint32_t get_unsignedint(const HeapTuple, const TupleDesc&, const Column_info_t&
 TTimestamp get_PositiveTTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 TTimestamp get_PositiveTTimestamp_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 
+/** @brief  Function will check whether the colNumber represent any specific column or NULL (SPI_ERROR_NOATTRIBUTE).  */
+bool column_found(const Column_info_t&);
+
+/** @brief Function tells expected type of each column and then check the correspondence type of each column.  */
+void fetch_column_info(const TupleDesc&, std::vector<Column_info_t>&);
 int64_t get_anyinteger(const HeapTuple, const TupleDesc&, const Column_info_t&, int64_t);
 double get_anynumerical(const HeapTuple, const TupleDesc&, const Column_info_t&, double);
 char get_char(const HeapTuple, const TupleDesc&, const Column_info_t&, char);
@@ -94,7 +94,9 @@ T get_integral(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_inf
 template <typename T>
 T get_positive(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, T opt_value) {
   static_assert(std::is_integral<T>::value, "Integral required.");
-  if (!column_found(info.colNumber)) return opt_value;
+
+  if (!column_found(info)) return opt_value;
+
   auto value = get_anyinteger(tuple, tupdesc, info, 0);
   if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
   return static_cast<T>(value);

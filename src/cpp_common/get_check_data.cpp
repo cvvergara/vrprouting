@@ -397,8 +397,8 @@ namespace vrprouting {
  *
  * [SPI_ERROR_NOATTRIBUTE](https://doxygen.postgresql.org/spi_8h.html#ac1512d8aaa23c2d57bb0d1eb8f453ee2)
  */
-bool column_found(int colNumber) {
-    return !(colNumber == SPI_ERROR_NOATTRIBUTE);
+bool column_found(const Column_info_t &info) {
+    return !(info.colNumber == SPI_ERROR_NOATTRIBUTE);
 }
 
 
@@ -594,7 +594,7 @@ int64_t* getBigIntArr(
  */
 TInterval
 get_TInterval(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TInterval opt_value) {
-  return column_found(info.colNumber)? getInterval(tuple, tupdesc, info) : opt_value;
+  return column_found(info)? getInterval(tuple, tupdesc, info) : opt_value;
 }
 
 /**
@@ -671,7 +671,7 @@ get_MaxTasks(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_
  */
 StepType
 get_StepType(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, StepType opt_value) {
-  StepType step_type = column_found(info.colNumber) ? getInt(tuple, tupdesc, info) : opt_value;
+  StepType step_type = column_found(info) ? getInt(tuple, tupdesc, info) : opt_value;
   StepType min_value = 1;
   StepType max_value = 6;
   if (step_type < min_value || step_type > max_value) {
@@ -717,7 +717,7 @@ get_PositiveIntArr_allowEmpty(
 int64_t*
 get_PosBigIntArr_allowEmpty(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, size_t &the_size) {
-  if (!column_found(info.colNumber)) return nullptr;
+  if (!column_found(info)) return nullptr;
   int64_t *array = get_BigIntArr_wEmpty(tuple, tupdesc, info, the_size);
   for (size_t i = 0; i < the_size; i++) {
     if (array[i] < 0) throw std::string("Unexpected negative value in array ") + info.name;
@@ -737,7 +737,7 @@ get_PosBigIntArr_allowEmpty(
  */
 TTimestamp
 get_TTimestamp_plain(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TTimestamp opt_value) {
-  return column_found(info.colNumber)?  (TTimestamp)getBigInt(tuple, tupdesc, info) : opt_value;
+  return column_found(info)?  (TTimestamp)getBigInt(tuple, tupdesc, info) : opt_value;
 }
 
 
@@ -773,7 +773,7 @@ get_unsignedint(
  */
 int64_t
 get_anyinteger(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, int64_t opt_value) {
-  return column_found(info.colNumber)? getBigInt(tuple, tupdesc, info) : opt_value;
+  return column_found(info)? getBigInt(tuple, tupdesc, info) : opt_value;
 }
 
 /**
@@ -789,7 +789,7 @@ get_anyinteger(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_inf
  */
 double
 get_anynumerical(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, double opt_value) {
-  return column_found(info.colNumber)? getFloat8(tuple, tupdesc, info) : opt_value;
+  return column_found(info)? getFloat8(tuple, tupdesc, info) : opt_value;
 }
 
 // TODO change to get_timestamp
@@ -805,7 +805,7 @@ get_anynumerical(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_i
 TTimestamp
 get_TTimestamp(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TTimestamp opt_value) {
-  return column_found(info.colNumber)?  getTimeStamp(tuple, tupdesc, info) : opt_value;
+  return column_found(info)?  getTimeStamp(tuple, tupdesc, info) : opt_value;
 }
 
 /**
@@ -852,7 +852,7 @@ get_PositiveTTimestamp_plain(
 Coordinate
 get_Coordinate(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, Coordinate opt_value) {
-  return column_found(info.colNumber)? getFloat8(tuple, tupdesc, info) : opt_value;
+  return column_found(info)? getFloat8(tuple, tupdesc, info) : opt_value;
 }
 
 /**
@@ -872,7 +872,7 @@ get_char(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &i
 
 
 char* get_jsonb(const HeapTuple tuple, const TupleDesc &tupdesc,  const vrprouting::Column_info_t &info) {
-  return column_found(info.colNumber)?  DatumGetCString(SPI_getvalue(tuple, tupdesc, info.colNumber)) : strdup("{}");
+  return column_found(info)?  DatumGetCString(SPI_getvalue(tuple, tupdesc, info.colNumber)) : strdup("{}");
 }
 
 }  // namespace vrprouting
