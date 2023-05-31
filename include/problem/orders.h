@@ -33,7 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <algorithm>
 
 #include "problem/order.h"
-#include "c_types/pickDeliveryOrders_t.h"
+#include "c_types/order_types.h"
 #include "cpp_common/pgr_assert.h"
 #include "cpp_common/identifiers.hpp"
 #include "problem/tw_node.h"

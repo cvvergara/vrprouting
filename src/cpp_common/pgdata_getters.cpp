@@ -42,14 +42,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/pgdata_fetchers.hpp"
 
 #include "c_types/info_t.hpp"
-#include "c_types/vroom/vroom_time_window_t.h"
-#include "c_types/break_types.h"
-#include "c_types/vroom/vroom_job_t.h"
-#include "c_types/vroom/vroom_shipment_t.h"
+
+#include "c_types/vroom_types.h"
 #include "c_types/matrix_types.h"
 #include "c_types/vehicle_types.h"
-#include "c_types/pickDeliveryOrders_t.h"
-#include "c_types/time_multipliers_t.h"
+#include "c_types/order_types.h"
+#include "c_types/multiplier_types.h"
 
 
 /**

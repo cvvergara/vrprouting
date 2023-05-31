@@ -40,6 +40,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/identifiers.hpp"
 #include "cpp_common/pgr_assert.h"
 #include "c_types/matrix_types.h"
+#include "c_types/vroom_types.h"
 
 
 namespace vrprouting {

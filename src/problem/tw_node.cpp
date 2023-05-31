@@ -29,9 +29,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <string>
 
 #include "cpp_common/pgr_assert.h"
-#include "problem/matrix.h"
-#include "c_types/pickDeliveryOrders_t.h"
+#include "c_types/order_types.h"
 #include "c_types/vehicle_types.h"
+
+#include "problem/matrix.h"
 
 
 namespace vrprouting {

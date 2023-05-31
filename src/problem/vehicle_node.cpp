@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "problem/vehicle_node.h"
 #include "cpp_common/pgr_assert.h"
-#include "c_types/solution_rt.h"
+#include "c_types/return_types.h"
 
 
 namespace vrprouting {

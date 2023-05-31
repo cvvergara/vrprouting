@@ -31,11 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_C_TYPES_RETURN_TYPES_H_
 #pragma once
 
-#ifdef __cplusplus
-#include <cstdint>
-#else
-#include <stdint.h>
-#endif
+#include "c_types/typedefs.h"
 
 /** @brief order-vehicle compatability relationship
 

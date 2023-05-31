@@ -35,9 +35,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <tuple>
 #include <iomanip>
 #include "problem/pickDeliver.h"
-#include "c_types/short_vehicle.h"
+#include "c_types/vehicle_types.h"
 
-typedef struct Solution_rt Solution_rt;
 
 namespace vrprouting {
 namespace problem {

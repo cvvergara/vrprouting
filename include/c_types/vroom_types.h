@@ -252,5 +252,4 @@ struct Vroom_vehicle_t {
   char *data; /** Metadata information of vehicle */
 };
 
-#endif  // INCLUDE_C_TYPES_VEHICLE_T_H_
 #endif  // INCLUDE_C_TYPES_VROOM_TYPES_H_
