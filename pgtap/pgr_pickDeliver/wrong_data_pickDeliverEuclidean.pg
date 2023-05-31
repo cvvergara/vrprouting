@@ -184,23 +184,23 @@ SELECT * FROM _vrp_pgr_pickDeliverEuclidean(
 
 SELECT throws_ok('vehiles5',
     'XX000',
-    $$Column 'e_open' not Found$$,
+    $$Column found: 'e_close', missing column: 'e_open'$$,
     'vehiles5, Should throw: e_close found, but not e_open');
 
 SELECT throws_ok('vehiles6',
     'XX000',
-    $$Column 'e_close' not Found$$,
+    $$Column found: 'e_open', missing column: 'e_close'$$,
     'vehiles6, Should throw: e_open found, but not e_close');
 
 SELECT throws_ok('vehiles7',
     'XX000',
-    $$Column 'e_y' not Found$$,
+    $$Column found: 'e_x', missing column: 'e_y'$$,
     'vehiles7, Should throw: e_x found, but not e_y');
 
 SELECT throws_ok('vehiles8',
     'XX000',
-    $$Column 'e_close' not Found$$,
-    'vehiles8, Should throw: e_y found, but not e_x');
+    $$Column found: 'e_open', missing column: 'e_close'$$,
+    'vehiles8, Should throw: e_open found, but not e_close');
 
 -- s_open and s_close should exist together or not at all
 
@@ -216,12 +216,12 @@ SELECT * FROM _vrp_pgr_pickDeliverEuclidean(
 
 SELECT throws_ok('no_s_open',
     'XX000',
-    $$Column 's_open' not Found$$,
+    $$Column found: 's_close', missing column: 's_open'$$,
     'no_s_open, Should throw: s_close found, but not s_open');
 
 SELECT throws_ok('no_s_close',
     'XX000',
-    $$Column 's_close' not Found$$,
+    $$Column found: 's_open', missing column: 's_close'$$,
     'no_s_close, Should throw: s_open found, but not s_close');
 ---------------------
 --  s_open > s_close
@@ -270,7 +270,7 @@ UPDATE orders_1 SET amount= -20 WHERE id =1;
 
 SELECT throws_ok('orders1',
     'XX000',
-    'Unexpected Negative value in column amount',
+    'Unexpected negative value in column amount',
     'Should throw: pickup.demand < 0');
 
 UPDATE orders_1 SET amount= 10 WHERE id =1;

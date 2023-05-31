@@ -61,28 +61,28 @@ namespace {
 void
 check_interval_type(const vrprouting::Column_info_t &info) {
   if (!(info.type == 1186)) {
-    throw std::string("Unexpected Column '") + info.name + "' type. Expected INTERVAL";
+    throw std::string("Unexpected type in column '") + info.name + "'. Expected INTERVAL";
   }
 }
 
 void
 check_jsonb_type(vrprouting::Column_info_t info) {
   if (!(info.type == JSONBOID)) {
-    throw std::string("Unexpected Column '") + info.name + "' type. Expected JSONB";
+    throw std::string("Unexpected type in column '") + info.name + "'. Expected JSONB";
   }
 }
 
 void
 check_integer_type(vrprouting::Column_info_t info) {
   if (!(info.type == INT2OID || info.type == INT4OID)) {
-    throw std::string("Unexpected Column '") + info.name + "' type. Expected SMALLINT or INTEGER";
+    throw std::string("Unexpected type in column '") + info.name + "'. Expected SMALLINT or INTEGER";
   }
 }
 
 void
 check_integerarray_type(vrprouting::Column_info_t info) {
   if (!(info.type == INT2ARRAYOID || info.type == INT4ARRAYOID)) {
-    throw std::string("Unexpected Column '") + info.name + "' type. Expected SMALLINT-ARRAY or INTEGER-ARRAY";
+    throw std::string("Unexpected type in column '") + info.name + "'. Expected SMALLINT-ARRAY or INTEGER-ARRAY";
   }
 }
 
@@ -93,7 +93,7 @@ check_integerarray_type(vrprouting::Column_info_t info) {
  *   SMALLINT[], INTEGER[], BIGINT[]
  *
  * @param[in] info contain column information.
- * @throw ERROR Unexpected Column type. Expected ANY-INTEGER-ARRAY.
+ * @throw ERROR Unexpected type in column. Expected ANY-INTEGER-ARRAY.
  */
 
 void
@@ -101,14 +101,14 @@ check_any_integerarray_type(vrprouting::Column_info_t info) {
   if (!(info.type == INT2ARRAYOID
         || info.type == INT4ARRAYOID
         || info.type == 1016)) {
-    throw std::string("Unexpected Column '") + info.name + "' type. Expected ANY-INTEGER-ARRAY";
+    throw std::string("Unexpected type in column '") + info.name + "'. Expected ANY-INTEGER-ARRAY";
   }
 }
 
 void
 check_timestamp_type(vrprouting::Column_info_t info) {
   if (!(info.type == 1114)) {
-    throw std::string("Unexpected Column '") + info.name + "' type. Expected TIMESTAMP";
+    throw std::string("Unexpected type in column '") + info.name + "'. Expected TIMESTAMP";
   }
 }
 
@@ -146,14 +146,14 @@ get_column_info(const TupleDesc &tupdesc, vrprouting::Column_info_t &info) {
  * Where ANY-INTEGER is SQL type: SMALLINT, INTEGER, BIGINT
  *
  * @param[in] info contain column information.
- * @throw ERROR Unexpected Column type. Expected column type is ANY-INTEGER.
+ * @throw ERROR Unexpected type in column. Expected column type is ANY-INTEGER.
  */
 void
 check_any_integer_type(const vrprouting::Column_info_t &info) {
     if (!(info.type == INT2OID
                 || info.type == INT4OID
                 || info.type == INT8OID)) {
-        throw std::string("Unexpected Column '") + info.name + "' type. Expected ANY-INTEGER";
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected ANY-INTEGER";
     }
 }
 
@@ -163,7 +163,7 @@ check_any_integer_type(const vrprouting::Column_info_t &info) {
  *             SMALLINT, INTEGER, BIGINT, REAL, FLOAT
  *
  * @param[in] info contain column information.
- * @throw ERROR Unexpected Column type. Expected column type is ANY-NUMERICAL.
+ * @throw ERROR Unexpected type in column. Expected column type is ANY-NUMERICAL.
  */
 void check_any_numerical_type(const vrprouting::Column_info_t &info) {
     if (!(info.type == INT2OID
@@ -172,7 +172,7 @@ void check_any_numerical_type(const vrprouting::Column_info_t &info) {
                 || info.type == FLOAT4OID
                 || info.type == FLOAT8OID
                 || info.type == NUMERICOID)) {
-        throw std::string("Unexpected Column '") + info.name + "' type. Expected ANY-NUMERICAL";
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected ANY-NUMERICAL";
     }
 }
 
@@ -182,12 +182,12 @@ void check_any_numerical_type(const vrprouting::Column_info_t &info) {
  *             TEXT
  *
  * @param[in] info contain column information.
- * @throw ERROR Unexpected Column type. Expected column type is TEXT.
+ * @throw ERROR Unexpected type in column. Expected column type is TEXT.
  */
 void
 check_text_type(const vrprouting::Column_info_t &info) {
     if (!(info.type == TEXTOID)) {
-        throw std::string("Unexpected Column '") + info.name + "' type. Expected TEXT";
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected TEXT";
     }
 }
 
@@ -198,12 +198,12 @@ check_text_type(const vrprouting::Column_info_t &info) {
  *
  * [BPCHAROID](https://doxygen.postgresql.org/include_2catalog_2pg__type_8h.html#afa7749dbe36d31874205189d9d6b21d7)
  * @param[in] info contain column information.
- * @throw ERROR Unexpected Column type. Expected column type is CHAR.
+ * @throw ERROR Unexpected type in column. Expected column type is CHAR.
  */
 void
 check_char_type(const vrprouting::Column_info_t &info) {
     if (!(info.type == BPCHAROID)) {
-        throw std::string("Unexpected Column '") + info.name + "' type. Expected TEXT";
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected TEXT";
     }
 }
 
@@ -253,7 +253,7 @@ getTimeStamp(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::
  * @param[in] tuple   input row to be examined.
  * @param[in] tupdesc  tuple descriptor
  * @param[in] info    contain column information.
- * @throw ERROR Unexpected Column type. Expected column type is ANY-INTEGER.
+ * @throw ERROR Unexpected type in column. Expected column type is ANY-INTEGER.
  * @throw ERROR When value of column is NULL.
  *
  * @return Integer type of column value is returned.
@@ -277,7 +277,7 @@ int64_t getBigInt(
             value = DatumGetInt64(binval);
             break;
         default:
-            throw std::string("Unexpected Column type of ") + info.name + ". Expected ANY-INTEGER";
+            throw std::string("Unexpected type in column type of ") + info.name + ". Expected ANY-INTEGER";
     }
     return value;
 }
@@ -286,7 +286,7 @@ int64_t getBigInt(
  * @param[in] tuple   input row to be examined.
  * @param[in] tupdesc  tuple descriptor
  * @param[in] info    contain column information.
- * @throw ERROR Unexpected Column type. Expected column type is ANY-NUMERICAL.
+ * @throw ERROR Unexpected type in column. Expected column type is ANY-NUMERICAL.
  * @throw ERROR When value of column is NULL.
  * @return Double type of column value is returned.
  */
@@ -319,7 +319,7 @@ double getFloat8(
             return static_cast<double>(DatumGetFloat8(DirectFunctionCall1(numeric_float8_no_overflow, binval)));
             break;
         default:
-            throw std::string("Unexpected Column type of ") + info.name + ". Expected ANY-NUMERICAL";
+            throw std::string("Unexpected type in column type of ") + info.name + ". Expected ANY-NUMERICAL";
     }
     return 0.0;
 }
@@ -334,7 +334,7 @@ double getFloat8(
  * @param[in] tupdesc       tuple descriptor
  * @param[in] info          contain column information.
  * @param[in] default_value returned when column contain NULL value.
- * @throw ERROR Unexpected Column type. Expected column type is CHAR.
+ * @throw ERROR Unexpected type in column. Expected column type is CHAR.
  * @throw ERROR When value of column is NULL.
  * @return Char type of column value is returned.
  */
@@ -346,7 +346,7 @@ char getChar(
 
   binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isNull);
   if (!(info.type == BPCHAROID)) {
-    throw std::string("Unexpected Column type of ") + info.name + ". Expected CHAR";
+    throw std::string("Unexpected type in column type of ") + info.name + ". Expected CHAR";
   }
 
   if (!isNull) {

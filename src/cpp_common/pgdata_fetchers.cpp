@@ -258,7 +258,10 @@ void fetch_vehicles(
    * Values for eucledian
    */
   /* e_x, e_y must exist or non at all */
-  if (is_euclidean) check_pairs(info[13], info[14]);
+  if (is_euclidean) {
+    check_pairs(info[13], info[14]);
+    check_pairs(info[15], info[16]);
+  }
   vehicle->start_x = is_euclidean? get_anynumerical(tuple, tupdesc, info[13], 0) : 0;
   vehicle->start_y = is_euclidean? get_anynumerical(tuple, tupdesc, info[14], 0) : 0;
   vehicle->end_x =   is_euclidean? get_anynumerical(tuple, tupdesc, info[15], vehicle->start_x) : 0;
