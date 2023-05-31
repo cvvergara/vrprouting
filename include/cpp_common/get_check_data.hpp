@@ -66,10 +66,6 @@ StepType   get_StepType(const HeapTuple, const TupleDesc&, const Column_info_t&,
 TTimestamp get_TTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 TTimestamp get_TTimestamp_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
 uint32_t get_unsignedint(const HeapTuple, const TupleDesc&, const Column_info_t&, int64_t);
-#if 0
-TTimestamp get_PositiveTTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
-TTimestamp get_PositiveTTimestamp_plain(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
-#endif
 
 /** @brief  Function will check whether the colNumber represent any specific column or NULL (SPI_ERROR_NOATTRIBUTE).  */
 bool column_found(const Column_info_t&);
