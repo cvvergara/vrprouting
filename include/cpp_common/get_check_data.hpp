@@ -46,17 +46,12 @@ extern "C" {
 namespace vrprouting {
 using Column_info_t = struct Column_info_t;
 
-
-#if 0
-/** @brief Enforces the input array to be @b NOT empty */
-int64_t* get_array(ArrayType*, size_t*, bool);
-
-/** @brief Function returns the values of specified columns in array. */
-int64_t* get_BigIntArr(const HeapTuple, const TupleDesc&, const Column_info_t&, uint64_t*);
-#endif
-
-
+// TODO this functions go in detail
+int64_t* get_PosBigIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
+uint32_t* get_PositiveIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
+TInterval get_PositiveTInterval(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
 TTimestamp get_TTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
+int64_t get_anyinteger(const HeapTuple, const TupleDesc&, const Column_info_t&, int64_t);
 
 /** @brief  Function will check whether the colNumber represent any specific column or NULL (SPI_ERROR_NOATTRIBUTE).  */
 bool column_found(const Column_info_t&);
@@ -64,14 +59,8 @@ bool column_found(const Column_info_t&);
 /** @brief Function tells expected type of each column and then check the correspondence type of each column.  */
 void fetch_column_info(const TupleDesc&, std::vector<Column_info_t>&);
 
-/** using **/
-int64_t* get_PosBigIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
-uint32_t* get_PositiveIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
-TInterval get_PositiveTInterval(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
-
 /** @brief Function returns the string representation of the value of specified column.  */
 char* get_jsonb(const HeapTuple, const TupleDesc&, const Column_info_t&);
-int64_t get_anyinteger(const HeapTuple, const TupleDesc&, const Column_info_t&, int64_t);
 double get_anynumerical(const HeapTuple, const TupleDesc&, const Column_info_t&, double);
 char get_char(const HeapTuple, const TupleDesc&, const Column_info_t&, char);
 
