@@ -69,7 +69,7 @@ namespace detail {
       if (!column_found(info)) return opt_value;
 
       auto value = get_anyinteger(tuple, tupdesc, info, 0);
-      if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
+      if (value < 0) throw std::string("Unexpected negative value in column '") + info.name + "'";
       return static_cast<T>(value);
     }
 

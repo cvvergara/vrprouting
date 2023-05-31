@@ -102,6 +102,10 @@ void fetch_jobs(
   job->skills = get_uint_array<Skill>(tuple, tupdesc, info[6], job->skills_size);
   job->priority = get_value<Priority>(tuple, tupdesc, info[7], 0);
   job->data = get_jsonb(tuple, tupdesc, info[8]);
+
+  if (job->priority > 100) {
+    throw std::string("Invalid value in column '") + info[7].name + "'. Maximum value allowed 100";
+  }
 }
 
 
@@ -171,6 +175,10 @@ void fetch_vroom_shipments(
 
   shipment->p_data = get_jsonb(tuple, tupdesc, info[10]);
   shipment->d_data = get_jsonb(tuple, tupdesc, info[11]);
+
+  if (shipment->priority > 100) {
+    throw std::string("Invalid value in column '") + info[9].name + "'. Maximum value allowed 100";
+  }
 }
 
 
@@ -206,7 +214,7 @@ void fetch_tw(
   time_window->tw_close = get_value<Duration>(tuple, tupdesc, info[2], 0);
 
   if (time_window->tw_open > time_window->tw_close) {
-      throw std::string("Invalid time window found '") + info[2].name + "' is less than  '" + info[1].name + "'";
+      throw std::string("Invalid time window found: '") + info[2].name + "' is less than '" + info[1].name + "'";
   }
 }
 
@@ -291,20 +299,16 @@ void fetch_vroom_vehicles(
   vehicle->max_tasks = get_value<int32_t>(tuple, tupdesc, info[8], INT_MAX);
   vehicle->data = get_jsonb(tuple, tupdesc, info[9]);
 
-  /* TODO throw? */
-  if (vehicle->tw_open > vehicle->tw_close) {
-    ereport(ERROR,
-        (errmsg("Invalid time window (%d, %d)",
-            vehicle->tw_open, vehicle->tw_close),
-         errhint("Time window start time %d must be "
-             "less than or equal to time window end time %d",
-             vehicle->tw_open, vehicle->tw_close)));
+  if (!(column_found(info[1]) || column_found(info[2]))) {
+    throw std::string("Missing column(s): '") + info[1].name + "' and/or '" + info[2].name + "' must exist";
   }
 
+  if (vehicle->tw_open > vehicle->tw_close) {
+      throw std::string("Invalid time window found: '") + info[6].name + "' is less than '" + info[5].name + "'";
+  }
 
   if (vehicle->speed_factor <= 0.0) {
-    ereport(ERROR, (errmsg("Invalid speed_factor %lf", vehicle->speed_factor),
-                    errhint("Speed factor must be greater than 0")));
+   throw std::string("Invalid negative or zero value in column '") + info[7].name + "'";
   }
 }
 

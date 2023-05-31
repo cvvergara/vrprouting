@@ -390,7 +390,7 @@ get_any_positive_array(
   if (!column_found(info)) return nullptr;
   int64_t *array = get_BigIntArr_wEmpty(tuple, tupdesc, info, the_size);
   for (size_t i = 0; i < the_size; i++) {
-    if (array[i] < 0) throw std::string("Unexpected negative value in array ") + info.name;
+    if (array[i] < 0) throw std::string("Unexpected negative value in array '") + info.name + "'";
   }
   return array;
 }
@@ -426,7 +426,7 @@ TInterval
 get_interval(
     const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TInterval opt_value) {
   TInterval value = column_found(info)? getInterval(tuple, tupdesc, info) : opt_value;
-  if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
+  if (value < 0) throw std::string("Unexpected negative value in column '") + info.name + "'";
   return (TInterval) value;
 }
 
@@ -522,7 +522,7 @@ void fetch_column_info(
           check_interval_type(coldata);
           break;
         default:
-          throw std::string("Case not found on getting info: Unexpected type of column ") + coldata.name;
+          throw std::string("Case not found in column '") + coldata.name + "' Please inform the developers";
       }
     }
   }
