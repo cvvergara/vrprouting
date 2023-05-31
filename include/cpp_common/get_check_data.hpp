@@ -46,12 +46,14 @@ extern "C" {
 namespace vrprouting {
 using Column_info_t = struct Column_info_t;
 
-// TODO this functions go in detail
-int64_t* get_PosBigIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
-uint32_t* get_PositiveIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
-TInterval get_PositiveTInterval(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
-TTimestamp get_TTimestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
-int64_t get_anyinteger(const HeapTuple, const TupleDesc&, const Column_info_t&, int64_t);
+namespace detail {
+  int64_t* get_PosBigIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
+  uint32_t* get_PositiveIntArr_allowEmpty(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
+  TInterval get_PositiveTInterval(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
+  TTimestamp get_pg_timestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
+  int64_t get_anyinteger(const HeapTuple, const TupleDesc&, const Column_info_t&, int64_t);
+}
+
 
 /** @brief  Function will check whether the colNumber represent any specific column or NULL (SPI_ERROR_NOATTRIBUTE).  */
 bool column_found(const Column_info_t&);
@@ -67,7 +69,7 @@ char get_char(const HeapTuple, const TupleDesc&, const Column_info_t&, char);
 template <typename T>
 T get_integral(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, T opt_value) {
   static_assert(std::is_integral<T>::value, "Integral required.");
-  return static_cast<T>(get_anyinteger(tuple, tupdesc, info, opt_value));
+  return static_cast<T>(detail::get_anyinteger(tuple, tupdesc, info, opt_value));
 }
 
 template <typename T>
@@ -76,7 +78,7 @@ T get_positive(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_inf
 
   if (!column_found(info)) return opt_value;
 
-  auto value = get_anyinteger(tuple, tupdesc, info, 0);
+  auto value = detail::get_anyinteger(tuple, tupdesc, info, 0);
   if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
   return static_cast<T>(value);
 }
@@ -97,10 +99,10 @@ T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t
       return static_cast<T>(get_positive<TInterval>(tuple, tupdesc,  info, static_cast<TInterval>(opt_value)));
       break;
     case TIMESTAMP :
-      return static_cast<T>(get_TTimestamp(tuple, tupdesc,  info, static_cast<TTimestamp>(opt_value)));
+      return static_cast<T>(detail::get_pg_timestamp(tuple, tupdesc,  info, static_cast<TTimestamp>(opt_value)));
       break;
     case INTERVAL :
-      return static_cast<T>(get_PositiveTInterval(tuple, tupdesc,  info, static_cast<TInterval>(opt_value)));
+      return static_cast<T>(detail::get_PositiveTInterval(tuple, tupdesc,  info, static_cast<TInterval>(opt_value)));
       break;
     case POSITIVE_INTEGER:
       return static_cast<T>(get_positive<int32_t>(tuple, tupdesc,  info, static_cast<int32_t>(opt_value)));
@@ -115,7 +117,7 @@ template <typename T>
 T* get_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, size_t &size) {
   switch (info.eType) {
     case ANY_POSITIVE_ARRAY:
-      return get_PosBigIntArr_allowEmpty(tuple, tupdesc, info, size);
+      return detail::get_PosBigIntArr_allowEmpty(tuple, tupdesc, info, size);
       break;
     default:
       throw std::string("Missing case value on array") + info.name;
@@ -127,7 +129,7 @@ template <typename T>
 T* get_uint_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, size_t &size) {
   switch (info.eType) {
     case ANY_UINT_ARRAY:
-      return get_PositiveIntArr_allowEmpty(tuple, tupdesc, info, size);
+      return detail::get_PositiveIntArr_allowEmpty(tuple, tupdesc, info, size);
       break;
     default:
       throw std::string("Missing case value on Uint array") + info.name;

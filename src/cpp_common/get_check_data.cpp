@@ -386,6 +386,86 @@ get_BigIntArr_wEmpty(
 
 namespace vrprouting {
 
+namespace detail {
+
+int64_t*
+get_PosBigIntArr_allowEmpty(
+    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, size_t &the_size) {
+  if (!column_found(info)) return nullptr;
+  int64_t *array = get_BigIntArr_wEmpty(tuple, tupdesc, info, the_size);
+  for (size_t i = 0; i < the_size; i++) {
+    if (array[i] < 0) throw std::string("Unexpected negative value in array ") + info.name;
+  }
+  return array;
+}
+
+uint32_t*
+get_PositiveIntArr_allowEmpty(
+    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info,
+    size_t &the_size) {
+  bool is_null = false;
+  the_size = 0;
+
+  Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
+  if (!raw_array) return  nullptr;
+
+  ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
+
+  return vrp_get_positiveIntArray_allowEmpty(&the_size, pg_array);
+}
+
+/**
+ * @params [in] tuple
+ * @params [in] tupdesc
+ * @params [in] info about the column been fetched
+ * @params [in] opt_value default value when the column does not exist
+ *
+ * @returns The value found
+ * @returns opt_value when the column does not exist
+ *
+ * exceptions when the value is negative
+ * @pre for positive values only
+ */
+TInterval
+get_PositiveTInterval(
+    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TInterval opt_value) {
+  TInterval value = column_found(info)? getInterval(tuple, tupdesc, info) : opt_value;
+  if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
+  return (TInterval) value;
+}
+
+/**
+ * @params [in] tuple
+ * @params [in] tupdesc
+ * @params [in] info about the column been fetched
+ * @params [in] opt_value default value when the column does not exist
+ *
+ * @returns The value found
+ * @returns opt_value when the column does not exist
+ */
+TTimestamp
+get_pg_timestamp(
+    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TTimestamp opt_value) {
+  return column_found(info)?  getTimeStamp(tuple, tupdesc, info) : opt_value;
+}
+
+/**
+ * @params [in] tuple from postgres
+ * @params [in] tupdesc from postgres
+ * @params [in] info about the column been fetched
+ * @params [in] opt_value default value when the column does not exist
+ *
+ * @returns The value found
+ * @returns opt_value when the column does not exist
+ *
+ * Used with vrprouting::ANY_INTEGER
+ */
+int64_t
+get_anyinteger(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, int64_t opt_value) {
+  return column_found(info)? getBigInt(tuple, tupdesc, info) : opt_value;
+}
+}  // namespace detail
+
 /**
  * @param[in] colNumber Column number (count starts at 1).
  * @return @b TRUE when colNumber exist.
@@ -452,69 +532,9 @@ void fetch_column_info(
   }
 }
 
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for positive values only
- */
-TInterval
-get_PositiveTInterval(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TInterval opt_value) {
-  TInterval value = column_found(info)? getInterval(tuple, tupdesc, info) : opt_value;
-  if (value < 0) throw std::string("Unexpected negative value in column ") + info.name;
-  return (TInterval) value;
-}
 
 
-uint32_t*
-get_PositiveIntArr_allowEmpty(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info,
-    size_t &the_size) {
-  bool is_null = false;
-  the_size = 0;
 
-  Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
-  if (!raw_array) return  nullptr;
-
-  ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
-
-  return vrp_get_positiveIntArray_allowEmpty(&the_size, pg_array);
-}
-
-int64_t*
-get_PosBigIntArr_allowEmpty(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, size_t &the_size) {
-  if (!column_found(info)) return nullptr;
-  int64_t *array = get_BigIntArr_wEmpty(tuple, tupdesc, info, the_size);
-  for (size_t i = 0; i < the_size; i++) {
-    if (array[i] < 0) throw std::string("Unexpected negative value in array ") + info.name;
-  }
-  return array;
-}
-
-
-/**
- * @params [in] tuple from postgres
- * @params [in] tupdesc from postgres
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * Used with vrprouting::ANY_INTEGER
- */
-int64_t
-get_anyinteger(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, int64_t opt_value) {
-  return column_found(info)? getBigInt(tuple, tupdesc, info) : opt_value;
-}
 
 /**
  * @params [in] tuple from postgres
@@ -532,21 +552,6 @@ get_anynumerical(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_i
   return column_found(info)? getFloat8(tuple, tupdesc, info) : opt_value;
 }
 
-// TODO change to get_timestamp
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- */
-TTimestamp
-get_TTimestamp(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TTimestamp opt_value) {
-  return column_found(info)?  getTimeStamp(tuple, tupdesc, info) : opt_value;
-}
 
 /**
  * @params [in] tuple
