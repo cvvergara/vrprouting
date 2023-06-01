@@ -25,6 +25,9 @@ DECLARE
   query TEXT;
   p TEXT;
   type_name TEXT;
+  msg1 TEXT;
+  msg2 TEXT;
+  msg3 TEXT;
 BEGIN
   start_sql = 'SELECT * FROM ' || fn || '(' || start_sql || '$$ SELECT ';
   FOREACH p IN ARRAY params
@@ -41,10 +44,22 @@ BEGIN
     RETURN query SELECT lives_ok(query, 'Lives: ' || type_name || ',' || parameter);
   END LOOP;
 
+  IF (accept[1] = ('TIMESTAMP')) THEN msg1 = lower(accept[1]) || ' without time zone'; END IF;
   FOREACH type_name IN ARRAY reject
   LOOP
     query := start_sql || parameter || '::' || type_name || end_sql;
-    RETURN query SELECT throws_ok(query, 'XX000', $$Unexpected type in column '$$ || parameter || $$'. Expected $$ || expected, 'throws: ' || type_name || ',' || parameter);
+    msg2 = lower(type_name);
+    IF (type_name = ('TIMESTAMP')) THEN msg2 = lower(type_name) || ' without time zone'; END IF;
+    msg3 = 'Throws: ' ||  accept[1] || ' to ' || type_name || ',' || parameter;
+    IF (accept[1] IN ('INTERVAL') AND type_name NOT IN ('TIME')) THEN
+      RETURN query SELECT throws_ok(query, '42846', $$cannot cast type $$ || msg1 || $$ to $$ || msg2, msg3);
+
+    ELSIF (accept[1] IN ('TIMESTAMP') AND type_name IN ('INTERVAL', 'INTEGER')) THEN
+      RETURN query SELECT throws_ok(query, '42846', $$cannot cast type $$ || msg1 || $$ to $$ || msg2, msg3);
+
+    ELSE
+      RETURN query SELECT throws_ok(query, 'XX000', $$Unexpected type in column '$$ || parameter || $$'. Expected $$ || expected, msg3);
+    END IF;
   END LOOP;
 END;
 $BODY$ LANGUAGE plpgsql;
@@ -129,7 +144,7 @@ DECLARE
   accept TEXT[] := ARRAY['INTERVAL'];
   reject TEXT[] := ARRAY['TIMESTAMP', 'DATE', 'TIME', 'INTEGER'];
 BEGIN
-  RETURN query SELECT test_value(fn, inner_query_table, start_sql, rest_sql, params, parameter, accept, reject);
+  RETURN query SELECT test_value(fn, inner_query_table, start_sql, rest_sql, params, parameter, accept, reject, 'INTERVAL');
 END;
 $BODY$ LANGUAGE plpgsql;
 
@@ -141,7 +156,7 @@ DECLARE
   accept TEXT[] := ARRAY['TIMESTAMP'];
   reject TEXT[] := ARRAY['INTERVAL', 'DATE', 'TIME', 'INTEGER'];
 BEGIN
-  RETURN query SELECT test_value(fn, inner_query_table, start_sql, rest_sql, params, parameter, accept, reject);
+  RETURN query SELECT test_value(fn, inner_query_table, start_sql, rest_sql, params, parameter, accept, reject, 'TIMESTAMP');
 END;
 $BODY$ LANGUAGE plpgsql;
 

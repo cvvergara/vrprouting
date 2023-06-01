@@ -154,7 +154,7 @@ vrp_get_positiveIntArr(ArrayType *v, size_t *arrlen, bool allow_empty, const cha
         case INT4OID:
             break;
         default:
-            elog(ERROR, "FOOO Unexpected type in column '%s'. Expected INTEGER-ARRAY", name);
+            elog(ERROR, "Unexpected type in column '%s'. Expected INTEGER-ARRAY", name);
     }
 
     deconstruct_array(v, element_type, typlen, typbyval,
