@@ -270,7 +270,7 @@ UPDATE orders_1 SET amount= -20 WHERE id =1;
 
 SELECT throws_ok('orders1',
     'XX000',
-    'Unexpected negative value in column amount',
+    $$Unexpected negative value in column 'amount'$$,
     'Should throw: pickup.demand < 0');
 
 UPDATE orders_1 SET amount= 10 WHERE id =1;

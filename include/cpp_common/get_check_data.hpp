@@ -100,6 +100,7 @@ T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t
       break;
     case ANY_UINT :
     case TINTERVAL :
+    case POSITIVE_INTEGER:
       return static_cast<T>(detail::get_positive<T>(tuple, tupdesc,  info, opt_value));
       break;
     case TIMESTAMP :

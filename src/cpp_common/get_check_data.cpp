@@ -504,6 +504,7 @@ void fetch_column_info(
         case ANY_POSITIVE_ARRAY:
           check_any_integerarray_type(coldata);
           break;
+        case POSITIVE_INTEGER:
         case INTEGER:
           check_integer_type(coldata);
           break;
