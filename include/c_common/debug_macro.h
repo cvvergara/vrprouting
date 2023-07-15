@@ -27,11 +27,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_C_COMMON_DEBUG_MACRO_H_
 #pragma once
 
-#ifndef NDEBUG
 
 #include "c_common/postgres_connection.h"
 #include "c_types/typedefs.h"
 
+#ifndef NDEBUG
 #define PGR_DBG(...) \
     elog(DEBUG3, __VA_ARGS__)
 #else
