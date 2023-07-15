@@ -160,16 +160,16 @@ find_program(POSTGRESQL_EXECUTABLE NAMES postgres
   NO_DEFAULT_PATH
   )
 
-
-
 # for XbetaY XalphaY XrcY -> X.Y
-string(REGEX REPLACE "^([0-9]+)[beta|alpha|rc|devel].*" "\\1.0" PostgreSQL_VERSION_STRING ${PostgreSQL_VERSION_STRING})
+string(REGEX REPLACE "([0-9]+)[beta|alpha|rc|devel].*" "\\1.0" POSTGRESQL_VERSION_STRING ${PostgreSQL_VERSION_STRING})
+message(STATUS "POSTGRESQL_VERSION_STRING=${POSTGRESQL_VERSION_STRING}")
+
+STRING(REGEX MATCH "([0-9]+)\.([0-9]+)" POSTGRESQL_VERSION "${POSTGRESQL_VERSION_STRING}")
+message(STATUS "POSTGRESQL_VERSION=${POSTGRESQL_VERSION}")
 
 #for X.Y.Z -> XY  Y<10
-string(REGEX REPLACE "^([0-9]+)\\.([0-9]+).*" "\\1" PostgreSQL_VERSION_MAYOR ${PostgreSQL_VERSION_STRING})
-string(REGEX REPLACE "^([0-9]+)\\.([0-9]+).*" "\\2" PostgreSQL_VERSION_MINOR ${PostgreSQL_VERSION_STRING})
-math(EXPR PostgreSQL_VERSION_NUM "${PostgreSQL_VERSION_MAYOR} * 10000 + ${PostgreSQL_VERSION_MINOR}")
-
+string(REGEX REPLACE "^([0-9]+)\\.([0-9]+).*" "\\1\\2" PGSQL_VERSION ${POSTGRESQL_VERSION})
+message(STATUS "PGSQL_VERSION=${PGSQL_VERSION}")
 
 #-------
 include_directories(SYSTEM ${PostgreSQL_INCLUDE_DIRS})
