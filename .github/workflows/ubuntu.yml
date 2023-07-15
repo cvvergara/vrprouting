@@ -22,8 +22,6 @@ jobs:
           postgis: [3]
           release: [Debug, Release]
           os: [ubuntu-latest]
-          exclude:
-              psql: 14
 
     steps:
       - uses: actions/checkout@v3
