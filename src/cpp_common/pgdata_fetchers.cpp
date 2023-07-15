@@ -105,8 +105,6 @@ void fetch_jobs(
 
   if (job->priority > 100) {
     throw std::string("Invalid value in column '") + info[7].name + "'. Maximum value allowed 100";
-  } else if (job->priority < 0) {
-    throw std::string("Unexpected negative value in column '") + info[7].name + "'";
   }
 }
 
@@ -180,8 +178,6 @@ void fetch_vroom_shipments(
 
   if (shipment->priority > 100) {
     throw std::string("Invalid value in column '") + info[9].name + "'. Maximum value allowed 100";
-  }  else if (shipment->priority < 0) {
-    throw std::string("Unexpected negative value in column '") + info[9].name + "'";
   }
 }
 

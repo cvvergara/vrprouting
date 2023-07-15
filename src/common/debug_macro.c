@@ -36,7 +36,7 @@ void DBG_PickDeliveryOrders_t(PickDeliveryOrders_t *dataArr, size_t total, char*
 #ifndef NDEBUG
   PGR_DBG("total %s %ld", title, total);
   for (size_t i = 0; i < total; i++) {
-    PGR_DBG("%ld %ld\n"
+    PGR_DBG("%ld %d\n"
         "  pick %ld x %f y %f - o %ld c %ld s %ld\n"
         "  drop %ld x %f y %f - o %ld c %ld s %ld\n",
 
@@ -66,7 +66,7 @@ void DBG_Vehicle_t(Vehicle_t *dataArr, size_t total, char* title ) {
 #ifndef NDEBUG
   PGR_DBG("total %s %ld", title, total);
   for (size_t i = 0; i < total; i++) {
-    PGR_DBG("%ld capacity %ld speed %f cant %ld\n"
+    PGR_DBG("%ld capacity %d speed %f cant %i\n"
         "  start %ld x %f y %f - o %ld c %ld s %ld"
         "    end %ld x %f y %f - o %ld c %ld s %ld",
         dataArr[i].id,
@@ -97,7 +97,7 @@ void DBG_Matrix_cell_t(Matrix_cell_t *dataArr, size_t total, char* title ) {
 #ifndef NDEBUG
   PGR_DBG("total %s %ld", title, total);
   for (size_t i = 0; i < total; i++) {
-    PGR_DBG("%ld %ld %f",
+    PGR_DBG("%ld %ld %li",
         dataArr[i].from_vid,
         dataArr[i].to_vid,
         dataArr[i].cost);
@@ -120,7 +120,7 @@ void DBG_uintarr(uint32_t *dataArr, size_t total, char* title) {
 #ifndef NDEBUG
   PGR_DBG("total %s %ld", title, total);
   for (size_t i = 0; i < total; i++) {
-    PGR_DBG("  %ld", dataArr[i]);
+    PGR_DBG("  %i", dataArr[i]);
   }
 #endif
 }
@@ -130,9 +130,9 @@ void DBG_Vroom_shipment_t(Vroom_shipment_t *dataArr, size_t total, char* title) 
 #ifndef NDEBUG
   PGR_DBG("total %s %ld", title, total);
   for (size_t i = 0; i < total; i++) {
-    PGR_DBG("%ld priority %ld\n"
-        "  pick %ld setup %f service %ld\n"
-        "  drop %ld setup %f service %ld\n",
+    PGR_DBG("%ld priority %i\n"
+        "  pick %ld setup %i service %i\n"
+        "  drop %ld setup %i service %i\n",
 
         dataArr[i].id,
         dataArr[i].priority,
@@ -154,7 +154,7 @@ void DBG_Vroom_time_window_t(Vroom_time_window_t *dataArr, size_t total, char* t
 #ifndef NDEBUG
   PGR_DBG("total %s %ld", title, total);
   for (size_t i = 0; i < total; i++) {
-    PGR_DBG("%ld tw_o %ld tw_c %ld kind=%c",
+    PGR_DBG("%li tw_o %i tw_c %i kind=%c",
         dataArr[i].id,
         dataArr[i].tw_open,
         dataArr[i].tw_close,
@@ -168,7 +168,7 @@ void DBG_Vroom_vehicle_t(Vroom_vehicle_t *dataArr, size_t total, char* title) {
   PGR_DBG("total %s %ld", title, total);
   for (size_t i = 0; i < total; i++) {
     PGR_DBG("%ld speed %f\n"
-        "  start %ld end %ld - open %ld close %ld",
+        "  start %ld end %ld - open %i close %i",
         dataArr[i].id,
         dataArr[i].speed_factor,
 
@@ -186,7 +186,7 @@ void DBG_Vroom_matrix_t(Vroom_matrix_t *dataArr, size_t total, char* title ) {
 #ifndef NDEBUG
   PGR_DBG("total %s %ld", title, total);
   for (size_t i = 0; i < total; i++) {
-    PGR_DBG("s %ld e %ld d %ld c %ld",
+    PGR_DBG("s %ld e %ld d %i c %i",
         dataArr[i].start_id,
         dataArr[i].end_id,
         dataArr[i].duration,
@@ -199,7 +199,7 @@ void DBG_Vroom_break_t(Vroom_break_t *dataArr, size_t total, char* title ) {
 #ifndef NDEBUG
   PGR_DBG("total %s %ld", title, total);
   for (size_t i = 0; i < total; i++) {
-    PGR_DBG("s %ld e %ld d %ld c %s",
+    PGR_DBG("id %ld vid %ld s %i d %s",
         dataArr[i].id,
         dataArr[i].vehicle_id,
         dataArr[i].service,
