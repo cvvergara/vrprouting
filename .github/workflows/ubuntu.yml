@@ -95,7 +95,7 @@ jobs:
           cd build
           PGBIN="/usr/lib/postgresql/${PGVER}/bin"
           PGINC="/usr/include/postgresql/${PGVER}/server"
-          cmake -DPostgreSQL_INCLUDE_DIR=${PGINC}" -DPOSTGRESQL_BIN=${PGBIN} -DCMAKE_BUILD_TYPE=${{ matrix.release }} -DWITH_DOC=OFF -DVROOM_INSTALL_PATH=$HOME/vroom-${{ env.VROOMVER }} ..
+          cmake -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} -DCMAKE_BUILD_TYPE=${{ matrix.release }} -DWITH_DOC=OFF -DVROOM_INSTALL_PATH=$HOME/vroom-${{ env.VROOMVER }} ..
 
       - name: Build
         run: |
