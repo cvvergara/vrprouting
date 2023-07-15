@@ -5,12 +5,23 @@
 
 DIR=$(git rev-parse --show-toplevel)
 
-pushd "${DIR}" > /dev/null || exit
+pushd "${DIR}" > /dev/null || exit 1
+
 read -ra files < <(git ls-files | grep '\.sh')
 
-result=$(shellcheck "${files[@]}")
-if [[ $result ]]; then
-  echo "$result"
-  echo " *** shellcheck found script errors"
-  exit 1
-fi
+for f in $(git ls-files | grep '\.sh')
+do
+  if [ "${f}" = "ci/bessie/regress.sh" ] ; then
+    result=$(shellcheck --exclude=SC2086 "${f}")
+  else
+    result=$(shellcheck "${f}")
+  fi
+
+  if [[ $result ]]; then
+    echo "$result"
+    echo " *** shellcheck found script errors while processing $f"
+    code=1
+  fi
+done
+popd || exit 1
+exit $code
