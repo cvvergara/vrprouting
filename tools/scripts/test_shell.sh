@@ -5,17 +5,17 @@
 
 DIR=$(git rev-parse --show-toplevel)
 
-pushd "${DIR}" > /dev/null || exit 1
-
-read -ra files < <(git ls-files | grep '\.sh')
+pushd "${DIR}" > /dev/null || exit
+code="0"
 
 for f in $(git ls-files | grep '\.sh')
 do
-  if [ "${f}" = "ci/bessie/regress.sh" ] ; then
+  if [ "${f}" = "tools/scripts/code_checker.sh" ] ; then
     result=$(shellcheck --exclude=SC2086 "${f}")
   else
     result=$(shellcheck "${f}")
   fi
+
 
   if [[ $result ]]; then
     echo "$result"

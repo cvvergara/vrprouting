@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
@@ -48,7 +49,7 @@ function test_c_files {
         echo "--------------------"
         echo "------   *.c  ------"
         echo "--------------------"
-        code_linter/cpplint/cpplint.py --extensions=c  --linelength=120 --filter=-readability/casting $1
+        code_linter/cpplint/cpplint.py --extensions=c  --linelength=120 --filter=-readability/casting "$1"
     fi
 }
 
@@ -57,7 +58,7 @@ function test_cpp_files {
         echo "--------------------"
         echo "------ *.cpp  ------"
         echo "--------------------"
-        code_linter/cpplint/cpplint.py --linelength=120 --filter=-runtime/references $1
+        code_linter/cpplint/cpplint.py --linelength=120 --filter=-runtime/references "$1"
     fi
 }
 
