@@ -18,12 +18,11 @@ jobs:
     strategy:
         fail-fast: false
         matrix:
-          psql: [12, 13, 14]
-          postgis: [2.5,3]
+          psql: [12, 13, 14, 15]
+          postgis: [3]
           release: [Debug, Release]
           os: [ubuntu-latest]
           exclude:
-            - postgis: 2.5
               psql: 14
 
     steps:
@@ -60,7 +59,7 @@ jobs:
             postgresql-server-dev-${{ matrix.psql }} \
             postgresql-plpython3-${{ matrix.psql }}
 
-      - name: Install Google OR-Tools dependencies 
+      - name: Install Google OR-Tools dependencies
         run: |
           sudo pip install --root=/  ortools
 
