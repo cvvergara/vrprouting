@@ -312,7 +312,7 @@ void fetch_vroom_vehicles(
   }
 
   if (vehicle->speed_factor <= 0.0) {
-   throw std::string("Invalid negative or zero value in column '") + info[7].name + "'";
+    throw std::string("Invalid negative or zero value in column '") + info[7].name + "'";
   }
 }
 
