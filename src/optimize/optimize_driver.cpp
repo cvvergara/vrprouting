@@ -368,8 +368,8 @@ do_optimize(
     char **log_msg,
     char **notice_msg,
     char **err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_alloc;
+  using vrprouting::msg;
+  using vrprouting::alloc;
 
   std::ostringstream log;
   std::ostringstream notice;
@@ -447,8 +447,8 @@ do_optimize(
       std::ostringstream hint;
       err << "Missing shipments for processing ";
       hint << "Shipments missing: " << shipments_in_stops << log.str();
-      *log_msg = pgr_msg(hint.str());
-      *err_msg = pgr_msg(err.str());
+      *log_msg = msg(hint.str());
+      *err_msg = msg(err.str());
       return;
     }
 
@@ -482,8 +482,8 @@ do_optimize(
 
     if (!time_matrix.has_no_infinity()) {
       err << "\nAn Infinity value was found on the Matrix";
-      *err_msg = pgr_msg(err.str());
-      *log_msg = pgr_msg(log.str());
+      *err_msg = msg(err.str());
+      *log_msg = msg(log.str());
       return;
     }
 
@@ -508,7 +508,7 @@ do_optimize(
      * Prepare results
      */
     if (!solution.empty()) {
-      (*return_tuples) = pgr_alloc(total_shipments * 2, (*return_tuples));
+      (*return_tuples) = alloc(total_shipments * 2, (*return_tuples));
 
       size_t seq = 0;
       for (const auto &row : solution) {
@@ -525,25 +525,25 @@ do_optimize(
     pgassert(*err_msg == nullptr);
     *log_msg = log.str().empty()?
       nullptr :
-      pgr_msg(log.str());
+      msg(log.str());
     *notice_msg = notice.str().empty()?
       nullptr :
-      pgr_msg(notice.str());
+      msg(notice.str());
   } catch (AssertFailedException &except) {
     err << except.what() << log.str();
-    *err_msg = pgr_msg(err.str());
+    *err_msg = msg(err.str());
   } catch (std::exception& except) {
     err << except.what() << log.str();
-    *err_msg = pgr_msg(err.str());
+    *err_msg = msg(err.str());
   } catch (const std::pair<std::string, std::string>& ex) {
     err << ex.first;
     log.str("");
     log.clear();
     log << ex.second;
-    *err_msg = pgr_msg(err.str().c_str());
-    *log_msg = pgr_msg(log.str().c_str());
+    *err_msg = msg(err.str().c_str());
+    *log_msg = msg(log.str().c_str());
   } catch(...) {
     err << "Caught unknown exception!" << log.str();
-    *err_msg = pgr_msg(err.str());
+    *err_msg = msg(err.str());
   }
 }

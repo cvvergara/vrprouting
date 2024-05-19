@@ -66,7 +66,7 @@ void get_data(
         total_tuples += ntuples;
 
         if (ntuples > 0) {
-            (*pgtuples) = pgr_alloc(total_tuples, *pgtuples);
+            (*pgtuples) = alloc(total_tuples, *pgtuples);
             if ((*pgtuples) == NULL) {
                 throw std::string("Out of memory!");
             }

@@ -7,6 +7,6 @@ ADD_LIBRARY(common OBJECT
 
     time_msg.c
     e_report.c
-    pgr_alloc.cpp
+    alloc.cpp
 
     )

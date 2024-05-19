@@ -116,8 +116,8 @@ do_compatibleVehicles(
         char **log_msg,
         char **notice_msg,
         char **err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_alloc;
+  using vrprouting::msg;
+  using vrprouting::alloc;
 
     std::ostringstream log;
     std::ostringstream notice;
@@ -171,7 +171,7 @@ do_compatibleVehicles(
 #endif
         if (!cost_matrix.has_no_infinity()) {
             err << "An Infinity value was found on the Matrix";
-            *err_msg = pgr_msg(err.str());
+            *err_msg = msg(err.str());
             return;
         }
 
@@ -187,8 +187,8 @@ do_compatibleVehicles(
         err << pd_problem.msg.get_error();
         if (!err.str().empty()) {
             log << pd_problem.msg.get_log();
-            *log_msg = pgr_msg(log.str());
-            *err_msg = pgr_msg(err.str());
+            *log_msg = msg(log.str());
+            *err_msg = msg(err.str());
             return;
         }
         log << pd_problem.msg.get_log();
@@ -204,7 +204,7 @@ do_compatibleVehicles(
 
         if (!solution.empty()) {
             log << "solution empty " << "\n";
-            (*return_tuples) = pgr_alloc(solution.size(), (*return_tuples));
+            (*return_tuples) = alloc(solution.size(), (*return_tuples));
             int seq = 0;
             for (const auto &row : solution) {
                 (*return_tuples)[seq] = row;
@@ -217,27 +217,27 @@ do_compatibleVehicles(
         pgassert(*err_msg == nullptr);
         *log_msg = log.str().empty()?
             nullptr :
-            pgr_msg(log.str());
+            msg(log.str());
         *notice_msg = notice.str().empty()?
             nullptr :
-            pgr_msg(notice.str());
+            msg(notice.str());
     } catch (AssertFailedException &except) {
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;
         err << except.what();
-        *err_msg = pgr_msg(err.str());
-        *log_msg = pgr_msg(log.str());
+        *err_msg = msg(err.str());
+        *log_msg = msg(log.str());
     } catch (std::exception& except) {
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;
         err << except.what();
-        *err_msg = pgr_msg(err.str());
-        *log_msg = pgr_msg(log.str());
+        *err_msg = msg(err.str());
+        *log_msg = msg(log.str());
     } catch(...) {
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;
         err << "Caught unknown exception!";
-        *err_msg = pgr_msg(err.str());
-        *log_msg = pgr_msg(log.str());
+        *err_msg = msg(err.str());
+        *log_msg = msg(log.str());
     }
 }

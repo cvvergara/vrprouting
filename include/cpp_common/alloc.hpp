@@ -1,5 +1,8 @@
 /*PGR-GNU*****************************************************************
-File: pgr_palloc.hpp
+File: alloc.hpp
+
+Copyright (c) 2015 pgRouting developers
+Mail: project@pgrouting.org
 
 Copyright (c) 2015 Celia Virginia Vergara Castillo
 Mail: vicky_vergara@hotmail.com
@@ -33,9 +36,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 extern "C" {
 
-extern void* SPI_palloc(size_t size);
-extern void * SPI_repalloc(void *pointer, size_t size);
-extern void SPI_pfree(void *pointer);
+extern
+void* SPI_palloc(size_t size);
+
+extern void *
+SPI_repalloc(void *pointer, size_t size);
+
+extern void
+SPI_pfree(void *pointer);
 
 }
 
@@ -60,7 +68,7 @@ namespace vrprouting {
 
 template <typename T>
 T*
-pgr_alloc(std::size_t size, T* ptr) {
+alloc(std::size_t size, T* ptr) {
     if (!ptr) {
         ptr = static_cast<T*>(SPI_palloc(size * sizeof(T)));
     } else {
@@ -71,14 +79,14 @@ pgr_alloc(std::size_t size, T* ptr) {
 
 template <typename T>
 T*
-pgr_free(T* ptr) {
+free(T* ptr) {
     if (ptr) {
         SPI_pfree(ptr);
     }
     return nullptr;
 }
 
-char* pgr_msg(const std::string &msg);
+char* msg(const std::string &);
 
 }  // namespace vrprouting
 

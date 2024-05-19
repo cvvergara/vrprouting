@@ -100,9 +100,9 @@ do_vrp_vroom(
     char ** log_msg,
     char ** notice_msg,
     char ** err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_free;
-  using vrprouting::pgr_alloc;
+  using vrprouting::msg;
+  using vrprouting::free;
+  using vrprouting::alloc;
 
   std::ostringstream log;
   std::ostringstream err;
@@ -156,7 +156,7 @@ do_vrp_vroom(
       (*return_count) = 0;
       err << "The speed_factor " << max_speed_factor << " is more than five times "
              "the speed factor " << min_speed_factor;
-      *err_msg = pgr_msg(err.str());
+      *err_msg = msg(err.str());
       return;
     }
 
@@ -180,7 +180,7 @@ do_vrp_vroom(
       (*return_tuples) = NULL;
       (*return_count) = 0;
       err << "An Infinity value was found on the Matrix. Might be missing information of a node";
-      *err_msg = pgr_msg(err.str());
+      *err_msg = msg(err.str());
       return;
     }
 
@@ -191,7 +191,7 @@ do_vrp_vroom(
       (*return_tuples) = NULL;
       (*return_count) = 0;
       err << "The size of time matrix exceeds the limit";
-      *err_msg = pgr_msg(err.str());
+      *err_msg = msg(err.str());
       return;
     }
 
@@ -219,11 +219,11 @@ do_vrp_vroom(
       notice << "No results found";
       *notice_msg = notice.str().empty()?
         *notice_msg :
-        pgr_msg(notice.str().c_str());
+        msg(notice.str().c_str());
       return;
     }
 
-    (*return_tuples) = pgr_alloc(count, (*return_tuples));
+    (*return_tuples) = alloc(count, (*return_tuples));
     for (size_t i = 0; i < count; i++) {
       *((*return_tuples) + i) = results[i];
     }
@@ -233,33 +233,33 @@ do_vrp_vroom(
     pgassert(*err_msg == NULL);
     *log_msg = log.str().empty()?
       *log_msg :
-      pgr_msg(log.str().c_str());
+      msg(log.str().c_str());
     *notice_msg = notice.str().empty()?
       *notice_msg :
-      pgr_msg(notice.str().c_str());
+      msg(notice.str().c_str());
   } catch (AssertFailedException &except) {
-    (*return_tuples) = pgr_free(*return_tuples);
+    (*return_tuples) = free(*return_tuples);
     (*return_count) = 0;
     err << except.what();
-    *err_msg = pgr_msg(err.str().c_str());
-    *log_msg = pgr_msg(log.str().c_str());
+    *err_msg = msg(err.str().c_str());
+    *log_msg = msg(log.str().c_str());
   } catch (const vroom::Exception &except) {
-    (*return_tuples) = pgr_free(*return_tuples);
+    (*return_tuples) = free(*return_tuples);
     (*return_count) = 0;
     err << except.message;
-    *err_msg = pgr_msg(err.str().c_str());
-    *log_msg = pgr_msg(log.str().c_str());
+    *err_msg = msg(err.str().c_str());
+    *log_msg = msg(log.str().c_str());
   } catch (std::exception &except) {
-    (*return_tuples) = pgr_free(*return_tuples);
+    (*return_tuples) = free(*return_tuples);
     (*return_count) = 0;
     err << except.what();
-    *err_msg = pgr_msg(err.str().c_str());
-    *log_msg = pgr_msg(log.str().c_str());
+    *err_msg = msg(err.str().c_str());
+    *log_msg = msg(log.str().c_str());
   } catch(...) {
-    (*return_tuples) = pgr_free(*return_tuples);
+    (*return_tuples) = free(*return_tuples);
     (*return_count) = 0;
     err << "Caught unknown exception!";
-    *err_msg = pgr_msg(err.str().c_str());
-    *log_msg = pgr_msg(log.str().c_str());
+    *err_msg = msg(err.str().c_str());
+    *log_msg = msg(log.str().c_str());
   }
 }

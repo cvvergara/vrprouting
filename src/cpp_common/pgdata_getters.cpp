@@ -64,8 +64,8 @@ vrp_get_matrixRows(
     size_t *total_rows,
     bool use_timestamps,
     char **err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_free;
+  using vrprouting::msg;
+  using vrprouting::free;
   using vrprouting::Column_info_t;
   try {
     std::vector<Column_info_t> info{3};
@@ -78,13 +78,13 @@ vrp_get_matrixRows(
 
     vrprouting::get_data(sql, rows, total_rows, true, info, &vrprouting::fetch_matrix_plain);
   } catch (const std::string &ex) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg(ex.c_str());
+    *err_msg = msg(ex.c_str());
   } catch(...) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg("Caught unknown exception!");
+    *err_msg = msg("Caught unknown exception!");
   }
 }
 
@@ -102,8 +102,8 @@ vrp_get_vroom_matrix(
     size_t *total_rows,
     bool use_timestamps,
     char **err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_free;
+  using vrprouting::msg;
+  using vrprouting::free;
   using vrprouting::Column_info_t;
   try {
     std::vector<Column_info_t> info{4};
@@ -115,13 +115,13 @@ vrp_get_vroom_matrix(
 
   vrprouting::get_data(sql, rows, total_rows, use_timestamps, info, &vrprouting::fetch_matrix_vroom);
   } catch (const std::string &ex) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg(ex.c_str());
+    *err_msg = msg(ex.c_str());
   } catch(...) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg("Caught unknown exception!");
+    *err_msg = msg("Caught unknown exception!");
   }
 }
 
@@ -139,8 +139,8 @@ vrp_get_vroom_breaks(
     size_t *total_rows,
     bool use_timestamps,
     char **err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_free;
+  using vrprouting::msg;
+  using vrprouting::free;
   using vrprouting::Column_info_t;
   try {
     std::vector<Column_info_t> info{4};
@@ -152,13 +152,13 @@ vrp_get_vroom_breaks(
 
   vrprouting::get_data(sql, rows, total_rows, use_timestamps, info, &vrprouting::fetch_breaks);
   } catch (const std::string &ex) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg(ex.c_str());
+    *err_msg = msg(ex.c_str());
   } catch(...) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg("Caught unknown exception!");
+    *err_msg = msg("Caught unknown exception!");
   }
 }
 
@@ -177,8 +177,8 @@ vrp_get_vroom_jobs(
     size_t *total_rows,
     bool use_timestamps,
     char **err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_free;
+  using vrprouting::msg;
+  using vrprouting::free;
   using vrprouting::Column_info_t;
   try {
     std::vector<Column_info_t> info{9};
@@ -195,13 +195,13 @@ vrp_get_vroom_jobs(
 
   vrprouting::get_data(sql, rows, total_rows, use_timestamps, info, &vrprouting::fetch_jobs);
   } catch (const std::string &ex) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg(ex.c_str());
+    *err_msg = msg(ex.c_str());
   } catch(...) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg("Caught unknown exception!");
+    *err_msg = msg("Caught unknown exception!");
   }
 }
 
@@ -222,8 +222,8 @@ vrp_get_orders(
     bool is_euclidean,
     bool use_timestamps,
     char **err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_free;
+  using vrprouting::msg;
+  using vrprouting::free;
   using vrprouting::Column_info_t;
   try {
       std::vector<Column_info_t> info{14};
@@ -256,13 +256,13 @@ vrp_get_orders(
 
     vrprouting::get_data(sql, rows, total_rows, is_euclidean, info, &vrprouting::fetch_orders);
   } catch (const std::string &ex) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg(ex.c_str());
+    *err_msg = msg(ex.c_str());
   } catch(...) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg("Caught unknown exception!");
+    *err_msg = msg("Caught unknown exception!");
   }
 }
 
@@ -280,8 +280,8 @@ vrp_get_vroom_shipments(
     size_t *total_rows,
     bool use_timestamps,
     char **err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_free;
+  using vrprouting::msg;
+  using vrprouting::free;
   using vrprouting::Column_info_t;
   try {
     std::vector<Column_info_t> info{12};
@@ -301,13 +301,13 @@ vrp_get_vroom_shipments(
 
     vrprouting::get_data(sql, rows, total_rows, use_timestamps, info, &vrprouting::fetch_vroom_shipments);
   } catch (const std::string &ex) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg(ex.c_str());
+    *err_msg = msg(ex.c_str());
   } catch(...) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg("Caught unknown exception!");
+    *err_msg = msg("Caught unknown exception!");
   }
 }
 
@@ -325,8 +325,8 @@ void vrp_get_timeMultipliers(
     size_t *total_rows,
     bool use_timestamps,
     char **err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_free;
+  using vrprouting::msg;
+  using vrprouting::free;
   using vrprouting::Column_info_t;
   try {
     std::vector<Column_info_t> info{2};
@@ -337,13 +337,13 @@ void vrp_get_timeMultipliers(
     info[1] = {-1, 0, true, "multiplier", vrprouting::ANY_NUMERICAL};
     vrprouting::get_data(sql, rows, total_rows, true, info, &vrprouting::fetch_multipliers);
   } catch (const std::string &ex) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg(ex.c_str());
+    *err_msg = msg(ex.c_str());
   } catch(...) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg("Caught unknown exception!");
+    *err_msg = msg("Caught unknown exception!");
   }
 }
 
@@ -362,8 +362,8 @@ vrp_get_vroom_time_windows(
     size_t *total_rows,
     bool use_timestamps,
     char **err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_free;
+  using vrprouting::msg;
+  using vrprouting::free;
   using vrprouting::Column_info_t;
   try {
     std::vector<Column_info_t> info{4};
@@ -375,13 +375,13 @@ vrp_get_vroom_time_windows(
 
     vrprouting::get_data(sql, rows, total_rows, use_timestamps, info, &vrprouting::fetch_tw);
   } catch (const std::string &ex) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg(ex.c_str());
+    *err_msg = msg(ex.c_str());
   } catch(...) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg("Caught unknown exception!");
+    *err_msg = msg("Caught unknown exception!");
   }
 }
 
@@ -399,8 +399,8 @@ vrp_get_vroom_shipments_time_windows(
     size_t *total_rows,
     bool use_timestamps,
     char **err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_free;
+  using vrprouting::msg;
+  using vrprouting::free;
   using vrprouting::Column_info_t;
   try {
     std::vector<Column_info_t> info{4};
@@ -412,13 +412,13 @@ vrp_get_vroom_shipments_time_windows(
 
   vrprouting::get_data(sql, rows, total_rows, use_timestamps, info, &vrprouting::fetch_tw);
   } catch (const std::string &ex) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg(ex.c_str());
+    *err_msg = msg(ex.c_str());
   } catch(...) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg("Caught unknown exception!");
+    *err_msg = msg("Caught unknown exception!");
   }
 }
 
@@ -443,8 +443,8 @@ vrp_get_vehicles(
     bool is_euclidean,
     bool use_timestamps,
     char **err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_free;
+  using vrprouting::msg;
+  using vrprouting::free;
   using vrprouting::Column_info_t;
   try {
     std::vector<Column_info_t> info{17};
@@ -482,13 +482,13 @@ vrp_get_vehicles(
 
     vrprouting::get_data(sql, rows, total_rows, is_euclidean, info, &vrprouting::fetch_vehicles);
   } catch (const std::string &ex) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg(ex.c_str());
+    *err_msg = msg(ex.c_str());
   } catch(...) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg("Caught unknown exception!");
+    *err_msg = msg("Caught unknown exception!");
   }
 }
 
@@ -507,8 +507,8 @@ vrp_get_vroom_vehicles(
     size_t *total_rows,
     bool use_timestamps,
     char **err_msg) {
-  using vrprouting::pgr_msg;
-  using vrprouting::pgr_free;
+  using vrprouting::msg;
+  using vrprouting::free;
   using vrprouting::Column_info_t;
   try {
     std::vector<Column_info_t> info{10};
@@ -526,13 +526,13 @@ vrp_get_vroom_vehicles(
 
   vrprouting::get_data(sql, rows, total_rows, use_timestamps, info, &vrprouting::fetch_vroom_vehicles);
   } catch (const std::string &ex) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg(ex.c_str());
+    *err_msg = msg(ex.c_str());
   } catch(...) {
-    (*rows) = pgr_free(*rows);
+    (*rows) = free(*rows);
     (*total_rows) = 0;
-    *err_msg = pgr_msg("Caught unknown exception!");
+    *err_msg = msg("Caught unknown exception!");
   }
 }
 

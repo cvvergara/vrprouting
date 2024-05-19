@@ -31,10 +31,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 namespace vrprouting {
 
-char *
-pgr_msg(const std::string &msg) {
+char * msg(const std::string &msg) {
     char* duplicate = nullptr;
-    duplicate = pgr_alloc(msg.size() + 1, duplicate);
+    duplicate = alloc(msg.size() + 1, duplicate);
     memcpy(duplicate, msg.c_str(), msg.size());
     duplicate[msg.size()] = '\0';
     return duplicate;
