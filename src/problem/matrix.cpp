@@ -196,6 +196,16 @@ Matrix::Matrix(
  * constructor for euclidean default multipliers
  */
 Matrix::Matrix(
+        const std::vector<Matrix_cell_t>& costs,
+        const Identifiers<Id>& node_ids,
+        Multiplier multiplier) :
+    Base_Matrix(costs, node_ids, multiplier),
+    m_multipliers{{0, 1}} { }
+
+/*
+ * constructor for euclidean default multipliers
+ */
+Matrix::Matrix(
         const std::map<std::pair<Coordinate, Coordinate>, Id> &euclidean_data,
         Multiplier multiplier) :
     Base_Matrix(euclidean_data, multiplier),

@@ -173,7 +173,7 @@ process(
     do_pgr_pickDeliver(
             pd_orders_arr, total_pd_orders,
             vehicles_arr, total_vehicles,
-            matrix_cells_arr, total_cells,
+            matrix_sql,
 
             factor,
             max_cycles,

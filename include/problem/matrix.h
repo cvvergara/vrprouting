@@ -55,6 +55,7 @@ class Matrix : public base::Base_Matrix {
 
     /** brief constructor for matrix version default multipliers */
     Matrix(Matrix_cell_t *, size_t, const Identifiers<Id>&, Multiplier = 1.0);
+    Matrix(const std::vector<Matrix_cell_t>&, const Identifiers<Id>&, Multiplier = 1.0);
 
     /** brief constructor for euclidean version default multipliers */
     explicit Matrix(const std::map<std::pair<Coordinate, Coordinate>, Id>&, Multiplier = 1.0);

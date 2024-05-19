@@ -233,6 +233,60 @@ Base_Matrix::get_original_id(Idx index) const {
  *
  */
 Base_Matrix::Base_Matrix(
+    const std::vector<Matrix_cell_t> &data_costs,
+    const Identifiers<Id>& node_ids,
+    Multiplier multiplier) {
+  /*
+   * Sets the selected nodes identifiers
+   */
+  m_ids.insert(m_ids.begin(), node_ids.begin(), node_ids.end());
+
+  /*
+   * Create matrix
+   */
+  m_time_matrix.resize(
+      m_ids.size(),
+      std::vector<TInterval>(
+        m_ids.size(),
+        /*
+         * Set initial values to infinity
+         */
+        (std::numeric_limits<TInterval>::max)()));
+
+  Identifiers<Idx> inserted;
+  /*
+   * Cycle the matrix data
+   */
+  for (const auto &data : data_costs) {
+    /*
+     * skip if row is not from selected nodes
+     */
+    if (!(has_id(data.from_vid) && has_id(data.to_vid))) continue;
+
+    /*
+     * Save the information
+     */
+    m_time_matrix[get_index(data.from_vid)][get_index(data.to_vid)] =
+      static_cast<TInterval>(static_cast<Multiplier>(data.cost) * multiplier);
+
+    /*
+     * If the opposite direction is infinity insert the same cost
+     */
+    if (m_time_matrix[get_index(data.to_vid)][get_index(data.from_vid)] == (std::numeric_limits<TInterval>::max)()) {
+      m_time_matrix[get_index(data.to_vid)][get_index(data.from_vid)] =
+        m_time_matrix[get_index(data.from_vid)][get_index(data.to_vid)];
+    }
+  }
+
+  /*
+   * Set the diagonal values to 0
+   */
+  for (size_t i = 0; i < m_time_matrix.size(); ++i) {
+    m_time_matrix[i][i] = 0;
+  }
+}
+
+Base_Matrix::Base_Matrix(
     Matrix_cell_t *data_costs, size_t size_matrix,
     const Identifiers<Id>& node_ids,
     Multiplier multiplier) {

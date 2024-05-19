@@ -37,8 +37,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "c_types/order_types.h"
 #include "c_types/return_types.h"
+#include "c_types/matrix_types.h"
 #include "cpp_common/alloc.hpp"
 #include "cpp_common/pgr_assert.h"
+#include "cpp_common/pgdata_getters.hpp"
 #include "problem/solution.h"
 #include "initialsol/simple.h"
 #include "optimizers/simple.h"
@@ -79,8 +81,7 @@ do_pgr_pickDeliver(
     Vehicle_t *vehicles_arr,
     size_t total_vehicles,
 
-    Matrix_cell_t *matrix_cells_arr,
-    size_t total_cells,
+    char* matrix_sql,
 
         double factor,
         int max_cycles,
@@ -94,10 +95,14 @@ do_pgr_pickDeliver(
         char **err_msg) {
     using vrprouting::msg;
     using vrprouting::alloc;
+    using vrprouting::pgget::get_matrix;
 
     std::ostringstream log;
     std::ostringstream notice;
     std::ostringstream err;
+
+    char* hint = nullptr;
+
     try {
         pgassert(!(*log_msg));
         pgassert(!(*notice_msg));
@@ -136,11 +141,17 @@ do_pgr_pickDeliver(
         std::vector<Vehicle_t> vehicles(
                 vehicles_arr, vehicles_arr + total_vehicles);
 
-        vrprouting::problem::Matrix time_matrix(
-                matrix_cells_arr,
-                total_cells,
-                node_ids,
-                static_cast<Multiplier>(factor));
+        hint = matrix_sql;
+        auto costs = get_matrix(std::string(matrix_sql), false);
+
+        if (costs.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+        hint = nullptr;
+
+        vrprouting::problem::Matrix time_matrix(costs, node_ids, static_cast<Multiplier>(factor));
 
 #if 0
         auto depot_node = vehicles[0].start_node_id;

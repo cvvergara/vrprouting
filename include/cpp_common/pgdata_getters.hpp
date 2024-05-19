@@ -54,7 +54,7 @@ std::vector<int64_t> get_intArray(ArrayType*, bool);
 std::set<int64_t> get_intSet(ArrayType*);
 
 /** @brief Get the travel time matrix */
-std::vector<Matrix_cell_t> vrp_get_matrixRows(const std::string&, bool);
+std::vector<Matrix_cell_t> get_matrix(const std::string&, bool);
 
 /** @brief Reads the VROOM matrix */
 std::vector<Vroom_matrix_t> vrp_get_vroom_matrix(const std::string&, bool);
