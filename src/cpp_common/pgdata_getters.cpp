@@ -37,7 +37,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "cpp_common/get_data.hpp"
 #include "c_common/postgres_connection.h"
-#include "c_common/pgr_alloc.hpp"
+#include "cpp_common/alloc.hpp"
 #include "cpp_common/get_check_data.hpp"
 #include "cpp_common/pgdata_fetchers.hpp"
 

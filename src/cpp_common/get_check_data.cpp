@@ -46,7 +46,7 @@ extern "C" {
 
 #include "c_common/arrays_input.h"
 #include "c_common/timeconversion.h"
-#include "c_common/pgr_alloc.hpp"
+#include "cpp_common/alloc.hpp"
 
 #include "c_types/info_t.hpp"
 #include "c_types/vroom_types.h"
