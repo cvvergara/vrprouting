@@ -185,11 +185,13 @@ do_pgr_pickDeliver(
         }
 #endif
 
+#if 0
         if (!time_matrix.has_no_infinity()) {
             err << "An Infinity value was found on the Matrix. Might be missing information of a node";
             *err_msg = msg(err.str().c_str());
             return;
         }
+#endif
 
         // TODO(vicky) wrap with a try and make a throw???
         // tried it is already wrapped
@@ -281,7 +283,7 @@ do_pgr_pickDeliver(
         *log_msg = msg(log.str().c_str());
     } catch (const std::string &ex) {
         *err_msg = msg(ex.c_str());
-        *log_msg = hint? msg(hint) : msg(log.str().c_str()); 
+        *log_msg = hint? msg(hint) : msg(log.str().c_str());
     } catch(...) {
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;

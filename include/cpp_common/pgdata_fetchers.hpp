@@ -94,7 +94,7 @@ void fetch_vroom_vehicles(
 
 namespace pgget {
 
-Matrix_cell_t fetch_matrix_plain(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
+Matrix_cell_t fetch_matrix(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
 PickDeliveryOrders_t fetch_orders(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 

@@ -50,6 +50,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_types/info_t.hpp"
 #include "c_types/order_types.h"
 #include "c_types/vehicle_types.h"
+#include "c_types/matrix_types.h"
 
 namespace vrprouting {
 namespace pgget {
@@ -74,6 +75,20 @@ std::set<int64_t> get_intSet(ArrayType *arr) {
     return vrprouting::get_pgset(arr);
 }
 #endif
+
+std::vector<Matrix_cell_t> get_matrix(
+    const std::string &sql,
+    bool use_timestamps) {
+  using vrprouting::Info;
+  std::vector<Info> info{
+    {-1, 0, true, "start_vid", vrprouting::ID},
+    {-1, 0, true, "end_vid", vrprouting::ID},
+    {-1, 0, true,
+      use_timestamps? "travel_time" : "agg_cost",
+      use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL}};
+
+    return pgget::get_data<Matrix_cell_t>(sql, use_timestamps, info, &fetch_matrix);
+}
 
 /**
   For queries comming from pgRouting

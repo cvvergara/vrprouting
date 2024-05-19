@@ -314,6 +314,17 @@ void fetch_vroom_vehicles(
 
 namespace pgget {
 
+Matrix_cell_t fetch_matrix(
+    const HeapTuple tuple, const TupleDesc &tupdesc,
+    const std::vector<Column_info_t> &info,
+    bool) {
+  Matrix_cell_t row;
+  row.from_vid = get_value<Id>(tuple, tupdesc,  info[0], -1);
+  row.to_vid = get_value<Id>(tuple, tupdesc,  info[1], -1);
+  row.cost = get_value<TInterval>(tuple, tupdesc, info[2], 0);
+  return row;
+}
+
 PickDeliveryOrders_t fetch_orders(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
