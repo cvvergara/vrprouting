@@ -43,6 +43,7 @@ extern "C" {
 
 #include "c_types/typedefs.h"
 using Column_info_t = struct Column_info_t;
+using Info = struct Column_info_t;
 
 namespace vrprouting {
 
@@ -93,27 +94,27 @@ void fetch_vroom_vehicles(
 
 namespace pgget {
 
-Matrix_cell_t fetch_matrix_plain(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+Matrix_cell_t fetch_matrix_plain(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
-PickDeliveryOrders_t fetch_orders(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+PickDeliveryOrders_t fetch_orders(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
-Vroom_shipment_t fetch_vroom_shipments(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+Vroom_shipment_t fetch_vroom_shipments(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
-Time_multipliers_t fetch_multipliers(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+Time_multipliers_t fetch_multipliers(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
-Vroom_time_window_t fetch_tw(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+Vroom_time_window_t fetch_tw(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
-Vehicle_t fetch_vehicles_euclidean(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+Vehicle_t fetch_vehicles_euclidean(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
-Vehicle_t fetch_vehicles(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+Vehicle_t fetch_vehicles(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
-Vroom_break_t fetch_breaks(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+Vroom_break_t fetch_breaks(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
-Vroom_job_t fetch_jobs(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+Vroom_job_t fetch_jobs(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
-Vroom_matrix_t fetch_matrix_vroom(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+Vroom_matrix_t fetch_matrix_vroom(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
-Vroom_vehicle_t fetch_vroom_vehicles(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+Vroom_vehicle_t fetch_vroom_vehicles(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
 
 }  // namespace pgget

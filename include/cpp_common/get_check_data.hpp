@@ -45,6 +45,7 @@ extern "C" {
 
 namespace vrprouting {
 using Column_info_t = struct Column_info_t;
+using Info = struct Column_info_t;
 
 /** @brief  Function will check whether the colNumber represent any specific column or NULL (SPI_ERROR_NOATTRIBUTE).  */
 bool column_found(const Column_info_t&);

@@ -85,7 +85,7 @@ pgr_SPI_connect(void) {
 }
 
 SPIPlanPtr
-pgr_SPI_prepare(char* sql) {
+pgr_SPI_prepare(const char* sql) {
     SPIPlanPtr SPIplan;
     SPIplan = SPI_prepare(sql, 0, NULL);
     if (SPIplan  == NULL) {

@@ -41,12 +41,8 @@ extern "C" {
 
 #include "cpp_common/undefPostgresDefine.hpp"
 
-#include "cpp_common/info_t.hpp"
-#include "c_types/ii_t_rt.h"
-#include "cpp_common/coordinate_t.hpp"
-#include "c_types/iid_t_rt.h"
-#include "cpp_common/orders_t.hpp"
-#include "cpp_common/vehicle_t.hpp"
+#include "c_types/order_types.h"
+#include "c_types/vehicle_types.h"
 
 namespace vrprouting {
 namespace pgget {
@@ -57,7 +53,6 @@ std::vector<int64_t> get_intArray(ArrayType*, bool);
 /** @brief Reads a postgres array saving it as set */
 std::set<int64_t> get_intSet(ArrayType*);
 
-** Matrix **/
 /** @brief Get the travel time matrix */
 std::vector<Matrix_cell_t> vrp_get_matrixRows(const std::string&, bool);
 
@@ -74,7 +69,7 @@ std::vector<Time_multipliers_t> vrp_get_timeMultipliers(const std::string&, bool
 std::vector<Vehicle_t> vrp_get_vehicles(const std::string&, bool);
 
 /** @brief Reads the VROOM breaks */
-std::vector<Vroom_break_t> vrp_get_vroom_breaks(const std::string&, bool;
+std::vector<Vroom_break_t> vrp_get_vroom_breaks(const std::string&, bool);
 
 /** @brief Reads the VROOM jobs */
 std::vector<Vroom_job_t> vrp_get_vroom_jobs(const std::string&, bool);
