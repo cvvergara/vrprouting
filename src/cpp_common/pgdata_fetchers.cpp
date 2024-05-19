@@ -338,5 +338,40 @@ PickDeliveryOrders_t fetch_orders(
   return pd_order;
 }
 
+Vehicle_t fetch_vehicles(
+    const HeapTuple tuple, const TupleDesc &tupdesc,
+    const std::vector<Column_info_t> &info,
+    bool is_euclidean) {
+
+  Vehicle_t vehicle;
+
+  vehicle.id = get_value<Id>(tuple, tupdesc, info[0], -1);
+  vehicle.capacity = get_value<PAmount>(tuple, tupdesc, info[1], 0);
+  vehicle.cant_v =  get_value<PAmount>(tuple, tupdesc, info[2], 1);
+  vehicle.speed  =  get_anynumerical(tuple, tupdesc, info[3], 1);
+
+  /*
+   * start values
+   */
+  vehicle.start_node_id = is_euclidean? 0 : get_value<Id>(tuple, tupdesc, info[4], -1);
+  vehicle.start_x = is_euclidean? get_anynumerical(tuple, tupdesc, info[5], 0) : 0;
+  vehicle.start_y = is_euclidean? get_anynumerical(tuple, tupdesc, info[6], 0) : 0;
+  vehicle.start_open_t = get_value<TTimestamp>(tuple, tupdesc, info[7], 0);
+  vehicle.start_close_t = get_value<TTimestamp>(tuple, tupdesc, info[8], INT64_MAX);
+  vehicle.start_service_t = get_value<TInterval>(tuple, tupdesc, info[9], 0);
+
+  /*
+   * end values
+   */
+  vehicle.end_node_id   = is_euclidean? 0 : get_value<Id>(tuple, tupdesc, info[10], vehicle.start_node_id);
+  vehicle.end_x =   is_euclidean? get_anynumerical(tuple, tupdesc, info[11], vehicle.start_x) : 0;
+  vehicle.end_y =   is_euclidean? get_anynumerical(tuple, tupdesc, info[12], vehicle.start_y) : 0;
+  vehicle.end_open_t = get_value<TTimestamp>(tuple, tupdesc, info[13], vehicle.start_open_t);
+  vehicle.end_close_t = get_value<TTimestamp>(tuple, tupdesc, info[14], vehicle.start_close_t);
+  vehicle.end_service_t   = get_value<TInterval>(tuple, tupdesc, info[15], 0);
+
+  return vehicle;
+}
+
 }   // namespace pgget
 }   // namespace vrprouting

@@ -166,7 +166,7 @@ process(
 
     do_pgr_pickDeliver(
             pd_orders_sql,
-            vehicles_arr, total_vehicles,
+            vehicles_sql,
             matrix_cells_arr, total_cells,
 
             factor,

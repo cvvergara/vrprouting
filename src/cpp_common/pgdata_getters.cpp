@@ -115,7 +115,6 @@ std::vector<PickDeliveryOrders_t> get_orders(
 }
 
 
-#if 0
 /**
 
   For queries of the type:
@@ -130,40 +129,32 @@ std::vector<PickDeliveryOrders_t> get_orders(
   @param[in] with_id flag that idicates if id is to be used
   @returns vector of `Vehicle_t`
   */
-std::vector<Vehicle_old> get_vehicles(const std::string &sql, bool with_id) {
-    using vrprouting::Column_info_t;
-    std::vector<Column_info_t> info{
-    {-1, 0, true, "", std::vector<std::string>{"id"}, ANY_INTEGER},
-    {-1, 0, true, "", std::vector<std::string>{"capacity"}, ANY_NUMERICAL},
-    {-1, 0, true, "", std::vector<std::string>{"start_x","s_x"}, ANY_NUMERICAL},
-    {-1, 0, true, "", std::vector<std::string>{"start_y","s_y"}, ANY_NUMERICAL},
-    {-1, 0, false, "", std::vector<std::string>{"number"}, ANY_INTEGER},
+std::vector<Vehicle_t> get_vehicles(
+    const std::string &sql,
+    bool is_euclidean) {
+  using vrprouting::Info;
+  std::vector<Info> info{
+    {-1, 0, true, "id", vrprouting::ID},
+    {-1, 0, true, "capacity", vrprouting::PAMOUNT},
+    {-1, 0, false, "number", vrprouting::PAMOUNT},
+    {-1, 0, false, "speed", vrprouting::SPEED},
 
-    {-1, 0, false, "", std::vector<std::string>{"start_open", "s_open"}, ANY_NUMERICAL},
-    {-1, 0, false, "", std::vector<std::string>{"start_close", "s_close"}, ANY_NUMERICAL},
-    {-1, 0, false, "", std::vector<std::string>{"start_service", "s_service"}, ANY_NUMERICAL},
-    {-1, 0, false, "", std::vector<std::string>{"end_x", "e_x"}, ANY_NUMERICAL},
-    {-1, 0, false, "", std::vector<std::string>{"end_y", "e_y"}, ANY_NUMERICAL},
+    {-1, 0, !is_euclidean, "s_id", vrprouting::ID},
+    {-1, 0, is_euclidean, "s_x", vrprouting::COORDINATE},
+    {-1, 0, is_euclidean, "s_y", vrprouting::COORDINATE},
+    {-1, 0, false, "s_open", vrprouting::TTIMESTAMP},
+    {-1, 0, false, "s_close", vrprouting::TTIMESTAMP},
+    {-1, 0, false,"s_service", vrprouting::TINTERVAL},
 
-    {-1, 0, false, "", std::vector<std::string>{"end_open", "e_open"}, ANY_NUMERICAL},
-    {-1, 0, false, "", std::vector<std::string>{"end_close", "e_close"}, ANY_NUMERICAL},
-    {-1, 0, false, "", std::vector<std::string>{"end_service", "e_service"}, ANY_NUMERICAL},
-    {-1, 0, false, "", std::vector<std::string>{"speed"}, ANY_NUMERICAL},
-    /* nodes are going to be ignored*/
-    {-1, 0, false, "", std::vector<std::string>{"start_node_id","s_id"}, ANY_INTEGER},
-    {-1, 0, false, "", std::vector<std::string>{"end_node_id","e_id"}, ANY_INTEGER}};
+    {-1, 0, false, "e_id", vrprouting::ID},
+    {-1, 0, false, "e_x", vrprouting::COORDINATE},
+    {-1, 0, false, "e_y", vrprouting::COORDINATE},
+    {-1, 0, false, "e_open", vrprouting::TTIMESTAMP},
+    {-1, 0, false, "e_close", vrprouting::TTIMESTAMP},
+    {-1, 0, false, "e_service", vrprouting::TINTERVAL}};
 
-    if (with_id) {
-        /* (x,y) values are ignored*/
-        info[2].strict = false;
-        info[3].strict = false;
-        /* start nodes are compulsory*/
-        info[14].strict = true;
-    }
-
-    return get_data<Vehicle_old>(sql, with_id, info, &fetch_vehicle);
+    return get_data<Vehicle_t>(sql, !is_euclidean, info, &fetch_vehicles);
 }
-#endif
 
 }  // namespace pgget
 }  // namespace pgrouting

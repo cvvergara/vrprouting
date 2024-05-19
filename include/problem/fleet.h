@@ -65,6 +65,14 @@ class Fleet: protected std::vector<Vehicle_pickDeliver> {
         build_fleet(vehicles, size_vehicles, {}, p_orders, p_nodes, node_id);
       }
 
+    Fleet(
+        const std::vector<Vehicle_t> &vehicles,
+        const Orders& p_orders, std::vector<Vehicle_node>& p_nodes, size_t& node_id)
+      : m_used(),
+      m_unused() {
+        build_fleet(vehicles, {}, p_orders, p_nodes, node_id);
+      }
+
     /** @brief Create a fleet based on the Vehicles of the problem */
     Fleet(Vehicle_t* vehicles , size_t size_vehicles,
         const std::vector<Short_vehicle> &new_stops,
@@ -129,6 +137,11 @@ class Fleet: protected std::vector<Vehicle_pickDeliver> {
         std::vector<Vehicle_node>& p_nodes, size_t& node_id);
 
     /** @brief build the fleet */
+    void build_fleet(
+        std::vector<Vehicle_t>, const std::vector<Short_vehicle>&,
+        const Orders&,
+        std::vector<Vehicle_node>&, size_t&);
+
     void build_fleet(
         Vehicle_t*, size_t, const std::vector<Short_vehicle>&,
         const Orders&,

@@ -362,6 +362,83 @@ Fleet::set_compatibles(const Orders &orders) {
   @param[in,out] p_nodes
   @param[in,out] node_id
   */
+void Fleet::build_fleet(
+    std::vector<Vehicle_t> vehicles,
+    const std::vector<Short_vehicle>& new_stops,
+    const Orders& p_orders,
+    std::vector<Vehicle_node>& p_nodes,
+    size_t& node_id) {
+    /**
+     * Sort vehicles: ASC start_open_t, end_close_t, id
+     */
+    std::sort(vehicles.begin(), vehicles.end(),
+            [] (const Vehicle_t &lhs, const Vehicle_t &rhs) {
+                if (lhs.start_open_t == rhs.start_open_t) {
+                    if (lhs.end_close_t == rhs.end_close_t) {
+                        return lhs.id < rhs.id;
+                    } else {
+                        return lhs.end_close_t < rhs.end_close_t;
+                    }
+                } else {
+                    return lhs.start_open_t < rhs.start_open_t;
+                }
+            });
+
+    /**
+     * Add the vehicles
+     */
+    for (const auto &v : vehicles) {
+        add_vehicle(v, new_stops, p_orders, p_nodes, node_id);
+    }
+
+    /**
+     *  creating a phony vehicle with max capacity and max window
+     *  with the start & end points of the first vehicle given
+     */
+    Vehicle_t phony_v({
+            /*
+             * id, capacity
+             */
+            -1,
+            (std::numeric_limits<PAmount>::max)(),
+            vehicles[0].speed,
+            1,
+            nullptr,
+            0,
+
+            /*
+             * Start values
+             */
+            vehicles[0].start_node_id,
+            0,
+            (std::numeric_limits<TTimestamp>::max)(),
+            0,
+            vehicles[0].start_x,
+            vehicles[0].start_y,
+
+            /*
+             * End values
+             */
+            vehicles[0].end_node_id,
+            0,
+            (std::numeric_limits<TTimestamp>::max)(),
+            0,
+            vehicles[0].end_x,
+            vehicles[0].end_y,
+    });
+
+    /*
+     * Add the phony vehicle
+     */
+    add_vehicle(phony_v, new_stops, p_orders, p_nodes, node_id);
+
+    Identifiers<size_t> unused(this->size());
+    m_size = size();
+    m_unused = unused;
+    pgassert(m_unused.size() == size());
+    invariant();
+}
+
 void
 Fleet::build_fleet(
     Vehicle_t *vehicles, size_t size_vehicles,

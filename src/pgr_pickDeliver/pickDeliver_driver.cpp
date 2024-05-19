@@ -75,9 +75,7 @@ get_initial_solution(vrprouting::problem::PickDeliver* problem_ptr, int m_initia
 void
 do_pgr_pickDeliver(
         char* orders_sql,
-
-        Vehicle_t *vehicles_arr,
-        size_t total_vehicles,
+        char* vehicles_sql,
 
         Matrix_cell_t *matrix_cells_arr,
         size_t total_cells,
@@ -95,6 +93,7 @@ do_pgr_pickDeliver(
     using vrprouting::msg;
     using vrprouting::alloc;
     using vrprouting::pgget::get_orders;
+    using vrprouting::pgget::get_vehicles;
 
     std::ostringstream log;
     std::ostringstream notice;
@@ -105,8 +104,6 @@ do_pgr_pickDeliver(
         pgassert(!(*log_msg));
         pgassert(!(*notice_msg));
         pgassert(!(*err_msg));
-        pgassert(total_vehicles);
-        pgassert(total_vehicles);
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
         log << "do_pgr_pickDeliver\n";
@@ -120,12 +117,22 @@ do_pgr_pickDeliver(
 
 
         hint = orders_sql;
-        auto orders = get_orders(std::string(orders_sql), true);
+        auto orders = get_orders(std::string(orders_sql), false);
         if (orders.size() == 0) {
             *notice_msg = msg("Insufficient data found on inner query");
             *log_msg = hint? msg(hint) : nullptr;
             return;
         }
+
+
+        hint = vehicles_sql;
+        auto vehicles = get_vehicles(std::string(vehicles_sql), false);
+        if (vehicles.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+
         hint = nullptr;
 
         for (const auto& o : orders) {
@@ -134,19 +141,12 @@ do_pgr_pickDeliver(
             order_ids += o.id;
         }
 
-        for (size_t i = 0; i < total_vehicles; ++i) {
-            auto vehicle = vehicles_arr[i];
-            node_ids += vehicle.start_node_id;
-            node_ids += vehicle.end_node_id;
+        for (const auto& v : vehicles) {
+            node_ids += v.start_node_id;
+            node_ids += v.end_node_id;
         }
 
         log << node_ids;
-
-        /*
-         * transform to C++ containers
-         */
-        std::vector<Vehicle_t> vehicles(
-                vehicles_arr, vehicles_arr + total_vehicles);
 
         vrprouting::problem::Matrix time_matrix(
                 matrix_cells_arr,
@@ -194,10 +194,9 @@ do_pgr_pickDeliver(
         // TODO(vicky) wrap with a try and make a throw???
         // tried it is already wrapped
         log << "Initialize problem\n";
-        vrprouting::problem::PickDeliver pd_problem(
-                orders,
-                vehicles_arr, total_vehicles,
+        vrprouting::problem::PickDeliver pd_problem(orders, vehicles,
                 time_matrix);
+        log << "->Initialize problem\n";
 
         err << pd_problem.msg.get_error();
         if (!err.str().empty()) {
@@ -255,7 +254,7 @@ do_pgr_pickDeliver(
         *notice_msg = notice.str().empty()?
             nullptr :
             msg(notice.str().c_str());
-    } catch (AssertFailedException &except) {
+            } catch (AssertFailedException &except) {
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;
         err << except.what();
@@ -267,16 +266,23 @@ do_pgr_pickDeliver(
         err << except.what();
         *err_msg = msg(err.str().c_str());
         *log_msg = msg(log.str().c_str());
+    } catch (const std::string &ex) {
+        *err_msg = msg(ex.c_str());
+        *log_msg = hint? msg(hint) : msg(log.str().c_str());
     } catch (const std::pair<std::string, std::string>& ex) {
         (*return_count) = 0;
         err << ex.first;
+        log.str("");
+        log.clear();
         log << ex.second;
         *err_msg = msg(err.str().c_str());
         *log_msg = msg(log.str().c_str());
     } catch (const std::pair<std::string, int64_t>& ex) {
         (*return_count) = 0;
         err << ex.first;
-        log << "FOOOO missing on matrix: id =  " << ex.second;
+        log.str("");
+        log.clear();
+        log << "Node missing on matrix: id =  " << ex.second;
         *err_msg = msg(err.str().c_str());
         *log_msg = msg(log.str().c_str());
     } catch(...) {
