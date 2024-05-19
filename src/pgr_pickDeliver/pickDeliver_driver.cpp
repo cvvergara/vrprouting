@@ -37,7 +37,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "c_types/order_types.h"
 #include "c_types/return_types.h"
-#include "cpp_common/pgdata_getters.hpp"
 #include "cpp_common/alloc.hpp"
 #include "cpp_common/pgr_assert.h"
 #include "problem/solution.h"
@@ -74,13 +73,14 @@ get_initial_solution(vrprouting::problem::PickDeliver* problem_ptr, int m_initia
 
 void
 do_pgr_pickDeliver(
-        char* orders_sql,
+    struct PickDeliveryOrders_t customers_arr[],
+    size_t total_customers,
 
-        Vehicle_t *vehicles_arr,
-        size_t total_vehicles,
+    Vehicle_t *vehicles_arr,
+    size_t total_vehicles,
 
-        Matrix_cell_t *matrix_cells_arr,
-        size_t total_cells,
+    Matrix_cell_t *matrix_cells_arr,
+    size_t total_cells,
 
         double factor,
         int max_cycles,
@@ -94,18 +94,16 @@ do_pgr_pickDeliver(
         char **err_msg) {
     using vrprouting::msg;
     using vrprouting::alloc;
-    using vrprouting::pgget::get_orders;
-    using vrprouting::pgget::get_vehicles;
 
     std::ostringstream log;
     std::ostringstream notice;
     std::ostringstream err;
-    char *hint = nullptr;
-
     try {
         pgassert(!(*log_msg));
         pgassert(!(*notice_msg));
         pgassert(!(*err_msg));
+        pgassert(total_customers);
+        pgassert(total_vehicles);
         pgassert(total_vehicles);
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
@@ -118,20 +116,10 @@ do_pgr_pickDeliver(
         Identifiers<Id> node_ids;
         Identifiers<Id> order_ids;
 
-
-        hint = orders_sql;
-        auto orders = get_orders(std::string(orders_sql), false);
-        if (orders.size() == 0) {
-            *notice_msg = msg("Insufficient data found on inner query");
-            *log_msg = hint? msg(hint) : nullptr;
-            return;
-        }
-        hint = nullptr;
-
-        for (const auto& o : orders) {
-            node_ids += o.pick_node_id;
-            node_ids += o.deliver_node_id;
-            order_ids += o.id;
+        for (size_t i = 0; i < total_customers; ++i) {
+            node_ids += customers_arr[i].pick_node_id;
+            node_ids += customers_arr[i].deliver_node_id;
+            order_ids += customers_arr[i].id;
         }
 
         for (size_t i = 0; i < total_vehicles; ++i) {
@@ -185,19 +173,17 @@ do_pgr_pickDeliver(
         }
 #endif
 
-#if 0
         if (!time_matrix.has_no_infinity()) {
             err << "An Infinity value was found on the Matrix. Might be missing information of a node";
             *err_msg = msg(err.str().c_str());
             return;
         }
-#endif
 
         // TODO(vicky) wrap with a try and make a throw???
         // tried it is already wrapped
         log << "Initialize problem\n";
         vrprouting::problem::PickDeliver pd_problem(
-                orders,
+                customers_arr, total_customers,
                 vehicles_arr, total_vehicles,
                 time_matrix);
 
@@ -281,9 +267,6 @@ do_pgr_pickDeliver(
         log << "FOOOO missing on matrix: id =  " << ex.second;
         *err_msg = msg(err.str().c_str());
         *log_msg = msg(log.str().c_str());
-    } catch (const std::string &ex) {
-        *err_msg = msg(ex.c_str());
-        *log_msg = hint? msg(hint) : msg(log.str().c_str());
     } catch(...) {
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;

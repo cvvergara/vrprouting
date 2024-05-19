@@ -161,11 +161,17 @@ process(
         return;
     }
 
+
+    PGR_DBG("Total %ld orders in query:", total_pd_orders);
+    PGR_DBG("Total %ld vehicles in query:", total_vehicles);
+    PGR_DBG("Total %ld matrix cells in query:", total_cells);
+
+
     PGR_DBG("Starting processing");
     clock_t start_t = clock();
 
     do_pgr_pickDeliver(
-            pd_orders_sql,
+            pd_orders_arr, total_pd_orders,
             vehicles_arr, total_vehicles,
             matrix_cells_arr, total_cells,
 

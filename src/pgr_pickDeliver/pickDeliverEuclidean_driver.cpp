@@ -137,7 +137,6 @@ do_pgr_pickDeliverEuclidean(
     char **err_msg) {
   using vrprouting::msg;
   using vrprouting::alloc;
-
   std::ostringstream log;
   std::ostringstream notice;
   std::ostringstream err;
