@@ -80,7 +80,10 @@ void get_data(
             }
 
             for (size_t t = 0; t < ntuples; t++) {
-              func(tuptable->vals[t], tupdesc, info,
+              func(
+                  tuptable->vals[t],
+                  tupdesc,
+                  info,
                   &(*pgtuples)[total_tuples - ntuples + t],
                   flag);
             }

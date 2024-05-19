@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: pgdata_fetchers.c
+File: pgdata_fetchers.hpp
 
 Copyright (c) 2015 pgRouting developers
 Mail: project@pgrouting.org
@@ -29,8 +29,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
-#ifndef INCLUDE_C_COMMON_PGDATA_FETCHERS_H_
-#define INCLUDE_C_COMMON_PGDATA_FETCHERS_H_
+#ifndef INCLUDE_CPP_COMMON_PGDATA_FETCHERS_HPP_
+#define INCLUDE_CPP_COMMON_PGDATA_FETCHERS_HPP_
 #pragma once
 
 /* for HeapTuple, TupleDesc */
@@ -91,6 +91,32 @@ void fetch_vroom_vehicles(
     const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
     Vroom_vehicle_t*, bool);
 
+namespace pgget {
+
+Matrix_cell_t fetch_matrix_plain(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+
+PickDeliveryOrders_t fetch_orders(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+
+Vroom_shipment_t fetch_vroom_shipments(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+
+Time_multipliers_t fetch_multipliers(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+
+Vroom_time_window_t fetch_tw(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+
+Vehicle_t fetch_vehicles_euclidean(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+
+Vehicle_t fetch_vehicles(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+
+Vroom_break_t fetch_breaks(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+
+Vroom_job_t fetch_jobs(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+
+Vroom_matrix_t fetch_matrix_vroom(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+
+Vroom_vehicle_t fetch_vroom_vehicles(const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&, bool);
+
+
+}  // namespace pgget
 }  // namespace vrprouting
 
 #endif  // INCLUDE_C_COMMON_PGDATA_FETCHERS_H_
