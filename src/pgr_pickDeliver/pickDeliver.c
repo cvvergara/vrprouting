@@ -165,7 +165,7 @@ process(
     clock_t start_t = clock();
 
     do_pgr_pickDeliver(
-            pd_orders_arr, total_pd_orders,
+            pd_orders_sql,
             vehicles_arr, total_vehicles,
             matrix_cells_arr, total_cells,
 

@@ -37,6 +37,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "c_types/order_types.h"
 #include "c_types/return_types.h"
+#include "cpp_common/pgdata_getters.hpp"
 #include "cpp_common/alloc.hpp"
 #include "cpp_common/pgr_assert.h"
 #include "problem/solution.h"
@@ -73,8 +74,7 @@ get_initial_solution(vrprouting::problem::PickDeliver* problem_ptr, int m_initia
 
 void
 do_pgr_pickDeliver(
-        struct PickDeliveryOrders_t customers_arr[],
-        size_t total_customers,
+        char* orders_sql,
 
         Vehicle_t *vehicles_arr,
         size_t total_vehicles,
@@ -92,17 +92,19 @@ do_pgr_pickDeliver(
         char **log_msg,
         char **notice_msg,
         char **err_msg) {
-  using vrprouting::msg;
-  using vrprouting::alloc;
+    using vrprouting::msg;
+    using vrprouting::alloc;
+    using vrprouting::pgget::get_orders;
 
     std::ostringstream log;
     std::ostringstream notice;
     std::ostringstream err;
+    char *hint = nullptr;
+
     try {
         pgassert(!(*log_msg));
         pgassert(!(*notice_msg));
         pgassert(!(*err_msg));
-        pgassert(total_customers);
         pgassert(total_vehicles);
         pgassert(total_vehicles);
         pgassert(*return_count == 0);
@@ -116,10 +118,20 @@ do_pgr_pickDeliver(
         Identifiers<Id> node_ids;
         Identifiers<Id> order_ids;
 
-        for (size_t i = 0; i < total_customers; ++i) {
-            node_ids += customers_arr[i].pick_node_id;
-            node_ids += customers_arr[i].deliver_node_id;
-            order_ids += customers_arr[i].id;
+
+        hint = orders_sql;
+        auto orders = get_orders(std::string(orders_sql), true);
+        if (orders.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+        hint = nullptr;
+
+        for (const auto& o : orders) {
+            node_ids += o.pick_node_id;
+            node_ids += o.deliver_node_id;
+            order_ids += o.id;
         }
 
         for (size_t i = 0; i < total_vehicles; ++i) {
@@ -183,7 +195,7 @@ do_pgr_pickDeliver(
         // tried it is already wrapped
         log << "Initialize problem\n";
         vrprouting::problem::PickDeliver pd_problem(
-                customers_arr, total_customers,
+                orders,
                 vehicles_arr, total_vehicles,
                 time_matrix);
 

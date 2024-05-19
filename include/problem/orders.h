@@ -57,6 +57,13 @@ class Orders : public std::vector<Order> {
         build_orders(p_orders, p_size_orders, problem_ptr);
       }
 
+    template <typename PTR> Orders(
+        const std::vector<PickDeliveryOrders_t> &p_orders,
+        const PTR problem_ptr) {
+      Tw_node::m_time_matrix_ptr = &problem_ptr->time_matrix();
+      build_orders(p_orders, problem_ptr);
+    }
+
     /** @brief find the best order -> @b this */
     size_t find_best_I(const Identifiers<size_t> &within_this_set) const;
 
@@ -82,6 +89,39 @@ class Orders : public std::vector<Order> {
  private:
     template <typename PTR>
       void build_orders(PickDeliveryOrders_t *, size_t, const PTR problem_ptr);
+
+    /**
+      @param [in] orders
+      @param [in] size_orders
+      @param [in] problem_ptr pointer to problem to get some needed information
+      */
+    template <typename PTR> void build_orders(
+        std::vector<PickDeliveryOrders_t> orders, const PTR problem_ptr) {
+        /**
+         * - Sort orders: ASC pick_open_t, deliver_close_t, id
+         */
+        std::sort(orders.begin(), orders.end(), [] (const PickDeliveryOrders_t &lhs, const PickDeliveryOrders_t &rhs) {
+            if (lhs.pick_open_t == rhs.pick_open_t) {
+              if (lhs.deliver_close_t == rhs.deliver_close_t) {
+                return lhs.id < rhs.id;
+              } else {
+                return lhs.deliver_close_t < rhs.deliver_close_t;
+              }
+            } else {
+              return lhs.pick_open_t < rhs.pick_open_t;
+            }
+            });
+
+        for (const auto &o : orders) {
+          Vehicle_node pick({problem_ptr->node_id()++, o, NodeType::kPickup});
+          Vehicle_node drop({problem_ptr->node_id()++, o, NodeType::kDelivery});
+
+          problem_ptr->add_node(pick);
+          problem_ptr->add_node(drop);
+
+          this->emplace_back(Order{size(), o.id, pick, drop});
+        }
+      }
 
     /** @brief add in an order */
     void add_order(const PickDeliveryOrders_t &order,

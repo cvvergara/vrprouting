@@ -96,16 +96,16 @@ std::vector<PickDeliveryOrders_t> get_orders(
   std::vector<Info> info{
     {-1, 0, true, "id", vrprouting::ID},
     {-1, 0, true, "amount", vrprouting::PAMOUNT},
+
     {-1, 0, !is_euclidean, "p_id", vrprouting::ID},
     {-1, 0, is_euclidean, "p_x", vrprouting::COORDINATE},
     {-1, 0, is_euclidean, "p_y", vrprouting::COORDINATE},
-
     {-1, 0, true, "p_open", vrprouting::TTIMESTAMP},
     {-1, 0, true, "p_close", vrprouting::TTIMESTAMP},
     {-1, 0, false,"p_service", vrprouting::TINTERVAL},
+
     {-1, 0, !is_euclidean, "d_id", vrprouting::ID},
     {-1, 0, is_euclidean, "d_x", vrprouting::COORDINATE},
-
     {-1, 0, is_euclidean, "d_y", vrprouting::COORDINATE},
     {-1, 0, true, "d_open", vrprouting::TTIMESTAMP},
     {-1, 0, true, "d_close", vrprouting::TTIMESTAMP},

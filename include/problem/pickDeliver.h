@@ -58,11 +58,24 @@ class PickDeliver {
       m_cost_matrix(p_cost_matrix),
       m_orders(p_orders, p_orders_size, this),
       m_trucks(p_vehicles, p_vehicles_size, m_orders, m_nodes, m_node_id) {
-    if (!msg.get_error().empty()) return;
-    m_trucks.clean();
-    m_orders.set_compatibles();
-    m_trucks.set_compatibles(m_orders);
-  }
+        if (!msg.get_error().empty()) return;
+        m_trucks.clean();
+        m_orders.set_compatibles();
+        m_trucks.set_compatibles(m_orders);
+      }
+
+    PickDeliver(
+        const std::vector<PickDeliveryOrders_t> &p_orders,
+        Vehicle_t* p_vehicles, size_t p_vehicles_size,
+        const Matrix &p_cost_matrix) :
+      m_cost_matrix(p_cost_matrix),
+      m_orders(p_orders, this),
+      m_trucks(p_vehicles, p_vehicles_size, m_orders, m_nodes, m_node_id) {
+        if (!msg.get_error().empty()) return;
+        m_trucks.clean();
+        m_orders.set_compatibles();
+        m_trucks.set_compatibles(m_orders);
+      }
 
     /** @brief Override stops constructor */
     PickDeliver(

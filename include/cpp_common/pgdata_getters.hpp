@@ -60,7 +60,7 @@ std::vector<Matrix_cell_t> vrp_get_matrixRows(const std::string&, bool);
 std::vector<Vroom_matrix_t> vrp_get_vroom_matrix(const std::string&, bool);
 
 /** @brief Reads the pick-Deliver shipments for timestams and intervals*/
-std::vector<PickDeliveryOrders_t> vrp_get_orders(const std::string&, bool);
+std::vector<PickDeliveryOrders_t> get_orders(const std::string&, bool);
 
 /** @brief Get the time multipliers using interval*/
 std::vector<Time_multipliers_t> vrp_get_timeMultipliers(const std::string&, bool);
