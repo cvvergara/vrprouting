@@ -28,7 +28,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "drivers/pgr_pickDeliver/pickDeliver_driver.h"
 
-#include <string.h>
 #include <sstream>
 #include <string>
 #include <deque>
@@ -109,9 +108,6 @@ do_pgr_pickDeliver(
         pgassert(!(*return_tuples));
         log << "do_pgr_pickDeliver\n";
 
-
-        *return_tuples = nullptr;
-        *return_count = 0;
 
         Identifiers<Id> node_ids;
         Identifiers<Id> order_ids;

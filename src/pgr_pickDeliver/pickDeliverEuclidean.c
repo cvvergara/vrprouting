@@ -118,8 +118,8 @@ process(
     PGR_DBG("Starting processing");
     clock_t start_t = clock();
     do_pgr_pickDeliverEuclidean(
-            pd_orders_arr, total_pd_orders,
-            vehicles_arr, total_vehicles,
+            pd_orders_sql,
+            vehicles_sql,
 
             factor,
             max_cycles,

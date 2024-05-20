@@ -45,15 +45,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 extern "C" {
 #endif
 
-  /*********************************************************
-    orders_sql TEXT,
-    max_vehicles INTEGER,
-    capacity FLOAT,
-    max_cycles INTEGER,
-   ********************************************************/
   void do_pgr_pickDeliverEuclidean(
-      PickDeliveryOrders_t *pd_orders_arr, size_t total_pd_orders,
-      Vehicle_t *vehicles_arr, size_t total_vehicles,
+      char*,
+      char*,
 
       double factor,
       int max_cycles,
