@@ -522,7 +522,9 @@ Base_Matrix::has_no_infinity() const {
        *
        * yes -> return false
        */
-      if (val == (std::numeric_limits<TInterval>::max)()) return false;
+      if (val == (std::numeric_limits<TInterval>::max)()) {
+        return false;
+      }
     }
   }
   /*

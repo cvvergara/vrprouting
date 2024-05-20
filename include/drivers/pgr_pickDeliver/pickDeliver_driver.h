@@ -51,7 +51,7 @@ extern "C" {
 
   void do_pgr_pickDeliver(
       char*,
-      Vehicle_t *vehicles_arr, size_t total_vehicles,
+      char*,
       char*,
 
       double factor,

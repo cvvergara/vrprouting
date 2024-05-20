@@ -76,10 +76,7 @@ get_initial_solution(vrprouting::problem::PickDeliver* problem_ptr, int m_initia
 void
 do_pgr_pickDeliver(
     char* orders_sql,
-
-    Vehicle_t *vehicles_arr,
-    size_t total_vehicles,
-
+    char* vehicles_sql,
     char* matrix_sql,
 
         double factor,
@@ -96,6 +93,7 @@ do_pgr_pickDeliver(
     using vrprouting::alloc;
     using vrprouting::pgget::get_matrix;
     using vrprouting::pgget::get_orders;
+    using vrprouting::pgget::get_vehicles;
 
     std::ostringstream log;
     std::ostringstream notice;
@@ -107,7 +105,6 @@ do_pgr_pickDeliver(
         pgassert(!(*log_msg));
         pgassert(!(*notice_msg));
         pgassert(!(*err_msg));
-        pgassert(total_vehicles);
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
         log << "do_pgr_pickDeliver\n";
@@ -127,6 +124,14 @@ do_pgr_pickDeliver(
             return;
         }
 
+        hint = vehicles_sql;
+        auto vehicles = get_vehicles(std::string(vehicles_sql), false);
+        if (vehicles.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+
         hint = matrix_sql;
         auto costs = get_matrix(std::string(matrix_sql), false);
 
@@ -141,23 +146,16 @@ do_pgr_pickDeliver(
             node_ids += o.pick_node_id;
             node_ids += o.deliver_node_id;
             order_ids += o.id;
-            log << o.id <<","<<o.pick_node_id<<","<<o.deliver_node_id;
+            log << "id" << o.id <<", pid"<<o.pick_node_id<<", did"<<o.deliver_node_id<<"\n";
         }
 
-        for (size_t i = 0; i < total_vehicles; ++i) {
-            auto vehicle = vehicles_arr[i];
-            node_ids += vehicle.start_node_id;
-            node_ids += vehicle.end_node_id;
+        for (const auto &v : vehicles) {
+            node_ids += v.start_node_id;
+            node_ids += v.end_node_id;
+            log << "id" << v.id <<", sid"<<v.start_node_id<<", eid"<<v.end_node_id<<"\n";
         }
 
-        log << node_ids;
-
-        /*
-         * transform to C++ containers
-         */
-        std::vector<Vehicle_t> vehicles(
-                vehicles_arr, vehicles_arr + total_vehicles);
-
+        log << "node_ids" << node_ids << "\n";
 
         vrprouting::problem::Matrix time_matrix(costs, node_ids, static_cast<Multiplier>(factor));
 
@@ -194,6 +192,7 @@ do_pgr_pickDeliver(
 
         if (!time_matrix.has_no_infinity()) {
             err << "An Infinity value was found on the Matrix. Might be missing information of a node";
+            log << time_matrix;
             *err_msg = msg(err.str().c_str());
             *log_msg = msg(log.str().c_str());
             return;
@@ -202,10 +201,7 @@ do_pgr_pickDeliver(
         // TODO(vicky) wrap with a try and make a throw???
         // tried it is already wrapped
         log << "Initialize problem\n";
-        vrprouting::problem::PickDeliver pd_problem(
-                orders,
-                vehicles_arr, total_vehicles,
-                time_matrix);
+        vrprouting::problem::PickDeliver pd_problem(orders, vehicles, time_matrix);
 
         err << pd_problem.msg.get_error();
         if (!err.str().empty()) {

@@ -168,7 +168,7 @@ std::vector<Vehicle_t> get_vehicles(
     {-1, 0, false, "e_close", vrprouting::TTIMESTAMP},
     {-1, 0, false, "e_service", vrprouting::TINTERVAL}};
 
-    return get_data<Vehicle_t>(sql, !is_euclidean, info, &fetch_vehicles);
+    return get_data<Vehicle_t>(sql, is_euclidean, info, &fetch_vehicles);
 }
 
 }  // namespace pgget
