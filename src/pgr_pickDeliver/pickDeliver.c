@@ -57,12 +57,6 @@ process(
     char *notice_msg = NULL;
     char *err_msg = NULL;
 
-#if 0
-    bool with_stops = false;
-    bool is_euclidean = false;
-    bool use_timestamps = false;
-#endif
-
     if (factor <= 0) {
         ereport(ERROR,
                 (errcode(ERRCODE_INTERNAL_ERROR),
@@ -95,86 +89,7 @@ process(
 
     pgr_SPI_connect();
 
-#if 0
-    PickDeliveryOrders_t *pd_orders_arr = NULL;
-    size_t total_pd_orders = 0;
-    vrp_get_orders(pd_orders_sql, &pd_orders_arr, &total_pd_orders, is_euclidean, use_timestamps, &err_msg);
-    throw_error(err_msg, pd_orders_sql);
-
-    if (total_pd_orders == 0) {
-        (*result_count) = 0;
-        (*result_tuples) = NULL;
-
-        /* freeing memory before return */
-        if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-
-        pgr_SPI_finish();
-        ereport(ERROR,
-                (errcode(ERRCODE_INTERNAL_ERROR),
-                 errmsg("No orders found")));
-        return;
-    }
-
-
-    Vehicle_t *vehicles_arr = NULL;
-    size_t total_vehicles = 0;
-    vrp_get_vehicles(vehicles_sql, &vehicles_arr, &total_vehicles, with_stops, is_euclidean, use_timestamps, &err_msg);
-    throw_error(err_msg, vehicles_sql);
-
-    if (total_vehicles == 0) {
-        (*result_count) = 0;
-        (*result_tuples) = NULL;
-
-        /* freeing memory before return */
-        if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-        if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
-
-        pgr_SPI_finish();
-        ereport(ERROR,
-                (errcode(ERRCODE_INTERNAL_ERROR),
-                 errmsg("No vehicles found")));
-        return;
-    }
-#endif
-
-#if 0
-    DBG_PickDeliveryOrders_t(pd_orders_arr, total_pd_orders, "orders");
-    DBG_Vehicle_t(vehicles_arr, total_vehicles, "vehicles");
-#endif
-
-#if 0
-    Matrix_cell_t *matrix_cells_arr = NULL;
-    size_t total_cells = 0;
-    vrp_get_matrixRows(matrix_sql, &matrix_cells_arr, &total_cells, false, &err_msg);
-    throw_error(err_msg, matrix_sql);
-
-    DBG_Matrix_cell_t(matrix_cells_arr, total_cells, "matrix cells");
-
-    if (total_cells == 0) {
-        (*result_count) = 0;
-        (*result_tuples) = NULL;
-
-        /* freeing memory before return */
-        if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-        if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
-        if (matrix_cells_arr) {pfree(matrix_cells_arr); matrix_cells_arr = NULL;}
-
-        ereport(WARNING,
-                (errcode(ERRCODE_INTERNAL_ERROR),
-                 errmsg("No matrix found")));
-        pgr_SPI_finish();
-        return;
-    }
-
-    PGR_DBG("Total %ld orders in query:", total_pd_orders);
-    PGR_DBG("Total %ld matrix cells in query:", total_cells);
-
-    PGR_DBG("Total %ld vehicles in query:", total_vehicles);
-#endif
-
-    PGR_DBG("Starting processing");
     clock_t start_t = clock();
-
     do_pgr_pickDeliver(
             pd_orders_sql,
             vehicles_sql,
@@ -204,17 +119,9 @@ process(
     if (log_msg) {pfree(log_msg); log_msg = NULL;}
     if (notice_msg) {pfree(notice_msg); notice_msg = NULL;}
     if (err_msg) {pfree(err_msg); err_msg = NULL;}
-#if 0
-    if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
-    if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-    if (matrix_cells_arr) {pfree(matrix_cells_arr); matrix_cells_arr = NULL;}
-#endif
     pgr_SPI_finish();
 }
 
-
-
-/******************************************************************************/
 
 
 PGDLLEXPORT Datum
@@ -222,24 +129,13 @@ _vrp_pgr_pickdeliver(PG_FUNCTION_ARGS) {
     FuncCallContext     *funcctx;
     TupleDesc            tuple_desc;
 
-    /**************************************************************************/
     Solution_rt *result_tuples = 0;
     size_t result_count = 0;
-    /**************************************************************************/
 
     if (SRF_IS_FIRSTCALL()) {
         MemoryContext   oldcontext;
         funcctx = SRF_FIRSTCALL_INIT();
         oldcontext = MemoryContextSwitchTo(funcctx->multi_call_memory_ctx);
-
-        /**********************************************************************
-           orders_sql TEXT,
-           vehicles_sql TEXT,
-           matrix_cell_sql TEXT,
-           factor FLOAT DEFAULT 1,
-           max_cycles  INTEGER DEFAULT 10,
-           initial_sol INTEGER DEFAULT 4,
-         **********************************************************************/
 
         process(
                 text_to_cstring(PG_GETARG_TEXT_P(0)),
@@ -250,8 +146,6 @@ _vrp_pgr_pickdeliver(PG_FUNCTION_ARGS) {
                 PG_GETARG_INT32(5),
                 &result_tuples,
                 &result_count);
-
-        /*********************************************************************/
 
         funcctx->max_calls = result_count;
         funcctx->user_fctx = result_tuples;
@@ -278,24 +172,6 @@ _vrp_pgr_pickdeliver(PG_FUNCTION_ARGS) {
         bool*       nulls;
         size_t      call_cntr = funcctx->call_cntr;
 
-        /*********************************************************************
-
-          OUT seq INTEGER,
-          OUT vehicle_number INTEGER,
-          OUT vehicle_id BIGINT,
-          OUT vehicle_seq INTEGER,
-          OUT order_id BIGINT,
-          OUT stop_type INT,
-          OUT cargo FLOAT,
-          OUT travel_time FLOAT,
-          OUT arrival_time FLOAT,
-          OUT wait_time FLOAT,
-          OUT service_time FLOAT,
-          OUT departure_time FLOAT
-
-         *********************************************************************/
-
-
         size_t numb = 13;
         values = palloc(numb * sizeof(Datum));
         nulls = palloc(numb * sizeof(bool));
@@ -319,8 +195,6 @@ _vrp_pgr_pickdeliver(PG_FUNCTION_ARGS) {
         values[10] = Int64GetDatum(result_tuples[call_cntr].waitDuration);
         values[11] = Int64GetDatum(result_tuples[call_cntr].serviceDuration);
         values[12] = Int64GetDatum(result_tuples[call_cntr].departureTime);
-
-        /*********************************************************************/
 
         tuple = heap_form_tuple(tuple_desc, values, nulls);
         result = HeapTupleGetDatum(tuple);
