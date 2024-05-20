@@ -334,7 +334,7 @@ PickDeliveryOrders_t fetch_orders(
   pd_order.demand = get_value<PAmount>(tuple, tupdesc, info[1], 0);
 
   pd_order.pick_node_id = is_euclidean? 0 : get_value<Id>(tuple, tupdesc, info[2], -1);
-  pd_order.pick_x = is_euclidean? get_anynumerical(tuple, tupdesc, info[2], 0) : 0;
+  pd_order.pick_x = is_euclidean? get_anynumerical(tuple, tupdesc, info[3], 0) : 0;
   pd_order.pick_y = is_euclidean? get_anynumerical(tuple, tupdesc, info[4], 0) : 0;
   pd_order.pick_open_t    = get_value<TTimestamp>(tuple, tupdesc, info[5], -1);
   pd_order.pick_close_t   = get_value<TTimestamp>(tuple, tupdesc, info[6], -1);

@@ -75,8 +75,7 @@ get_initial_solution(vrprouting::problem::PickDeliver* problem_ptr, int m_initia
 
 void
 do_pgr_pickDeliver(
-    struct PickDeliveryOrders_t customers_arr[],
-    size_t total_customers,
+    char* orders_sql,
 
     Vehicle_t *vehicles_arr,
     size_t total_vehicles,
@@ -96,6 +95,7 @@ do_pgr_pickDeliver(
     using vrprouting::msg;
     using vrprouting::alloc;
     using vrprouting::pgget::get_matrix;
+    using vrprouting::pgget::get_orders;
 
     std::ostringstream log;
     std::ostringstream notice;
@@ -107,8 +107,6 @@ do_pgr_pickDeliver(
         pgassert(!(*log_msg));
         pgassert(!(*notice_msg));
         pgassert(!(*err_msg));
-        pgassert(total_customers);
-        pgassert(total_vehicles);
         pgassert(total_vehicles);
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
@@ -121,10 +119,29 @@ do_pgr_pickDeliver(
         Identifiers<Id> node_ids;
         Identifiers<Id> order_ids;
 
-        for (size_t i = 0; i < total_customers; ++i) {
-            node_ids += customers_arr[i].pick_node_id;
-            node_ids += customers_arr[i].deliver_node_id;
-            order_ids += customers_arr[i].id;
+        hint = orders_sql;
+        auto orders = get_orders(std::string(orders_sql), false);
+        if (orders.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+
+        hint = matrix_sql;
+        auto costs = get_matrix(std::string(matrix_sql), false);
+
+        if (costs.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+        hint = nullptr;
+
+        for (const auto &o : orders) {
+            node_ids += o.pick_node_id;
+            node_ids += o.deliver_node_id;
+            order_ids += o.id;
+            log << o.id <<","<<o.pick_node_id<<","<<o.deliver_node_id;
         }
 
         for (size_t i = 0; i < total_vehicles; ++i) {
@@ -141,15 +158,6 @@ do_pgr_pickDeliver(
         std::vector<Vehicle_t> vehicles(
                 vehicles_arr, vehicles_arr + total_vehicles);
 
-        hint = matrix_sql;
-        auto costs = get_matrix(std::string(matrix_sql), false);
-
-        if (costs.size() == 0) {
-            *notice_msg = msg("Insufficient data found on inner query");
-            *log_msg = hint? msg(hint) : nullptr;
-            return;
-        }
-        hint = nullptr;
 
         vrprouting::problem::Matrix time_matrix(costs, node_ids, static_cast<Multiplier>(factor));
 
@@ -187,6 +195,7 @@ do_pgr_pickDeliver(
         if (!time_matrix.has_no_infinity()) {
             err << "An Infinity value was found on the Matrix. Might be missing information of a node";
             *err_msg = msg(err.str().c_str());
+            *log_msg = msg(log.str().c_str());
             return;
         }
 
@@ -194,7 +203,7 @@ do_pgr_pickDeliver(
         // tried it is already wrapped
         log << "Initialize problem\n";
         vrprouting::problem::PickDeliver pd_problem(
-                customers_arr, total_customers,
+                orders,
                 vehicles_arr, total_vehicles,
                 time_matrix);
 
@@ -266,6 +275,9 @@ do_pgr_pickDeliver(
         err << except.what();
         *err_msg = msg(err.str().c_str());
         *log_msg = msg(log.str().c_str());
+    } catch (const std::string &ex) {
+        *err_msg = msg(ex.c_str());
+        *log_msg = hint? msg(hint) : msg(log.str().c_str());
     } catch (const std::pair<std::string, std::string>& ex) {
         (*return_count) = 0;
         err << ex.first;

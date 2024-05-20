@@ -50,7 +50,7 @@ extern "C" {
 
 
   void do_pgr_pickDeliver(
-      PickDeliveryOrders_t *pd_orders_arr, size_t total_pd_orders,
+      char*,
       Vehicle_t *vehicles_arr, size_t total_vehicles,
       char*,
 

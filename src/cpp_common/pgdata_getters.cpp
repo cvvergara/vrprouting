@@ -126,7 +126,7 @@ std::vector<PickDeliveryOrders_t> get_orders(
     {-1, 0, true, "d_close", vrprouting::TTIMESTAMP},
     {-1, 0, false, "d_service", vrprouting::TINTERVAL}};
 
-    return pgget::get_data<PickDeliveryOrders_t>(sql, !is_euclidean, info, &fetch_orders);
+    return pgget::get_data<PickDeliveryOrders_t>(sql, is_euclidean, info, &fetch_orders);
 }
 
 
