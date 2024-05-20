@@ -56,9 +56,11 @@ process(
     char *notice_msg = NULL;
     char *err_msg = NULL;
 
+#if 0
     bool with_stops = false;
     bool is_euclidean = true;
     bool use_timestamps = false;
+#endif
 
     if (factor <= 0) {
         ereport(ERROR,
@@ -89,6 +91,7 @@ process(
 
     pgr_SPI_connect();
 
+#if 0
     PGR_DBG("Load orders");
     struct PickDeliveryOrders_t *pd_orders_arr = NULL;
     size_t total_pd_orders = 0;
@@ -114,8 +117,8 @@ process(
         return;
     }
     PGR_DBG("Total %ld orders in query:", total_pd_orders);
-
     PGR_DBG("Starting processing");
+#endif
     clock_t start_t = clock();
     do_pgr_pickDeliverEuclidean(
             pd_orders_sql,
@@ -144,9 +147,10 @@ process(
     if (log_msg) pfree(log_msg);
     if (notice_msg) pfree(notice_msg);
     if (err_msg) pfree(err_msg);
+#if 0
     if (pd_orders_arr) pfree(pd_orders_arr);
     if (vehicles_arr) pfree(vehicles_arr);
-
+#endif
     pgr_SPI_finish();
 }
 /*                                                                            */

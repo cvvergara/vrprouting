@@ -128,52 +128,52 @@ do_pgr_pickDeliverEuclidean(
         int max_cycles,
         int initial_solution_id,
 
-        Solution_rt **return_tuples,
-        size_t *return_count,
+    Solution_rt **return_tuples,
+    size_t *return_count,
 
-        char **log_msg,
-        char **notice_msg,
-        char **err_msg) {
-    using vrprouting::msg;
-    using vrprouting::alloc;
-    using vrprouting::pgget::get_orders;
-    using vrprouting::pgget::get_vehicles;
+    char **log_msg,
+    char **notice_msg,
+    char **err_msg) {
+  using vrprouting::msg;
+  using vrprouting::alloc;
+  using vrprouting::pgget::get_orders;
+  using vrprouting::pgget::get_vehicles;
 
-    std::ostringstream log;
-    std::ostringstream notice;
-    std::ostringstream err;
+  std::ostringstream log;
+  std::ostringstream notice;
+  std::ostringstream err;
 
-    char* hint = nullptr;
+  char* hint = nullptr;
 
-    try {
-        pgassert(!(*log_msg));
-        pgassert(!(*notice_msg));
-        pgassert(!(*err_msg));
-        pgassert(*return_count == 0);
-        pgassert(!(*return_tuples));
-        log << "do_pgr_pickDeliverEuclidean\n";
+  try {
+    pgassert(!(*log_msg));
+    pgassert(!(*notice_msg));
+    pgassert(!(*err_msg));
+    pgassert(*return_count == 0);
+    pgassert(!(*return_tuples));
+    log << "do_pgr_pickDeliverEuclidean\n";
 
-        Identifiers<Id> node_ids;
+    Identifiers<Id> node_ids;
 
-        std::string err_string;
-        std::string hint_string;
+    std::string err_string;
+    std::string hint_string;
 
-        hint = orders_sql;
-        auto orders = get_orders(std::string(orders_sql), true);
-        if (orders.size() == 0) {
-            *notice_msg = msg("Insufficient data found on inner query");
-            *log_msg = hint? msg(hint) : nullptr;
-            return;
-        }
+    hint = orders_sql;
+    auto orders = get_orders(std::string(orders_sql), true);
+    if (orders.size() == 0) {
+      *notice_msg = msg("Insufficient data found on inner query");
+      *log_msg = hint? msg(hint) : nullptr;
+      return;
+    }
 
-        hint = vehicles_sql;
-        auto vehicles = get_vehicles(std::string(vehicles_sql), true);
-        if (vehicles.size() == 0) {
-            *notice_msg = msg("Insufficient data found on inner query");
-            *log_msg = hint? msg(hint) : nullptr;
-            return;
-        }
-        hint = nullptr;
+    hint = vehicles_sql;
+    auto vehicles = get_vehicles(std::string(vehicles_sql), true);
+    if (vehicles.size() == 0) {
+      *notice_msg = msg("Insufficient data found on inner query");
+      *log_msg = hint? msg(hint) : nullptr;
+      return;
+    }
+    hint = nullptr;
 
     if (!are_shipments_ok(orders, &err_string, &hint_string)) {
       *err_msg = msg(err_string.c_str());
@@ -296,6 +296,9 @@ do_pgr_pickDeliverEuclidean(
     err << except.what();
     *err_msg = msg(err.str().c_str());
     *log_msg = msg(log.str().c_str());
+  } catch (const std::string &ex) {
+    *err_msg = msg(ex.c_str());
+    *log_msg = hint? msg(hint) : msg(log.str().c_str());
   } catch (const std::pair<std::string, std::string>& ex) {
     (*return_count) = 0;
     err << ex.first;
