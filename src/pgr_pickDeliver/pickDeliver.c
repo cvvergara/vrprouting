@@ -57,9 +57,11 @@ process(
     char *notice_msg = NULL;
     char *err_msg = NULL;
 
+#if 0
     bool with_stops = false;
     bool is_euclidean = false;
     bool use_timestamps = false;
+#endif
 
     if (factor <= 0) {
         ereport(ERROR,
@@ -112,7 +114,6 @@ process(
                  errmsg("No orders found")));
         return;
     }
-#endif
 
 
     Vehicle_t *vehicles_arr = NULL;
@@ -125,9 +126,7 @@ process(
         (*result_tuples) = NULL;
 
         /* freeing memory before return */
-#if 0
         if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-#endif
         if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
 
         pgr_SPI_finish();
@@ -136,6 +135,7 @@ process(
                  errmsg("No vehicles found")));
         return;
     }
+#endif
 
 #if 0
     DBG_PickDeliveryOrders_t(pd_orders_arr, total_pd_orders, "orders");
@@ -168,9 +168,9 @@ process(
 
     PGR_DBG("Total %ld orders in query:", total_pd_orders);
     PGR_DBG("Total %ld matrix cells in query:", total_cells);
-#endif
 
     PGR_DBG("Total %ld vehicles in query:", total_vehicles);
+#endif
 
     PGR_DBG("Starting processing");
     clock_t start_t = clock();
@@ -204,8 +204,8 @@ process(
     if (log_msg) {pfree(log_msg); log_msg = NULL;}
     if (notice_msg) {pfree(notice_msg); notice_msg = NULL;}
     if (err_msg) {pfree(err_msg); err_msg = NULL;}
-    if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
 #if 0
+    if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
     if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
     if (matrix_cells_arr) {pfree(matrix_cells_arr); matrix_cells_arr = NULL;}
 #endif
