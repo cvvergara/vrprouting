@@ -42,7 +42,7 @@ extern "C" {
   void do_pickDeliver(
       PickDeliveryOrders_t customers_arr[], size_t total_customers,
       Vehicle_t *vehicles_arr, size_t total_vehicles,
-      Matrix_cell_t *matrix_cells_arr, size_t total_cells,
+      char*,
       Time_multipliers_t *multipliers_arr, size_t total_multipliers,
 
       bool,
@@ -50,6 +50,7 @@ extern "C" {
       int max_cycles,
       bool stop_on_all_served,
       int64_t execution_date,
+      bool,
 
       Solution_rt **return_tuples,
       size_t *return_count,

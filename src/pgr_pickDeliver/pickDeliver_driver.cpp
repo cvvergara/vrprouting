@@ -74,9 +74,9 @@ get_initial_solution(vrprouting::problem::PickDeliver* problem_ptr, int m_initia
 
 void
 do_pgr_pickDeliver(
-    char* orders_sql,
-    char* vehicles_sql,
-    char* matrix_sql,
+        char* orders_sql,
+        char* vehicles_sql,
+        char* matrix_sql,
 
         double factor,
         int max_cycles,
@@ -203,6 +203,7 @@ do_pgr_pickDeliver(
 
         err << pd_problem.msg.get_error();
         if (!err.str().empty()) {
+            log << pd_problem.msg.get_error();
             log << pd_problem.msg.get_log();
             *log_msg = msg(log.str().c_str());
             *err_msg = msg(err.str().c_str());
@@ -212,10 +213,12 @@ do_pgr_pickDeliver(
         log << "Finish Reading data\n";
         pd_problem.msg.clear();
 
+        log << "Finish Initialize problem\n";
+
 #if 0
         try {
 #endif
-        using Initials_code = vrprouting::initialsol::simple::Initials_code;
+            using Initials_code = vrprouting::initialsol::simple::Initials_code;
             auto sol = get_initial_solution(&pd_problem, initial_solution_id);
             using Optimize = vrprouting::optimizers::simple::Optimize;
             sol = Optimize(sol, static_cast<size_t>(max_cycles), (Initials_code)initial_solution_id);
@@ -231,9 +234,12 @@ do_pgr_pickDeliver(
 #endif
 
         log << pd_problem.msg.get_log();
-        log << "Finish solve\n";
         pd_problem.msg.clear();
+        log << "Finish solve\n";
 
+        /*
+         * Prepare results
+         */
         auto solution = sol.get_postgres_result();
         log << pd_problem.msg.get_log();
         pd_problem.msg.clear();
@@ -250,7 +256,9 @@ do_pgr_pickDeliver(
         }
         (*return_count) = solution.size();
 
-        pgassert(*err_msg == NULL);
+        log << pd_problem.msg.get_log();
+
+        pgassert(*err_msg == nullptr);
         *log_msg = log.str().empty()?
             nullptr :
             msg(log.str().c_str());

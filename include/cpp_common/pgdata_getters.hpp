@@ -56,17 +56,18 @@ std::set<int64_t> get_intSet(ArrayType*);
 /** @brief Get the matrix */
 std::vector<Matrix_cell_t> get_matrix(const std::string&, bool);
 
-/** @brief Reads the VROOM matrix */
-std::vector<Vroom_matrix_t> vrp_get_vroom_matrix(const std::string&, bool);
-
 /** @brief Reads the pick-Deliver shipments for timestams and intervals*/
 std::vector<PickDeliveryOrders_t> get_orders(const std::string&, bool, bool);
 
-/** @brief Get the time multipliers using interval*/
-std::vector<Time_multipliers_t> vrp_get_timeMultipliers(const std::string&, bool);
-
 /** @brief Reads the vehicles information */
 std::vector<Vehicle_t> get_vehicles(const std::string&, bool, bool);
+
+/** @brief Get the time multipliers using interval*/
+std::vector<Time_multipliers_t> get_timeMultipliers(const std::string&, bool);
+
+/** @brief Reads the VROOM matrix */
+std::vector<Vroom_matrix_t> vrp_get_vroom_matrix(const std::string&, bool);
+
 
 /** @brief Reads the VROOM breaks */
 std::vector<Vroom_break_t> vrp_get_vroom_breaks(const std::string&, bool);

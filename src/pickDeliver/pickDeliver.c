@@ -186,7 +186,7 @@ process(
   do_pickDeliver(
       pd_orders_arr,    total_pd_orders,
       vehicles_arr,     total_vehicles,
-      matrix_cells_arr, total_cells,
+      matrix_sql,
       multipliers_arr,      total_multipliers_arr,
 
       optimize,
@@ -195,6 +195,7 @@ process(
       stop_on_all_served,
 
       execution_date,
+      use_timestamps,
 
       result_tuples,
       result_count,

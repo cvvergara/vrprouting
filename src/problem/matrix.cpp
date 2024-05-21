@@ -173,6 +173,17 @@ Matrix::Matrix(
     m_multipliers(set_tdm(multipliers, size_multipliers)) { }
 
 /*
+ * constructor
+ */
+Matrix::Matrix(
+        const std::vector<Matrix_cell_t> matrix,
+        Time_multipliers_t *multipliers, size_t size_multipliers,
+        const Identifiers<Id>& node_ids,
+        Multiplier multiplier) :
+    Base_Matrix(matrix, node_ids, multiplier),
+    m_multipliers(set_tdm(multipliers, size_multipliers)) { }
+
+/*
  * constructor for euclidean with time dependant multipliers
  */
 Matrix::Matrix(

@@ -98,15 +98,18 @@ Matrix_cell_t fetch_matrix(const HeapTuple, const TupleDesc&, const std::vector<
 
 PickDeliveryOrders_t fetch_orders(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
+Time_multipliers_t fetch_timeMultipliers(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
+
+Vehicle_t fetch_vehicles(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
+
+
 Vroom_shipment_t fetch_vroom_shipments(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
-Time_multipliers_t fetch_multipliers(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
 Vroom_time_window_t fetch_tw(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
 Vehicle_t fetch_vehicles_euclidean(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
-Vehicle_t fetch_vehicles(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
 Vroom_break_t fetch_breaks(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 

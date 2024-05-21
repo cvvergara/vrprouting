@@ -325,6 +325,16 @@ Matrix_cell_t fetch_matrix(
   return row;
 }
 
+Time_multipliers_t fetch_timeMultipliers(
+        const HeapTuple tuple, const TupleDesc &tupdesc,
+        const std::vector<Column_info_t> &info,
+        bool) {
+   Time_multipliers_t row;
+   row.start_time = get_value<TTimestamp>(tuple, tupdesc, info[0], 0);
+   row.multiplier = get_anynumerical(tuple, tupdesc,  info[1], 1);
+   return row;
+}
+
 PickDeliveryOrders_t fetch_orders(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
