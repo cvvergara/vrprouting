@@ -105,7 +105,8 @@ std::vector<Matrix_cell_t> get_matrix(
   */
 std::vector<PickDeliveryOrders_t> get_orders(
     const std::string &sql,
-    bool is_euclidean
+    bool is_euclidean,
+    bool use_timestamps
     ) {
   using vrprouting::Info;
   std::vector<Info> info{
@@ -115,16 +116,29 @@ std::vector<PickDeliveryOrders_t> get_orders(
     {-1, 0, !is_euclidean, "p_id", vrprouting::ID},
     {-1, 0, is_euclidean, "p_x", vrprouting::COORDINATE},
     {-1, 0, is_euclidean, "p_y", vrprouting::COORDINATE},
-    {-1, 0, true, "p_open", vrprouting::TTIMESTAMP},
-    {-1, 0, true, "p_close", vrprouting::TTIMESTAMP},
-    {-1, 0, false,"p_service", vrprouting::TINTERVAL},
+
+    {-1, 0, true,
+      use_timestamps? "p_tw_open" : "p_open",
+      use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+    {-1, 0, true,
+      use_timestamps? "p_tw_close" : "p_close",
+      use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+    {-1, 0, false,
+      use_timestamps? "p_t_service" : "p_service",
+      use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
 
     {-1, 0, !is_euclidean, "d_id", vrprouting::ID},
     {-1, 0, is_euclidean, "d_x", vrprouting::COORDINATE},
     {-1, 0, is_euclidean, "d_y", vrprouting::COORDINATE},
-    {-1, 0, true, "d_open", vrprouting::TTIMESTAMP},
-    {-1, 0, true, "d_close", vrprouting::TTIMESTAMP},
-    {-1, 0, false, "d_service", vrprouting::TINTERVAL}};
+    {-1, 0, true,
+      use_timestamps? "d_tw_open" : "d_open",
+      use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+    {-1, 0, true,
+      use_timestamps? "d_tw_close" : "d_close",
+      use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+    {-1, 0, false,
+      use_timestamps? "d_t_service" : "d_service",
+      use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL}};
 
     return pgget::get_data<PickDeliveryOrders_t>(sql, is_euclidean, info, &fetch_orders);
 }

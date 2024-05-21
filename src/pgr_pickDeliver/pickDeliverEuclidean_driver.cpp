@@ -153,13 +153,16 @@ do_pgr_pickDeliverEuclidean(
     pgassert(!(*return_tuples));
     log << "do_pgr_pickDeliverEuclidean\n";
 
+    bool use_timestamps = false;
+    bool is_euclidean = true;
+
     Identifiers<Id> node_ids;
 
     std::string err_string;
     std::string hint_string;
 
     hint = orders_sql;
-    auto orders = get_orders(std::string(orders_sql), true);
+    auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);
     if (orders.size() == 0) {
       *notice_msg = msg("Insufficient data found on inner query");
       *log_msg = hint? msg(hint) : nullptr;
@@ -167,7 +170,7 @@ do_pgr_pickDeliverEuclidean(
     }
 
     hint = vehicles_sql;
-    auto vehicles = get_vehicles(std::string(vehicles_sql), true);
+    auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean);
     if (vehicles.size() == 0) {
       *notice_msg = msg("Insufficient data found on inner query");
       *log_msg = hint? msg(hint) : nullptr;
