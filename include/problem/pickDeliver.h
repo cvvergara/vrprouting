@@ -79,18 +79,31 @@ class PickDeliver {
 
     /** @brief Override stops constructor */
     PickDeliver(
-        PickDeliveryOrders_t* p_orders, size_t p_orders_size,
-        Vehicle_t* p_vehicles, size_t p_vehicles_size,
-        std::vector<Short_vehicle> new_stops,
-        const Matrix &p_cost_matrix) :
-      m_cost_matrix(p_cost_matrix),
-      m_orders(p_orders, p_orders_size, this),
-      m_trucks(p_vehicles, p_vehicles_size, new_stops, m_orders, m_nodes, m_node_id) {
-    if (!msg.get_error().empty()) return;
-    m_trucks.clean();
-    m_orders.set_compatibles();
-    m_trucks.set_compatibles(m_orders);
-  }
+            const std::vector<PickDeliveryOrders_t> &p_orders,
+            const std::vector<Vehicle_t> &p_vehicles,
+            std::vector<Short_vehicle> new_stops,
+            const Matrix &p_cost_matrix) :
+        m_cost_matrix(p_cost_matrix),
+        m_orders(p_orders, this),
+        m_trucks(p_vehicles, new_stops, m_orders, m_nodes, m_node_id) {
+            if (!msg.get_error().empty()) return;
+            m_trucks.clean();
+            m_orders.set_compatibles();
+            m_trucks.set_compatibles(m_orders);
+        }
+    PickDeliver(
+            PickDeliveryOrders_t* p_orders, size_t p_orders_size,
+            Vehicle_t* p_vehicles, size_t p_vehicles_size,
+            std::vector<Short_vehicle> new_stops,
+            const Matrix &p_cost_matrix) :
+        m_cost_matrix(p_cost_matrix),
+        m_orders(p_orders, p_orders_size, this),
+        m_trucks(p_vehicles, p_vehicles_size, new_stops, m_orders, m_nodes, m_node_id) {
+            if (!msg.get_error().empty()) return;
+            m_trucks.clean();
+            m_orders.set_compatibles();
+            m_trucks.set_compatibles(m_orders);
+        }
 
     virtual ~PickDeliver() = default;
 

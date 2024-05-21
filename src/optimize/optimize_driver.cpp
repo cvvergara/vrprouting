@@ -65,51 +65,50 @@ namespace {
  *
  *  @returns (vehicle id, stops vector) pair which hold the the new stops structure
  */
-std::vector<Short_vehicle>
-    one_processing(
-            PickDeliveryOrders_t *shipments_arr, size_t total_shipments,
-            Vehicle_t *vehicles_arr, size_t total_vehicles,
-            std::vector<Short_vehicle> new_stops,
-            const vrprouting::problem::Matrix &time_matrix,
-            int max_cycles,
-            int64_t execution_date) {
-        try {
-            /*
-             * Construct problem
-             */
-            vrprouting::problem::PickDeliver pd_problem(
-                    shipments_arr, total_shipments,
-                    vehicles_arr, total_vehicles,
-                    new_stops,
-                    time_matrix);
+std::vector<Short_vehicle> one_processing(
+        PickDeliveryOrders_t *shipments_arr, size_t total_shipments,
+        Vehicle_t *vehicles_arr, size_t total_vehicles,
+        std::vector<Short_vehicle> new_stops,
+        const vrprouting::problem::Matrix &time_matrix,
+        int max_cycles,
+        int64_t execution_date) {
+    try {
+        /*
+         * Construct problem
+         */
+        vrprouting::problem::PickDeliver pd_problem(
+                shipments_arr, total_shipments,
+                vehicles_arr, total_vehicles,
+                new_stops,
+                time_matrix);
 
-            /*
-             * Unknown problem when createing the pick Deliver problem
-             */
-            if (!pd_problem.msg.get_error().empty()) {
-                throw std::make_pair(pd_problem.msg.get_error(), pd_problem.msg.get_log());
-            }
-
-            /*
-             * get initial solution
-             */
-            using Initial_solution = vrprouting::initialsol::tabu::Initial_solution;
-            using Solution = vrprouting::problem::Solution;
-            auto sol = static_cast<Solution>(Initial_solution(execution_date, true, &pd_problem));
-
-            /*
-             * Optimize the initial solution:
-             * - false: do not stop on all served
-             * - true:  optimize
-             */
-            using Optimize = vrprouting::optimizers::tabu::Optimize;
-            sol = Optimize(sol, static_cast<size_t>(max_cycles), false, true);
-
-            return sol.get_stops();
-        } catch(...) {
-            throw;
+        /*
+         * Unknown problem when createing the pick Deliver problem
+         */
+        if (!pd_problem.msg.get_error().empty()) {
+            throw std::make_pair(pd_problem.msg.get_error(), pd_problem.msg.get_log());
         }
+
+        /*
+         * get initial solution
+         */
+        using Initial_solution = vrprouting::initialsol::tabu::Initial_solution;
+        using Solution = vrprouting::problem::Solution;
+        auto sol = static_cast<Solution>(Initial_solution(execution_date, true, &pd_problem));
+
+        /*
+         * Optimize the initial solution:
+         * - false: do not stop on all served
+         * - true:  optimize
+         */
+        using Optimize = vrprouting::optimizers::tabu::Optimize;
+        sol = Optimize(sol, static_cast<size_t>(max_cycles), false, true);
+
+        return sol.get_stops();
+    } catch(...) {
+        throw;
     }
+}
 
 
 /** @brief: extract the times where the shipments opens or closes
@@ -120,18 +119,18 @@ std::vector<Short_vehicle>
  *  @returns processing times
  */
 Identifiers<TTimestamp>
-    processing_times_by_shipment(
-            PickDeliveryOrders_t *shipments_arr, size_t total_shipments
-            ) {
-        Identifiers<TTimestamp> processing_times;
-        for (size_t i = 0; i < total_shipments; ++i) {
-            processing_times += shipments_arr[i].pick_open_t;
-            processing_times += shipments_arr[i].pick_close_t;
-            processing_times += shipments_arr[i].deliver_open_t;
-            processing_times += shipments_arr[i].deliver_close_t;
-        }
-        return processing_times;
+processing_times_by_shipment(
+        PickDeliveryOrders_t *shipments_arr, size_t total_shipments
+        ) {
+    Identifiers<TTimestamp> processing_times;
+    for (size_t i = 0; i < total_shipments; ++i) {
+        processing_times += shipments_arr[i].pick_open_t;
+        processing_times += shipments_arr[i].pick_close_t;
+        processing_times += shipments_arr[i].deliver_open_t;
+        processing_times += shipments_arr[i].deliver_close_t;
     }
+    return processing_times;
+}
 
 /** @brief: extract the times where the vehicle opens or closes
  *
@@ -141,18 +140,18 @@ Identifiers<TTimestamp>
  *  @returns processing times
  */
 Identifiers<TTimestamp>
-    processing_times_by_vehicle(
-            Vehicle_t *vehicles_arr, size_t total_vehicles
-            ) {
-        Identifiers<TTimestamp> processing_times;
-        for (size_t i = 0; i < total_vehicles; ++i) {
-            processing_times += vehicles_arr[i].start_open_t;
-            processing_times += vehicles_arr[i].start_close_t;
-            processing_times += vehicles_arr[i].end_open_t;
-            processing_times += vehicles_arr[i].end_close_t;
-        }
-        return processing_times;
+processing_times_by_vehicle(
+        Vehicle_t *vehicles_arr, size_t total_vehicles
+        ) {
+    Identifiers<TTimestamp> processing_times;
+    for (size_t i = 0; i < total_vehicles; ++i) {
+        processing_times += vehicles_arr[i].start_open_t;
+        processing_times += vehicles_arr[i].start_close_t;
+        processing_times += vehicles_arr[i].end_open_t;
+        processing_times += vehicles_arr[i].end_close_t;
     }
+    return processing_times;
+}
 
 /** @brief get the original stops
  *
@@ -162,21 +161,21 @@ Identifiers<TTimestamp>
  *  @returns (vehicle id, stops vector) pair which hold the stops structure
  */
 std::vector<Short_vehicle>
-    get_initial_stops(
-            Vehicle_t *vehicles_arr, size_t total_vehicles
-            ) {
-        std::vector<Short_vehicle> the_stops;
-        for (size_t i = 0; i < total_vehicles; ++i) {
-            std::vector<Id> stops;
-            for (size_t j = 0; j < vehicles_arr[i].stops_size; ++j) {
-                stops.push_back(vehicles_arr[i].stops[j]);
-            }
-            the_stops.push_back({vehicles_arr[i].id, stops});
+get_initial_stops(
+        Vehicle_t *vehicles_arr, size_t total_vehicles
+        ) {
+    std::vector<Short_vehicle> the_stops;
+    for (size_t i = 0; i < total_vehicles; ++i) {
+        std::vector<Id> stops;
+        for (size_t j = 0; j < vehicles_arr[i].stops_size; ++j) {
+            stops.push_back(vehicles_arr[i].stops[j]);
         }
-        std::sort(the_stops.begin(), the_stops.end(), []
-                (const Short_vehicle &lhs, const Short_vehicle &rhs) {return lhs.id < rhs.id;});
-        return the_stops;
+        the_stops.push_back({vehicles_arr[i].id, stops});
     }
+    std::sort(the_stops.begin(), the_stops.end(), []
+            (const Short_vehicle &lhs, const Short_vehicle &rhs) {return lhs.id < rhs.id;});
+    return the_stops;
+}
 
 /** @brief Update the vehicle stops to the new values
  *
@@ -184,17 +183,17 @@ std::vector<Short_vehicle>
  *  @param[in] new_values subset of stops that are to be used for the update
  */
 void
-    update_stops(std::vector<Short_vehicle>& the_stops,  // NOLINT [runtime/references]
-            const std::vector<Short_vehicle> new_values) {
-        for (const auto &v : new_values) {
-            auto v_id = v.id;
-            auto v_to_modify = std::find_if(
-                    the_stops.begin(), the_stops.end(), [v_id]
-                    (const Short_vehicle& v) -> bool {return v.id == v_id;});
-            pgassert(v_to_modify != the_stops.end());
-            v_to_modify->stops = v.stops;
-        }
+update_stops(std::vector<Short_vehicle>& the_stops,  // NOLINT [runtime/references]
+        const std::vector<Short_vehicle> new_values) {
+    for (const auto &v : new_values) {
+        auto v_id = v.id;
+        auto v_to_modify = std::find_if(
+                the_stops.begin(), the_stops.end(), [v_id]
+                (const Short_vehicle& v) -> bool {return v.id == v_id;});
+        pgassert(v_to_modify != the_stops.end());
+        v_to_modify->stops = v.stops;
     }
+}
 
 /** @brief Executes an optimization by subdivision of data
  *
@@ -211,78 +210,78 @@ void
  *  @returns vector[vehicle id] = stops which hold the the new stops structure
  */
 std::vector<Short_vehicle>
-    subdivide_processing(
-            PickDeliveryOrders_t *shipments_arr, size_t total_shipments,
-            Vehicle_t *vehicles_arr, size_t total_vehicles,
-            const vrprouting::problem::Matrix &time_matrix,
-            int max_cycles,
-            int64_t execution_date,
-            bool subdivide_by_vehicle,
-            std::ostringstream &log) {
-        try {
-            auto the_stops = get_initial_stops(vehicles_arr, total_vehicles);
+subdivide_processing(
+        PickDeliveryOrders_t *shipments_arr, size_t total_shipments,
+        Vehicle_t *vehicles_arr, size_t total_vehicles,
+        const vrprouting::problem::Matrix &time_matrix,
+        int max_cycles,
+        int64_t execution_date,
+        bool subdivide_by_vehicle,
+        std::ostringstream &log) {
+    try {
+        auto the_stops = get_initial_stops(vehicles_arr, total_vehicles);
 
-            auto processing_times = subdivide_by_vehicle?
-                processing_times_by_vehicle(vehicles_arr, total_vehicles)
-                : processing_times_by_shipment(shipments_arr, total_shipments);
+        auto processing_times = subdivide_by_vehicle?
+            processing_times_by_vehicle(vehicles_arr, total_vehicles)
+            : processing_times_by_shipment(shipments_arr, total_shipments);
 
-            Identifiers<Id> prev_shipments_in_stops;
-            for (const auto &t : processing_times) {
-                CHECK_FOR_INTERRUPTS();
-                /*
-                 * Get active vehicles at time t
-                 */
-                auto vehicles_to_process = static_cast<size_t>(std::distance(vehicles_arr,
-                            std::partition(
-                                vehicles_arr, vehicles_arr + total_vehicles,
-                                [&](const Vehicle_t& v)
-                                {return v.start_open_t <= t && t <= v.end_close_t;})));
+        Identifiers<Id> prev_shipments_in_stops;
+        for (const auto &t : processing_times) {
+            CHECK_FOR_INTERRUPTS();
+            /*
+             * Get active vehicles at time t
+             */
+            auto vehicles_to_process = static_cast<size_t>(std::distance(vehicles_arr,
+                        std::partition(
+                            vehicles_arr, vehicles_arr + total_vehicles,
+                            [&](const Vehicle_t& v)
+                            {return v.start_open_t <= t && t <= v.end_close_t;})));
 
-                /* Get shipments in stops of active vehicles */
-                Identifiers<Id> shipments_in_stops;
-                for (size_t i = 0; i < vehicles_to_process; ++i) {
-                    auto v_id = vehicles_arr[i].id;
-                    auto v_to_modify = std::find_if(
-                            the_stops.begin(), the_stops.end(), [&]
-                            (const Short_vehicle& v) -> bool {return v.id == v_id;});
+            /* Get shipments in stops of active vehicles */
+            Identifiers<Id> shipments_in_stops;
+            for (size_t i = 0; i < vehicles_to_process; ++i) {
+                auto v_id = vehicles_arr[i].id;
+                auto v_to_modify = std::find_if(
+                        the_stops.begin(), the_stops.end(), [&]
+                        (const Short_vehicle& v) -> bool {return v.id == v_id;});
 
-                    for (const auto &s : v_to_modify->stops) {
-                        shipments_in_stops += s;
-                    }
+                for (const auto &s : v_to_modify->stops) {
+                    shipments_in_stops += s;
                 }
-
-                /*
-                 * Nothing to do:
-                 * - no shipments to process
-                 * - last optimization had exavtly the same shipments
-                 */
-                if ((shipments_in_stops.size() == 0)
-                        || (prev_shipments_in_stops == shipments_in_stops)) continue;
-                log << "\nOptimizing at time: " << t;
-
-                prev_shipments_in_stops = shipments_in_stops;
-
-                auto shipments_to_process = static_cast<size_t>(std::distance(shipments_arr,
-                            std::partition(shipments_arr, shipments_arr + total_shipments,
-                                [&](const PickDeliveryOrders_t& s){return shipments_in_stops.has(s.id);})));
-
-                pgassert(shipments_to_process > 0);
-                pgassert(shipments_in_stops.size() == static_cast<size_t>(shipments_to_process));
-
-                auto new_stops = one_processing(
-                        shipments_arr, shipments_to_process,
-                        vehicles_arr, vehicles_to_process, the_stops,
-                        time_matrix,
-                        max_cycles, execution_date);
-
-                update_stops(the_stops, new_stops);
             }
 
-            return the_stops;
-        } catch(...) {
-            throw;
+            /*
+             * Nothing to do:
+             * - no shipments to process
+             * - last optimization had exavtly the same shipments
+             */
+            if ((shipments_in_stops.size() == 0)
+                    || (prev_shipments_in_stops == shipments_in_stops)) continue;
+            log << "\nOptimizing at time: " << t;
+
+            prev_shipments_in_stops = shipments_in_stops;
+
+            auto shipments_to_process = static_cast<size_t>(std::distance(shipments_arr,
+                        std::partition(shipments_arr, shipments_arr + total_shipments,
+                            [&](const PickDeliveryOrders_t& s){return shipments_in_stops.has(s.id);})));
+
+            pgassert(shipments_to_process > 0);
+            pgassert(shipments_in_stops.size() == static_cast<size_t>(shipments_to_process));
+
+            auto new_stops = one_processing(
+                    shipments_arr, shipments_to_process,
+                    vehicles_arr, vehicles_to_process, the_stops,
+                    time_matrix,
+                    max_cycles, execution_date);
+
+            update_stops(the_stops, new_stops);
         }
+
+        return the_stops;
+    } catch(...) {
+        throw;
     }
+}
 
 
 }  // namespace

@@ -180,10 +180,10 @@ process(
   clock_t start_t = clock();
 
   do_optimize(
-      pd_orders_arr,    total_pd_orders,
-      vehicles_arr,     total_vehicles,
-      matrix_cells_arr, total_cells,
-      multipliers_arr,      total_multipliers_arr,
+      pd_orders_sql,
+      vehicles_sql,
+      matrix_sql,
+      multipliers_sql,
 
       factor,
       max_cycles,
@@ -192,6 +192,10 @@ process(
       check_triangle_inequality,
       subdivision_kind != 0,
       subdivision_kind == 1,
+
+      use_timestamps,
+      with_stops,
+      is_euclidean,
 
       result_tuples,
       result_count,
