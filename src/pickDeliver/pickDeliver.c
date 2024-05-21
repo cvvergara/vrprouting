@@ -96,90 +96,6 @@ process(
 
   pgr_SPI_connect();
 
-  PickDeliveryOrders_t *pd_orders_arr = NULL;
-  size_t total_pd_orders = 0;
-  vrp_get_orders(pd_orders_sql, &pd_orders_arr, &total_pd_orders, is_euclidean, use_timestamps, &err_msg);
-  throw_error(err_msg, pd_orders_sql);
-
-  if (total_pd_orders == 0) {
-    (*result_count) = 0;
-    (*result_tuples) = NULL;
-
-    /* freeing memory before return */
-    if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-
-    pgr_SPI_finish();
-    return;
-  }
-
-  Vehicle_t *vehicles_arr = NULL;
-  size_t total_vehicles = 0;
-  vrp_get_vehicles(vehicles_sql, &vehicles_arr, &total_vehicles, with_stops, is_euclidean, use_timestamps, &err_msg);
-  throw_error(err_msg, vehicles_sql);
-
-  if (total_vehicles == 0) {
-    (*result_count) = 0;
-    (*result_tuples) = NULL;
-
-    /* freeing memory before return */
-    if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-    if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
-
-    ereport(WARNING,
-        (errcode(ERRCODE_INTERNAL_ERROR),
-         errmsg("No vehicles found")));
-
-    pgr_SPI_finish();
-    return;
-  }
-
-  Time_multipliers_t *multipliers_arr = NULL;
-  size_t total_multipliers_arr = 0;
-  vrp_get_timeMultipliers(multipliers_sql, &multipliers_arr, &total_multipliers_arr, use_timestamps, &err_msg);
-  throw_error(err_msg, multipliers_sql);
-
-  if (total_multipliers_arr == 0) {
-    ereport(WARNING,
-        (errcode(ERRCODE_INTERNAL_ERROR),
-         errmsg("No matrix found")));
-    (*result_count) = 0;
-    (*result_tuples) = NULL;
-
-    /* freeing memory before return */
-    if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-    if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
-    if (multipliers_arr) {pfree(multipliers_arr); multipliers_arr = NULL;}
-
-    pgr_SPI_finish();
-    return;
-  }
-
-  Matrix_cell_t *matrix_cells_arr = NULL;
-  size_t total_cells = 0;
-  vrp_get_matrixRows(matrix_sql, &matrix_cells_arr, &total_cells, use_timestamps, &err_msg);
-  throw_error(err_msg, matrix_sql);
-
-  if (total_cells == 0) {
-    (*result_count) = 0;
-    (*result_tuples) = NULL;
-
-    /* freeing memory before return */
-    if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-    if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
-    if (multipliers_arr) {pfree(multipliers_arr); multipliers_arr = NULL;}
-    if (matrix_cells_arr) {pfree(matrix_cells_arr); matrix_cells_arr = NULL;}
-
-    ereport(WARNING,
-        (errcode(ERRCODE_INTERNAL_ERROR),
-         errmsg("No matrix found")));
-    pgr_SPI_finish();
-    return;
-  }
-
-  PGR_DBG("Total %ld orders in query:", total_pd_orders);
-  PGR_DBG("Total %ld vehicles in query:", total_vehicles);
-  PGR_DBG("Total %ld matrix cells in query:", total_cells);
-  PGR_DBG("Total %ld time dependant multipliers:", total_multipliers_arr);
 
   clock_t start_t = clock();
 
@@ -219,11 +135,6 @@ process(
   if (log_msg) {pfree(log_msg); log_msg = NULL;}
   if (notice_msg) {pfree(notice_msg); notice_msg = NULL;}
   if (err_msg) {pfree(err_msg); err_msg = NULL;}
-  if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-  if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
-  if (multipliers_arr) {pfree(multipliers_arr); multipliers_arr = NULL;}
-  if (matrix_cells_arr) {pfree(matrix_cells_arr); matrix_cells_arr = NULL;}
-
   pgr_SPI_finish();
 }
 
@@ -237,10 +148,8 @@ _vrp_pickdeliver(PG_FUNCTION_ARGS) {
   FuncCallContext     *funcctx;
   TupleDesc            tuple_desc;
 
-  /**************************************************************************/
   Solution_rt *result_tuples = 0;
   size_t result_count = 0;
-  /**************************************************************************/
 
   if (SRF_IS_FIRSTCALL()) {
     MemoryContext   oldcontext;
@@ -263,8 +172,6 @@ _vrp_pickdeliver(PG_FUNCTION_ARGS) {
         &result_tuples,
         &result_count);
 
-    /*********************************************************************/
-
     funcctx->max_calls = result_count;
     funcctx->user_fctx = result_tuples;
     if (get_call_result_type(fcinfo, NULL, &tuple_desc)
@@ -317,8 +224,6 @@ _vrp_pickdeliver(PG_FUNCTION_ARGS) {
     values[14] = Int32GetDatum(result_tuples[call_cntr].cvTot);
     values[15] = Int32GetDatum(result_tuples[call_cntr].twvTot);
 
-    /*********************************************************************/
-
     tuple = heap_form_tuple(tuple_desc, values, nulls);
     result = HeapTupleGetDatum(tuple);
 
@@ -332,7 +237,6 @@ _vrp_pickdeliver(PG_FUNCTION_ARGS) {
     SRF_RETURN_DONE(funcctx);
   }
 }
-/******************************************************************************/
 
 
 /**
@@ -343,10 +247,8 @@ _vrp_pickdeliverraw(PG_FUNCTION_ARGS) {
   FuncCallContext     *funcctx;
   TupleDesc            tuple_desc;
 
-  /**************************************************************************/
   Solution_rt *result_tuples = 0;
   size_t result_count = 0;
-  /**************************************************************************/
 
   if (SRF_IS_FIRSTCALL()) {
     MemoryContext   oldcontext;
@@ -369,8 +271,6 @@ _vrp_pickdeliverraw(PG_FUNCTION_ARGS) {
         &result_tuples,
         &result_count);
 
-    /*********************************************************************/
-
     funcctx->max_calls = result_count;
     funcctx->user_fctx = result_tuples;
     if (get_call_result_type(fcinfo, NULL, &tuple_desc)
@@ -423,7 +323,6 @@ _vrp_pickdeliverraw(PG_FUNCTION_ARGS) {
     values[14] = Int32GetDatum(result_tuples[call_cntr].cvTot);
     values[15] = Int32GetDatum(result_tuples[call_cntr].twvTot);
 
-    /*********************************************************************/
 
     tuple = heap_form_tuple(tuple_desc, values, nulls);
     result = HeapTupleGetDatum(tuple);
