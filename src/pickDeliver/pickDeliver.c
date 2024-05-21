@@ -184,8 +184,8 @@ process(
   clock_t start_t = clock();
 
   do_pickDeliver(
-      pd_orders_arr,    total_pd_orders,
-      vehicles_arr,     total_vehicles,
+      pd_orders_sql,
+      vehicles_sql,
       matrix_sql,
       multipliers_sql,
 
@@ -196,6 +196,8 @@ process(
 
       execution_date,
       use_timestamps,
+      with_stops,
+      is_euclidean,
 
       result_tuples,
       result_count,

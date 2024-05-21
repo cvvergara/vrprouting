@@ -60,7 +60,7 @@ std::vector<Matrix_cell_t> get_matrix(const std::string&, bool);
 std::vector<PickDeliveryOrders_t> get_orders(const std::string&, bool, bool);
 
 /** @brief Reads the vehicles information */
-std::vector<Vehicle_t> get_vehicles(const std::string&, bool, bool);
+std::vector<Vehicle_t> get_vehicles(const std::string&, bool, bool, bool);
 
 /** @brief Get the time multipliers using interval*/
 std::vector<Time_multipliers_t> get_timeMultipliers(const std::string&, bool);

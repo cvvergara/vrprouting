@@ -110,9 +110,7 @@ do_pgr_pickDeliver(
 
         bool use_timestamps = false;
         bool is_euclidean = false;
-
-        Identifiers<Id> node_ids;
-        Identifiers<Id> order_ids;
+        bool with_stops = false;
 
         hint = orders_sql;
         auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);
@@ -123,7 +121,7 @@ do_pgr_pickDeliver(
         }
 
         hint = vehicles_sql;
-        auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps);
+        auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps, with_stops);
         if (vehicles.size() == 0) {
             *notice_msg = msg("Insufficient data found on inner query");
             *log_msg = hint? msg(hint) : nullptr;
@@ -140,11 +138,13 @@ do_pgr_pickDeliver(
         }
         hint = nullptr;
 
+        Identifiers<Id> node_ids;
+        Identifiers<Id> order_ids;
+
         for (const auto &o : orders) {
             node_ids += o.pick_node_id;
             node_ids += o.deliver_node_id;
             order_ids += o.id;
-            log << "id" << o.id <<", pid"<<o.pick_node_id<<", did"<<o.deliver_node_id<<"\n";
         }
 
         for (const auto &v : vehicles) {
@@ -199,6 +199,9 @@ do_pgr_pickDeliver(
         // TODO(vicky) wrap with a try and make a throw???
         // tried it is already wrapped
         log << "Initialize problem\n";
+        /*
+         * Construct problem
+         */
         vrprouting::problem::PickDeliver pd_problem(orders, vehicles, time_matrix);
 
         err << pd_problem.msg.get_error();

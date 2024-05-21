@@ -155,6 +155,7 @@ do_pgr_pickDeliverEuclidean(
 
     bool use_timestamps = false;
     bool is_euclidean = true;
+    bool with_stops = true;
 
     Identifiers<Id> node_ids;
 
@@ -170,7 +171,7 @@ do_pgr_pickDeliverEuclidean(
     }
 
     hint = vehicles_sql;
-    auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps);
+    auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps, with_stops);
     if (vehicles.size() == 0) {
       *notice_msg = msg("Insufficient data found on inner query");
       *log_msg = hint? msg(hint) : nullptr;

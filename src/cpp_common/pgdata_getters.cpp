@@ -175,7 +175,8 @@ std::vector<PickDeliveryOrders_t> get_orders(
 std::vector<Vehicle_t> get_vehicles(
     const std::string &sql,
     bool is_euclidean,
-    bool use_timestamps) {
+    bool use_timestamps,
+    bool with_stops) {
   using vrprouting::Info;
 
   std::vector<Info> info{
@@ -208,7 +209,9 @@ std::vector<Vehicle_t> get_vehicles(
       use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
     {-1, 0, false,
       use_timestamps? "e_t_service" : "e_service",
-      use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL}};
+      use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+
+    {-1, 0, with_stops, "stops", vrprouting::ANY_POSITIVE_ARRAY}};
 
     return get_data<Vehicle_t>(sql, is_euclidean, info, &fetch_vehicles);
 }

@@ -110,8 +110,8 @@ digraph G {
  */
 void
 do_pickDeliver(
-        PickDeliveryOrders_t *customers_arr, size_t total_customers,
-        Vehicle_t *vehicles_arr, size_t total_vehicles,
+        char* orders_sql,
+        char* vehicles_sql,
         char* matrix_sql,
         char* multipliers_sql,
 
@@ -122,6 +122,8 @@ do_pickDeliver(
         bool stop_on_all_served,
         int64_t execution_date,
         bool use_timestamps,
+        bool is_euclidean,
+        bool with_stops,
 
         Solution_rt **return_tuples,
         size_t *return_count,
@@ -146,13 +148,25 @@ do_pickDeliver(
         pgassert(!(*log_msg));
         pgassert(!(*notice_msg));
         pgassert(!(*err_msg));
-        pgassert(total_customers);
-        pgassert(total_vehicles);
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
         log << "do_pickDeliver\n";
 
-        //bool is_euclidean = false;
+        hint = orders_sql;
+        auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);
+        if (orders.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+
+        hint = vehicles_sql;
+        auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps, with_stops);
+        if (vehicles.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
 
         hint = matrix_sql;
         auto costs = get_matrix(std::string(matrix_sql), use_timestamps);
@@ -170,22 +184,21 @@ do_pickDeliver(
         Identifiers<Id> node_ids;
         Identifiers<Id> order_ids;
 
-        for (size_t i = 0; i < total_customers; ++i) {
-            node_ids += customers_arr[i].pick_node_id;
-            node_ids += customers_arr[i].deliver_node_id;
-            order_ids += customers_arr[i].id;
+        for (const auto &o : orders) {
+            node_ids += o.pick_node_id;
+            node_ids += o.deliver_node_id;
+            order_ids += o.id;
         }
 
         bool missing = false;
-        for (size_t i = 0; i < total_vehicles; ++i) {
-            auto vehicle = vehicles_arr[i];
-            node_ids += vehicle.start_node_id;
-            node_ids += vehicle.end_node_id;
-            for (size_t j = 0; j < vehicle.stops_size; ++j) {
-                if (!order_ids.has(vehicle.stops[j])) {
+        for (const auto &v : vehicles) {
+            node_ids += v.start_node_id;
+            node_ids += v.end_node_id;
+            for (size_t j = 0; j < v.stops_size; ++j) {
+                if (!order_ids.has(v.stops[j])) {
                     if (!missing) err << "Order in 'stops' information missing";
                     missing = true;
-                    err << "Missing information of order " << vehicle.stops[j] << "\n";
+                    err << "Missing information of order " << v.stops[j] << "\n";
                 }
             }
             if (missing) {
@@ -228,8 +241,8 @@ do_pickDeliver(
          * Construct problem
          */
         vrprouting::problem::PickDeliver pd_problem(
-                customers_arr, total_customers,
-                vehicles_arr, total_vehicles,
+                orders,
+                vehicles,
                 cost_matrix);
 
         err << pd_problem.msg.get_error();

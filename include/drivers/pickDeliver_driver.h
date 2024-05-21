@@ -40,8 +40,8 @@ extern "C" {
 
   /** @brief Driver for processing a pickupDeliver problem */
   void do_pickDeliver(
-      PickDeliveryOrders_t customers_arr[], size_t total_customers,
-      Vehicle_t *vehicles_arr, size_t total_vehicles,
+      char*,
+      char*,
       char*,
       char*,
 
@@ -50,7 +50,7 @@ extern "C" {
       int max_cycles,
       bool stop_on_all_served,
       int64_t execution_date,
-      bool,
+      bool, bool, bool,
 
       Solution_rt **return_tuples,
       size_t *return_count,
