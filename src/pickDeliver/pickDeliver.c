@@ -187,7 +187,7 @@ process(
       pd_orders_arr,    total_pd_orders,
       vehicles_arr,     total_vehicles,
       matrix_sql,
-      multipliers_arr,      total_multipliers_arr,
+      multipliers_sql,
 
       optimize,
       factor,

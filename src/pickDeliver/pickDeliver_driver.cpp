@@ -39,6 +39,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_types/return_types.h"
 #include "c_types/vehicle_types.h"
 #include "c_types/matrix_types.h"
+#include "c_types/multiplier_types.h"
 
 #include "cpp_common/alloc.hpp"
 #include "cpp_common/pgr_assert.h"
@@ -112,7 +113,7 @@ do_pickDeliver(
         PickDeliveryOrders_t *customers_arr, size_t total_customers,
         Vehicle_t *vehicles_arr, size_t total_vehicles,
         char* matrix_sql,
-        Time_multipliers_t *multipliers_arr, size_t total_multipliers,
+        char* multipliers_sql,
 
 
         bool optimize,
@@ -133,6 +134,7 @@ do_pickDeliver(
     using vrprouting::pgget::get_matrix;
     using vrprouting::pgget::get_orders;
     using vrprouting::pgget::get_vehicles;
+    using vrprouting::pgget::get_timeMultipliers;
 
     std::ostringstream log;
     std::ostringstream notice;
@@ -160,6 +162,9 @@ do_pickDeliver(
             *log_msg = hint? msg(hint) : nullptr;
             return;
         }
+
+        hint = multipliers_sql;
+        auto multipliers = get_timeMultipliers(std::string(multipliers_sql), use_timestamps);
         hint = nullptr;
 
         Identifiers<Id> node_ids;
@@ -191,7 +196,7 @@ do_pickDeliver(
 
         vrprouting::problem::Matrix cost_matrix(
                 costs,
-                multipliers_arr, total_multipliers,
+                multipliers,
                 node_ids, static_cast<Multiplier>(factor));
 #if 1
         /*

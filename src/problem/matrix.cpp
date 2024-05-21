@@ -53,6 +53,22 @@ namespace {
  * @returns time dependant multiplier container
  */
 std::vector<std::tuple<TTimestamp, Multiplier>>
+set_tdm(std::vector<Time_multipliers_t> p_multipliers) {
+    pgassert(!p_multipliers.empty());
+    std::vector<std::tuple<TTimestamp, Multiplier>> tdm;
+    /*
+     * Sort the multipliers info
+     */
+    std::sort(p_multipliers.begin(), p_multipliers.end(),
+            [] (const Time_multipliers_t &lhs, const Time_multipliers_t &rhs) {
+                return lhs.start_time < rhs.start_time;
+            });
+    for (const auto &m: p_multipliers) {
+        tdm.emplace_back(m.start_time, m.multiplier);
+    }
+    return tdm;
+}
+std::vector<std::tuple<TTimestamp, Multiplier>>
 set_tdm(Time_multipliers_t *p_multipliers, size_t size_multipliers) {
     pgassert(size_multipliers > 1);
     std::vector<std::tuple<TTimestamp, Multiplier>> tdm;
@@ -176,12 +192,12 @@ Matrix::Matrix(
  * constructor
  */
 Matrix::Matrix(
-        const std::vector<Matrix_cell_t> matrix,
-        Time_multipliers_t *multipliers, size_t size_multipliers,
+        const std::vector<Matrix_cell_t>& matrix,
+        const std::vector<Time_multipliers_t>& multipliers,
         const Identifiers<Id>& node_ids,
         Multiplier multiplier) :
     Base_Matrix(matrix, node_ids, multiplier),
-    m_multipliers(set_tdm(multipliers, size_multipliers)) { }
+    m_multipliers(set_tdm(multipliers)) { }
 
 /*
  * constructor for euclidean with time dependant multipliers

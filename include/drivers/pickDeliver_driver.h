@@ -43,7 +43,7 @@ extern "C" {
       PickDeliveryOrders_t customers_arr[], size_t total_customers,
       Vehicle_t *vehicles_arr, size_t total_vehicles,
       char*,
-      Time_multipliers_t *multipliers_arr, size_t total_multipliers,
+      char*,
 
       bool,
       double factor,
