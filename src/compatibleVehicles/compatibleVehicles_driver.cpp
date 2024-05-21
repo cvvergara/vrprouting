@@ -34,14 +34,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <string>
 #include <deque>
 
-#include "problem/pickDeliver.h"
-#include "problem/matrix.h"
 #include "c_types/order_types.h"
-#include "c_types/return_types.h"
 #include "c_types/vehicle_types.h"
+#include "c_types/matrix_types.h"
+#include "c_types/multiplier_types.h"
+#include "c_types/return_types.h"
 
 #include "cpp_common/pgr_assert.h"
 #include "cpp_common/alloc.hpp"
+#include "cpp_common/pgdata_getters.hpp"
+
+#include "problem/pickDeliver.h"
+#include "problem/matrix.h"
 
 /**
  *
@@ -96,19 +100,15 @@ digraph G {
  */
 void
 do_compatibleVehicles(
-        PickDeliveryOrders_t customers_arr[],
-        size_t total_customers,
-
-        Vehicle_t *vehicles_arr,
-        size_t total_vehicles,
-
-        Matrix_cell_t *matrix_cells_arr,
-        size_t total_cells,
-
-        Time_multipliers_t *multipliers_arr,
-        size_t total_multipliers,
+        char* orders_sql,
+        char* vehicles_sql,
+        char* matrix_sql,
+        char* multipliers_sql,
 
         double factor,
+        bool use_timestamps,
+        bool is_euclidean,
+        bool with_stops,
 
         CompatibleVehicles_rt **return_tuples,
         size_t *return_count,
@@ -116,46 +116,72 @@ do_compatibleVehicles(
         char **log_msg,
         char **notice_msg,
         char **err_msg) {
-  using vrprouting::msg;
-  using vrprouting::alloc;
+    using vrprouting::msg;
+    using vrprouting::alloc;
+    using vrprouting::pgget::get_matrix;
+    using vrprouting::pgget::get_orders;
+    using vrprouting::pgget::get_vehicles;
+    using vrprouting::pgget::get_timeMultipliers;
 
     std::ostringstream log;
     std::ostringstream notice;
     std::ostringstream err;
+
+    char* hint = nullptr;
+
     try {
-        /*
-         * verify preconditions
-         */
         pgassert(!(*log_msg));
         pgassert(!(*notice_msg));
         pgassert(!(*err_msg));
-        pgassert(total_customers);
-        pgassert(total_vehicles);
-        pgassert(total_vehicles);
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
         log << "do_compatibleVehicles\n";
 
+        hint = orders_sql;
+        auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);
+        if (orders.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+
+        hint = vehicles_sql;
+        auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps, with_stops);
+        if (vehicles.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+
+        hint = matrix_sql;
+        auto costs = get_matrix(std::string(matrix_sql), use_timestamps);
+
+        if (costs.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+
+        hint = multipliers_sql;
+        auto multipliers = get_timeMultipliers(std::string(multipliers_sql), use_timestamps);
+        hint = nullptr;
 
         Identifiers<Id> node_ids;
 
-        for (size_t i = 0; i < total_customers; ++i) {
-            node_ids += customers_arr[i].pick_node_id;
-            node_ids += customers_arr[i].deliver_node_id;
+        for (const auto &o : orders) {
+            node_ids += o.pick_node_id;
+            node_ids += o.deliver_node_id;
         }
 
-        for (size_t i = 0; i < total_vehicles; ++i) {
-            node_ids += vehicles_arr[i].start_node_id;
-            node_ids += vehicles_arr[i].end_node_id;
+        for (const auto &v : vehicles) {
+            node_ids += v.start_node_id;
+            node_ids += v.end_node_id;
         }
 
-        /*
-         * Verify matrix cells preconditions
-         */
         vrprouting::problem::Matrix cost_matrix(
-            matrix_cells_arr, total_cells,
-            multipliers_arr, total_multipliers,
-            node_ids, static_cast<Multiplier>(factor));
+                costs,
+                multipliers,
+                node_ids, static_cast<Multiplier>(factor));
 #if 0
         /*
          * Verify matrix triangle inequality
@@ -180,15 +206,16 @@ do_compatibleVehicles(
          */
         log << "Initialize problem\n";
         vrprouting::problem::PickDeliver pd_problem(
-                customers_arr, total_customers,
-                vehicles_arr, total_vehicles,
+                orders,
+                vehicles,
                 cost_matrix);
 
         err << pd_problem.msg.get_error();
         if (!err.str().empty()) {
+            log << pd_problem.msg.get_error();
             log << pd_problem.msg.get_log();
-            *log_msg = msg(log.str());
-            *err_msg = msg(err.str());
+            *log_msg = msg(log.str().c_str());
+            *err_msg = msg(err.str().c_str());
             return;
         }
         log << pd_problem.msg.get_log();
@@ -225,19 +252,34 @@ do_compatibleVehicles(
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;
         err << except.what();
-        *err_msg = msg(err.str());
-        *log_msg = msg(log.str());
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
     } catch (std::exception& except) {
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;
         err << except.what();
-        *err_msg = msg(err.str());
-        *log_msg = msg(log.str());
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch (const std::string &ex) {
+        *err_msg = msg(ex.c_str());
+        *log_msg = hint? msg(hint) : msg(log.str().c_str());
+    } catch (const std::pair<std::string, std::string>& ex) {
+        (*return_count) = 0;
+        err << ex.first;
+        log << ex.second;
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch (const std::pair<std::string, int64_t>& ex) {
+        (*return_count) = 0;
+        err << ex.first;
+        log << "FOOOO missing on matrix: id =  " << ex.second;
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
     } catch(...) {
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;
         err << "Caught unknown exception!";
-        *err_msg = msg(err.str());
-        *log_msg = msg(log.str());
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
     }
 }

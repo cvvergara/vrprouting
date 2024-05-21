@@ -149,12 +149,15 @@ process(
 #endif
 
     do_compatibleVehicles(
-            pd_orders_arr, total_pd_orders,
-            vehicles_arr, total_vehicles,
-            matrix_cells_arr, total_cells,
-            multipliers_arr, total_multipliers_arr,
+            pd_orders_sql,
+            vehicles_sql,
+            matrix_sql,
+            multipliers_sql,
 
             factor,
+            use_timestamps,
+            is_euclidean,
+            with_stops,
 
             result_tuples,
             result_count,

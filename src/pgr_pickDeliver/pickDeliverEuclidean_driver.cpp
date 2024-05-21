@@ -155,7 +155,7 @@ do_pgr_pickDeliverEuclidean(
 
     bool use_timestamps = false;
     bool is_euclidean = true;
-    bool with_stops = true;
+    bool with_stops = false;
 
     Identifiers<Id> node_ids;
 
