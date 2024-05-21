@@ -106,9 +106,9 @@ std::vector<Matrix_cell_t> get_matrix(
 std::vector<PickDeliveryOrders_t> get_orders(
     const std::string &sql,
     bool is_euclidean,
-    bool use_timestamps
-    ) {
+    bool use_timestamps) {
   using vrprouting::Info;
+
   std::vector<Info> info{
     {-1, 0, true, "id", vrprouting::ID},
     {-1, 0, true, "amount", vrprouting::PAMOUNT},
@@ -160,8 +160,10 @@ std::vector<PickDeliveryOrders_t> get_orders(
   */
 std::vector<Vehicle_t> get_vehicles(
     const std::string &sql,
-    bool is_euclidean) {
+    bool is_euclidean,
+    bool use_timestamps) {
   using vrprouting::Info;
+
   std::vector<Info> info{
     {-1, 0, true, "id", vrprouting::ID},
     {-1, 0, true, "capacity", vrprouting::PAMOUNT},
@@ -171,16 +173,28 @@ std::vector<Vehicle_t> get_vehicles(
     {-1, 0, !is_euclidean, "s_id", vrprouting::ID},
     {-1, 0, is_euclidean, "s_x", vrprouting::COORDINATE},
     {-1, 0, is_euclidean, "s_y", vrprouting::COORDINATE},
-    {-1, 0, false, "s_open", vrprouting::TTIMESTAMP},
-    {-1, 0, false, "s_close", vrprouting::TTIMESTAMP},
-    {-1, 0, false,"s_service", vrprouting::TINTERVAL},
+    {-1, 0, false,
+      use_timestamps? "s_tw_open" : "s_open",
+      use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+    {-1, 0, false,
+      use_timestamps? "s_tw_close" : "s_close",
+      use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+    {-1, 0, false,
+      use_timestamps? "s_t_service" : "s_service",
+      use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
 
     {-1, 0, false, "e_id", vrprouting::ID},
     {-1, 0, false, "e_x", vrprouting::COORDINATE},
     {-1, 0, false, "e_y", vrprouting::COORDINATE},
-    {-1, 0, false, "e_open", vrprouting::TTIMESTAMP},
-    {-1, 0, false, "e_close", vrprouting::TTIMESTAMP},
-    {-1, 0, false, "e_service", vrprouting::TINTERVAL}};
+    {-1, 0, false,
+      use_timestamps? "e_tw_open" : "e_open",
+      use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+    {-1, 0, false,
+      use_timestamps? "e_tw_close" : "e_close",
+      use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+    {-1, 0, false,
+      use_timestamps? "e_t_service" : "e_service",
+      use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL}};
 
     return get_data<Vehicle_t>(sql, is_euclidean, info, &fetch_vehicles);
 }

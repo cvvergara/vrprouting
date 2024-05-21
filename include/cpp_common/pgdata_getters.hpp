@@ -66,7 +66,7 @@ std::vector<PickDeliveryOrders_t> get_orders(const std::string&, bool, bool);
 std::vector<Time_multipliers_t> vrp_get_timeMultipliers(const std::string&, bool);
 
 /** @brief Reads the vehicles information */
-std::vector<Vehicle_t> get_vehicles(const std::string&, bool);
+std::vector<Vehicle_t> get_vehicles(const std::string&, bool, bool);
 
 /** @brief Reads the VROOM breaks */
 std::vector<Vroom_break_t> vrp_get_vroom_breaks(const std::string&, bool);
