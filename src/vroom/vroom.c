@@ -247,34 +247,13 @@ PGDLLEXPORT Datum _vrp_vroom(PG_FUNCTION_ARGS) {
   FuncCallContext   *funcctx;
   TupleDesc       tuple_desc;
 
-  /**********************************************************************/
   Vroom_rt *result_tuples = NULL;
   size_t result_count = 0;
-  /**********************************************************************/
 
   if (SRF_IS_FIRSTCALL()) {
     MemoryContext   oldcontext;
     funcctx = SRF_FIRSTCALL_INIT();
     oldcontext = MemoryContextSwitchTo(funcctx->multi_call_memory_ctx);
-
-    /***********************************************************************
-     *
-     *   _vrp_vroom(
-     *     jobs_sql TEXT,
-     *     jobs_time_windows_sql TEXT,
-     *     shipments_sql TEXT,
-     *     shipments_time_windows_sql TEXT,
-     *     vehicles_sql TEXT,
-     *     breaks_sql TEXT,
-     *     breaks_time_windows_sql TEXT,
-     *     matrix_sql TEXT,
-     *     exploration_level INTEGER default 5,
-     *     timeout INTEGER default -1,
-     *     fn SMALLINT,
-     *     is_plain BOOLEAN
-     *   );
-     *
-     **********************************************************************/
 
     char *args[8];
     for (int i = 0; i < 8; i++) {
@@ -324,8 +303,6 @@ PGDLLEXPORT Datum _vrp_vroom(PG_FUNCTION_ARGS) {
         !is_plain,
         &result_tuples,
         &result_count);
-
-    /**********************************************************************/
 
 
     funcctx->max_calls = result_count;
@@ -413,7 +390,6 @@ PGDLLEXPORT Datum _vrp_vroom(PG_FUNCTION_ARGS) {
     values[14] = Int32GetDatum(result_tuples[call_cntr].departure_time);
     values[15] = PointerGetDatum(arrayType);
 
-    /**********************************************************************/
 
     tuple = heap_form_tuple(tuple_desc, values, nulls);
     result = HeapTupleGetDatum(tuple);
