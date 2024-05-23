@@ -322,11 +322,15 @@ subdivide_processing(
             pgassert(shipments_to_process > 0);
             pgassert(shipments_in_stops.size() == static_cast<size_t>(shipments_to_process));
 
+#if 1
+            auto new_stops = one_processing(active_orders, active_vehicles, the_stops, time_matrix, max_cycles, execution_date);
+#else
             auto new_stops = one_processing(
                     shipments_arr, shipments_to_process,
                     vehicles_arr, vehicles_to_process, the_stops,
                     time_matrix,
                     max_cycles, execution_date);
+#endif
 
             update_stops(the_stops, new_stops);
         }
