@@ -23,16 +23,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
-#include "problem/tw_node.h"
+#include "problem/tw_node.hpp"
 
 #include <limits>
 #include <string>
 
-#include "cpp_common/pgr_assert.h"
+#include "cpp_common/assert.hpp"
 #include "c_types/order_types.h"
 #include "c_types/vehicle_types.h"
 
-#include "problem/matrix.h"
+#include "problem/matrix.hpp"
 
 
 namespace vrprouting {

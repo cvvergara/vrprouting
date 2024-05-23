@@ -87,7 +87,7 @@ process(
     vrp_SPI_connect();
 
     clock_t start_t = clock();
-    do_pgr_pickDeliverEuclidean(
+    vrp_do_pgr_pickDeliverEuclidean(
             pd_orders_sql,
             vehicles_sql,
 

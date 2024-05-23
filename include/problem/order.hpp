@@ -30,9 +30,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #pragma once
 
 
-#include "cpp_common/identifier.h"
+#include "cpp_common/identifier.hpp"
 #include "cpp_common/identifiers.hpp"
-#include "problem/vehicle_node.h"
+#include "problem/vehicle_node.hpp"
 
 namespace vrprouting {
 namespace problem {

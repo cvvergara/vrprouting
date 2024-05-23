@@ -44,13 +44,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_types/return_types.h"
 
 #include "cpp_common/alloc.hpp"
-#include "cpp_common/interruption.h"
-#include "cpp_common/pgr_assert.h"
-#include "cpp_common/pgr_messages.h"
+#include "cpp_common/interruption.hpp"
+#include "cpp_common/assert.hpp"
+#include "cpp_common/messages.hpp"
 #include "cpp_common/pgdata_getters.hpp"
 
-#include "problem/pickDeliver.h"
-#include "problem/matrix.h"
+#include "problem/pickDeliver.hpp"
+#include "problem/matrix.hpp"
 #include "initialsol/tabu.h"
 #include "optimizers/tabu.h"
 

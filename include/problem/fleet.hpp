@@ -36,10 +36,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_types/typedefs.h"
 #include "c_types/vehicle_types.h"
 #include "cpp_common/short_vehicle.hpp"
-#include "problem/vehicle_pickDeliver.h"
+#include "problem/vehicle_pickDeliver.hpp"
 
 namespace vrprouting {
-class Pgr_messages;
+class Messages;
 
 namespace problem {
 class Orders;
@@ -134,7 +134,7 @@ class Fleet: protected std::vector<Vehicle_pickDeliver> {
     /** @brief set the vehicle's user's initial solution */
     void set_initial_solution(const Orders&, Identifiers<size_t>&, Identifiers<size_t>&, TTimestamp, bool);
 
-    Pgr_messages& msg() {return m_msg;}
+    Messages& msg() {return m_msg;}
 
  protected:
     /** @brief add a new vehicle to the fleet */
@@ -165,7 +165,7 @@ class Fleet: protected std::vector<Vehicle_pickDeliver> {
     /** set of invalid vehicles */
     Identifiers<size_t> m_invalid;
 
-    mutable Pgr_messages m_msg;
+    mutable Messages m_msg;
 
     /* for the invariant */
     size_t m_size;

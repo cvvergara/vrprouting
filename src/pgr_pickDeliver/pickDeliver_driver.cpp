@@ -38,15 +38,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_types/return_types.h"
 #include "c_types/matrix_types.h"
 #include "cpp_common/alloc.hpp"
-#include "cpp_common/pgr_assert.h"
+#include "cpp_common/assert.hpp"
 #include "cpp_common/pgdata_getters.hpp"
-#include "problem/solution.h"
+#include "problem/solution.hpp"
 #include "initialsol/simple.h"
 #include "optimizers/simple.h"
 
-#include "problem/pickDeliver.h"
+#include "problem/pickDeliver.hpp"
 #include "initialsol/initials_code.h"
-#include "problem/matrix.h"
+#include "problem/matrix.hpp"
 
 namespace  {
 vrprouting::problem::Solution
@@ -73,7 +73,7 @@ get_initial_solution(vrprouting::problem::PickDeliver* problem_ptr, int m_initia
 }  // namespace
 
 void
-do_pgr_pickDeliver(
+vrp_do_pgr_pickDeliver(
         char* orders_sql,
         char* vehicles_sql,
         char* matrix_sql,

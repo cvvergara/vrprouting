@@ -90,7 +90,7 @@ process(
     vrp_SPI_connect();
 
     clock_t start_t = clock();
-    do_pgr_pickDeliver(
+    vrp_do_pgr_pickDeliver(
             pd_orders_sql,
             vehicles_sql,
             matrix_sql,

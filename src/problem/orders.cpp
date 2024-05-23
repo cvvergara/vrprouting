@@ -25,12 +25,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 /*! @file */
 
-#include "problem/orders.h"
+#include "problem/orders.hpp"
 
 #include <vector>
 #include <utility>
 
-#include "cpp_common/pgr_assert.h"
+#include "cpp_common/assert.hpp"
 #include "cpp_common/identifiers.hpp"
 
 

@@ -38,8 +38,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <tuple>
 #include <iomanip>
 
-#include "problem/vehicle_pickDeliver.h"
-#include "problem/fleet.h"
+#include "problem/vehicle_pickDeliver.hpp"
+#include "problem/fleet.hpp"
 #include "cpp_common/short_vehicle.hpp"
 
 typedef struct Solution_rt Solution_rt;
@@ -116,7 +116,7 @@ class Solution {
 
     bool operator<(const Solution&) const;
 
-    Pgr_messages& msg() {return m_msg;}
+    Messages& msg() {return m_msg;}
     const Orders& orders() const {return m_orders;}
     Fleet& vehicles() {return m_trucks;}
 
@@ -127,7 +127,7 @@ class Solution {
     /** the problem info */
     Orders m_orders;
     Fleet  m_trucks;
-    Pgr_messages m_msg;
+    Messages m_msg;
 };
 
 }  //  namespace problem
