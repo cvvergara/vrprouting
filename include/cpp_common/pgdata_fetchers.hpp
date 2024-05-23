@@ -48,11 +48,6 @@ using Info = struct Column_info_t;
 namespace vrprouting {
 
 /** @brief for matrix */
-#if 0
-void fetch_matrix_plain(
-    const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
-    Matrix_cell_t*, bool);
-#endif
 void fetch_breaks(
     const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
     Vroom_break_t*, bool);
@@ -61,37 +56,11 @@ void fetch_jobs(
     const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
     Vroom_job_t*, bool);
 
-#if 0
-void fetch_matrix_vroom(
-    const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
-    Vroom_matrix_t*, bool);
-
-void fetch_orders(
-    const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
-    PickDeliveryOrders_t*, bool);
-
-void fetch_vroom_shipments(
-    const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
-    Vroom_shipment_t*, bool);
-
-void fetch_multipliers(
-    const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
-    Time_multipliers_t*, bool);
-#endif
 
 void fetch_tw(
     const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
     Vroom_time_window_t*, bool);
 
-#if 0
-void fetch_vehicles_euclidean(
-    const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
-    Vehicle_t*, bool);
-
-void fetch_vehicles(
-    const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
-    Vehicle_t*, bool);
-#endif
 
 void fetch_vroom_vehicles(
     const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,

@@ -57,26 +57,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 namespace vrprouting {
 namespace pgget {
 
-#if 0
-/**
- * @param[in] input the postgres array
- * @param[in] allow_empty when true, empty arrays are accepted.
- * @returns Returns a vector of int64_t
- */
-std::vector<int64_t> get_intArray(ArrayType *input, bool allow_empty) {
-    return vrprouting::get_pgarray(input, allow_empty);
-}
-
-/**
- * @param[in] arr 1 dimension postgres array
- * @returns Returns a set of int64_t
- *
- * Can be empty set.
- */
-std::set<int64_t> get_intSet(ArrayType *arr) {
-    return vrprouting::get_pgset(arr);
-}
-#endif
 
 namespace vroom {
 std::vector<Vroom_matrix_t> get_matrix(

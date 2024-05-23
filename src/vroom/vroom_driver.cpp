@@ -239,10 +239,6 @@ vrp_do_vroom(
     }
     vrprouting::base::Base_Matrix matrix(costs, location_ids, min_speed_factor);
     log << matrix;
-#if 0
-    vrprouting::base::Base_Matrix matrix(matrix_rows, total_matrix_rows,
-            location_ids, min_speed_factor);
-#endif
 
     /*
      * Verify matrix cells preconditions

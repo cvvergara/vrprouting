@@ -107,85 +107,7 @@ process(
   (*result_tuples) = NULL;
   (*result_count) = 0;
 
-#if 0
-  Vroom_job_t *jobs = NULL;
-  size_t total_jobs = 0;
-  if (jobs_sql) {
-    vrp_get_vroom_jobs(jobs_sql, &jobs, &total_jobs, use_timestamps, &err_msg);
-    throw_error(err_msg, jobs_sql);
-  }
 
-  Vroom_shipment_t *shipments = NULL;
-  size_t total_shipments = 0;
-  if (shipments_sql) {
-    vrp_get_vroom_shipments(shipments_sql, &shipments, &total_shipments, use_timestamps, &err_msg);
-    throw_error(err_msg, shipments_sql);
-  }
-
-  if (total_jobs == 0 && total_shipments == 0) {
-    if (fn == 0) {
-      ereport(WARNING, (errmsg("Insufficient data found on Jobs SQL and Shipments SQL query."),
-                        errhint("%s, %s", jobs_sql, shipments_sql)));
-    } else if (fn == 1) {
-      ereport(WARNING, (errmsg("Insufficient data found on Jobs SQL query."),
-                        errhint("%s", jobs_sql)));
-    } else if (fn == 2) {
-      ereport(WARNING, (errmsg("Insufficient data found on Shipments SQL query."),
-                        errhint("%s", shipments_sql)));
-    }
-    (*result_count) = 0;
-    (*result_tuples) = NULL;
-    vrp_SPI_finish();
-    return;
-  }
-#endif
-
-#if 0
-  Vroom_time_window_t *jobs_tws = NULL;
-  size_t total_jobs_tws = 0;
-  if (jobs_tws_sql) {
-    vrp_get_vroom_time_windows(jobs_tws_sql, &jobs_tws, &total_jobs_tws, use_timestamps, &err_msg);
-    throw_error(err_msg, jobs_tws_sql);
-  }
-
-  Vroom_time_window_t *shipments_tws = NULL;
-  size_t total_shipments_tws = 0;
-  if (shipments_tws_sql) {
-    vrp_get_vroom_shipments_time_windows(
-        shipments_tws_sql, &shipments_tws, &total_shipments_tws, use_timestamps, &err_msg);
-    throw_error(err_msg, shipments_tws_sql);
-  }
-
-  Vroom_vehicle_t *vehicles = NULL;
-  size_t total_vehicles = 0;
-  vrp_get_vroom_vehicles(vehicles_sql, &vehicles, &total_vehicles, use_timestamps, &err_msg);
-  throw_error(err_msg, vehicles_sql);
-
-
-  if (total_vehicles == 0) {
-    ereport(WARNING, (errmsg("Insufficient data found on Vehicles SQL query."),
-                      errhint("%s", vehicles_sql)));
-    (*result_count) = 0;
-    (*result_tuples) = NULL;
-    vrp_SPI_finish();
-    return;
-  }
-
-  Vroom_break_t *breaks = NULL;
-  size_t total_breaks = 0;
-  if (breaks_sql) {
-    vrp_get_vroom_breaks(breaks_sql, &breaks, &total_breaks, use_timestamps, &err_msg);
-    throw_error(err_msg, breaks_sql);
-  }
-
-
-  Vroom_time_window_t *breaks_tws = NULL;
-  size_t total_breaks_tws = 0;
-  if (breaks_tws_sql) {
-    vrp_get_vroom_time_windows(breaks_tws_sql, &breaks_tws, &total_breaks_tws, use_timestamps, &err_msg);
-    throw_error(err_msg, breaks_tws_sql);
-  }
-#endif
 
 
   clock_t start_t = clock();
@@ -230,11 +152,6 @@ process(
   if (notice_msg) pfree(notice_msg);
   if (err_msg) pfree(err_msg);
 
-#if 0
-  if (jobs) pfree(jobs);
-  if (shipments) pfree(shipments);
-  if (vehicles) pfree(vehicles);
-#endif
   vrp_SPI_finish();
 }
 
