@@ -199,10 +199,10 @@ class Vrp_vroom_problem : public vrprouting::Messages {
   }
 
   void add_jobs(const Vroom_job_t *jobs, size_t count,
-                const Vroom_time_window_t *jobs_tws, size_t total_jobs_tws) {
+                const std::vector<Vroom_time_window_t> &jobs_tw) {
     add_jobs(
         std::vector<Vroom_job_t>(jobs, jobs + count),
-        std::vector<Vroom_time_window_t>(jobs_tws, jobs_tws + total_jobs_tws));
+        jobs_tw);
   }
   ///@}
 

@@ -83,7 +83,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 void
 vrp_do_vroom(
     Vroom_job_t *jobs, size_t total_jobs,
-    Vroom_time_window_t *jobs_tws, size_t total_jobs_tws,
+    char* jobs_tws_sql,
     Vroom_shipment_t *shipments, size_t total_shipments,
     char* shipments_tws_sql,
     Vroom_vehicle_t *vehicles, size_t total_vehicles,
@@ -133,6 +133,10 @@ vrp_do_vroom(
 
     hint = breaks_tws_sql;
     auto breaks_tw = breaks_tws_sql? get_timewindows(std::string(breaks_tws_sql), use_timestamps, false)
+        : std::vector<Vroom_time_window_t>();
+
+    hint = jobs_tws_sql;
+    auto jobs_tw  = jobs_tws_sql? get_timewindows(std::string(jobs_tws_sql), use_timestamps, false)
         : std::vector<Vroom_time_window_t>();
 
     hint = shipments_tws_sql;
@@ -239,7 +243,7 @@ vrp_do_vroom(
                          breaks,
                          breaks_tw);
     problem.add_jobs(jobs, total_jobs,
-                     jobs_tws, total_jobs_tws);
+                     jobs_tw);
     problem.add_shipments(shipments, total_shipments,
                           shipments_tw);
 

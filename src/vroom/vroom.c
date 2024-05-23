@@ -138,6 +138,7 @@ process(
     return;
   }
 
+#if 0
   Vroom_time_window_t *jobs_tws = NULL;
   size_t total_jobs_tws = 0;
   if (jobs_tws_sql) {
@@ -145,7 +146,6 @@ process(
     throw_error(err_msg, jobs_tws_sql);
   }
 
-#if 0
   Vroom_time_window_t *shipments_tws = NULL;
   size_t total_shipments_tws = 0;
   if (shipments_tws_sql) {
@@ -194,7 +194,7 @@ process(
 
   vrp_do_vroom(
     jobs, total_jobs,
-    jobs_tws, total_jobs_tws,
+    jobs_tws_sql,
     shipments, total_shipments,
     shipments_tws_sql,
     vehicles, total_vehicles,
