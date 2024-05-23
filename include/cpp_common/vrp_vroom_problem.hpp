@@ -410,10 +410,10 @@ class Vrp_vroom_problem : public vrprouting::Messages {
   }
 
   void add_vehicles(const Vroom_vehicle_t *vehicles, size_t count,
-                    const Vroom_break_t *breaks, size_t total_breaks,
+                    const std::vector<Vroom_break_t> &breaks,
                     const Vroom_time_window_t *breaks_tws, size_t total_breaks_tws) {
     add_vehicles(std::vector<Vroom_vehicle_t>(vehicles, vehicles + count),
-                 std::vector<Vroom_break_t>(breaks, breaks + total_breaks),
+                 breaks,
                  std::vector<Vroom_time_window_t>(breaks_tws, breaks_tws + total_breaks_tws));
   }
   ///@}

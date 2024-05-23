@@ -42,7 +42,7 @@ extern "C" {
       Vroom_shipment_t *shipments, size_t total_shipments,
       Vroom_time_window_t *shipments_tws, size_t total_shipments_tws,
       Vroom_vehicle_t *vehicles, size_t total_vehicles,
-      Vroom_break_t *breaks, size_t total_breaks,
+      char*,
       Vroom_time_window_t *breaks_tws, size_t total_breaks_tws,
       char*,
 

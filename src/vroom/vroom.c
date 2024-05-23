@@ -168,12 +168,14 @@ process(
     return;
   }
 
+#if 0
   Vroom_break_t *breaks = NULL;
   size_t total_breaks = 0;
   if (breaks_sql) {
     vrp_get_vroom_breaks(breaks_sql, &breaks, &total_breaks, use_timestamps, &err_msg);
     throw_error(err_msg, breaks_sql);
   }
+#endif
 
 
   Vroom_time_window_t *breaks_tws = NULL;
@@ -183,28 +185,6 @@ process(
     throw_error(err_msg, breaks_tws_sql);
   }
 
-#if 0
-  Vroom_matrix_t *matrix_rows = NULL;
-  size_t total_matrix_rows = 0;
-  vrp_get_vroom_matrix(matrix_sql, &matrix_rows, &total_matrix_rows, use_timestamps, &err_msg);
-  throw_error(err_msg, matrix_sql);
-
-  DBG_Vroom_shipment_t(shipments, total_shipments, "shipments");
-  DBG_Vroom_time_window_t(shipments_tws, total_shipments_tws, "shipments_tws");
-  DBG_Vroom_vehicle_t(vehicles, total_vehicles, "vehicles");
-  DBG_Vroom_break_t(breaks, total_breaks, "breaks");
-  DBG_Vroom_time_window_t(breaks_tws, total_breaks_tws, "breaks_tws");
-  DBG_Vroom_matrix_t(matrix_rows, total_matrix_rows, "matrix_rows");
-
-  if (total_matrix_rows == 0) {
-    ereport(WARNING, (errmsg("Insufficient data found on Matrix SQL query."),
-                      errhint("%s", matrix_sql)));
-    (*result_count) = 0;
-    (*result_tuples) = NULL;
-    vrp_SPI_finish();
-    return;
-  }
-#endif
 
   clock_t start_t = clock();
 
@@ -216,7 +196,7 @@ process(
     shipments, total_shipments,
     shipments_tws, total_shipments_tws,
     vehicles, total_vehicles,
-    breaks, total_breaks,
+    breaks_sql,
     breaks_tws, total_breaks_tws,
     matrix_sql,
 
@@ -250,9 +230,6 @@ process(
   if (jobs) pfree(jobs);
   if (shipments) pfree(shipments);
   if (vehicles) pfree(vehicles);
-#if 0
-  if (matrix_rows) pfree(matrix_rows);
-#endif
   vrp_SPI_finish();
 }
 
@@ -346,11 +323,7 @@ PGDLLEXPORT Datum _vrp_vroom(PG_FUNCTION_ARGS) {
     /**********************************************************************/
 
 
-#if PGSQL_VERSION > 95
     funcctx->max_calls = result_count;
-#else
-    funcctx->max_calls = (uint32_t)result_count;
-#endif
     funcctx->user_fctx = result_tuples;
     if (get_call_result_type(fcinfo, NULL, &tuple_desc)
         != TYPEFUNC_COMPOSITE) {

@@ -59,6 +59,7 @@ void check_pairs(vrprouting::Column_info_t lhs, vrprouting::Column_info_t rhs) {
 namespace vrprouting {
 
 
+#if 0
 void fetch_matrix_plain(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
@@ -68,7 +69,7 @@ void fetch_matrix_plain(
   row->to_vid = get_value<Id>(tuple, tupdesc,  info[1], -1);
   row->cost = get_value<TInterval>(tuple, tupdesc, info[2], 0);
 }
-
+#endif
 
 void fetch_breaks(
     const HeapTuple tuple, const TupleDesc &tupdesc,
@@ -314,6 +315,18 @@ void fetch_vroom_vehicles(
 
 namespace pgget {
 namespace vroom {
+
+Vroom_break_t fetch_breaks(
+    const HeapTuple tuple, const TupleDesc &tupdesc,
+    const std::vector<Column_info_t> &info,
+    bool) {
+  Vroom_break_t vroom_break;
+  vroom_break.id = get_value<Idx>(tuple, tupdesc, info[0], 0);
+  vroom_break.vehicle_id = get_value<Idx>(tuple, tupdesc, info[1], 0);
+  vroom_break.service = get_value<Duration>(tuple, tupdesc, info[2], 0);
+  vroom_break.data = get_jsonb(tuple, tupdesc, info[3]);
+  return vroom_break;
+}
 
 Vroom_matrix_t fetch_matrix(
     const HeapTuple tuple, const TupleDesc &tupdesc,

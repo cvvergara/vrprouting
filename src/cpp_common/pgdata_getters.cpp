@@ -91,6 +91,20 @@ std::vector<Vroom_matrix_t> get_matrix(
 
     return pgget::get_data<Vroom_matrix_t>(sql, use_timestamps, info, &fetch_matrix);
 }
+
+std::vector<Vroom_break_t> get_breaks(
+    const std::string &sql,
+    bool use_timestamps) {
+  using vrprouting::Info;
+  std::vector<Info> info{
+    {-1, 0, true, "id", vrprouting::IDX},
+    {-1, 0, true, "vehicle_id", vrprouting::IDX},
+    {-1, 0, false, "service", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+    {-1, 0, false, "data", vrprouting::JSONB}};
+
+    return pgget::get_data<Vroom_break_t>(sql, use_timestamps, info, &fetch_breaks);
+}
+
 }  // namespace vroom
 
 std::vector<Time_multipliers_t> get_timeMultipliers(

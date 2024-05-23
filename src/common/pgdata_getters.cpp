@@ -51,6 +51,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 
 
+#if 0
 /**
  * @param [in]  sql Query for Vroom_matrix_t
  * @param [out] rows C Container that holds all the matrix rows
@@ -87,6 +88,7 @@ vrp_get_vroom_matrix(
     *err_msg = msg("Caught unknown exception!");
   }
 }
+#endif
 
 /**
  * @param[in] sql SQL query to execute
