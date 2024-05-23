@@ -94,6 +94,7 @@ vrp_do_vroom(
     int32_t exploration_level,
     int32_t timeout,
     int32_t loading_time,
+    int16_t fn_used,
 
     bool use_timestamps,
 
@@ -153,6 +154,16 @@ vrp_do_vroom(
         *notice_msg = msg("Insufficient data found on inner query");
         *log_msg = msg(matrix_sql);
         return;
+    }
+
+    if ((fn_used == 0 || fn_used == 1) && jobs.empty()) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = msg(jobs_sql);
+            return;
+    } else if ((fn_used == 0 || fn_used == 2) && total_shipments == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = msg("shipments_sql");
+            return;
     }
 
     auto start_time = std::chrono::high_resolution_clock::now();

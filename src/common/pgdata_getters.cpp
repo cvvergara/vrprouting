@@ -125,7 +125,6 @@ vrp_get_vroom_breaks(
     *err_msg = msg("Caught unknown exception!");
   }
 }
-#endif
 
 
 /**
@@ -169,6 +168,7 @@ vrp_get_vroom_jobs(
     *err_msg = msg("Caught unknown exception!");
   }
 }
+#endif
 
 
 
@@ -219,6 +219,7 @@ vrp_get_vroom_shipments(
 
 
 
+#if 0
 /**
  * @param[in] sql SQL query to execute
  * @param[out] rows C Container that holds the data
@@ -292,7 +293,7 @@ vrp_get_vroom_shipments_time_windows(
     *err_msg = msg("Caught unknown exception!");
   }
 }
-
+#endif
 
 
 

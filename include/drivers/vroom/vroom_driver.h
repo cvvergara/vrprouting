@@ -49,6 +49,7 @@ extern "C" {
       int32_t exploration_level,
       int32_t timeout,
       int32_t loading_time,
+      int16_t,
 
       bool,
 
