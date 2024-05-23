@@ -106,7 +106,7 @@ vrp_do_vroom(
   using vrprouting::msg;
   using vrprouting::free;
   using vrprouting::alloc;
-  using vrprouting::pgget::get_matrix_vroom;
+  using vrprouting::pgget::vroom::get_matrix;
 
   std::ostringstream log;
   std::ostringstream err;
@@ -126,7 +126,7 @@ vrp_do_vroom(
     pgassert(total_vehicles);
 
     hint = matrix_sql;
-    auto costs = get_matrix_vroom(std::string(matrix_sql), use_timestamps);
+    auto costs = get_matrix(std::string(matrix_sql), use_timestamps);
 
     if (costs.size() == 0) {
         *notice_msg = msg("Insufficient data found on inner query");

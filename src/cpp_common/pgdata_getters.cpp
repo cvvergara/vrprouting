@@ -78,6 +78,21 @@ std::set<int64_t> get_intSet(ArrayType *arr) {
 }
 #endif
 
+namespace vroom {
+std::vector<Vroom_matrix_t> get_matrix(
+    const std::string &sql,
+    bool use_timestamps) {
+  using vrprouting::Info;
+  std::vector<Info> info{
+    {-1, 0, true, "start_id", vrprouting::MATRIX_INDEX},
+    {-1, 0, true, "end_id", vrprouting::MATRIX_INDEX},
+    {-1, 0, true, "duration", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+    {-1, 0, false, "cost", vrprouting::INTEGER}};
+
+    return pgget::get_data<Vroom_matrix_t>(sql, use_timestamps, info, &fetch_matrix_vroom);
+}
+}  // namespace vroom
+
 std::vector<Time_multipliers_t> get_timeMultipliers(
     const std::string &sql,
     bool use_timestamps) {
@@ -103,19 +118,6 @@ std::vector<Matrix_cell_t> get_matrix(
       use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL}};
 
     return pgget::get_data<Matrix_cell_t>(sql, use_timestamps, info, &fetch_matrix);
-}
-
-std::vector<Vroom_matrix_t> get_matrix_vroom(
-    const std::string &sql,
-    bool use_timestamps) {
-  using vrprouting::Info;
-  std::vector<Info> info{
-    {-1, 0, true, "start_id", vrprouting::MATRIX_INDEX},
-    {-1, 0, true, "end_id", vrprouting::MATRIX_INDEX},
-    {-1, 0, true, "duration", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
-    {-1, 0, false, "cost", vrprouting::INTEGER}};
-
-    return pgget::get_data<Vroom_matrix_t>(sql, use_timestamps, info, &fetch_matrix_vroom);
 }
 
 
