@@ -340,6 +340,33 @@ Vroom_matrix_t fetch_matrix(
   return matrix;
 }
 
+Vroom_time_window_t fetch_timewindows(
+        const HeapTuple tuple, const TupleDesc &tupdesc,
+        const std::vector<Column_info_t> &info,
+        bool) {
+    Vroom_time_window_t time_window;
+
+    time_window.id = get_value<Idx>(tuple, tupdesc, info[0], 0);
+    time_window.kind = ' ';
+    auto is_shipment = column_found(info[3]) && info[3].strict;
+
+    if (is_shipment) {
+        char kind = get_char(tuple, tupdesc, info[3], ' ');
+        if (kind != 'p' && kind != 'd') {
+            throw std::string("Invalid kind '") + kind + "', Expecting 'p' or 'd'";
+        }
+        time_window.kind = kind;
+    }
+
+    time_window.tw_open = get_value<Duration>(tuple, tupdesc, info[1], 0);
+    time_window.tw_close = get_value<Duration>(tuple, tupdesc, info[2], 0);
+
+    if (time_window.tw_open > time_window.tw_close) {
+        throw std::string("Invalid time window found: '") + info[2].name + "' < '" + info[1].name + "'";
+    }
+    return time_window;
+}
+
 }  // namespace vroom
 
 Matrix_cell_t fetch_matrix(

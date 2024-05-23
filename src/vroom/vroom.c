@@ -175,7 +175,6 @@ process(
     vrp_get_vroom_breaks(breaks_sql, &breaks, &total_breaks, use_timestamps, &err_msg);
     throw_error(err_msg, breaks_sql);
   }
-#endif
 
 
   Vroom_time_window_t *breaks_tws = NULL;
@@ -184,6 +183,7 @@ process(
     vrp_get_vroom_time_windows(breaks_tws_sql, &breaks_tws, &total_breaks_tws, use_timestamps, &err_msg);
     throw_error(err_msg, breaks_tws_sql);
   }
+#endif
 
 
   clock_t start_t = clock();
@@ -197,7 +197,7 @@ process(
     shipments_tws, total_shipments_tws,
     vehicles, total_vehicles,
     breaks_sql,
-    breaks_tws, total_breaks_tws,
+    breaks_tws_sql,
     matrix_sql,
 
     exploration_level,

@@ -113,7 +113,7 @@ Vehicle_t fetch_vehicles(const HeapTuple, const TupleDesc&, const std::vector<In
 namespace vroom {
 Vroom_matrix_t fetch_matrix(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 Vroom_shipment_t fetch_vroom_shipments(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
-Vroom_time_window_t fetch_tw(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
+Vroom_time_window_t fetch_timewindows(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
 Vehicle_t fetch_vehicles_euclidean(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 

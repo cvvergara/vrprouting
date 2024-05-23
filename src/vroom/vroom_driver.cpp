@@ -88,7 +88,7 @@ vrp_do_vroom(
     Vroom_time_window_t *shipments_tws, size_t total_shipments_tws,
     Vroom_vehicle_t *vehicles, size_t total_vehicles,
     char* breaks_sql,
-    Vroom_time_window_t *breaks_tws, size_t total_breaks_tws,
+    char* breaks_tws_sql,
     char* matrix_sql,
 
     int32_t exploration_level,
@@ -108,6 +108,7 @@ vrp_do_vroom(
   using vrprouting::alloc;
   using vrprouting::pgget::vroom::get_matrix;
   using vrprouting::pgget::vroom::get_breaks;
+  using vrprouting::pgget::vroom::get_timewindows;
 
   std::ostringstream log;
   std::ostringstream err;
@@ -127,7 +128,12 @@ vrp_do_vroom(
     pgassert(total_vehicles);
 
     hint = breaks_sql;
-    auto breaks = breaks_sql? get_breaks(std::string(breaks_sql), use_timestamps) : std::vector<Vroom_break_t>();
+    auto breaks = breaks_sql? get_breaks(std::string(breaks_sql), use_timestamps)
+        : std::vector<Vroom_break_t>();
+
+    hint = breaks_tws_sql;
+    auto breaks_tw = breaks_tws_sql? get_timewindows(std::string(breaks_tws_sql), use_timestamps)
+        : std::vector<Vroom_time_window_t>();
 
     hint = matrix_sql;
     auto costs = get_matrix(std::string(matrix_sql), use_timestamps);
@@ -227,7 +233,7 @@ vrp_do_vroom(
     problem.add_matrix(matrix);
     problem.add_vehicles(vehicles, total_vehicles,
                          breaks,
-                         breaks_tws, total_breaks_tws);
+                         breaks_tw);
     problem.add_jobs(jobs, total_jobs,
                      jobs_tws, total_jobs_tws);
     problem.add_shipments(shipments, total_shipments,

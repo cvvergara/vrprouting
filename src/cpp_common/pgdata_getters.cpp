@@ -105,6 +105,19 @@ std::vector<Vroom_break_t> get_breaks(
     return pgget::get_data<Vroom_break_t>(sql, use_timestamps, info, &fetch_breaks);
 }
 
+std::vector<Vroom_time_window_t> get_timewindows(
+    const std::string &sql,
+    bool use_timestamps) {
+  using vrprouting::Info;
+  std::vector<Info> info{
+      {-1, 0, true, "id", vrprouting::ANY_INTEGER},
+      {-1, 0, true, "tw_open", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+      {-1, 0, true, "tw_close", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+      {-1, 0, false, "kind", vrprouting::CHAR1}};
+
+    return pgget::get_data<Vroom_time_window_t>(sql, use_timestamps, info, &fetch_timewindows);
+}
+
 }  // namespace vroom
 
 std::vector<Time_multipliers_t> get_timeMultipliers(

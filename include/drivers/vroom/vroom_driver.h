@@ -43,7 +43,7 @@ extern "C" {
       Vroom_time_window_t *shipments_tws, size_t total_shipments_tws,
       Vroom_vehicle_t *vehicles, size_t total_vehicles,
       char*,
-      Vroom_time_window_t *breaks_tws, size_t total_breaks_tws,
+      char*,
       char*,
 
       int32_t exploration_level,

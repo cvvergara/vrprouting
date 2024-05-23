@@ -88,7 +88,6 @@ vrp_get_vroom_matrix(
     *err_msg = msg("Caught unknown exception!");
   }
 }
-#endif
 
 /**
  * @param[in] sql SQL query to execute
@@ -126,6 +125,7 @@ vrp_get_vroom_breaks(
     *err_msg = msg("Caught unknown exception!");
   }
 }
+#endif
 
 
 /**
