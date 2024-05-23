@@ -131,7 +131,7 @@ one_processing(
 }
 
 
-/** @brief: extract the times where the shipments opens or closes
+/** @brief: extract the times where the orders opens or closes
  *
  *  @param[in] shipments_arr A C Array of pickup and dropoff shipments
  *  @param[in] total_shipments size of the shipments_arr
@@ -139,15 +139,13 @@ one_processing(
  *  @returns processing times
  */
 Identifiers<TTimestamp>
-processing_times_by_shipment(
-        PickDeliveryOrders_t *shipments_arr, size_t total_shipments
-        ) {
+processing_times_by_shipment(const std::vector<PickDeliveryOrders_t> orders) {
     Identifiers<TTimestamp> processing_times;
-    for (size_t i = 0; i < total_shipments; ++i) {
-        processing_times += shipments_arr[i].pick_open_t;
-        processing_times += shipments_arr[i].pick_close_t;
-        processing_times += shipments_arr[i].deliver_open_t;
-        processing_times += shipments_arr[i].deliver_close_t;
+    for (const auto &o : orders) {
+        processing_times += o.pick_open_t;
+        processing_times += o.pick_close_t;
+        processing_times += o.deliver_open_t;
+        processing_times += o.deliver_close_t;
     }
     return processing_times;
 }
@@ -238,25 +236,43 @@ subdivide_processing(
         std::ostringstream &log) {
     try {
         std::vector<Vehicle_t> vehicles(vehicles_arr, vehicles_arr + total_vehicles);
+        std::vector<PickDeliveryOrders_t> orders(shipments_arr, shipments_arr + total_shipments);
         auto the_stops = get_initial_stops(vehicles);
 
         auto processing_times = subdivide_by_vehicle?
             processing_times_by_vehicle(vehicles)
-            : processing_times_by_shipment(shipments_arr, total_shipments);
+            : processing_times_by_shipment(orders);
 
         Identifiers<Id> prev_shipments_in_stops;
+        /*
+         * process active vehicles and orders at time \b t
+         */
         for (const auto &t : processing_times) {
             CHECK_FOR_INTERRUPTS();
             /*
              * Get active vehicles at time t
              */
+#if 0
+            std::vector<Vehicle_t> active_vehicles;
+            std::vector<Vehicle_t> inactive_vehicles;
+            std::partition_copy(vehicles.begin(), vehicles.end(),
+                    active_vehicles.begin(), inactive_vehicles.begin(),
+                    [&](const Vehicle_t& v)
+                    {return v.start_open_t <= t && t <= v.end_close_t;});
+#endif
+
             auto vehicles_to_process = static_cast<size_t>(std::distance(vehicles_arr,
                         std::partition(
                             vehicles_arr, vehicles_arr + total_vehicles,
                             [&](const Vehicle_t& v)
                             {return v.start_open_t <= t && t <= v.end_close_t;})));
 
-            /* Get shipments in stops of active vehicles */
+#if 0
+            pgassert(active_vehicles.size() == vehicles_to_process);
+            pgassert(vehicles.size() == total_vehicles);
+#endif
+
+            /* Get active orders of active vehicles */
             Identifiers<Id> shipments_in_stops;
             for (size_t i = 0; i < vehicles_to_process; ++i) {
                 auto v_id = vehicles_arr[i].id;
