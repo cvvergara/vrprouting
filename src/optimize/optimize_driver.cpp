@@ -416,6 +416,8 @@ do_optimize(
         Identifiers<Id> node_ids;
         Identifiers<Id> shipments_in_stops;
 
+        std::vector<Vehicle_t> vehicles(vehicles_arr, vehicles_arr + total_vehicles);
+
         /*
          * Remove vehicles not going to be optimized and sort remaining vehicles
          * 1. sort by id
@@ -423,6 +425,22 @@ do_optimize(
          *   - data comes from query that could possibly give a duplicate
          * 3. remove vehicles that closes(end) before the execution time
          */
+        std::sort(vehicles.begin(), vehicles.end(),
+                [](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id < rhs.id;});
+
+        vehicles.erase(
+                    std::unique(
+                        vehicles.begin(), vehicles.end(),
+                        [&](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id == rhs.id;}),
+                    vehicles.end());
+
+        vehicles.erase(
+                    std::remove_if(
+                        vehicles.begin(), vehicles.end(),
+                        [&](const Vehicle_t& v){return v.end_close_t < execution_date;}),
+                    vehicles.end());
+
+#if 0
         std::sort(vehicles_arr, vehicles_arr + total_vehicles,
                 [](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id < rhs.id;});
 
@@ -433,6 +451,8 @@ do_optimize(
         total_vehicles = static_cast<size_t>(std::distance(vehicles_arr,
                     std::remove_if(vehicles_arr, vehicles_arr + total_vehicles,
                         [&](const Vehicle_t& v){return v.end_close_t < execution_date;})));
+        pgassert(vehicles.size() == total_vehicles);
+#endif
 
         /*
          * Remove shipments not involved in optimization
@@ -510,7 +530,6 @@ do_optimize(
             return;
         }
 
-        std::vector<Vehicle_t> vehicles(vehicles_arr, vehicles_arr + total_vehicles);
         std::vector<PickDeliveryOrders_t> orders(shipments_arr, shipments_arr + total_shipments);
         /*
          * get the solution
