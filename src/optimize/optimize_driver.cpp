@@ -225,16 +225,14 @@ update_stops(std::vector<Short_vehicle>& the_stops,  // NOLINT [runtime/referenc
  */
 std::vector<Short_vehicle>
 subdivide_processing(
-        PickDeliveryOrders_t *shipments_arr, size_t total_shipments,
-        Vehicle_t *vehicles_arr, size_t total_vehicles,
+        const std::vector<PickDeliveryOrders_t> &orders,
+        const std::vector<Vehicle_t> &vehicles,
         const vrprouting::problem::Matrix &time_matrix,
         int max_cycles,
         int64_t execution_date,
         bool subdivide_by_vehicle,
         std::ostringstream &log) {
     try {
-        std::vector<Vehicle_t> vehicles(vehicles_arr, vehicles_arr + total_vehicles);
-        std::vector<PickDeliveryOrders_t> orders(shipments_arr, shipments_arr + total_shipments);
         auto the_stops = get_initial_stops(vehicles);
 
         auto processing_times = subdivide_by_vehicle?
@@ -257,22 +255,25 @@ subdivide_processing(
                     [&](const Vehicle_t& v)
                     {return v.start_open_t <= t && t <= v.end_close_t;});
 
+#if 0
             auto vehicles_to_process = static_cast<size_t>(std::distance(vehicles_arr,
                         std::partition(
                             vehicles_arr, vehicles_arr + total_vehicles,
                             [&](const Vehicle_t& v)
                             {return v.start_open_t <= t && t <= v.end_close_t;})));
-
             pgassert(active_vehicles.size() == vehicles_to_process);
             pgassert(vehicles.size() == total_vehicles);
+#endif
 
             /* Get active orders of active vehicles */
             Identifiers<Id> orders_in_active_vehicles;
             for (const auto &v : active_vehicles) {
+                // TODO fix
                 std::set<Id> stops(v.stops, v.stops + v.stops_size);
                 orders_in_active_vehicles += stops;
             }
 
+#if 0
             Identifiers<Id> shipments_in_stops;
             for (size_t i = 0; i < vehicles_to_process; ++i) {
                 auto v_id = vehicles_arr[i].id;
@@ -287,7 +288,7 @@ subdivide_processing(
 
             pgassert(orders_in_active_vehicles.size() == shipments_in_stops.size());
             pgassert(orders_in_active_vehicles == shipments_in_stops);
-
+#endif
             /*
              * Nothing to do:
              * - no shipments to process
@@ -313,14 +314,16 @@ subdivide_processing(
                     [&](const PickDeliveryOrders_t& o)
                     {return orders_in_active_vehicles.has(o.id);});
 
+#if 0
             auto shipments_to_process = static_cast<size_t>(std::distance(shipments_arr,
                         std::partition(shipments_arr, shipments_arr + total_shipments,
                             [&](const PickDeliveryOrders_t& s){return orders_in_active_vehicles.has(s.id);})));
 
             pgassert(active_orders.size() == shipments_to_process);
-            pgassert(active_orders.size() == orders_in_active_vehicles.size());
-            pgassert(shipments_to_process > 0);
             pgassert(shipments_in_stops.size() == static_cast<size_t>(shipments_to_process));
+#endif
+            pgassert(active_orders.size() == orders_in_active_vehicles.size());
+            pgassert(active_orders.size() > 0);
 
 #if 1
             auto new_stops = one_processing(active_orders, active_vehicles, the_stops, time_matrix, max_cycles, execution_date);
@@ -560,13 +563,14 @@ do_optimize(
             return;
         }
 
+        std::vector<Vehicle_t> vehicles(vehicles_arr, vehicles_arr + total_vehicles);
+        std::vector<PickDeliveryOrders_t> orders(shipments_arr, shipments_arr + total_shipments);
         /*
          * get the solution
          */
         auto solution = subdivide?
             subdivide_processing(
-                    shipments_arr, total_shipments,
-                    vehicles_arr, total_vehicles,
+                    orders, vehicles,
                     time_matrix,
                     max_cycles, execution_date,
                     subdivide_by_vehicle,
