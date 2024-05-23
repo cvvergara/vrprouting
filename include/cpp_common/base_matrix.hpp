@@ -66,7 +66,8 @@ class Base_Matrix {
     Base_Matrix(Matrix_cell_t *, size_t, const Identifiers<Id>&, Multiplier);
     Base_Matrix(const std::vector<Matrix_cell_t>&, const Identifiers<Id>&, Multiplier);
     Base_Matrix(Vroom_matrix_t *, size_t, const Identifiers<Id> &, double);
-    explicit Base_Matrix(const std::map<std::pair<Coordinate, Coordinate>, Id> &, Multiplier);
+    Base_Matrix(const std::vector<Vroom_matrix_t>&, const Identifiers<Id>&, Multiplier);
+    Base_Matrix(const std::map<std::pair<Coordinate, Coordinate>, Id> &, Multiplier);
 
     /** @name status of the matrix
      * @{

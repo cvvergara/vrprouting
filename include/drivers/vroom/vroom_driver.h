@@ -36,7 +36,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 extern "C" {
 #endif
 
-  void do_vrp_vroom(
+  void vrp_do_vroom(
       Vroom_job_t *jobs, size_t total_jobs,
       Vroom_time_window_t *jobs_tws, size_t total_jobs_tws,
       Vroom_shipment_t *shipments, size_t total_shipments,
@@ -44,11 +44,13 @@ extern "C" {
       Vroom_vehicle_t *vehicles, size_t total_vehicles,
       Vroom_break_t *breaks, size_t total_breaks,
       Vroom_time_window_t *breaks_tws, size_t total_breaks_tws,
-      Vroom_matrix_t *matrix_cells_arr, size_t total_cells,
+      char*,
 
       int32_t exploration_level,
       int32_t timeout,
       int32_t loading_time,
+
+      bool,
 
       Vroom_rt **return_tuples,
       size_t *return_count,

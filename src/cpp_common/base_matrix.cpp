@@ -357,6 +357,62 @@ Base_Matrix::Base_Matrix(
  * @post costs[from_vid, to_vid] = 0 when from_vid = to_vid
  *
  */
+Base_Matrix::Base_Matrix(
+        const std::vector<Vroom_matrix_t> &matrix,
+        const Identifiers<Id> &location_ids, Multiplier scaling_factor) {
+    /*
+     * Sets the selected nodes identifiers
+     */
+    m_ids.insert(m_ids.begin(), location_ids.begin(), location_ids.end());
+
+    /*
+     * Create matrix
+     * Set initial values to infinity
+     */
+    m_time_matrix.resize(m_ids.size(), std::vector<TInterval>(m_ids.size(), (std::numeric_limits<TInterval>::max)()));
+    m_cost_matrix.resize(m_ids.size(), std::vector<TravelCost>(m_ids.size(), (std::numeric_limits<TravelCost>::max)()));
+
+    Identifiers<Idx> inserted;
+    /*
+     * Cycle the matrix data
+     * skip if row is not from selected nodes
+     */
+    for (const auto &cell : matrix) {
+        /*
+         * skip if cell is not from selected nodes
+         */
+        if (!(has_id(cell.start_id) && has_id(cell.end_id))) continue;
+
+        auto sidx = get_index(cell.start_id);
+        auto eidx = get_index(cell.end_id);
+
+        /*
+         * Save the information. Scale the time matrix according to scaling_factor
+         */
+        m_time_matrix[sidx][eidx] = static_cast<Duration>(std::round(cell.duration / scaling_factor));
+        m_cost_matrix[sidx][eidx] = static_cast<Duration>(cell.cost);
+
+        /*
+         * If the opposite direction is infinity insert the same values
+         */
+        if (m_time_matrix[eidx][sidx] == (std::numeric_limits<TInterval>::max)()) {
+            m_time_matrix[eidx][sidx] = m_time_matrix[sidx][eidx];
+        }
+
+        if (m_cost_matrix[eidx][sidx] == (std::numeric_limits<TInterval>::max)()) {
+            m_cost_matrix[eidx][sidx] = m_cost_matrix[sidx][eidx];
+        }
+    }
+
+    /*
+     * Set the diagonal values to 0
+     */
+    for (size_t i = 0; i < m_time_matrix.size(); ++i) {
+        m_time_matrix[i][i] = static_cast<Duration>(scaling_factor - scaling_factor);
+        m_cost_matrix[i][i] = static_cast<Duration>(scaling_factor - scaling_factor);
+    }
+}
+
 Base_Matrix::Base_Matrix(Vroom_matrix_t *matrix_rows, size_t total_matrix_rows,
                          const Identifiers<Id> &location_ids, double scaling_factor) {
   /*

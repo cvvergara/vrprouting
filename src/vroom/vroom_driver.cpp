@@ -36,6 +36,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "cpp_common/alloc.hpp"
 #include "cpp_common/assert.hpp"
+#include "cpp_common/pgdata_getters.hpp"
 #include "cpp_common/vrp_vroom_problem.hpp"
 
 /** @file vroom_driver.cpp
@@ -80,7 +81,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * @param [out] err_msg            Stores the error message
  */
 void
-do_vrp_vroom(
+vrp_do_vroom(
     Vroom_job_t *jobs, size_t total_jobs,
     Vroom_time_window_t *jobs_tws, size_t total_jobs_tws,
     Vroom_shipment_t *shipments, size_t total_shipments,
@@ -88,11 +89,13 @@ do_vrp_vroom(
     Vroom_vehicle_t *vehicles, size_t total_vehicles,
     Vroom_break_t *breaks, size_t total_breaks,
     Vroom_time_window_t *breaks_tws, size_t total_breaks_tws,
-    Vroom_matrix_t *matrix_rows, size_t total_matrix_rows,
+    char* matrix_sql,
 
     int32_t exploration_level,
     int32_t timeout,
     int32_t loading_time,
+
+    bool use_timestamps,
 
     Vroom_rt **return_tuples,
     size_t *return_count,
@@ -103,10 +106,14 @@ do_vrp_vroom(
   using vrprouting::msg;
   using vrprouting::free;
   using vrprouting::alloc;
+  using vrprouting::pgget::get_matrix_vroom;
 
   std::ostringstream log;
   std::ostringstream err;
   std::ostringstream notice;
+
+  char* hint = nullptr;
+
   try {
     pgassert(!(*log_msg));
     pgassert(!(*notice_msg));
@@ -115,10 +122,17 @@ do_vrp_vroom(
     pgassert(!(*return_count));
     pgassert(jobs || shipments);
     pgassert(vehicles);
-    pgassert(matrix_rows);
     pgassert(total_jobs || total_shipments);
     pgassert(total_vehicles);
-    pgassert(total_matrix_rows);
+
+    hint = matrix_sql;
+    auto costs = get_matrix_vroom(std::string(matrix_sql), use_timestamps);
+
+    if (costs.size() == 0) {
+        *notice_msg = msg("Insufficient data found on inner query");
+        *log_msg = msg(matrix_sql);
+        return;
+    }
 
     auto start_time = std::chrono::high_resolution_clock::now();
 
@@ -170,8 +184,17 @@ do_vrp_vroom(
     /*
      * Create the matrix. Also, scale the time matrix according to min_speed_factor
      */
+    log << "the min speed factor " << min_speed_factor << "\tmax speed factor " << min_speed_factor << "\n";
+    for (const auto c: costs) {
+        log << "start_id" << c.start_id << "\tend_id" << c.end_id
+            << "\tduration" << c.duration << "\tcost" << c.cost << "\n";
+    }
+    vrprouting::base::Base_Matrix matrix(costs, location_ids, min_speed_factor);
+    log << matrix;
+#if 0
     vrprouting::base::Base_Matrix matrix(matrix_rows, total_matrix_rows,
-                                         location_ids, min_speed_factor);
+            location_ids, min_speed_factor);
+#endif
 
     /*
      * Verify matrix cells preconditions
@@ -181,6 +204,7 @@ do_vrp_vroom(
       (*return_count) = 0;
       err << "An Infinity value was found on the Matrix. Might be missing information of a node";
       *err_msg = msg(err.str());
+      *log_msg = msg(log.str());
       return;
     }
 
@@ -237,29 +261,38 @@ do_vrp_vroom(
     *notice_msg = notice.str().empty()?
       *notice_msg :
       msg(notice.str().c_str());
-  } catch (AssertFailedException &except) {
-    (*return_tuples) = free(*return_tuples);
-    (*return_count) = 0;
-    err << except.what();
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  } catch (const vroom::Exception &except) {
-    (*return_tuples) = free(*return_tuples);
-    (*return_count) = 0;
-    err << except.message;
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  } catch (std::exception &except) {
-    (*return_tuples) = free(*return_tuples);
-    (*return_count) = 0;
-    err << except.what();
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  } catch(...) {
-    (*return_tuples) = free(*return_tuples);
-    (*return_count) = 0;
-    err << "Caught unknown exception!";
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  }
+    } catch (AssertFailedException &except) {
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << except.what();
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch (std::exception& except) {
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << except.what();
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch (const std::string &ex) {
+        *err_msg = msg(ex.c_str());
+        *log_msg = hint? msg(hint) : msg(log.str().c_str());
+    } catch (const std::pair<std::string, std::string>& ex) {
+        (*return_count) = 0;
+        err << ex.first;
+        log << ex.second;
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch (const std::pair<std::string, int64_t>& ex) {
+        (*return_count) = 0;
+        err << ex.first;
+        log << "FOOOO missing on matrix: id =  " << ex.second;
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch(...) {
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << "Caught unknown exception!";
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    }
 }

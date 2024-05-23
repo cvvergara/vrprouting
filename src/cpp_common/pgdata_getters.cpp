@@ -52,6 +52,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_types/vehicle_types.h"
 #include "c_types/multiplier_types.h"
 #include "c_types/matrix_types.h"
+#include "c_types/vroom_types.h"
 
 namespace vrprouting {
 namespace pgget {
@@ -103,6 +104,20 @@ std::vector<Matrix_cell_t> get_matrix(
 
     return pgget::get_data<Matrix_cell_t>(sql, use_timestamps, info, &fetch_matrix);
 }
+
+std::vector<Vroom_matrix_t> get_matrix_vroom(
+    const std::string &sql,
+    bool use_timestamps) {
+  using vrprouting::Info;
+  std::vector<Info> info{
+    {-1, 0, true, "start_id", vrprouting::MATRIX_INDEX},
+    {-1, 0, true, "end_id", vrprouting::MATRIX_INDEX},
+    {-1, 0, true, "duration", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+    {-1, 0, false, "cost", vrprouting::INTEGER}};
+
+    return pgget::get_data<Vroom_matrix_t>(sql, use_timestamps, info, &fetch_matrix_vroom);
+}
+
 
 /**
   For queries comming from pgRouting

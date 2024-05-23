@@ -66,8 +66,7 @@ std::vector<Vehicle_t> get_vehicles(const std::string&, bool, bool, bool);
 std::vector<Time_multipliers_t> get_timeMultipliers(const std::string&, bool);
 
 /** @brief Reads the VROOM matrix */
-std::vector<Vroom_matrix_t> vrp_get_vroom_matrix(const std::string&, bool);
-
+std::vector<Vroom_matrix_t> get_matrix_vroom(const std::string&, bool);
 
 /** @brief Reads the VROOM breaks */
 std::vector<Vroom_break_t> vrp_get_vroom_breaks(const std::string&, bool);

@@ -95,6 +95,7 @@ void fetch_vroom_vehicles(
 namespace pgget {
 
 Matrix_cell_t fetch_matrix(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
+Vroom_matrix_t fetch_matrix_vroom(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
 PickDeliveryOrders_t fetch_orders(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
@@ -104,8 +105,6 @@ Vehicle_t fetch_vehicles(const HeapTuple, const TupleDesc&, const std::vector<In
 
 
 Vroom_shipment_t fetch_vroom_shipments(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
-
-
 Vroom_time_window_t fetch_tw(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
 Vehicle_t fetch_vehicles_euclidean(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
@@ -114,8 +113,6 @@ Vehicle_t fetch_vehicles_euclidean(const HeapTuple, const TupleDesc&, const std:
 Vroom_break_t fetch_breaks(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
 Vroom_job_t fetch_jobs(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
-
-Vroom_matrix_t fetch_matrix_vroom(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
 Vroom_vehicle_t fetch_vroom_vehicles(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
