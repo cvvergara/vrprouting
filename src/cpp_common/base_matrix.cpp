@@ -286,6 +286,7 @@ Base_Matrix::Base_Matrix(
   }
 }
 
+#if 0
 Base_Matrix::Base_Matrix(
     Matrix_cell_t *data_costs, size_t size_matrix,
     const Identifiers<Id>& node_ids,
@@ -340,6 +341,7 @@ Base_Matrix::Base_Matrix(
     m_time_matrix[i][i] = 0;
   }
 }
+#endif
 
 /**
  * @brief Constructor for VROOM matrix input
@@ -413,6 +415,7 @@ Base_Matrix::Base_Matrix(
     }
 }
 
+#if 0
 Base_Matrix::Base_Matrix(Vroom_matrix_t *matrix_rows, size_t total_matrix_rows,
                          const Identifiers<Id> &location_ids, double scaling_factor) {
   /*
@@ -476,6 +479,7 @@ Base_Matrix::Base_Matrix(Vroom_matrix_t *matrix_rows, size_t total_matrix_rows,
     m_cost_matrix[i][i] = 0;
   }
 }
+#endif
 
 /*
  * constructor for euclidean

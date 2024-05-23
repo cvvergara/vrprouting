@@ -180,6 +180,7 @@ time_change(const std::vector<std::tuple<TTimestamp, Multiplier>> &tdm, TTimesta
 
 }  // namespace
 
+#if 0
 Matrix::Matrix(
         Matrix_cell_t *matrix, size_t size_matrix,
         Time_multipliers_t *multipliers, size_t size_multipliers,
@@ -187,6 +188,7 @@ Matrix::Matrix(
         Multiplier multiplier) :
     Base_Matrix(matrix, size_matrix, node_ids, multiplier),
     m_multipliers(set_tdm(multipliers, size_multipliers)) { }
+#endif
 
 /*
  * constructor
@@ -209,6 +211,7 @@ Matrix::Matrix(
     Base_Matrix(euclidean_data, multiplier),
     m_multipliers(set_tdm(multipliers, size_multipliers)) { }
 
+#if 0
 /*
  * constructor for euclidean default multipliers
  */
@@ -218,6 +221,7 @@ Matrix::Matrix(
         Multiplier multiplier) :
     Base_Matrix(matrix, size_matrix, node_ids, multiplier),
     m_multipliers{{0, 1}} { }
+#endif
 
 /*
  * constructor for euclidean default multipliers
