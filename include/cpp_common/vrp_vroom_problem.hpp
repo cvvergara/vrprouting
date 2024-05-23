@@ -281,12 +281,14 @@ class Vrp_vroom_problem : public vrprouting::Messages {
     }
   }
 
+#if 0
   void add_shipments(const Vroom_shipment_t *shipments, size_t count,
           const std::vector <Vroom_time_window_t> &shipments_tws) {
       add_shipments(
               std::vector<Vroom_shipment_t>(shipments, shipments + count),
               shipments_tws);
   }
+#endif
   ///@}
 
 

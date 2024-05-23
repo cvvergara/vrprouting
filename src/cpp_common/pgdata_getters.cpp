@@ -144,7 +144,34 @@ std::vector<Vroom_job_t> get_jobs(
     return pgget::get_data<Vroom_job_t>(sql, use_timestamps, info, &fetch_jobs);
 }
 
+/**
+ * @param[in] sql SQL query to execute
+ * @param[out] rows C Container that holds the data
+ * @param[out] total_rows Total rows recieved
+ * @param [in] use_timestamps When true postgres Time datatypes are used
+ * @param [out] err_msg When not empty there was an error
+ */
+std::vector<Vroom_shipment_t>
+get_shipments(
+    const std::string &sql,
+    bool use_timestamps) {
+    using vrprouting::Info;
+    std::vector<Info> info{
+        {-1, 0, true, "id", vrprouting::IDX},
+        {-1, 0, true, "p_location_id", vrprouting::MATRIX_INDEX},
+        {-1, 0, false, "p_setup", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+        {-1, 0, false, "p_service", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+        {-1, 0, true, "d_location_id", vrprouting::MATRIX_INDEX},
+        {-1, 0, false, "d_setup", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+        {-1, 0, false, "d_service", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+        {-1, 0, false, "amount", vrprouting::ANY_POSITIVE_ARRAY},
+        {-1, 0, false, "skills", vrprouting::ANY_UINT_ARRAY},
+        {-1, 0, false, "priority", vrprouting::POSITIVE_INTEGER},
+        {-1, 0, false, "p_data", vrprouting::JSONB},
+        {-1, 0, false, "d_data", vrprouting::JSONB}};
 
+    return pgget::get_data<Vroom_shipment_t>(sql, use_timestamps, info, &fetch_shipments);
+}
 
 }  // namespace vroom
 

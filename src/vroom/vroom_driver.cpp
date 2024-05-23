@@ -84,7 +84,7 @@ void
 vrp_do_vroom(
     char* jobs_sql,
     char* jobs_tws_sql,
-    Vroom_shipment_t *shipments, size_t total_shipments,
+    char* shipments_sql,
     char* shipments_tws_sql,
     Vroom_vehicle_t *vehicles, size_t total_vehicles,
     char* breaks_sql,
@@ -111,6 +111,7 @@ vrp_do_vroom(
   using vrprouting::pgget::vroom::get_breaks;
   using vrprouting::pgget::vroom::get_timewindows;
   using vrprouting::pgget::vroom::get_jobs;
+  using vrprouting::pgget::vroom::get_shipments;
 
   std::ostringstream log;
   std::ostringstream err;
@@ -143,6 +144,10 @@ vrp_do_vroom(
     auto jobs_tw  = jobs_tws_sql? get_timewindows(std::string(jobs_tws_sql), use_timestamps, false)
         : std::vector<Vroom_time_window_t>();
 
+    hint = shipments_sql;
+    auto shipments  = shipments_sql? get_shipments(std::string(shipments_sql), use_timestamps)
+        : std::vector<Vroom_shipment_t>();
+
     hint = shipments_tws_sql;
     auto shipments_tw  = shipments_tws_sql? get_timewindows(std::string(shipments_tws_sql), use_timestamps, true)
         : std::vector<Vroom_time_window_t>();
@@ -160,7 +165,7 @@ vrp_do_vroom(
             *notice_msg = msg("Insufficient data found on inner query");
             *log_msg = msg(jobs_sql);
             return;
-    } else if ((fn_used == 0 || fn_used == 2) && total_shipments == 0) {
+    } else if ((fn_used == 0 || fn_used == 2) && shipments.empty()) {
             *notice_msg = msg("Insufficient data found on inner query");
             *log_msg = msg("shipments_sql");
             return;
@@ -174,9 +179,9 @@ vrp_do_vroom(
       location_ids += j.location_id;
     }
 
-    for (size_t i = 0; i < total_shipments; ++i) {
-      location_ids += shipments[i].p_location_id;
-      location_ids += shipments[i].d_location_id;
+    for (const auto &s : shipments) {
+      location_ids += s.p_location_id;
+      location_ids += s.d_location_id;
     }
 
     double min_speed_factor, max_speed_factor;
@@ -257,8 +262,7 @@ vrp_do_vroom(
                          breaks,
                          breaks_tw);
     problem.add_jobs(jobs, jobs_tw);
-    problem.add_shipments(shipments, total_shipments,
-                          shipments_tw);
+    problem.add_shipments(shipments, shipments_tw);
 
     auto end_time = std::chrono::high_resolution_clock::now();
     loading_time += static_cast<int32_t>(

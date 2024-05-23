@@ -80,7 +80,6 @@ void fetch_breaks(
   vroom_break->service = get_value<Duration>(tuple, tupdesc, info[2], 0);
   vroom_break->data = get_jsonb(tuple, tupdesc, info[3]);
 }
-#endif
 
 void fetch_jobs(
     const HeapTuple tuple, const TupleDesc &tupdesc,
@@ -108,6 +107,7 @@ void fetch_jobs(
     throw std::string("Invalid value in column '") + info[7].name + "'. Maximum value allowed 100";
   }
 }
+#endif
 
 
 #if 0
@@ -397,6 +397,40 @@ Vroom_job_t fetch_jobs(
   }
   return job;
 }
+
+Vroom_shipment_t fetch_shipments(
+        const HeapTuple tuple, const TupleDesc &tupdesc,
+        const std::vector<Column_info_t> &info,
+        bool) {
+    Vroom_shipment_t shipment;
+
+    shipment.id = get_value<Idx>(tuple, tupdesc, info[0], 0);
+
+    shipment.p_location_id = get_value<MatrixIndex>(tuple, tupdesc, info[1], 0);
+    shipment.d_location_id = get_value<MatrixIndex>(tuple, tupdesc, info[4], 0);
+
+    shipment.p_setup = get_value<Duration>(tuple, tupdesc, info[2], 0);
+    shipment.p_service = get_value<Duration>(tuple, tupdesc, info[3], 0);
+    shipment.d_setup = get_value<Duration>(tuple, tupdesc, info[5], 0);
+    shipment.d_service = get_value<Duration>(tuple, tupdesc, info[6], 0);
+
+    shipment.amount_size = 0;
+    shipment.amount = get_array<Amount>(tuple, tupdesc, info[7], shipment.amount_size);
+
+    shipment.skills_size = 0;
+    shipment.skills = get_uint_array<Skill>(tuple, tupdesc, info[8], shipment.skills_size);
+
+    shipment.priority = get_value<Priority>(tuple, tupdesc, info[9], 0);
+
+    shipment.p_data = get_jsonb(tuple, tupdesc, info[10]);
+    shipment.d_data = get_jsonb(tuple, tupdesc, info[11]);
+
+    if (shipment.priority > 100) {
+        throw std::string("Invalid value in column '") + info[9].name + "'. Maximum value allowed 100";
+    }
+    return shipment;
+}
+
 
 }  // namespace vroom
 

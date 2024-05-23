@@ -114,7 +114,6 @@ process(
     vrp_get_vroom_jobs(jobs_sql, &jobs, &total_jobs, use_timestamps, &err_msg);
     throw_error(err_msg, jobs_sql);
   }
-#endif
 
   Vroom_shipment_t *shipments = NULL;
   size_t total_shipments = 0;
@@ -123,7 +122,6 @@ process(
     throw_error(err_msg, shipments_sql);
   }
 
-#if 0
   if (total_jobs == 0 && total_shipments == 0) {
     if (fn == 0) {
       ereport(WARNING, (errmsg("Insufficient data found on Jobs SQL and Shipments SQL query."),
@@ -199,7 +197,7 @@ process(
   vrp_do_vroom(
     jobs_sql,
     jobs_tws_sql,
-    shipments, total_shipments,
+    shipments_sql,
     shipments_tws_sql,
     vehicles, total_vehicles,
     breaks_sql,
@@ -236,8 +234,8 @@ process(
 
 #if 0
   if (jobs) pfree(jobs);
-#endif
   if (shipments) pfree(shipments);
+#endif
   if (vehicles) pfree(vehicles);
   vrp_SPI_finish();
 }

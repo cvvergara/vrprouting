@@ -38,8 +38,7 @@ extern "C" {
 
   void vrp_do_vroom(
       char*, char*,
-      Vroom_shipment_t *shipments, size_t total_shipments,
-      char*,
+      char*, char*,
       Vroom_vehicle_t *vehicles, size_t total_vehicles,
 
       char*,
