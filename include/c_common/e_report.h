@@ -55,7 +55,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 /*! @brief notice & error
  *
  *  ~~~~{.c}
- *  pgr_notice(&log_msg, &notice_msg, &error_msg);
+ *  vrp_global_report(&log_msg, &notice_msg, &error_msg);
  *
  *  precondition: before calling ereport
  *      assert(!*log_msg);

@@ -1,6 +1,6 @@
 /*PGR-GNU*****************************************************************
 
-FILE: pgr_messages.h
+FILE: messages.hpp
 
 Copyright (c) 2015 pgRouting developers
 Mail: project@pgrouting.org
@@ -27,8 +27,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 File from pgRouting
 */
 
-#ifndef INCLUDE_CPP_COMMON_PGR_MESSAGES_H_
-#define INCLUDE_CPP_COMMON_PGR_MESSAGES_H_
+#ifndef INCLUDE_CPP_COMMON_PGR_MESSAGES_HPP_
+#define INCLUDE_CPP_COMMON_PGR_MESSAGES_HPP_
 #pragma once
 
 
@@ -49,11 +49,11 @@ namespace vrprouting {
  * notice
  * error
  */
-class Pgr_messages {
+class Messages {
  public:
-    Pgr_messages() = default;
-    Pgr_messages(const Pgr_messages&) {}
-    Pgr_messages& operator=(const Pgr_messages&) {return *this;}
+    Messages() = default;
+    Messages(const Messages&) {}
+    Messages& operator=(const Messages&) {return *this;}
 
     /*! @brief gets the contents of @b log message
      *
@@ -109,4 +109,4 @@ class Pgr_messages {
 
 }  // namespace vrprouting
 
-#endif  // INCLUDE_CPP_COMMON_PGR_MESSAGES_H_
+#endif  // INCLUDE_CPP_COMMON_PGR_MESSAGES_HPP_

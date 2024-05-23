@@ -1,6 +1,6 @@
 /*PGR-GNU*****************************************************************
 
-FILE: pgr_assert
+FILE: assert.h
 
 Copyright 2015~ Vicky Vergara <vicky_vergara@hotmail.com>
 Copyright 2014 Stephen Woodbridge <woodbri@imaptools.com>
@@ -68,7 +68,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * Example:
  * @code
     #include <iostream>
-    #include "pgr_assert.h"
+    #include "assert.h"
 
     int main() {
 

@@ -38,16 +38,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_types/matrix_types.h"
 #include "c_types/vehicle_types.h"
 #include "c_types/vroom_types.h"
-#include "cpp_common/base_matrix.h"
-#include "cpp_common/interruption.h"
-#include "cpp_common/pgr_messages.h"
+#include "cpp_common/base_matrix.hpp"
+#include "cpp_common/interruption.hpp"
+#include "cpp_common/messages.hpp"
 #include "structures/vroom/input/input.h"
 #include "structures/vroom/job.h"
 #include "structures/vroom/vehicle.h"
 
 namespace vrprouting {
 
-class Vrp_vroom_problem : public vrprouting::Pgr_messages {
+class Vrp_vroom_problem : public vrprouting::Messages {
  public:
   std::vector<vroom::Job> jobs() const { return m_jobs; }
   std::vector<std::pair<vroom::Job, vroom::Job>> shipments() const { return m_shipments; }

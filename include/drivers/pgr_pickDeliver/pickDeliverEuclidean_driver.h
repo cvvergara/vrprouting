@@ -32,11 +32,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_DRIVERS_PGR_PICKDELIVER_PICKDELIVEREUCLIDEAN_DRIVER_H_
 #pragma once
 
-/* for size-t */
 #ifdef __cplusplus
-#   include <cstddef>
+#include <cstddef>
 #else
-#   include <stddef.h>
+#include <stddef.h>
 #endif
 
 #include "c_types/typedefs.h"
@@ -45,9 +44,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 extern "C" {
 #endif
 
-  void do_pgr_pickDeliverEuclidean(
-      char*,
-      char*,
+  void vrp_do_pgr_pickDeliverEuclidean(
+      char*, char*,
 
       double factor,
       int max_cycles,

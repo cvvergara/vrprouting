@@ -50,7 +50,7 @@ SPI_pfree(void *pointer);
 
 namespace vrprouting {
 
-/*! \fn pgr_alloc(std::size_t size, T *ptr)
+/*! \fn alloc(std::size_t size, T *ptr)
 
 \brief allocates memory
 

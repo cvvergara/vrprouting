@@ -1,6 +1,6 @@
 /*WC-GNU*****************************************************************
 
-FILE: pgr_pickDeliver.h
+FILE: pickDeliver.h
 
 Copyright (c) 2017 pgRouting developers
 Mail: project@pgrouting.org
@@ -38,11 +38,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_types/order_types.h"
 #include "c_types/vehicle_types.h"
 
-#include "cpp_common/pgr_messages.h"
-#include "problem/vehicle_node.h"
-#include "problem/orders.h"
-#include "problem/fleet.h"
-#include "problem/matrix.h"
+#include "cpp_common/messages.hpp"
+#include "problem/vehicle_node.hpp"
+#include "problem/orders.hpp"
+#include "problem/fleet.hpp"
+#include "problem/matrix.hpp"
 
 namespace vrprouting {
 namespace problem {
@@ -51,6 +51,7 @@ namespace problem {
 class PickDeliver {
  public:
     /** @brief General Constructor */
+#if 0
     PickDeliver(
         PickDeliveryOrders_t* p_orders, size_t p_orders_size,
         Vehicle_t* p_vehicles, size_t p_vehicles_size,
@@ -63,7 +64,7 @@ class PickDeliver {
         m_orders.set_compatibles();
         m_trucks.set_compatibles(m_orders);
       }
-
+#endif
     PickDeliver(
         const std::vector<PickDeliveryOrders_t> &p_orders,
         const std::vector<Vehicle_t> &p_vehicles,
