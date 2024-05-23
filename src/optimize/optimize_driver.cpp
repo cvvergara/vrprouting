@@ -169,10 +169,9 @@ processing_times_by_vehicle(const std::vector<Vehicle_t> &vehicles) {
     return processing_times;
 }
 
-/** @brief get the original stops
+/** @brief get the stops of a set of vehicles
  *
- *  @param[in] vehicles_arr A C Array of vehicles
- *  @param[in] total_vehicles size of the vehicles_arr
+ *  @param[in] vehicles
  *
  *  @returns vector of (vehicle id, stops vector) pairs ascending order of vehicles
  */
@@ -182,16 +181,15 @@ get_initial_stops(
         ) {
     std::vector<Short_vehicle> the_stops;
     for (const auto &v : vehicles) {
-        std::vector<Id> stops;
-        for (size_t j = 0; j < v.stops_size; ++j) {
-            stops.push_back(v.stops[j]);
-        }
+        std::vector<Id> stops(v.stops, v.stops + v.stops_size);
         the_stops.push_back({v.id, stops});
     }
     std::sort(the_stops.begin(), the_stops.end(), []
             (const Short_vehicle &lhs, const Short_vehicle &rhs) {return lhs.id < rhs.id;});
     return the_stops;
 }
+
+
 
 /** @brief Update the vehicle stops to the new values
  *
@@ -252,14 +250,12 @@ subdivide_processing(
             /*
              * Get active vehicles at time t
              */
-#if 0
             std::vector<Vehicle_t> active_vehicles;
             std::vector<Vehicle_t> inactive_vehicles;
             std::partition_copy(vehicles.begin(), vehicles.end(),
-                    active_vehicles.begin(), inactive_vehicles.begin(),
+                    std::back_inserter(active_vehicles), std::back_inserter(inactive_vehicles),
                     [&](const Vehicle_t& v)
                     {return v.start_open_t <= t && t <= v.end_close_t;});
-#endif
 
             auto vehicles_to_process = static_cast<size_t>(std::distance(vehicles_arr,
                         std::partition(
@@ -267,12 +263,16 @@ subdivide_processing(
                             [&](const Vehicle_t& v)
                             {return v.start_open_t <= t && t <= v.end_close_t;})));
 
-#if 0
             pgassert(active_vehicles.size() == vehicles_to_process);
             pgassert(vehicles.size() == total_vehicles);
-#endif
 
             /* Get active orders of active vehicles */
+            Identifiers<Id> orders_in_active_vehicles;
+            for (const auto &v : active_vehicles) {
+                std::set<Id> stops(v.stops, v.stops + v.stops_size);
+                orders_in_active_vehicles += stops;
+            }
+
             Identifiers<Id> shipments_in_stops;
             for (size_t i = 0; i < vehicles_to_process; ++i) {
                 auto v_id = vehicles_arr[i].id;
@@ -284,6 +284,9 @@ subdivide_processing(
                     shipments_in_stops += s;
                 }
             }
+
+            pgassert(orders_in_active_vehicles.size() == shipments_in_stops.size());
+            pgassert(orders_in_active_vehicles == shipments_in_stops);
 
             /*
              * Nothing to do:
