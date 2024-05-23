@@ -348,19 +348,16 @@ Vroom_matrix_t fetch_matrix(
 Vroom_time_window_t fetch_timewindows(
         const HeapTuple tuple, const TupleDesc &tupdesc,
         const std::vector<Column_info_t> &info,
-        bool) {
+        bool is_shipment) {
     Vroom_time_window_t time_window;
 
     time_window.id = get_value<Idx>(tuple, tupdesc, info[0], 0);
-    time_window.kind = ' ';
-    auto is_shipment = column_found(info[3]) && info[3].strict;
+    time_window.kind = is_shipment? get_char(tuple, tupdesc, info[3], ' ') : ' ';
 
     if (is_shipment) {
-        char kind = get_char(tuple, tupdesc, info[3], ' ');
-        if (kind != 'p' && kind != 'd') {
-            throw std::string("Invalid kind '") + kind + "', Expecting 'p' or 'd'";
+        if (time_window.kind != 'p' && time_window.kind != 'd') {
+            throw std::string("Invalid kind '") + time_window.kind + "', Expecting 'p' or 'd'";
         }
-        time_window.kind = kind;
     }
 
     time_window.tw_open = get_value<Duration>(tuple, tupdesc, info[1], 0);

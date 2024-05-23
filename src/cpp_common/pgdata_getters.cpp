@@ -107,15 +107,15 @@ std::vector<Vroom_break_t> get_breaks(
 
 std::vector<Vroom_time_window_t> get_timewindows(
     const std::string &sql,
-    bool use_timestamps) {
+    bool use_timestamps, bool is_shipment) {
   using vrprouting::Info;
   std::vector<Info> info{
       {-1, 0, true, "id", vrprouting::ANY_INTEGER},
       {-1, 0, true, "tw_open", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
       {-1, 0, true, "tw_close", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
-      {-1, 0, false, "kind", vrprouting::CHAR1}};
+      {-1, 0, is_shipment, "kind", vrprouting::CHAR1}};
 
-    return pgget::get_data<Vroom_time_window_t>(sql, use_timestamps, info, &fetch_timewindows);
+    return pgget::get_data<Vroom_time_window_t>(sql, is_shipment, info, &fetch_timewindows);
 }
 
 }  // namespace vroom

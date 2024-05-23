@@ -73,7 +73,7 @@ std::vector<Vroom_matrix_t> get_matrix(const std::string&, bool);
 std::vector<Vroom_break_t> get_breaks(const std::string&, bool);
 
 /** @brief Reads the VROOM time windows */
-std::vector<Vroom_time_window_t> get_timewindows(const std::string&, bool);
+std::vector<Vroom_time_window_t> get_timewindows(const std::string&, bool, bool);
 
 /** @brief Reads the VROOM jobs */
 std::vector<Vroom_job_t> get_jobs(const std::string&, bool);

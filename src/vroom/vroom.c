@@ -145,6 +145,7 @@ process(
     throw_error(err_msg, jobs_tws_sql);
   }
 
+#if 0
   Vroom_time_window_t *shipments_tws = NULL;
   size_t total_shipments_tws = 0;
   if (shipments_tws_sql) {
@@ -152,6 +153,7 @@ process(
         shipments_tws_sql, &shipments_tws, &total_shipments_tws, use_timestamps, &err_msg);
     throw_error(err_msg, shipments_tws_sql);
   }
+#endif
 
   Vroom_vehicle_t *vehicles = NULL;
   size_t total_vehicles = 0;
@@ -194,7 +196,7 @@ process(
     jobs, total_jobs,
     jobs_tws, total_jobs_tws,
     shipments, total_shipments,
-    shipments_tws, total_shipments_tws,
+    shipments_tws_sql,
     vehicles, total_vehicles,
     breaks_sql,
     breaks_tws_sql,

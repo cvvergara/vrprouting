@@ -85,7 +85,7 @@ vrp_do_vroom(
     Vroom_job_t *jobs, size_t total_jobs,
     Vroom_time_window_t *jobs_tws, size_t total_jobs_tws,
     Vroom_shipment_t *shipments, size_t total_shipments,
-    Vroom_time_window_t *shipments_tws, size_t total_shipments_tws,
+    char* shipments_tws_sql,
     Vroom_vehicle_t *vehicles, size_t total_vehicles,
     char* breaks_sql,
     char* breaks_tws_sql,
@@ -132,7 +132,11 @@ vrp_do_vroom(
         : std::vector<Vroom_break_t>();
 
     hint = breaks_tws_sql;
-    auto breaks_tw = breaks_tws_sql? get_timewindows(std::string(breaks_tws_sql), use_timestamps)
+    auto breaks_tw = breaks_tws_sql? get_timewindows(std::string(breaks_tws_sql), use_timestamps, false)
+        : std::vector<Vroom_time_window_t>();
+
+    hint = shipments_tws_sql;
+    auto shipments_tw  = shipments_tws_sql? get_timewindows(std::string(shipments_tws_sql), use_timestamps, true)
         : std::vector<Vroom_time_window_t>();
 
     hint = matrix_sql;
@@ -237,7 +241,7 @@ vrp_do_vroom(
     problem.add_jobs(jobs, total_jobs,
                      jobs_tws, total_jobs_tws);
     problem.add_shipments(shipments, total_shipments,
-                          shipments_tws, total_shipments_tws);
+                          shipments_tw);
 
     auto end_time = std::chrono::high_resolution_clock::now();
     loading_time += static_cast<int32_t>(

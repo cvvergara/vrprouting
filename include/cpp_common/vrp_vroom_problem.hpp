@@ -280,10 +280,10 @@ class Vrp_vroom_problem : public vrprouting::Messages {
   }
 
   void add_shipments(const Vroom_shipment_t *shipments, size_t count,
-                     const Vroom_time_window_t *shipment_tws, size_t total_shipment_tws) {
-    add_shipments(
-        std::vector<Vroom_shipment_t>(shipments, shipments + count),
-        std::vector<Vroom_time_window_t>(shipment_tws, shipment_tws + total_shipment_tws));
+          const std::vector <Vroom_time_window_t> &shipments_tws) {
+      add_shipments(
+              std::vector<Vroom_shipment_t>(shipments, shipments + count),
+              shipments_tws);
   }
   ///@}
 
