@@ -356,6 +356,7 @@ subdivide_processing(
 void
 do_optimize(
         PickDeliveryOrders_t *shipments_arr, size_t total_shipments,
+        char* orders_sql,
         char* vehicles_sql,
         char* matrix_sql,
         char* multipliers_sql,
@@ -401,7 +402,15 @@ do_optimize(
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
 
-        std::vector<PickDeliveryOrders_t> orders(shipments_arr, shipments_arr + total_shipments);
+        std::vector<PickDeliveryOrders_t> orders1(shipments_arr, shipments_arr + total_shipments);
+
+        hint = orders_sql;
+        auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);
+        if (orders.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
 
         hint = vehicles_sql;
         auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps, with_stops);

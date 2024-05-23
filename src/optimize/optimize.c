@@ -113,6 +113,7 @@ process(
 
     do_optimize(
             pd_orders_arr,    total_pd_orders,
+            pd_orders_sql,
             vehicles_sql,
             matrix_sql,
             multipliers_sql,

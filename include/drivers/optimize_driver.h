@@ -41,9 +41,7 @@ extern "C" {
     /** @brief Driver for processing a pickupDeliver problem */
     void do_optimize(
             PickDeliveryOrders_t customers_arr[], size_t,
-            char*,
-            char*,
-            char*,
+            char*, char*, char*, char*,
 
             double,
             int,
