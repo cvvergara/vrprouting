@@ -87,7 +87,7 @@ process(
         return;
     }
 
-    pgr_SPI_connect();
+    vrp_SPI_connect();
 
     clock_t start_t = clock();
     do_pgr_pickDeliver(
@@ -113,13 +113,13 @@ process(
         (*result_count) = 0;
         (*result_tuples) = NULL;
     }
-    pgr_global_report(log_msg, notice_msg, err_msg);
+    vrp_global_report(log_msg, notice_msg, err_msg);
 
     /* freeing memory before return */
     if (log_msg) {pfree(log_msg); log_msg = NULL;}
     if (notice_msg) {pfree(notice_msg); notice_msg = NULL;}
     if (err_msg) {pfree(err_msg); err_msg = NULL;}
-    pgr_SPI_finish();
+    vrp_SPI_finish();
 }
 
 

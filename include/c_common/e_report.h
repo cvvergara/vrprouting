@@ -41,9 +41,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * ~~~~{.c}
  * std::ostringstream log;
  * log << "the message";
- * *log_msg = pgr_msg(log.str().c_str());
+ * *log_msg = msg(log.str().c_str());
  * ~~~~
- *
  *
  *
  *  when there is ERROR then postgreSQL takes over control
@@ -65,7 +64,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *  ~~~~
  */
 void
-pgr_global_report(
+vrp_global_report(
         char* log_msg,
         char* notice_msg,
         char* error_msg);

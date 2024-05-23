@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_common/e_report.h"
 
 void
-pgr_global_report(
+vrp_global_report(
     char* log,
     char* notice,
     char* err) {

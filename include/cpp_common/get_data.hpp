@@ -58,8 +58,8 @@ void get_data(
 
     size_t total_tuples;
 
-    auto SPIplan = pgr_SPI_prepare(sql);
-    auto SPIportal = pgr_SPI_cursor_open(SPIplan);
+    auto SPIplan = vrp_SPI_prepare(sql);
+    auto SPIportal = vrp_SPI_cursor_open(SPIplan);
 
     bool moredata = true;
     (*total_pgtuples) = total_tuples = 0;
@@ -116,8 +116,8 @@ std::vector<Data_type> get_data(
 
     size_t total_tuples = 0;
 
-    auto SPIplan = pgr_SPI_prepare(sql.c_str());
-    auto SPIportal = pgr_SPI_cursor_open(SPIplan);
+    auto SPIplan = vrp_SPI_prepare(sql.c_str());
+    auto SPIportal = vrp_SPI_cursor_open(SPIplan);
 
     bool moredata = true;
     std::vector<Data_type> tuples;

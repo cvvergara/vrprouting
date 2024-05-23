@@ -84,7 +84,7 @@ process(
         return;
     }
 
-    pgr_SPI_connect();
+    vrp_SPI_connect();
 
     clock_t start_t = clock();
     do_pgr_pickDeliverEuclidean(
@@ -109,12 +109,12 @@ process(
         (*result_tuples) = NULL;
     }
 
-    pgr_global_report(log_msg, notice_msg, err_msg);
+    vrp_global_report(log_msg, notice_msg, err_msg);
 
     if (log_msg) pfree(log_msg);
     if (notice_msg) pfree(notice_msg);
     if (err_msg) pfree(err_msg);
-    pgr_SPI_finish();
+    vrp_SPI_finish();
 }
 
 PGDLLEXPORT Datum

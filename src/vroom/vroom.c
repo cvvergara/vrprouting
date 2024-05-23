@@ -102,7 +102,7 @@ process(
   char *err_msg = NULL;
 
   clock_t start_loading = clock();
-  pgr_SPI_connect();
+  vrp_SPI_connect();
 
   (*result_tuples) = NULL;
   (*result_count) = 0;
@@ -134,7 +134,7 @@ process(
     }
     (*result_count) = 0;
     (*result_tuples) = NULL;
-    pgr_SPI_finish();
+    vrp_SPI_finish();
     return;
   }
 
@@ -164,7 +164,7 @@ process(
                       errhint("%s", vehicles_sql)));
     (*result_count) = 0;
     (*result_tuples) = NULL;
-    pgr_SPI_finish();
+    vrp_SPI_finish();
     return;
   }
 
@@ -202,7 +202,7 @@ process(
                       errhint("%s", matrix_sql)));
     (*result_count) = 0;
     (*result_tuples) = NULL;
-    pgr_SPI_finish();
+    vrp_SPI_finish();
     return;
   }
 
@@ -239,7 +239,7 @@ process(
     (*result_count) = 0;
   }
 
-  pgr_global_report(log_msg, notice_msg, err_msg);
+  vrp_global_report(log_msg, notice_msg, err_msg);
 
   if (log_msg) pfree(log_msg);
   if (notice_msg) pfree(notice_msg);
@@ -250,7 +250,7 @@ process(
   if (vehicles) pfree(vehicles);
   if (matrix_rows) pfree(matrix_rows);
 
-  pgr_SPI_finish();
+  vrp_SPI_finish();
 }
 
 

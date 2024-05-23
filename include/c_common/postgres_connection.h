@@ -37,13 +37,10 @@ extern "C" {
 #include <fmgr.h>
 
 
-// TODO change prefix
-void pgr_send_error(int errcode);
-void pgr_SPI_finish(void);
-void pgr_SPI_connect(void);
-SPIPlanPtr pgr_SPI_prepare(const char*);
-Portal pgr_SPI_cursor_open(SPIPlanPtr);
-char* pgr_cstring2char(const char *inStr);
+void vrp_SPI_finish(void);
+void vrp_SPI_connect(void);
+SPIPlanPtr vrp_SPI_prepare(const char*);
+Portal vrp_SPI_cursor_open(SPIPlanPtr);
 
 #ifdef __cplusplus
 }
