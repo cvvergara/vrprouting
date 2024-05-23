@@ -89,7 +89,7 @@ std::vector<Vroom_matrix_t> get_matrix(
     {-1, 0, true, "duration", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
     {-1, 0, false, "cost", vrprouting::INTEGER}};
 
-    return pgget::get_data<Vroom_matrix_t>(sql, use_timestamps, info, &fetch_matrix_vroom);
+    return pgget::get_data<Vroom_matrix_t>(sql, use_timestamps, info, &fetch_matrix);
 }
 }  // namespace vroom
 

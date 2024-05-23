@@ -70,22 +70,22 @@ namespace vroom {
 std::vector<Vroom_matrix_t> get_matrix(const std::string&, bool);
 
 /** @brief Reads the VROOM breaks */
-std::vector<Vroom_break_t> vrp_get_vroom_breaks(const std::string&, bool);
+std::vector<Vroom_break_t> get_breaks(const std::string&, bool);
 
 /** @brief Reads the VROOM jobs */
-std::vector<Vroom_job_t> vrp_get_vroom_jobs(const std::string&, bool);
+std::vector<Vroom_job_t> get_jobs(const std::string&, bool);
 
 /** @brief Reads the VROOM shipments */
-std::vector<Vroom_shipment_t> vrp_get_vroom_shipments(const std::string&, bool);
+std::vector<Vroom_shipment_t> get_shipments(const std::string&, bool);
 
 /** @brief Reads the VROOM time windows */
-std::vector<Vroom_time_window_t> vrp_get_vroom_time_windows(const std::string&, bool);
+std::vector<Vroom_time_window_t> get_time_windows(const std::string&, bool);
 
 /** @brief Reads the VROOM shipments time windows */
-std::vector<Vroom_time_window_t> vrp_get_vroom_shipments_time_windows(const std::string&, bool);
+std::vector<Vroom_time_window_t> get_shipments_time_windows(const std::string&, bool);
 
 /** @brief Reads the VROOM vehicles */
-std::vector<Vroom_vehicle_t> vrp_get_vroom_vehicles(const std::string&, bool);
+std::vector<Vroom_vehicle_t> get_vehicles(const std::string&, bool);
 
 }  // namespace vroom
 }  // namespace pgget

@@ -94,8 +94,8 @@ void fetch_vroom_vehicles(
 
 namespace pgget {
 
+
 Matrix_cell_t fetch_matrix(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
-Vroom_matrix_t fetch_matrix_vroom(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
 PickDeliveryOrders_t fetch_orders(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
@@ -103,7 +103,8 @@ Time_multipliers_t fetch_timeMultipliers(const HeapTuple, const TupleDesc&, cons
 
 Vehicle_t fetch_vehicles(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
-
+namespace vroom {
+Vroom_matrix_t fetch_matrix(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 Vroom_shipment_t fetch_vroom_shipments(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 Vroom_time_window_t fetch_tw(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
@@ -117,6 +118,7 @@ Vroom_job_t fetch_jobs(const HeapTuple, const TupleDesc&, const std::vector<Info
 Vroom_vehicle_t fetch_vroom_vehicles(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 
 
+}  // namespace vroom
 }  // namespace pgget
 }  // namespace vrprouting
 

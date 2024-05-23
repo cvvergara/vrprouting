@@ -313,6 +313,21 @@ void fetch_vroom_vehicles(
 }
 
 namespace pgget {
+namespace vroom {
+
+Vroom_matrix_t fetch_matrix(
+    const HeapTuple tuple, const TupleDesc &tupdesc,
+    const std::vector<Column_info_t> &info,
+    bool) {
+  Vroom_matrix_t matrix;
+  matrix.start_id = get_value<MatrixIndex>(tuple, tupdesc, info[0], -1);
+  matrix.end_id = get_value<MatrixIndex>(tuple, tupdesc, info[1], -1);
+  matrix.duration = get_value<Duration>(tuple, tupdesc, info[2], 0);
+  matrix.cost = get_value<TravelCost>(tuple, tupdesc, info[3], matrix.duration);
+  return matrix;
+}
+
+}  // namespace vroom
 
 Matrix_cell_t fetch_matrix(
     const HeapTuple tuple, const TupleDesc &tupdesc,
@@ -325,17 +340,6 @@ Matrix_cell_t fetch_matrix(
   return row;
 }
 
-Vroom_matrix_t fetch_matrix_vroom(
-    const HeapTuple tuple, const TupleDesc &tupdesc,
-    const std::vector<Column_info_t> &info,
-    bool) {
-  Vroom_matrix_t matrix;
-  matrix.start_id = get_value<MatrixIndex>(tuple, tupdesc, info[0], -1);
-  matrix.end_id = get_value<MatrixIndex>(tuple, tupdesc, info[1], -1);
-  matrix.duration = get_value<Duration>(tuple, tupdesc, info[2], 0);
-  matrix.cost = get_value<TravelCost>(tuple, tupdesc, info[3], matrix.duration);
-  return matrix;
-}
 
 Time_multipliers_t fetch_timeMultipliers(
         const HeapTuple tuple, const TupleDesc &tupdesc,
