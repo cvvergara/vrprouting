@@ -69,7 +69,6 @@ void fetch_matrix_plain(
   row->to_vid = get_value<Id>(tuple, tupdesc,  info[1], -1);
   row->cost = get_value<TInterval>(tuple, tupdesc, info[2], 0);
 }
-#endif
 
 void fetch_breaks(
     const HeapTuple tuple, const TupleDesc &tupdesc,
@@ -81,6 +80,7 @@ void fetch_breaks(
   vroom_break->service = get_value<Duration>(tuple, tupdesc, info[2], 0);
   vroom_break->data = get_jsonb(tuple, tupdesc, info[3]);
 }
+#endif
 
 void fetch_jobs(
     const HeapTuple tuple, const TupleDesc &tupdesc,
@@ -110,6 +110,7 @@ void fetch_jobs(
 }
 
 
+#if 0
 void fetch_matrix_vroom(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
@@ -148,7 +149,7 @@ void fetch_orders(
   pd_order->deliver_x =   is_euclidean? get_anynumerical(tuple, tupdesc, info[12], pd_order->pick_x) : 0;
   pd_order->deliver_y =   is_euclidean? get_anynumerical(tuple, tupdesc, info[13], pd_order->pick_y) : 0;
 }
-
+#endif
 
 void fetch_vroom_shipments(
     const HeapTuple tuple, const TupleDesc &tupdesc,
@@ -183,6 +184,7 @@ void fetch_vroom_shipments(
 }
 
 
+#if 0
 void fetch_multipliers(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
@@ -191,6 +193,7 @@ void fetch_multipliers(
   row->start_time = get_value<TTimestamp>(tuple, tupdesc, info[0], 0);
   row->multiplier = get_anynumerical(tuple, tupdesc,  info[1], 1);
 }
+#endif
 
 
 void fetch_tw(
@@ -221,6 +224,7 @@ void fetch_tw(
 
 
 
+#if 0
 void fetch_vehicles(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Column_info_t> &info,
@@ -276,6 +280,7 @@ void fetch_vehicles(
   vehicle->end_x =   is_euclidean? get_anynumerical(tuple, tupdesc, info[15], vehicle->start_x) : 0;
   vehicle->end_y =   is_euclidean? get_anynumerical(tuple, tupdesc, info[16], vehicle->start_y) : 0;
 }
+#endif
 
 
 void fetch_vroom_vehicles(
@@ -421,6 +426,11 @@ Vehicle_t fetch_vehicles(
     bool is_euclidean) {
 
   Vehicle_t vehicle;
+
+  if (is_euclidean) {
+    check_pairs(info[5], info[6]);
+    check_pairs(info[11], info[12]);
+  };
 
   vehicle.id = get_value<Id>(tuple, tupdesc, info[0], -1);
   vehicle.capacity = get_value<PAmount>(tuple, tupdesc, info[1], 0);
