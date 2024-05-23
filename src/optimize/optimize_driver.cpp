@@ -178,19 +178,19 @@ processing_times_by_vehicle(
  *  @param[in] vehicles_arr A C Array of vehicles
  *  @param[in] total_vehicles size of the vehicles_arr
  *
- *  @returns (vehicle id, stops vector) pair which hold the stops structure
+ *  @returns vector of (vehicle id, stops vector) pairs ascending order of vehicles
  */
 std::vector<Short_vehicle>
 get_initial_stops(
-        Vehicle_t *vehicles_arr, size_t total_vehicles
+        std::vector<Vehicle_t> vehicles
         ) {
     std::vector<Short_vehicle> the_stops;
-    for (size_t i = 0; i < total_vehicles; ++i) {
+    for (const auto &v : vehicles) {
         std::vector<Id> stops;
-        for (size_t j = 0; j < vehicles_arr[i].stops_size; ++j) {
-            stops.push_back(vehicles_arr[i].stops[j]);
+        for (size_t j = 0; j < v.stops_size; ++j) {
+            stops.push_back(v.stops[j]);
         }
-        the_stops.push_back({vehicles_arr[i].id, stops});
+        the_stops.push_back({v.id, stops});
     }
     std::sort(the_stops.begin(), the_stops.end(), []
             (const Short_vehicle &lhs, const Short_vehicle &rhs) {return lhs.id < rhs.id;});
@@ -239,7 +239,8 @@ subdivide_processing(
         bool subdivide_by_vehicle,
         std::ostringstream &log) {
     try {
-        auto the_stops = get_initial_stops(vehicles_arr, total_vehicles);
+        std::vector<Vehicle_t> vehicles(vehicles_arr, vehicles_arr + total_vehicles);
+        auto the_stops = get_initial_stops(vehicles);
 
         auto processing_times = subdivide_by_vehicle?
             processing_times_by_vehicle(vehicles_arr, total_vehicles)
