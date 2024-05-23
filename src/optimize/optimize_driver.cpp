@@ -301,15 +301,24 @@ subdivide_processing(
 #endif
             log << "\nOptimizing at time: " << t;
 
-
             prev_shipments_in_stops = orders_in_active_vehicles;
 #if 0
             prev_shipments_in_stops = shipments_in_stops;
 #endif
+            std::vector<PickDeliveryOrders_t> active_orders;
+            std::vector<PickDeliveryOrders_t> inactive_orders;
+
+            std::partition_copy(orders.begin(), orders.end(),
+                    std::back_inserter(active_orders), std::back_inserter(inactive_orders),
+                    [&](const PickDeliveryOrders_t& o)
+                    {return orders_in_active_vehicles.has(o.id);});
+
             auto shipments_to_process = static_cast<size_t>(std::distance(shipments_arr,
                         std::partition(shipments_arr, shipments_arr + total_shipments,
-                            [&](const PickDeliveryOrders_t& s){return shipments_in_stops.has(s.id);})));
+                            [&](const PickDeliveryOrders_t& s){return orders_in_active_vehicles.has(s.id);})));
 
+            pgassert(active_orders.size() == shipments_to_process);
+            pgassert(active_orders.size() == orders_in_active_vehicles.size());
             pgassert(shipments_to_process > 0);
             pgassert(shipments_in_stops.size() == static_cast<size_t>(shipments_to_process));
 
