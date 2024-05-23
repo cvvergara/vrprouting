@@ -268,8 +268,16 @@ subdivide_processing(
             /* Get active orders of active vehicles */
             Identifiers<Id> orders_in_active_vehicles;
             for (const auto &v : active_vehicles) {
-                // TODO fix
-                std::set<Id> stops(v.stops, v.stops + v.stops_size);
+                /*
+                 * On previous cycles the stops have changed
+                 * So instead of getting the stops from the vehicles
+                 * get the stops from the the history of stops
+                 */
+                auto stop_it = std::find_if(
+                        the_stops.begin(), the_stops.end(), [&]
+                        (const Short_vehicle& v) -> bool {return v.id == v_id;});
+
+                std::set<Id> stops(stops_it->stops, stops_it->stops + stops_it->stops_size);
                 orders_in_active_vehicles += stops;
             }
 
