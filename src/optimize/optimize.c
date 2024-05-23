@@ -92,23 +92,6 @@ process(
 
     pgr_SPI_connect();
 
-#if 0
-    PickDeliveryOrders_t *pd_orders_arr = NULL;
-    size_t total_pd_orders = 0;
-    vrp_get_orders(pd_orders_sql, &pd_orders_arr, &total_pd_orders, is_euclidean, use_timestamps, &err_msg);
-    throw_error(err_msg, pd_orders_sql);
-
-    if (total_pd_orders == 0) {
-        (*result_count) = 0;
-        (*result_tuples) = NULL;
-
-        /* freeing memory before return */
-        if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-
-        pgr_SPI_finish();
-        return;
-    }
-#endif
 
     clock_t start_t = clock();
 
@@ -150,7 +133,6 @@ process(
     if (log_msg) {pfree(log_msg); log_msg = NULL;}
     if (notice_msg) {pfree(notice_msg); notice_msg = NULL;}
     if (err_msg) {pfree(err_msg); err_msg = NULL;}
-    if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
     pgr_SPI_finish();
 }
 

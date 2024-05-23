@@ -470,10 +470,6 @@ do_optimize(
             }
         }
 
-#if 0
-        std::sort(shipments_arr, shipments_arr + total_shipments,
-                [](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id < rhs.id;});
-#endif
 
         std::sort(orders.begin(), orders.end(),
                 [](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id < rhs.id;});
@@ -484,16 +480,6 @@ do_optimize(
                         [&](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id == rhs.id;}),
                     orders.end());
 
-#if 0
-        total_shipments = static_cast<size_t>(std::distance(shipments_arr,
-                    std::unique(shipments_arr, shipments_arr + total_shipments,
-                        [&](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id == rhs.id;})));
-
-        pgassert(orders.size() == total_shipments);
-        total_shipments = static_cast<size_t>(std::distance(shipments_arr,
-                    std::remove_if(shipments_arr, shipments_arr + total_shipments,
-                        [&](const PickDeliveryOrders_t& s){return !shipments_in_stops.has(s.id);})));
-#endif
 
 
         orders.erase(
@@ -502,29 +488,10 @@ do_optimize(
                         [&](const PickDeliveryOrders_t& s){return !shipments_in_stops.has(s.id);}),
                     orders.end());
 
-#if 0
-        pgassert(orders.size() == total_shipments);
-        if (shipments_in_stops.size() != orders.size()) {
-            log << "possible Shipments missing: " << shipments_in_stops << log.str();
-        }
-#endif
 
         /*
          * Verify shipments complete data
          */
-#if 0
-        if (shipments_in_stops.size() != total_shipments) {
-            for (size_t i = 0; i < total_shipments; ++i) {
-                shipments_in_stops -= shipments_arr[i].id;
-            }
-            std::ostringstream hint;
-            err << "Missing shipments for processing ";
-            hint << "Shipments missing: " << shipments_in_stops << log.str();
-            *log_msg = msg(hint.str());
-            *err_msg = msg(err.str());
-            return;
-        }
-#else
         if (shipments_in_stops.size() != orders.size()) {
             for (const auto &o : orders) {
                 shipments_in_stops -= o.id;
@@ -536,7 +503,6 @@ do_optimize(
             *err_msg = msg(err.str());
             return;
         }
-#endif
         /*
          * Finish getting the node ids involved on the process
          */
