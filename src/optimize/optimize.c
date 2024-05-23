@@ -108,28 +108,6 @@ process(
         return;
     }
 
-#if 0
-    Vehicle_t *vehicles_arr = NULL;
-    size_t total_vehicles = 0;
-    vrp_get_vehicles(vehicles_sql, &vehicles_arr, &total_vehicles, with_stops, is_euclidean, use_timestamps, &err_msg);
-    throw_error(err_msg, vehicles_sql);
-
-    if (total_vehicles == 0) {
-        (*result_count) = 0;
-        (*result_tuples) = NULL;
-
-        /* freeing memory before return */
-        if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-        if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
-
-        ereport(WARNING,
-                (errcode(ERRCODE_INTERNAL_ERROR),
-                 errmsg("No vehicles found")));
-
-        pgr_SPI_finish();
-        return;
-    }
-#endif
 
     clock_t start_t = clock();
 
@@ -172,9 +150,6 @@ process(
     if (notice_msg) {pfree(notice_msg); notice_msg = NULL;}
     if (err_msg) {pfree(err_msg); err_msg = NULL;}
     if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-#if 0
-    if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
-#endif
     pgr_SPI_finish();
 }
 

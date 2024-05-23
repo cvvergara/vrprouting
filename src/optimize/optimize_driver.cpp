@@ -447,19 +447,6 @@ do_optimize(
                         [&](const Vehicle_t& v){return v.end_close_t < execution_date;}),
                     vehicles.end());
 
-#if 0
-        std::sort(vehicles_arr, vehicles_arr + total_vehicles,
-                [](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id < rhs.id;});
-
-        total_vehicles = static_cast<size_t>(std::distance(vehicles_arr,
-                    std::unique(vehicles_arr, vehicles_arr + total_vehicles,
-                        [&](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id == rhs.id;})));
-
-        total_vehicles = static_cast<size_t>(std::distance(vehicles_arr,
-                    std::remove_if(vehicles_arr, vehicles_arr + total_vehicles,
-                        [&](const Vehicle_t& v){return v.end_close_t < execution_date;})));
-        pgassert(vehicles.size() == total_vehicles);
-#endif
 
         /*
          * Remove shipments not involved in optimization
