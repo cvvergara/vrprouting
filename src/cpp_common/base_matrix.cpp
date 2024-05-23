@@ -286,62 +286,6 @@ Base_Matrix::Base_Matrix(
   }
 }
 
-#if 0
-Base_Matrix::Base_Matrix(
-    Matrix_cell_t *data_costs, size_t size_matrix,
-    const Identifiers<Id>& node_ids,
-    Multiplier multiplier) {
-  /*
-   * Sets the selected nodes identifiers
-   */
-  m_ids.insert(m_ids.begin(), node_ids.begin(), node_ids.end());
-
-  /*
-   * Create matrix
-   */
-  m_time_matrix.resize(
-      m_ids.size(),
-      std::vector<TInterval>(
-        m_ids.size(),
-        /*
-         * Set initial values to infinity
-         */
-        (std::numeric_limits<TInterval>::max)()));
-
-  Identifiers<Idx> inserted;
-  /*
-   * Cycle the matrix data
-   */
-  for (size_t i = 0; i < size_matrix; ++i) {
-    auto data = data_costs[i];
-    /*
-     * skip if row is not from selected nodes
-     */
-    if (!(has_id(data.from_vid) && has_id(data.to_vid))) continue;
-
-    /*
-     * Save the information
-     */
-    m_time_matrix[get_index(data.from_vid)][get_index(data.to_vid)] =
-      static_cast<TInterval>(static_cast<Multiplier>(data.cost) * multiplier);
-
-    /*
-     * If the opposite direction is infinity insert the same cost
-     */
-    if (m_time_matrix[get_index(data.to_vid)][get_index(data.from_vid)] == (std::numeric_limits<TInterval>::max)()) {
-      m_time_matrix[get_index(data.to_vid)][get_index(data.from_vid)] =
-        m_time_matrix[get_index(data.from_vid)][get_index(data.to_vid)];
-    }
-  }
-
-  /*
-   * Set the diagonal values to 0
-   */
-  for (size_t i = 0; i < m_time_matrix.size(); ++i) {
-    m_time_matrix[i][i] = 0;
-  }
-}
-#endif
 
 /**
  * @brief Constructor for VROOM matrix input
@@ -415,71 +359,6 @@ Base_Matrix::Base_Matrix(
     }
 }
 
-#if 0
-Base_Matrix::Base_Matrix(Vroom_matrix_t *matrix_rows, size_t total_matrix_rows,
-                         const Identifiers<Id> &location_ids, double scaling_factor) {
-  /*
-   * Sets the selected nodes identifiers
-   */
-  m_ids.insert(m_ids.begin(), location_ids.begin(), location_ids.end());
-
-  /*
-   * Create matrix
-   */
-  m_time_matrix.resize(
-      m_ids.size(),
-      std::vector<TInterval>(m_ids.size(),
-                             /*
-                              * Set initial values to infinity
-                              */
-                             (std::numeric_limits<TInterval>::max)()));
-  m_cost_matrix.resize(
-      m_ids.size(),
-      std::vector<TravelCost>(m_ids.size(), (std::numeric_limits<TravelCost>::max)()));
-
-  Identifiers<Idx> inserted;
-  /*
-   * Cycle the matrix data
-   */
-  for (size_t i = 0; i < total_matrix_rows; ++i) {
-    auto cell = matrix_rows[i];
-    /*
-     * skip if row is not from selected nodes
-     */
-    if (!(has_id(cell.start_id) && has_id(cell.end_id))) continue;
-
-    /*
-     * Save the information. Scale the time matrix according to scaling_factor
-     */
-    m_time_matrix[get_index(cell.start_id)][get_index(cell.end_id)] =
-      static_cast<Duration>(std::round(cell.duration / scaling_factor));
-    m_cost_matrix[get_index(cell.start_id)][get_index(cell.end_id)] =
-      static_cast<Duration>(cell.cost);
-
-    /*
-     * If the opposite direction is infinity insert the same cost
-     */
-    if (m_time_matrix[get_index(cell.end_id)][get_index(cell.start_id)] ==
-        (std::numeric_limits<TInterval>::max)()) {
-      m_time_matrix[get_index(cell.end_id)][get_index(cell.start_id)] =
-        m_time_matrix[get_index(cell.start_id)][get_index(cell.end_id)];
-    }
-    if (m_cost_matrix[get_index(cell.end_id)][get_index(cell.start_id)] ==
-        (std::numeric_limits<TravelCost>::max)()) {
-      m_cost_matrix[get_index(cell.end_id)][get_index(cell.start_id)] =
-          m_cost_matrix[get_index(cell.start_id)][get_index(cell.end_id)];
-    }
-  }
-
-  /*
-   * Set the diagonal values to 0
-   */
-  for (size_t i = 0; i < m_time_matrix.size(); ++i) {
-    m_time_matrix[i][i] = 0;
-    m_cost_matrix[i][i] = 0;
-  }
-}
-#endif
 
 /*
  * constructor for euclidean
