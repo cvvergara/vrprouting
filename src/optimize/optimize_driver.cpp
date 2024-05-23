@@ -401,6 +401,8 @@ do_optimize(
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
 
+        std::vector<PickDeliveryOrders_t> orders(shipments_arr, shipments_arr + total_shipments);
+
         hint = vehicles_sql;
         auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps, with_stops);
         if (vehicles.size() == 0) {
@@ -423,7 +425,6 @@ do_optimize(
         hint = nullptr;
 
         Identifiers<Id> node_ids;
-        Identifiers<Id> shipments_in_stops;
 
         /*
          * Remove vehicles not going to be optimized and sort remaining vehicles
@@ -455,6 +456,7 @@ do_optimize(
          * 2. Remove duplicates
          * 2. Remove shipments not on the stops
          */
+        Identifiers<Id> shipments_in_stops;
         for (const auto &v : vehicles) {
             node_ids += v.start_node_id;
             node_ids += v.end_node_id;
@@ -466,17 +468,41 @@ do_optimize(
         std::sort(shipments_arr, shipments_arr + total_shipments,
                 [](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id < rhs.id;});
 
+        std::sort(orders.begin(), orders.end(),
+                [](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id < rhs.id;});
+
+        orders.erase(
+                    std::unique(
+                        orders.begin(), orders.end(),
+                        [&](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id == rhs.id;}),
+                    orders.end());
+
         total_shipments = static_cast<size_t>(std::distance(shipments_arr,
                     std::unique(shipments_arr, shipments_arr + total_shipments,
                         [&](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id == rhs.id;})));
+
+        pgassert(orders.size() == total_shipments);
 
         total_shipments = static_cast<size_t>(std::distance(shipments_arr,
                     std::remove_if(shipments_arr, shipments_arr + total_shipments,
                         [&](const PickDeliveryOrders_t& s){return !shipments_in_stops.has(s.id);})));
 
+
+        orders.erase(
+                    std::remove_if(
+                        orders.begin(), orders.end(),
+                        [&](const PickDeliveryOrders_t& s){return !shipments_in_stops.has(s.id);}),
+                    orders.end());
+
+        pgassert(orders.size() == total_shipments);
+        if (shipments_in_stops.size() != orders.size()) {
+            log << "possible Shipments missing: " << shipments_in_stops << log.str();
+        }
+
         /*
          * Verify shipments complete data
          */
+#if 0
         if (shipments_in_stops.size() != total_shipments) {
             for (size_t i = 0; i < total_shipments; ++i) {
                 shipments_in_stops -= shipments_arr[i].id;
@@ -488,13 +514,25 @@ do_optimize(
             *err_msg = msg(err.str());
             return;
         }
-
+#else
+        if (shipments_in_stops.size() != orders.size()) {
+            for (const auto &o : orders) {
+                shipments_in_stops -= o.id;
+            }
+            std::ostringstream log1;
+            err << "Missing shipments for processing ";
+            log1 << "Shipments missing: " << shipments_in_stops << log.str();
+            *log_msg = msg(log1.str());
+            *err_msg = msg(err.str());
+            return;
+        }
+#endif
         /*
          * Finish getting the node ids involved on the process
          */
-        for (size_t i = 0; i < total_shipments; ++i) {
-            node_ids += shipments_arr[i].pick_node_id;
-            node_ids += shipments_arr[i].deliver_node_id;
+        for (const auto &o : orders) {
+            node_ids += o.pick_node_id;
+            node_ids += o.deliver_node_id;
         }
 
         /*
@@ -524,7 +562,6 @@ do_optimize(
             return;
         }
 
-        std::vector<PickDeliveryOrders_t> orders(shipments_arr, shipments_arr + total_shipments);
         /*
          * get the solution
          */
