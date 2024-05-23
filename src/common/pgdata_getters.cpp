@@ -168,7 +168,6 @@ vrp_get_vroom_jobs(
     *err_msg = msg("Caught unknown exception!");
   }
 }
-#endif
 
 
 
@@ -216,6 +215,7 @@ vrp_get_vroom_shipments(
     *err_msg = msg("Caught unknown exception!");
   }
 }
+#endif
 
 
 

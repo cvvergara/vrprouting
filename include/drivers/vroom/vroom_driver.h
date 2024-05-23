@@ -39,10 +39,8 @@ extern "C" {
   void vrp_do_vroom(
       char*, char*,
       char*, char*,
-      Vroom_vehicle_t *vehicles, size_t total_vehicles,
-
       char*,
-      char*,
+      char*, char*,
       char*,
 
       int32_t exploration_level,

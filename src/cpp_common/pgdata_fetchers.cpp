@@ -149,7 +149,6 @@ void fetch_orders(
   pd_order->deliver_x =   is_euclidean? get_anynumerical(tuple, tupdesc, info[12], pd_order->pick_x) : 0;
   pd_order->deliver_y =   is_euclidean? get_anynumerical(tuple, tupdesc, info[13], pd_order->pick_y) : 0;
 }
-#endif
 
 void fetch_vroom_shipments(
     const HeapTuple tuple, const TupleDesc &tupdesc,
@@ -182,6 +181,7 @@ void fetch_vroom_shipments(
     throw std::string("Invalid value in column '") + info[9].name + "'. Maximum value allowed 100";
   }
 }
+#endif
 
 
 #if 0
@@ -429,6 +429,42 @@ Vroom_shipment_t fetch_shipments(
         throw std::string("Invalid value in column '") + info[9].name + "'. Maximum value allowed 100";
     }
     return shipment;
+}
+
+Vroom_vehicle_t fetch_vehicles(
+        const HeapTuple tuple, const TupleDesc &tupdesc,
+        const std::vector<Column_info_t> &info,
+        bool) {
+    Vroom_vehicle_t vehicle;
+    vehicle.id = get_value<Idx>(tuple, tupdesc, info[0], 0);
+    vehicle.start_id = get_value<MatrixIndex>(tuple, tupdesc, info[1], -1);
+    vehicle.end_id = get_value<MatrixIndex>(tuple, tupdesc, info[2], -1);
+
+    vehicle.capacity_size = 0;
+    vehicle.capacity = get_array<Amount>(tuple, tupdesc, info[3], vehicle.capacity_size);
+
+    vehicle.skills_size = 0;
+    vehicle.skills = get_uint_array<Skill>(tuple, tupdesc, info[4], vehicle.skills_size);
+
+    vehicle.tw_open = get_value<Duration>(tuple, tupdesc, info[5], 0);
+    vehicle.tw_close = get_value<Duration>(tuple, tupdesc, info[6], UINT_MAX);
+
+    vehicle.speed_factor = get_anynumerical(tuple, tupdesc, info[7], 1.0);
+    vehicle.max_tasks = get_value<int32_t>(tuple, tupdesc, info[8], INT_MAX);
+    vehicle.data = get_jsonb(tuple, tupdesc, info[9]);
+
+    if (!(column_found(info[1]) || column_found(info[2]))) {
+        throw std::string("Missing column(s): '") + info[1].name + "' and/or '" + info[2].name + "' must exist";
+    }
+
+    if (vehicle.tw_open > vehicle.tw_close) {
+        throw std::string("Invalid time window found: '") + info[6].name + "' is less than '" + info[5].name + "'";
+    }
+
+    if (vehicle.speed_factor <= 0.0) {
+        throw std::string("Invalid negative or zero value in column '") + info[7].name + "'";
+    }
+    return vehicle;
 }
 
 

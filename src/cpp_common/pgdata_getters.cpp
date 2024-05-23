@@ -173,6 +173,33 @@ get_shipments(
     return pgget::get_data<Vroom_shipment_t>(sql, use_timestamps, info, &fetch_shipments);
 }
 
+/**
+ * @param[in] sql SQL query to execute
+ * @param[out] rows C Container that holds the data
+ * @param[out] total_rows Total rows recieved
+ * @param [in] use_timestamps When true postgres Time datatypes are used
+ * @param [out] err_msg When not empty there was an error
+ */
+std::vector<Vroom_vehicle_t>
+get_vehicles(
+        const std::string &sql,
+        bool use_timestamps) {
+    using vrprouting::Info;
+    std::vector<Info> info{
+        {-1, 0, true, "id", vrprouting::IDX},
+        {-1, 0, false, "start_id", vrprouting::MATRIX_INDEX},
+        {-1, 0, false, "end_id", vrprouting::MATRIX_INDEX},
+        {-1, 0, false, "capacity", vrprouting::ANY_POSITIVE_ARRAY},
+        {-1, 0, false, "skills", vrprouting::ANY_UINT_ARRAY},
+        {-1, 0, false, "tw_open", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+        {-1, 0, false, "tw_close", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+        {-1, 0, false, "speed_factor", vrprouting::ANY_NUMERICAL},
+        {-1, 0, false, "max_tasks", vrprouting::POSITIVE_INTEGER},
+        {-1, 0, false, "data", vrprouting::JSONB}};
+
+    return pgget::get_data<Vroom_vehicle_t>(sql, use_timestamps, info, &fetch_vehicles);
+}
+
 }  // namespace vroom
 
 std::vector<Time_multipliers_t> get_timeMultipliers(

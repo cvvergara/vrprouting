@@ -84,9 +84,11 @@ void
 vrp_do_vroom(
     char* jobs_sql,
     char* jobs_tws_sql,
+
     char* shipments_sql,
     char* shipments_tws_sql,
-    Vroom_vehicle_t *vehicles, size_t total_vehicles,
+
+    char* vehicles_sql,
     char* breaks_sql,
     char* breaks_tws_sql,
     char* matrix_sql,
@@ -112,6 +114,7 @@ vrp_do_vroom(
   using vrprouting::pgget::vroom::get_timewindows;
   using vrprouting::pgget::vroom::get_jobs;
   using vrprouting::pgget::vroom::get_shipments;
+  using vrprouting::pgget::vroom::get_vehicles;
 
   std::ostringstream log;
   std::ostringstream err;
@@ -125,8 +128,16 @@ vrp_do_vroom(
     pgassert(!(*err_msg));
     pgassert(!(*return_tuples));
     pgassert(!(*return_count));
-    pgassert(vehicles);
-    pgassert(total_vehicles);
+
+    hint = vehicles_sql;
+    auto vehicles = vehicles_sql? get_vehicles(std::string(vehicles_sql), use_timestamps)
+        : std::vector<Vroom_vehicle_t>();
+
+    if (vehicles.size() == 0) {
+        *notice_msg = msg("Insufficient data found on inner query");
+        *log_msg = msg(matrix_sql);
+        return;
+    }
 
     hint = breaks_sql;
     auto breaks = breaks_sql? get_breaks(std::string(breaks_sql), use_timestamps)
@@ -187,14 +198,14 @@ vrp_do_vroom(
     double min_speed_factor, max_speed_factor;
     min_speed_factor = max_speed_factor = vehicles[0].speed_factor;
 
-    for (size_t i = 0; i < total_vehicles; ++i) {
-      min_speed_factor = std::min(min_speed_factor, vehicles[i].speed_factor);
-      max_speed_factor = std::max(max_speed_factor, vehicles[i].speed_factor);
-      if (vehicles[i].start_id != -1) {
-        location_ids += vehicles[i].start_id;
+    for (const auto &v : vehicles) {
+      min_speed_factor = std::min(min_speed_factor, v.speed_factor);
+      max_speed_factor = std::max(max_speed_factor, v.speed_factor);
+      if (v.start_id != -1) {
+        location_ids += v.start_id;
       }
-      if (vehicles[i].end_id != -1) {
-        location_ids += vehicles[i].end_id;
+      if (v.end_id != -1) {
+        location_ids += v.end_id;
       }
     }
 
@@ -214,8 +225,8 @@ vrp_do_vroom(
     /*
      * Scale the vehicles speed factors according to the minimum speed factor
      */
-    for (size_t i = 0; i < total_vehicles; ++i) {
-      vehicles[i].speed_factor = std::round(vehicles[i].speed_factor / min_speed_factor);
+    for (auto &v : vehicles) {
+      v.speed_factor = std::round(v.speed_factor / min_speed_factor);
     }
 
     /*
@@ -258,9 +269,7 @@ vrp_do_vroom(
 
     vrprouting::Vrp_vroom_problem problem;
     problem.add_matrix(matrix);
-    problem.add_vehicles(vehicles, total_vehicles,
-                         breaks,
-                         breaks_tw);
+    problem.add_vehicles(vehicles, breaks, breaks_tw);
     problem.add_jobs(jobs, jobs_tw);
     problem.add_shipments(shipments, shipments_tw);
 
