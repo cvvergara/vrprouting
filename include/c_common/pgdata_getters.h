@@ -58,21 +58,10 @@ extern "C" {
 extern "C" {
 #endif
 
-/** Matrix **/
-/** @brief Get the travel time matrix */
-void vrp_get_matrixRows(char*, Matrix_cell_t **, size_t*, bool, char**);
 
 /** @brief Reads the VROOM matrix */
 void vrp_get_vroom_matrix(char*, Vroom_matrix_t**, size_t*, bool, char**);
 
-/** @brief Reads the pick-Deliver shipments for timestams and intervals*/
-void vrp_get_orders(char*, PickDeliveryOrders_t**, size_t*, bool, bool, char**);
-
-/** @brief Get the time multipliers using interval*/
-void vrp_get_timeMultipliers(char*, Time_multipliers_t**, size_t*, bool, char**);
-
-/** @brief Reads the vehicles information */
-void vrp_get_vehicles(char*, Vehicle_t**, size_t*, bool, bool, bool, char**);
 
 /** @brief Reads the VROOM breaks */
 void vrp_get_vroom_breaks(char*, Vroom_break_t**, size_t*, bool, char**);
