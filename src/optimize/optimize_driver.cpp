@@ -65,11 +65,12 @@ namespace {
  *
  *  @returns (vehicle id, stops vector) pair which hold the the new stops structure
  */
+
 std::vector<Short_vehicle>
 one_processing(
-        PickDeliveryOrders_t *shipments_arr, size_t total_shipments,
-        Vehicle_t *vehicles_arr, size_t total_vehicles,
-        std::vector<Short_vehicle> new_stops,
+        const std::vector<PickDeliveryOrders_t> &orders,
+        const std::vector<Vehicle_t> &vehicles,
+        const std::vector<Short_vehicle> &new_stops,
         const vrprouting::problem::Matrix &time_matrix,
         int max_cycles,
         int64_t execution_date) {
@@ -78,8 +79,8 @@ one_processing(
          * Construct problem
          */
         vrprouting::problem::PickDeliver pd_problem(
-                shipments_arr, total_shipments,
-                vehicles_arr, total_vehicles,
+                orders,
+                vehicles,
                 new_stops,
                 time_matrix);
 
@@ -109,6 +110,20 @@ one_processing(
     } catch(...) {
         throw;
     }
+}
+
+
+std::vector<Short_vehicle>
+one_processing(
+        PickDeliveryOrders_t *shipments_arr, size_t total_shipments,
+        Vehicle_t *vehicles_arr, size_t total_vehicles,
+        std::vector<Short_vehicle> new_stops,
+        const vrprouting::problem::Matrix &time_matrix,
+        int max_cycles,
+        int64_t execution_date) {
+    std::vector<PickDeliveryOrders_t> orders(shipments_arr, shipments_arr + total_shipments);
+    std::vector<Vehicle_t> vehicles(vehicles_arr, vehicles_arr + total_vehicles);
+    return one_processing(orders, vehicles, new_stops, time_matrix, max_cycles, execution_date);
 }
 
 
