@@ -160,15 +160,13 @@ processing_times_by_shipment(
  *  @returns processing times
  */
 Identifiers<TTimestamp>
-processing_times_by_vehicle(
-        Vehicle_t *vehicles_arr, size_t total_vehicles
-        ) {
+processing_times_by_vehicle(const std::vector<Vehicle_t> &vehicles) {
     Identifiers<TTimestamp> processing_times;
-    for (size_t i = 0; i < total_vehicles; ++i) {
-        processing_times += vehicles_arr[i].start_open_t;
-        processing_times += vehicles_arr[i].start_close_t;
-        processing_times += vehicles_arr[i].end_open_t;
-        processing_times += vehicles_arr[i].end_close_t;
+    for (const auto &v : vehicles) {
+        processing_times += v.start_open_t;
+        processing_times += v.start_close_t;
+        processing_times += v.end_open_t;
+        processing_times += v.end_close_t;
     }
     return processing_times;
 }
@@ -182,7 +180,7 @@ processing_times_by_vehicle(
  */
 std::vector<Short_vehicle>
 get_initial_stops(
-        std::vector<Vehicle_t> vehicles
+        const std::vector<Vehicle_t> &vehicles
         ) {
     std::vector<Short_vehicle> the_stops;
     for (const auto &v : vehicles) {
@@ -243,7 +241,7 @@ subdivide_processing(
         auto the_stops = get_initial_stops(vehicles);
 
         auto processing_times = subdivide_by_vehicle?
-            processing_times_by_vehicle(vehicles_arr, total_vehicles)
+            processing_times_by_vehicle(vehicles)
             : processing_times_by_shipment(shipments_arr, total_shipments);
 
         Identifiers<Id> prev_shipments_in_stops;
