@@ -356,7 +356,7 @@ subdivide_processing(
 void
 do_optimize(
         PickDeliveryOrders_t *shipments_arr, size_t total_shipments,
-        Vehicle_t *vehicles_arr, size_t total_vehicles,
+        char* vehicles_sql,
         char* matrix_sql,
         char* multipliers_sql,
 
@@ -369,6 +369,8 @@ do_optimize(
         bool subdivide_by_vehicle,
 
         bool use_timestamps,
+        bool is_euclidean,
+        bool with_stops,
 
         Short_vehicle_rt **return_tuples,
         size_t *return_count,
@@ -396,9 +398,16 @@ do_optimize(
         pgassert(!(*notice_msg));
         pgassert(!(*err_msg));
         pgassert(total_shipments);
-        pgassert(total_vehicles);
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
+
+        hint = vehicles_sql;
+        auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps, with_stops);
+        if (vehicles.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
 
         hint = matrix_sql;
         auto costs = get_matrix(std::string(matrix_sql), use_timestamps);
@@ -415,8 +424,6 @@ do_optimize(
 
         Identifiers<Id> node_ids;
         Identifiers<Id> shipments_in_stops;
-
-        std::vector<Vehicle_t> vehicles(vehicles_arr, vehicles_arr + total_vehicles);
 
         /*
          * Remove vehicles not going to be optimized and sort remaining vehicles
@@ -461,11 +468,11 @@ do_optimize(
          * 2. Remove duplicates
          * 2. Remove shipments not on the stops
          */
-        for (size_t i = 0; i < total_vehicles; ++i) {
-            node_ids += vehicles_arr[i].start_node_id;
-            node_ids += vehicles_arr[i].end_node_id;
-            for (size_t j = 0; j < vehicles_arr[i].stops_size; ++j) {
-                shipments_in_stops += vehicles_arr[i].stops[j];
+        for (const auto &v : vehicles) {
+            node_ids += v.start_node_id;
+            node_ids += v.end_node_id;
+            for (size_t j = 0; j < v.stops_size; ++j) {
+                shipments_in_stops += v.stops[j];
             }
         }
 

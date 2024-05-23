@@ -108,6 +108,7 @@ process(
         return;
     }
 
+#if 0
     Vehicle_t *vehicles_arr = NULL;
     size_t total_vehicles = 0;
     vrp_get_vehicles(vehicles_sql, &vehicles_arr, &total_vehicles, with_stops, is_euclidean, use_timestamps, &err_msg);
@@ -128,13 +129,13 @@ process(
         pgr_SPI_finish();
         return;
     }
-
+#endif
 
     clock_t start_t = clock();
 
     do_optimize(
             pd_orders_arr,    total_pd_orders,
-            vehicles_arr,     total_vehicles,
+            vehicles_sql,
             matrix_sql,
             multipliers_sql,
 
@@ -147,6 +148,8 @@ process(
             subdivision_kind == 1,
 
             use_timestamps,
+            is_euclidean,
+            with_stops,
 
             result_tuples,
             result_count,
@@ -169,13 +172,11 @@ process(
     if (notice_msg) {pfree(notice_msg); notice_msg = NULL;}
     if (err_msg) {pfree(err_msg); err_msg = NULL;}
     if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
+#if 0
     if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
+#endif
     pgr_SPI_finish();
 }
-
-
-
-/******************************************************************************/
 
 
 PGDLLEXPORT Datum
@@ -183,10 +184,8 @@ _vrp_optimize(PG_FUNCTION_ARGS) {
     FuncCallContext     *funcctx;
     TupleDesc            tuple_desc;
 
-    /**************************************************************************/
     Short_vehicle_rt *result_tuples = 0;
     size_t result_count = 0;
-    /**************************************************************************/
 
     if (SRF_IS_FIRSTCALL()) {
         MemoryContext   oldcontext;
@@ -210,13 +209,7 @@ _vrp_optimize(PG_FUNCTION_ARGS) {
                 &result_tuples,
                 &result_count);
 
-        /*********************************************************************/
-
-#if PGSQL_VERSION > 95
         funcctx->max_calls = result_count;
-#else
-        funcctx->max_calls = (uint32_t)result_count;
-#endif
         funcctx->user_fctx = result_tuples;
         if (get_call_result_type(fcinfo, NULL, &tuple_desc)
                 != TYPEFUNC_COMPOSITE) {
@@ -254,8 +247,6 @@ _vrp_optimize(PG_FUNCTION_ARGS) {
         values[0] = Int32GetDatum(funcctx->call_cntr + 1);
         values[1] = Int64GetDatum(result_tuples[call_cntr].vehicle_id);
         values[2] = Int64GetDatum(result_tuples[call_cntr].order_id);
-
-        /*********************************************************************/
 
         tuple = heap_form_tuple(tuple_desc, values, nulls);
         result = HeapTupleGetDatum(tuple);
