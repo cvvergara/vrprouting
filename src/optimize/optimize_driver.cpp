@@ -117,6 +117,7 @@ one_processing(
 }
 
 
+#if 0
 std::vector<Short_vehicle>
 one_processing(
         PickDeliveryOrders_t *shipments_arr, size_t total_shipments,
@@ -129,7 +130,7 @@ one_processing(
     std::vector<Vehicle_t> vehicles(vehicles_arr, vehicles_arr + total_vehicles);
     return one_processing(orders, vehicles, new_stops, time_matrix, max_cycles, execution_date);
 }
-
+#endif
 
 /** @brief: extract the times where the orders opens or closes
  *
@@ -275,9 +276,9 @@ subdivide_processing(
                  */
                 auto stop_it = std::find_if(
                         the_stops.begin(), the_stops.end(), [&]
-                        (const Short_vehicle& v) -> bool {return v.id == v_id;});
+                        (const Short_vehicle& sv) -> bool {return sv.id == v.id;});
 
-                std::set<Id> stops(stops_it->stops, stops_it->stops + stops_it->stops_size);
+                std::set<Id> stops(stop_it->stops.begin(), stop_it->stops.end());
                 orders_in_active_vehicles += stops;
             }
 
@@ -584,8 +585,7 @@ do_optimize(
                     subdivide_by_vehicle,
                     log) :
             one_processing(
-                    shipments_arr, total_shipments,
-                    vehicles_arr, total_vehicles, {},
+                    orders, vehicles, {},
                     time_matrix,
                     max_cycles, execution_date);
 
