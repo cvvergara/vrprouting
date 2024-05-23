@@ -129,6 +129,7 @@ process(
         return;
     }
 
+#if 0
     Time_multipliers_t *multipliers_arr = NULL;
     size_t total_multipliers_arr = 0;
     vrp_get_timeMultipliers(multipliers_sql, &multipliers_arr, &total_multipliers_arr, use_timestamps, &err_msg);
@@ -176,14 +177,15 @@ process(
     PGR_DBG("Total %ld vehicles in query:", total_vehicles);
     PGR_DBG("Total %ld matrix cells in query:", total_cells);
     PGR_DBG("Total %ld time dependant multipliers:", total_multipliers_arr);
+#endif
 
     clock_t start_t = clock();
 
     do_optimize(
             pd_orders_arr,    total_pd_orders,
             vehicles_arr,     total_vehicles,
-            matrix_cells_arr, total_cells,
-            multipliers_arr,      total_multipliers_arr,
+            matrix_sql,
+            multipliers_sql,
 
             factor,
             max_cycles,
@@ -192,6 +194,8 @@ process(
             check_triangle_inequality,
             subdivision_kind != 0,
             subdivision_kind == 1,
+
+            use_timestamps,
 
             result_tuples,
             result_count,
@@ -215,9 +219,10 @@ process(
     if (err_msg) {pfree(err_msg); err_msg = NULL;}
     if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
     if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
+#if 0
     if (multipliers_arr) {pfree(multipliers_arr); multipliers_arr = NULL;}
     if (matrix_cells_arr) {pfree(matrix_cells_arr); matrix_cells_arr = NULL;}
-
+#endif
     pgr_SPI_finish();
 }
 

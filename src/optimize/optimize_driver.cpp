@@ -37,18 +37,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <utility>
 #include <algorithm>
 
-#include "problem/pickDeliver.h"
 #include "c_types/order_types.h"
 #include "c_types/vehicle_types.h"
+#include "c_types/matrix_types.h"
+#include "c_types/multiplier_types.h"
 #include "c_types/return_types.h"
-#include "problem/matrix.h"
 
-#include "cpp_common/pgr_assert.h"
-#include "cpp_common/pgr_messages.h"
-#include "initialsol/tabu.h"
-#include "optimizers/tabu.h"
 #include "cpp_common/alloc.hpp"
 #include "cpp_common/interruption.h"
+#include "cpp_common/pgr_assert.h"
+#include "cpp_common/pgr_messages.h"
+#include "cpp_common/pgdata_getters.hpp"
+
+#include "problem/pickDeliver.h"
+#include "problem/matrix.h"
+#include "initialsol/tabu.h"
+#include "optimizers/tabu.h"
 
 namespace {
 
@@ -365,9 +369,8 @@ void
 do_optimize(
         PickDeliveryOrders_t *shipments_arr, size_t total_shipments,
         Vehicle_t *vehicles_arr, size_t total_vehicles,
-        Matrix_cell_t *matrix_cells_arr, size_t total_cells,
-        Time_multipliers_t *multipliers_arr, size_t total_multipliers,
-
+        char* matrix_sql,
+        char* multipliers_sql,
 
         double factor,
         int max_cycles,
@@ -377,6 +380,8 @@ do_optimize(
         bool subdivide,
         bool subdivide_by_vehicle,
 
+        bool use_timestamps,
+
         Short_vehicle_rt **return_tuples,
         size_t *return_count,
 
@@ -385,6 +390,10 @@ do_optimize(
         char **err_msg) {
     using vrprouting::msg;
     using vrprouting::alloc;
+    using vrprouting::pgget::get_matrix;
+    using vrprouting::pgget::get_orders;
+    using vrprouting::pgget::get_vehicles;
+    using vrprouting::pgget::get_timeMultipliers;
 
     std::ostringstream log;
     std::ostringstream notice;
@@ -400,12 +409,21 @@ do_optimize(
         pgassert(!(*err_msg));
         pgassert(total_shipments);
         pgassert(total_vehicles);
-        pgassert(total_cells);
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
 
-        *return_tuples = nullptr;
-        *return_count = 0;
+        hint = matrix_sql;
+        auto costs = get_matrix(std::string(matrix_sql), use_timestamps);
+
+        if (costs.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+
+        hint = multipliers_sql;
+        auto multipliers = get_timeMultipliers(std::string(multipliers_sql), use_timestamps);
+        hint = nullptr;
 
         Identifiers<Id> node_ids;
         Identifiers<Id> shipments_in_stops;
@@ -484,8 +502,8 @@ do_optimize(
          * - Verify matrix cells preconditions
          */
         vrprouting::problem::Matrix time_matrix(
-                matrix_cells_arr, total_cells,
-                multipliers_arr, total_multipliers,
+                costs,
+                multipliers,
                 node_ids, static_cast<Multiplier>(factor));
 
         if (check_triangle_inequality && !time_matrix.obeys_triangle_inequality()) {

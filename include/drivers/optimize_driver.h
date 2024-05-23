@@ -42,14 +42,16 @@ extern "C" {
     void do_optimize(
             PickDeliveryOrders_t customers_arr[], size_t,
             Vehicle_t *vehicles_arr, size_t,
-            Matrix_cell_t *, size_t,
-            Time_multipliers_t *, size_t,
+            char*,
+            char*,
 
             double,
             int,
             int64_t,
 
             bool, bool, bool,
+
+            bool,
 
             Short_vehicle_rt**,
             size_t*,
