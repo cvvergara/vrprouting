@@ -118,6 +118,34 @@ std::vector<Vroom_time_window_t> get_timewindows(
     return pgget::get_data<Vroom_time_window_t>(sql, is_shipment, info, &fetch_timewindows);
 }
 
+/**
+ * @param[in] sql SQL query to execute
+ * @param[out] rows C Container that holds the data
+ * @param[out] total_rows Total rows recieved
+ * @param [in] use_timestamps When true postgres Time datatypes are used
+ * @param [out] err_msg When not empty there was an error
+ */
+std::vector<Vroom_job_t> get_jobs(
+    const std::string &sql,
+    bool use_timestamps) {
+    using vrprouting::Info;
+    std::vector<Info> info{
+
+    {-1, 0, true, "id", vrprouting::IDX},
+    {-1, 0, true, "location_id", vrprouting::MATRIX_INDEX},
+    {-1, 0, false, "setup",   use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+    {-1, 0, false, "service", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+    {-1, 0, false, "delivery", vrprouting::ANY_POSITIVE_ARRAY},
+    {-1, 0, false, "pickup", vrprouting::ANY_POSITIVE_ARRAY},
+    {-1, 0, false, "skills", vrprouting::ANY_UINT_ARRAY},
+    {-1, 0, false, "priority", vrprouting::POSITIVE_INTEGER},
+    {-1, 0, false, "data", vrprouting::JSONB}};
+
+    return pgget::get_data<Vroom_job_t>(sql, use_timestamps, info, &fetch_jobs);
+}
+
+
+
 }  // namespace vroom
 
 std::vector<Time_multipliers_t> get_timeMultipliers(

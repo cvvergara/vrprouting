@@ -81,9 +81,6 @@ std::vector<Vroom_job_t> get_jobs(const std::string&, bool);
 /** @brief Reads the VROOM shipments */
 std::vector<Vroom_shipment_t> get_shipments(const std::string&, bool);
 
-/** @brief Reads the VROOM shipments time windows */
-std::vector<Vroom_time_window_t> get_shipments_time_windows(const std::string&, bool);
-
 /** @brief Reads the VROOM vehicles */
 std::vector<Vroom_vehicle_t> get_vehicles(const std::string&, bool);
 

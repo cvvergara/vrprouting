@@ -82,7 +82,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 void
 vrp_do_vroom(
-    Vroom_job_t *jobs, size_t total_jobs,
+    char* jobs_sql,
     char* jobs_tws_sql,
     Vroom_shipment_t *shipments, size_t total_shipments,
     char* shipments_tws_sql,
@@ -109,6 +109,7 @@ vrp_do_vroom(
   using vrprouting::pgget::vroom::get_matrix;
   using vrprouting::pgget::vroom::get_breaks;
   using vrprouting::pgget::vroom::get_timewindows;
+  using vrprouting::pgget::vroom::get_jobs;
 
   std::ostringstream log;
   std::ostringstream err;
@@ -122,9 +123,7 @@ vrp_do_vroom(
     pgassert(!(*err_msg));
     pgassert(!(*return_tuples));
     pgassert(!(*return_count));
-    pgassert(jobs || shipments);
     pgassert(vehicles);
-    pgassert(total_jobs || total_shipments);
     pgassert(total_vehicles);
 
     hint = breaks_sql;
@@ -134,6 +133,10 @@ vrp_do_vroom(
     hint = breaks_tws_sql;
     auto breaks_tw = breaks_tws_sql? get_timewindows(std::string(breaks_tws_sql), use_timestamps, false)
         : std::vector<Vroom_time_window_t>();
+
+    hint = jobs_sql;
+    auto jobs  = jobs_sql? get_jobs(std::string(jobs_sql), use_timestamps)
+        : std::vector<Vroom_job_t>();
 
     hint = jobs_tws_sql;
     auto jobs_tw  = jobs_tws_sql? get_timewindows(std::string(jobs_tws_sql), use_timestamps, false)
@@ -156,8 +159,8 @@ vrp_do_vroom(
 
     Identifiers<Id> location_ids;
 
-    for (size_t i = 0; i < total_jobs; ++i) {
-      location_ids += jobs[i].location_id;
+    for (const auto &j : jobs) {
+      location_ids += j.location_id;
     }
 
     for (size_t i = 0; i < total_shipments; ++i) {
@@ -242,8 +245,7 @@ vrp_do_vroom(
     problem.add_vehicles(vehicles, total_vehicles,
                          breaks,
                          breaks_tw);
-    problem.add_jobs(jobs, total_jobs,
-                     jobs_tw);
+    problem.add_jobs(jobs, jobs_tw);
     problem.add_shipments(shipments, total_shipments,
                           shipments_tw);
 

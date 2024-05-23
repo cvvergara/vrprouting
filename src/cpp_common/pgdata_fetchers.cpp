@@ -369,6 +369,35 @@ Vroom_time_window_t fetch_timewindows(
     return time_window;
 }
 
+Vroom_job_t fetch_jobs(
+    const HeapTuple tuple, const TupleDesc &tupdesc,
+    const std::vector<Column_info_t> &info,
+    bool) {
+  Vroom_job_t job;
+
+  job.id = get_value<Idx>(tuple, tupdesc, info[0], 0);
+  job.location_id = get_value<MatrixIndex>(tuple, tupdesc, info[1], 0);
+
+  job.setup = get_value<Duration>(tuple, tupdesc, info[2], 0);
+  job.service = get_value<Duration>(tuple, tupdesc, info[3], 0);
+
+  job.delivery_size = 0;
+  job.delivery = get_array<Amount>(tuple, tupdesc, info[4], job.delivery_size);
+
+  job.pickup_size = 0;
+  job.pickup = get_array<Amount>(tuple, tupdesc, info[5], job.pickup_size);
+
+  job.skills_size = 0;
+  job.skills = get_uint_array<Skill>(tuple, tupdesc, info[6], job.skills_size);
+  job.priority = get_value<Priority>(tuple, tupdesc, info[7], 0);
+  job.data = get_jsonb(tuple, tupdesc, info[8]);
+
+  if (job.priority > 100) {
+    throw std::string("Invalid value in column '") + info[7].name + "'. Maximum value allowed 100";
+  }
+  return job;
+}
+
 }  // namespace vroom
 
 Matrix_cell_t fetch_matrix(

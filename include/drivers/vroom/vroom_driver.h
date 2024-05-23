@@ -37,11 +37,11 @@ extern "C" {
 #endif
 
   void vrp_do_vroom(
-      Vroom_job_t *jobs, size_t total_jobs,
-      char*,
+      char*, char*,
       Vroom_shipment_t *shipments, size_t total_shipments,
       char*,
       Vroom_vehicle_t *vehicles, size_t total_vehicles,
+
       char*,
       char*,
       char*,

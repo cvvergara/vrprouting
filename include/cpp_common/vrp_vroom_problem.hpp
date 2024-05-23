@@ -198,12 +198,14 @@ class Vrp_vroom_problem : public vrprouting::Messages {
     }
   }
 
+#if 0
   void add_jobs(const Vroom_job_t *jobs, size_t count,
                 const std::vector<Vroom_time_window_t> &jobs_tw) {
     add_jobs(
         std::vector<Vroom_job_t>(jobs, jobs + count),
         jobs_tw);
   }
+#endif
   ///@}
 
 
