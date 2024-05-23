@@ -117,20 +117,6 @@ one_processing(
 }
 
 
-#if 0
-std::vector<Short_vehicle>
-one_processing(
-        PickDeliveryOrders_t *shipments_arr, size_t total_shipments,
-        Vehicle_t *vehicles_arr, size_t total_vehicles,
-        std::vector<Short_vehicle> new_stops,
-        const vrprouting::problem::Matrix &time_matrix,
-        int max_cycles,
-        int64_t execution_date) {
-    std::vector<PickDeliveryOrders_t> orders(shipments_arr, shipments_arr + total_shipments);
-    std::vector<Vehicle_t> vehicles(vehicles_arr, vehicles_arr + total_vehicles);
-    return one_processing(orders, vehicles, new_stops, time_matrix, max_cycles, execution_date);
-}
-#endif
 
 /** @brief: extract the times where the orders opens or closes
  *
@@ -256,15 +242,6 @@ subdivide_processing(
                     [&](const Vehicle_t& v)
                     {return v.start_open_t <= t && t <= v.end_close_t;});
 
-#if 0
-            auto vehicles_to_process = static_cast<size_t>(std::distance(vehicles_arr,
-                        std::partition(
-                            vehicles_arr, vehicles_arr + total_vehicles,
-                            [&](const Vehicle_t& v)
-                            {return v.start_open_t <= t && t <= v.end_close_t;})));
-            pgassert(active_vehicles.size() == vehicles_to_process);
-            pgassert(vehicles.size() == total_vehicles);
-#endif
 
             /* Get active orders of active vehicles */
             Identifiers<Id> orders_in_active_vehicles;
@@ -282,22 +259,6 @@ subdivide_processing(
                 orders_in_active_vehicles += stops;
             }
 
-#if 0
-            Identifiers<Id> shipments_in_stops;
-            for (size_t i = 0; i < vehicles_to_process; ++i) {
-                auto v_id = vehicles_arr[i].id;
-                auto v_to_modify = std::find_if(
-                        the_stops.begin(), the_stops.end(), [&]
-                        (const Short_vehicle& v) -> bool {return v.id == v_id;});
-
-                for (const auto &s : v_to_modify->stops) {
-                    shipments_in_stops += s;
-                }
-            }
-
-            pgassert(orders_in_active_vehicles.size() == shipments_in_stops.size());
-            pgassert(orders_in_active_vehicles == shipments_in_stops);
-#endif
             /*
              * Nothing to do:
              * - no shipments to process
@@ -305,16 +266,9 @@ subdivide_processing(
              */
             if ((orders_in_active_vehicles.size() == 0)
                     || (prev_shipments_in_stops == orders_in_active_vehicles)) continue;
-#if 0
-            if ((shipments_in_stops.size() == 0)
-                    || (prev_shipments_in_stops == shipments_in_stops)) continue;
-#endif
             log << "\nOptimizing at time: " << t;
 
             prev_shipments_in_stops = orders_in_active_vehicles;
-#if 0
-            prev_shipments_in_stops = shipments_in_stops;
-#endif
             std::vector<PickDeliveryOrders_t> active_orders;
             std::vector<PickDeliveryOrders_t> inactive_orders;
 
@@ -323,26 +277,10 @@ subdivide_processing(
                     [&](const PickDeliveryOrders_t& o)
                     {return orders_in_active_vehicles.has(o.id);});
 
-#if 0
-            auto shipments_to_process = static_cast<size_t>(std::distance(shipments_arr,
-                        std::partition(shipments_arr, shipments_arr + total_shipments,
-                            [&](const PickDeliveryOrders_t& s){return orders_in_active_vehicles.has(s.id);})));
-
-            pgassert(active_orders.size() == shipments_to_process);
-            pgassert(shipments_in_stops.size() == static_cast<size_t>(shipments_to_process));
-#endif
             pgassert(active_orders.size() == orders_in_active_vehicles.size());
             pgassert(active_orders.size() > 0);
 
-#if 1
             auto new_stops = one_processing(active_orders, active_vehicles, the_stops, time_matrix, max_cycles, execution_date);
-#else
-            auto new_stops = one_processing(
-                    shipments_arr, shipments_to_process,
-                    vehicles_arr, vehicles_to_process, the_stops,
-                    time_matrix,
-                    max_cycles, execution_date);
-#endif
 
             update_stops(the_stops, new_stops);
         }
