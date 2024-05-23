@@ -293,12 +293,19 @@ subdivide_processing(
              * - no shipments to process
              * - last optimization had exavtly the same shipments
              */
+            if ((orders_in_active_vehicles.size() == 0)
+                    || (prev_shipments_in_stops == orders_in_active_vehicles)) continue;
+#if 0
             if ((shipments_in_stops.size() == 0)
                     || (prev_shipments_in_stops == shipments_in_stops)) continue;
+#endif
             log << "\nOptimizing at time: " << t;
 
-            prev_shipments_in_stops = shipments_in_stops;
 
+            prev_shipments_in_stops = orders_in_active_vehicles;
+#if 0
+            prev_shipments_in_stops = shipments_in_stops;
+#endif
             auto shipments_to_process = static_cast<size_t>(std::distance(shipments_arr,
                         std::partition(shipments_arr, shipments_arr + total_shipments,
                             [&](const PickDeliveryOrders_t& s){return shipments_in_stops.has(s.id);})));
