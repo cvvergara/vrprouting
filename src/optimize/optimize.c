@@ -92,6 +92,7 @@ process(
 
     pgr_SPI_connect();
 
+#if 0
     PickDeliveryOrders_t *pd_orders_arr = NULL;
     size_t total_pd_orders = 0;
     vrp_get_orders(pd_orders_sql, &pd_orders_arr, &total_pd_orders, is_euclidean, use_timestamps, &err_msg);
@@ -107,12 +108,11 @@ process(
         pgr_SPI_finish();
         return;
     }
-
+#endif
 
     clock_t start_t = clock();
 
     do_optimize(
-            pd_orders_arr,    total_pd_orders,
             pd_orders_sql,
             vehicles_sql,
             matrix_sql,

@@ -355,7 +355,6 @@ subdivide_processing(
 
 void
 do_optimize(
-        PickDeliveryOrders_t *shipments_arr, size_t total_shipments,
         char* orders_sql,
         char* vehicles_sql,
         char* matrix_sql,
@@ -398,11 +397,8 @@ do_optimize(
         pgassert(!(*log_msg));
         pgassert(!(*notice_msg));
         pgassert(!(*err_msg));
-        pgassert(total_shipments);
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
-
-        std::vector<PickDeliveryOrders_t> orders1(shipments_arr, shipments_arr + total_shipments);
 
         hint = orders_sql;
         auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);
@@ -474,7 +470,7 @@ do_optimize(
             }
         }
 
-#if 1
+#if 0
         std::sort(shipments_arr, shipments_arr + total_shipments,
                 [](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id < rhs.id;});
 #endif
@@ -488,7 +484,7 @@ do_optimize(
                         [&](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id == rhs.id;}),
                     orders.end());
 
-#if 1
+#if 0
         total_shipments = static_cast<size_t>(std::distance(shipments_arr,
                     std::unique(shipments_arr, shipments_arr + total_shipments,
                         [&](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id == rhs.id;})));
@@ -497,8 +493,8 @@ do_optimize(
         total_shipments = static_cast<size_t>(std::distance(shipments_arr,
                     std::remove_if(shipments_arr, shipments_arr + total_shipments,
                         [&](const PickDeliveryOrders_t& s){return !shipments_in_stops.has(s.id);})));
-
 #endif
+
 
         orders.erase(
                     std::remove_if(
@@ -595,7 +591,7 @@ do_optimize(
          * Prepare results
          */
         if (!solution.empty()) {
-            (*return_tuples) = alloc(total_shipments * 2, (*return_tuples));
+            (*return_tuples) = alloc(orders.size() * 2, (*return_tuples));
 
             size_t seq = 0;
             for (const auto &row : solution) {
@@ -605,9 +601,9 @@ do_optimize(
                     ++seq;
                 }
             }
+            (*return_count) = orders.size() * 2;
         }
 
-        (*return_count) = total_shipments * 2;
 
         pgassert(*err_msg == nullptr);
         *log_msg = log.str().empty()?
