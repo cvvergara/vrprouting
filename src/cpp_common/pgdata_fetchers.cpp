@@ -58,8 +58,7 @@ void check_pairs(vrprouting::Column_info_t lhs, vrprouting::Column_info_t rhs) {
 
 namespace vrprouting {
 
-
-
+#if 0
 
 
 
@@ -129,6 +128,7 @@ void fetch_vroom_vehicles(
     throw std::string("Invalid negative or zero value in column '") + info[7].name + "'";
   }
 }
+#endif
 
 namespace pgget {
 namespace vroom {
