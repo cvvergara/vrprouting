@@ -33,14 +33,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "c_types/typedefs.h"
 
-#if 0
-namespace vrprouting {
-namespace vroom {
-#endif
-
 /** @brief Vehicle's break attributes
 
-@note C/C++/postgreSQL connecting structure for input
+@note C/C++/postgreSQL connecting classure for input
 name | description
 :----- | :-------
 id | Identifier of break
@@ -48,7 +43,8 @@ vehicle_id | Identifier of vehicle
 service | Duration of break
 data | Metadata information of break
 */
-struct Vroom_break_t {
+class Vroom_break_t {
+public:
   Idx id; /** Identifier of break */
   Idx vehicle_id;  /** Identifier of vehicle */
   Duration service; /** Duration of break */
@@ -57,7 +53,7 @@ struct Vroom_break_t {
 
 /** @brief Job's attributes
 
-@note C/C++/postgreSQL connecting structure for input
+@note C/C++/postgreSQL connecting classure for input
 name | description
 :----- | :-------
 id | The job's identifier
@@ -73,7 +69,8 @@ skills_size | Number of mandatory skills
 priority | Priority level of job
 data | Metadata information of job
 */
-struct Vroom_job_t {
+class Vroom_job_t {
+public:
   Idx id; /** The job's identifier */
   MatrixIndex location_id; /** Location index of job in matrix */
 
@@ -96,7 +93,7 @@ struct Vroom_job_t {
 
 /** @brief Matrix's attributes
 
-@note C/C++/postgreSQL connecting structure for input
+@note C/C++/postgreSQL connecting classure for input
 name | description
 :----- | :-------
 start_id | Start node identifier
@@ -104,7 +101,8 @@ end_id | End node identifier
 duration | Duration to travel from start to end
 cost | Cost to travel from start to end
 */
-struct Vroom_matrix_t {
+class Vroom_matrix_t {
+public:
   MatrixIndex start_id;  /** Start node identifier */
   MatrixIndex end_id;    /** End node identifier */
 
@@ -115,7 +113,7 @@ struct Vroom_matrix_t {
 
 /** @brief Vroom's shipment's attributes
 
-@note C/C++/postgreSQL connecting structure for input
+@note C/C++/postgreSQL connecting classure for input
 name | description
 :----- | :-------
 id | Shipment identifier
@@ -133,7 +131,8 @@ priority | Priority level of shipment
 p_data | Metadata information of pickup shipment
 d_data | Metadata information of delivery shipment
 */
-struct Vroom_shipment_t {
+class Vroom_shipment_t {
+public:
   Idx id; /** Shipment identifier */
 
   /** pickup shipment */
@@ -160,7 +159,7 @@ struct Vroom_shipment_t {
 
 /** @brief Time window's attributes
 
-@note C/C++/postgreSQL connecting structure for input
+@note C/C++/postgreSQL connecting classure for input
 name | description
 :----- | :-------
 id | Identifier of the job/shipment/break
@@ -168,7 +167,8 @@ kind | Whether the shipment is a pickup ('p') or a delivery ('d')
 tw_open | Time window opening time
 tw_close | Time window closing time
 */
-struct Vroom_time_window_t {
+class Vroom_time_window_t {
+public:
   Idx id;
   char kind;
   Duration tw_open;
@@ -177,7 +177,7 @@ struct Vroom_time_window_t {
 
 /** @brief Vroom's Vehicles's attributes
 
-@note C/C++/postgreSQL connecting structure for input
+@note C/C++/postgreSQL connecting classure for input
 name | description
 :----- | :-------
 id | The vehicle's identifier
@@ -193,7 +193,8 @@ speed_factor | Vehicle travel time multiplier
 max_tasks | Max number of tasks in a route for the vehicle
 data | Metadata information of vehicle
 */
-struct Vroom_vehicle_t {
+class Vroom_vehicle_t {
+public:
   Idx id; /** The vehicle's identifier */
   MatrixIndex start_id; /** Start location index in matrix */
   MatrixIndex end_id; /** End location index in matrix */
@@ -213,10 +214,5 @@ struct Vroom_vehicle_t {
 
   std::string data; /** Metadata information of vehicle */
 };
-
-#if 0
-}  // namespace vroom
-}  // namespace vrprouting
-#endif
 
 #endif  // INCLUDE_C_TYPES_VROOM_TYPES_H_

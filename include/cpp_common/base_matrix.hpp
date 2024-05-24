@@ -40,7 +40,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "structures/generic/matrix.h"
 
-typedef struct Matrix_cell_t Matrix_cell_t;
+
+class Vroom_matrix_t;
 
 namespace vrprouting {
 namespace base {

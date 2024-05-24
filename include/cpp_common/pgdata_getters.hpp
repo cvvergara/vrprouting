@@ -43,6 +43,7 @@ extern "C" {
 
 #include "c_types/order_types.h"
 #include "c_types/vehicle_types.h"
+#include "c_types/vroom_types.h"
 
 namespace vrprouting {
 namespace pgget {

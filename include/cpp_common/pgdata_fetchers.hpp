@@ -42,7 +42,13 @@ extern "C" {
 #include <vector>
 
 #include "c_types/typedefs.h"
-using Info = struct Info;
+class Info;
+class Vroom_matrix_t;
+class Vroom_time_window_t;
+class Vroom_job_t;
+class Vroom_break_t;
+class Vroom_shipment_t;
+class Vroom_vehicle_t;
 
 namespace vrprouting {
 
