@@ -36,68 +36,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 namespace vrprouting {
 
-#if 0
-/** @brief Retrives the tuples
- * @tparam Data_type Scructure of data
- * @tparam Func fetcher function
- * @param[in] sql  Query to be processed
- * @param[out] pgtuples C array of data
- * @param[out] total_pgtuples C array size
- * @param[in] flag useful flag depending on data
- * @param[in] info information about the data
- * @param[in] func fetcher function to be used
- */
-template <typename Data_type, typename Func>
-void get_data(
-        char *sql,
-        Data_type **pgtuples,
-        size_t *total_pgtuples,
-        bool flag,
-        std::vector<Column_info_t> &info,
-        Func func) {
-    const int tuple_limit = 1000000;
-
-    size_t total_tuples;
-
-    auto SPIplan = vrp_SPI_prepare(sql);
-    auto SPIportal = vrp_SPI_cursor_open(SPIplan);
-
-    bool moredata = true;
-    (*total_pgtuples) = total_tuples = 0;
-
-    while (moredata == true) {
-        SPI_cursor_fetch(SPIportal, true, tuple_limit);
-        auto tuptable = SPI_tuptable;
-        auto tupdesc = SPI_tuptable->tupdesc;
-        if (total_tuples == 0) fetch_column_info(tupdesc, info);
-
-        size_t ntuples = SPI_processed;
-        total_tuples += ntuples;
-
-        if (ntuples > 0) {
-            (*pgtuples) = alloc(total_tuples, *pgtuples);
-            if ((*pgtuples) == NULL) {
-                throw std::string("Out of memory!");
-            }
-
-            for (size_t t = 0; t < ntuples; t++) {
-              func(
-                  tuptable->vals[t],
-                  tupdesc,
-                  info,
-                  &(*pgtuples)[total_tuples - ntuples + t],
-                  flag);
-            }
-            SPI_freetuptable(tuptable);
-        } else {
-          moredata = false;
-        }
-    }
-
-    SPI_cursor_close(SPIportal);
-    (*total_pgtuples) = total_tuples;
-}
-#endif
 
 namespace pgget {
 /** @brief Retrives the tuples
