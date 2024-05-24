@@ -40,12 +40,12 @@ extern "C" {
 #include <limits>
 
 #include "c_types/typedefs.h"
-#include "c_types/info_t.hpp"
+#include "cpp_common/info.hpp"
 
 
 namespace vrprouting {
-using Column_info_t = struct Column_info_t;
-using Info = struct Column_info_t;
+using Info = struct Info;
+using Column_info_t = struct Info;
 
 /** @brief  Function will check whether the colNumber represent any specific column or NULL (SPI_ERROR_NOATTRIBUTE).  */
 bool column_found(const Column_info_t&);

@@ -47,8 +47,8 @@ extern "C" {
 #include "c_common/arrays_input.h"
 #include "c_common/timeconversion.h"
 #include "cpp_common/alloc.hpp"
+#include "cpp_common/info.hpp"
 
-#include "c_types/info_t.hpp"
 #include "c_types/vroom_types.h"
 #include "c_types/matrix_types.h"
 #include "c_types/vehicle_types.h"

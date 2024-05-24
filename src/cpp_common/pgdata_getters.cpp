@@ -4,19 +4,6 @@ File: pgdata_getters.cpp
 Copyright (c) 2015 pgRouting developers
 Mail: project@pgrouting.org
 
-Copyright (c) 2024 Celia Virginia Vergara Castillo
-- Return C++ container
-Copyright (c) 2023 Celia Virginia Vergara Castillo
-- cat into one file
-Copyright (c) 2020 Mahmoud SAKR and Esteban ZIMANYI
-mail: m_attia_sakrcw at yahoo.com, estebanzimanyicw at gmail.com
-Copyright (c) 2016 Rohith Reddy
-Copyright (c) 2016 Andrea Nardelli
-mail: nrd.nardelli at gmail.com
-Copyright (c) 2015 Celia Virginia Vergara Castillo
-mail: vicky at erosion.dev
-
-
 ------
 
 This program is free software; you can redistribute it and/or modify
@@ -46,8 +33,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/get_data.hpp"
 #include "cpp_common/get_check_data.hpp"
 #include "cpp_common/pgdata_fetchers.hpp"
+#include "cpp_common/info.hpp"
 
-#include "c_types/info_t.hpp"
 #include "c_types/order_types.h"
 #include "c_types/vehicle_types.h"
 #include "c_types/multiplier_types.h"

@@ -35,7 +35,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <limits.h>
 #include <float.h>
 #include <assert.h>
-#include "c_types/info_t.hpp"
+
+#include "cpp_common/info.hpp"
 #include "cpp_common/get_check_data.hpp"
 
 #include "c_types/vroom_types.h"

@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: info_t.hpp
+File: info.hpp
 
 Copyright (c) 2015 Celia Virginia Vergara Castillo
 Mail: vicky at erosion.dev
