@@ -36,6 +36,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 namespace vrprouting {
 
+#if 0
 /** @brief Retrives the tuples
  * @tparam Data_type Scructure of data
  * @tparam Func fetcher function
@@ -96,6 +97,7 @@ void get_data(
     SPI_cursor_close(SPIportal);
     (*total_pgtuples) = total_tuples;
 }
+#endif
 
 namespace pgget {
 /** @brief Retrives the tuples
