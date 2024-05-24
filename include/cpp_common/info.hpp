@@ -72,7 +72,7 @@ enum expectType {
 };
 
 
-struct Column_info_t {
+struct Info {
   int colNumber;
   uint64_t type;
   bool strict;
