@@ -72,12 +72,13 @@ enum expectType {
 };
 
 
-struct Info {
-  int colNumber;
-  uint64_t type;
-  bool strict;
-  std::string name;
-  expectType eType;
+class Info {
+public:
+    int colNumber;
+    uint64_t type;
+    bool strict;
+    std::string name;
+    expectType eType;
 };
 
 }  // namespace vrprouting
