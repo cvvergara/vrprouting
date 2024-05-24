@@ -80,7 +80,7 @@ namespace detail {
 void fetch_column_info(const TupleDesc&, std::vector<Info>&);
 
 /** @brief Function gets the C string of a JSONB */
-char* get_jsonb(const HeapTuple, const TupleDesc&, const Info&);
+std::string get_jsonb(const HeapTuple, const TupleDesc&, const Info&);
 
 /** @brief Function gets the @b double of a Postgres floating point */
 double get_anynumerical(const HeapTuple, const TupleDesc&, const Info&, double);

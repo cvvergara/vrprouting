@@ -33,6 +33,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "c_types/typedefs.h"
 
+#if 0
+namespace vrprouting {
+namespace vroom {
+#endif
+
 /** @brief Vehicle's break attributes
 
 @note C/C++/postgreSQL connecting structure for input
@@ -47,7 +52,7 @@ struct Vroom_break_t {
   Idx id; /** Identifier of break */
   Idx vehicle_id;  /** Identifier of vehicle */
   Duration service; /** Duration of break */
-  char *data; /** Metadata information of break */
+  std::string data; /** Metadata information of break */
 };
 
 /** @brief Job's attributes
@@ -86,7 +91,7 @@ struct Vroom_job_t {
 
   Priority priority; /** Priority level of job */
 
-  char *data; /** Metadata information of job */
+  std::string data; /** Metadata information of job */
 };
 
 /** @brief Matrix's attributes
@@ -149,8 +154,8 @@ struct Vroom_shipment_t {
 
   Priority priority; /** Priority level of shipment */
 
-  char *p_data; /** Metadata information of pickup shipment */
-  char *d_data; /** Metadata information of delivery shipment */
+  std::string p_data; /** Metadata information of pickup shipment */
+  std::string d_data; /** Metadata information of delivery shipment */
 };
 
 /** @brief Time window's attributes
@@ -206,7 +211,12 @@ struct Vroom_vehicle_t {
 
   int32_t max_tasks; /** Max number of tasks in a route for the vehicle */
 
-  char *data; /** Metadata information of vehicle */
+  std::string data; /** Metadata information of vehicle */
 };
+
+#if 0
+}  // namespace vroom
+}  // namespace vrprouting
+#endif
 
 #endif  // INCLUDE_C_TYPES_VROOM_TYPES_H_

@@ -571,8 +571,8 @@ get_char(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, char
  *
  * @returns "{}" (empty jsonb) when when the column does not exist
  */
-char* get_jsonb(const HeapTuple tuple, const TupleDesc &tupdesc,  const vrprouting::Info &info) {
-  return column_found(info)? DatumGetCString(SPI_getvalue(tuple, tupdesc, info.colNumber)) : strdup("{}");
+std::string get_jsonb(const HeapTuple tuple, const TupleDesc &tupdesc,  const vrprouting::Info &info) {
+  return column_found(info)? DatumGetCString(SPI_getvalue(tuple, tupdesc, info.colNumber)) : "{}";
 }
 
 }  // namespace vrprouting
