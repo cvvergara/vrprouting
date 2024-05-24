@@ -5,5 +5,5 @@ ADD_LIBRARY(cpp_common OBJECT
   get_check_data.cpp
   messages.cpp
   identifier.cpp
-  pgr_assert.cpp
+  assert.cpp
   )
