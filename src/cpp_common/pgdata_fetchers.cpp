@@ -47,7 +47,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 namespace {
 
-void check_pairs(vrprouting::Column_info_t lhs, vrprouting::Column_info_t rhs) {
+void check_pairs(vrprouting::Info lhs, vrprouting::Info rhs) {
   if (!(vrprouting::column_found(lhs)) && vrprouting::column_found(rhs)) {
     throw std::string("Column found: '") + rhs.name + "', missing column: '" + lhs.name + "'";
   } else if (!(vrprouting::column_found(rhs)) && vrprouting::column_found(lhs)) {
@@ -65,7 +65,7 @@ namespace vroom {
 
 Vroom_break_t fetch_breaks(
     const HeapTuple tuple, const TupleDesc &tupdesc,
-    const std::vector<Column_info_t> &info,
+    const std::vector<Info> &info,
     bool) {
   Vroom_break_t vroom_break;
   vroom_break.id = get_value<Idx>(tuple, tupdesc, info[0], 0);
@@ -77,7 +77,7 @@ Vroom_break_t fetch_breaks(
 
 Vroom_matrix_t fetch_matrix(
     const HeapTuple tuple, const TupleDesc &tupdesc,
-    const std::vector<Column_info_t> &info,
+    const std::vector<Info> &info,
     bool) {
   Vroom_matrix_t matrix;
   matrix.start_id = get_value<MatrixIndex>(tuple, tupdesc, info[0], -1);
@@ -89,7 +89,7 @@ Vroom_matrix_t fetch_matrix(
 
 Vroom_time_window_t fetch_timewindows(
         const HeapTuple tuple, const TupleDesc &tupdesc,
-        const std::vector<Column_info_t> &info,
+        const std::vector<Info> &info,
         bool is_shipment) {
     Vroom_time_window_t time_window;
 
@@ -113,7 +113,7 @@ Vroom_time_window_t fetch_timewindows(
 
 Vroom_job_t fetch_jobs(
     const HeapTuple tuple, const TupleDesc &tupdesc,
-    const std::vector<Column_info_t> &info,
+    const std::vector<Info> &info,
     bool) {
   Vroom_job_t job;
 
@@ -142,7 +142,7 @@ Vroom_job_t fetch_jobs(
 
 Vroom_shipment_t fetch_shipments(
         const HeapTuple tuple, const TupleDesc &tupdesc,
-        const std::vector<Column_info_t> &info,
+        const std::vector<Info> &info,
         bool) {
     Vroom_shipment_t shipment;
 
@@ -175,7 +175,7 @@ Vroom_shipment_t fetch_shipments(
 
 Vroom_vehicle_t fetch_vehicles(
         const HeapTuple tuple, const TupleDesc &tupdesc,
-        const std::vector<Column_info_t> &info,
+        const std::vector<Info> &info,
         bool) {
     Vroom_vehicle_t vehicle;
     vehicle.id = get_value<Idx>(tuple, tupdesc, info[0], 0);
@@ -214,7 +214,7 @@ Vroom_vehicle_t fetch_vehicles(
 
 Matrix_cell_t fetch_matrix(
     const HeapTuple tuple, const TupleDesc &tupdesc,
-    const std::vector<Column_info_t> &info,
+    const std::vector<Info> &info,
     bool) {
   Matrix_cell_t row;
   row.from_vid = get_value<Id>(tuple, tupdesc,  info[0], -1);
@@ -226,7 +226,7 @@ Matrix_cell_t fetch_matrix(
 
 Time_multipliers_t fetch_timeMultipliers(
         const HeapTuple tuple, const TupleDesc &tupdesc,
-        const std::vector<Column_info_t> &info,
+        const std::vector<Info> &info,
         bool) {
    Time_multipliers_t row;
    row.start_time = get_value<TTimestamp>(tuple, tupdesc, info[0], 0);
@@ -236,7 +236,7 @@ Time_multipliers_t fetch_timeMultipliers(
 
 PickDeliveryOrders_t fetch_orders(
     const HeapTuple tuple, const TupleDesc &tupdesc,
-    const std::vector<Column_info_t> &info,
+    const std::vector<Info> &info,
     bool is_euclidean) {
   PickDeliveryOrders_t pd_order;
   pd_order.id = get_value<Id>(tuple, tupdesc, info[0], -1);
@@ -260,7 +260,7 @@ PickDeliveryOrders_t fetch_orders(
 
 Vehicle_t fetch_vehicles(
     const HeapTuple tuple, const TupleDesc &tupdesc,
-    const std::vector<Column_info_t> &info,
+    const std::vector<Info> &info,
     bool is_euclidean) {
 
   Vehicle_t vehicle;

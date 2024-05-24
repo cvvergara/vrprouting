@@ -59,28 +59,28 @@ extern "C" {
 namespace {
 
 void
-check_interval_type(const vrprouting::Column_info_t &info) {
+check_interval_type(const vrprouting::Info &info) {
   if (!(info.type == 1186)) {
     throw std::string("Unexpected type in column '") + info.name + "'. Expected INTERVAL";
   }
 }
 
 void
-check_jsonb_type(vrprouting::Column_info_t info) {
+check_jsonb_type(vrprouting::Info info) {
   if (!(info.type == JSONBOID)) {
     throw std::string("Unexpected type in column '") + info.name + "'. Expected JSONB";
   }
 }
 
 void
-check_integer_type(vrprouting::Column_info_t info) {
+check_integer_type(vrprouting::Info info) {
   if (!(info.type == INT2OID || info.type == INT4OID)) {
     throw std::string("Unexpected type in column '") + info.name + "'. Expected SMALLINT or INTEGER";
   }
 }
 
 void
-check_integerarray_type(vrprouting::Column_info_t info) {
+check_integerarray_type(vrprouting::Info info) {
   if (!(info.type == INT2ARRAYOID || info.type == INT4ARRAYOID)) {
     throw std::string("Unexpected type in column '") + info.name + "'. Expected INTEGER-ARRAY";
   }
@@ -97,7 +97,7 @@ check_integerarray_type(vrprouting::Column_info_t info) {
  */
 
 void
-check_any_integerarray_type(vrprouting::Column_info_t info) {
+check_any_integerarray_type(vrprouting::Info info) {
   if (!(info.type == INT2ARRAYOID
         || info.type == INT4ARRAYOID
         || info.type == 1016)) {
@@ -106,7 +106,7 @@ check_any_integerarray_type(vrprouting::Column_info_t info) {
 }
 
 void
-check_timestamp_type(vrprouting::Column_info_t info) {
+check_timestamp_type(vrprouting::Info info) {
   if (!(info.type == 1114)) {
     throw std::string("Unexpected type in column '") + info.name + "'. Expected TIMESTAMP";
   }
@@ -125,7 +125,7 @@ check_timestamp_type(vrprouting::Column_info_t info) {
  *        @b FALSE when column was not found.
  */
 bool
-get_column_info(const TupleDesc &tupdesc, vrprouting::Column_info_t &info) {
+get_column_info(const TupleDesc &tupdesc, vrprouting::Info &info) {
     info.colNumber =  SPI_fnumber(tupdesc, info.name.c_str());
     if (info.strict && info.colNumber == SPI_ERROR_NOATTRIBUTE) {
         throw std::string("Column '") + info.name + "' not Found";
@@ -149,7 +149,7 @@ get_column_info(const TupleDesc &tupdesc, vrprouting::Column_info_t &info) {
  * @throw ERROR Unexpected type in column. Expected column type is ANY-INTEGER.
  */
 void
-check_any_integer_type(const vrprouting::Column_info_t &info) {
+check_any_integer_type(const vrprouting::Info &info) {
     if (!(info.type == INT2OID
                 || info.type == INT4OID
                 || info.type == INT8OID)) {
@@ -165,7 +165,7 @@ check_any_integer_type(const vrprouting::Column_info_t &info) {
  * @param[in] info contain column information.
  * @throw ERROR Unexpected type in column. Expected column type is ANY-NUMERICAL.
  */
-void check_any_numerical_type(const vrprouting::Column_info_t &info) {
+void check_any_numerical_type(const vrprouting::Info &info) {
     if (!(info.type == INT2OID
                 || info.type == INT4OID
                 || info.type == INT8OID
@@ -185,7 +185,7 @@ void check_any_numerical_type(const vrprouting::Column_info_t &info) {
  * @throw ERROR Unexpected type in column. Expected column type is TEXT.
  */
 void
-check_text_type(const vrprouting::Column_info_t &info) {
+check_text_type(const vrprouting::Info &info) {
     if (!(info.type == TEXTOID)) {
         throw std::string("Unexpected type in column '") + info.name + "'. Expected TEXT";
     }
@@ -201,14 +201,14 @@ check_text_type(const vrprouting::Column_info_t &info) {
  * @throw ERROR Unexpected type in column. Expected column type is CHAR.
  */
 void
-check_char_type(const vrprouting::Column_info_t &info) {
+check_char_type(const vrprouting::Info &info) {
     if (!(info.type == BPCHAROID)) {
         throw std::string("Unexpected type in column '") + info.name + "'. Expected TEXT";
     }
 }
 
 TInterval
-getInterval(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column_info_t &info) {
+getInterval(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info) {
   Datum binval;
   bool isnull;
   Interval*   interval;
@@ -231,7 +231,7 @@ getInterval(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::C
 }
 
 TTimestamp
-getTimeStamp(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column_info_t &info) {
+getTimeStamp(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info) {
   Datum binval;
   bool isnull;
   TTimestamp value = 0;
@@ -259,7 +259,7 @@ getTimeStamp(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::
  * @return Integer type of column value is returned.
  */
 int64_t getBigInt(
-        const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column_info_t &info) {
+        const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info) {
     Datum binval;
     bool isnull;
     int64_t value = 0;
@@ -291,7 +291,7 @@ int64_t getBigInt(
  * @return Double type of column value is returned.
  */
 double getFloat8(
-        const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column_info_t &info) {
+        const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info) {
     Datum binval;
     bool isnull = false;
     binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isnull);
@@ -339,7 +339,7 @@ double getFloat8(
  * @return Char type of column value is returned.
  */
 char getChar(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column_info_t &info, char default_value) {
+    const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info, char default_value) {
   Datum binval;
   bool isNull;
   char value = default_value;
@@ -362,7 +362,7 @@ char getChar(
 
 int64_t*
 get_BigIntArr_wEmpty(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Column_info_t &info, size_t &the_size) {
+    const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info, size_t &the_size) {
   bool is_null = false;
   the_size = 0;
 
@@ -386,7 +386,7 @@ namespace detail {
 
 int64_t*
 get_any_positive_array(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, size_t &the_size) {
+    const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, size_t &the_size) {
   if (!column_found(info)) return nullptr;
   int64_t *array = get_BigIntArr_wEmpty(tuple, tupdesc, info, the_size);
   for (size_t i = 0; i < the_size; i++) {
@@ -397,7 +397,7 @@ get_any_positive_array(
 
 uint32_t*
 get_uint_array(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info,
+    const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info,
     size_t &the_size) {
   bool is_null = false;
   the_size = 0;
@@ -424,7 +424,7 @@ get_uint_array(
  */
 TInterval
 get_interval(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TInterval opt_value) {
+    const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, TInterval opt_value) {
   TInterval value = column_found(info)? getInterval(tuple, tupdesc, info) : opt_value;
   if (value < 0) throw std::string("Unexpected negative value in column '") + info.name + "'";
   return (TInterval) value;
@@ -441,7 +441,7 @@ get_interval(
  */
 TTimestamp
 get_timestamp(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, TTimestamp opt_value) {
+    const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, TTimestamp opt_value) {
   return column_found(info)?  getTimeStamp(tuple, tupdesc, info) : opt_value;
 }
 
@@ -457,7 +457,7 @@ get_timestamp(
  * Used with vrprouting::ANY_INTEGER
  */
 int64_t
-get_anyinteger(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, int64_t opt_value) {
+get_anyinteger(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, int64_t opt_value) {
   return column_found(info)? getBigInt(tuple, tupdesc, info) : opt_value;
 }
 }  // namespace detail
@@ -469,7 +469,7 @@ get_anyinteger(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_inf
  *
  * [SPI_ERROR_NOATTRIBUTE](https://doxygen.postgresql.org/spi_8h.html#ac1512d8aaa23c2d57bb0d1eb8f453ee2)
  */
-bool column_found(const Column_info_t &info) {
+bool column_found(const Info &info) {
     return !(info.colNumber == SPI_ERROR_NOATTRIBUTE);
 }
 
@@ -482,7 +482,7 @@ bool column_found(const Column_info_t &info) {
  */
 void fetch_column_info(
     const TupleDesc &tupdesc,
-    std::vector<vrprouting::Column_info_t> &info) {
+    std::vector<vrprouting::Info> &info) {
   for (auto &coldata : info) {
     if (get_column_info(tupdesc, coldata)) {
       switch (coldata.eType) {
@@ -544,7 +544,7 @@ void fetch_column_info(
  * Used with vrprouting::ANY_NUMERICAL
  */
 double
-get_anynumerical(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, double opt_value) {
+get_anynumerical(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, double opt_value) {
   return column_found(info)? getFloat8(tuple, tupdesc, info) : opt_value;
 }
 
@@ -559,7 +559,7 @@ get_anynumerical(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_i
  * @returns opt_value when the column does not exist
  */
 char
-get_char(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, char opt_value) {
+get_char(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, char opt_value) {
   return getChar(tuple, tupdesc, info, opt_value);
 }
 
@@ -571,7 +571,7 @@ get_char(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &i
  *
  * @returns "{}" (empty jsonb) when when the column does not exist
  */
-char* get_jsonb(const HeapTuple tuple, const TupleDesc &tupdesc,  const vrprouting::Column_info_t &info) {
+char* get_jsonb(const HeapTuple tuple, const TupleDesc &tupdesc,  const vrprouting::Info &info) {
   return column_found(info)? DatumGetCString(SPI_getvalue(tuple, tupdesc, info.colNumber)) : strdup("{}");
 }
 

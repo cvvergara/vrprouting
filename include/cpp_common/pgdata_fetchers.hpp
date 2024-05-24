@@ -46,26 +46,6 @@ using Info = struct Info;
 
 namespace vrprouting {
 
-#if 0
-/** @brief for matrix */
-void fetch_breaks(
-    const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
-    Vroom_break_t*, bool);
-
-void fetch_jobs(
-    const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
-    Vroom_job_t*, bool);
-
-
-void fetch_tw(
-    const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
-    Vroom_time_window_t*, bool);
-
-
-void fetch_vroom_vehicles(
-    const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
-    Vroom_vehicle_t*, bool);
-#endif
 
 namespace pgget {
 
