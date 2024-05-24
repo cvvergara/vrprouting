@@ -44,27 +44,27 @@ extern "C" {
 
 
 namespace vrprouting {
-using Info = struct Info;
 using Column_info_t = struct Info;
+using Info = struct Info;
 
 /** @brief  Function will check whether the colNumber represent any specific column or NULL (SPI_ERROR_NOATTRIBUTE).  */
-bool column_found(const Column_info_t&);
+bool column_found(const Info&);
 
 namespace detail {
-  int64_t* get_any_positive_array(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
-  uint32_t* get_uint_array(const HeapTuple, const TupleDesc&, const Column_info_t&, size_t&);
-  TInterval get_interval(const HeapTuple, const TupleDesc&, const Column_info_t&, TInterval);
-  TTimestamp get_timestamp(const HeapTuple, const TupleDesc&, const Column_info_t&, TTimestamp);
-  int64_t get_anyinteger(const HeapTuple, const TupleDesc&, const Column_info_t&, int64_t);
+  int64_t* get_any_positive_array(const HeapTuple, const TupleDesc&, const Info&, size_t&);
+  uint32_t* get_uint_array(const HeapTuple, const TupleDesc&, const Info&, size_t&);
+  TInterval get_interval(const HeapTuple, const TupleDesc&, const Info&, TInterval);
+  TTimestamp get_timestamp(const HeapTuple, const TupleDesc&, const Info&, TTimestamp);
+  int64_t get_anyinteger(const HeapTuple, const TupleDesc&, const Info&, int64_t);
 
   template <typename T>
-    T get_integral(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, T opt_value) {
+    T get_integral(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, T opt_value) {
       static_assert(std::is_integral<T>::value, "Integral required.");
       return static_cast<T>(get_anyinteger(tuple, tupdesc, info, static_cast<int64_t>(opt_value)));
     }
 
   template <typename T>
-    T get_positive(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, T opt_value) {
+    T get_positive(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, T opt_value) {
       static_assert(std::is_integral<T>::value, "Integral required.");
 
       if (!column_found(info)) return opt_value;
@@ -79,19 +79,19 @@ namespace detail {
 
 
 /** @brief Function tells expected type of each column and then check the correspondence type of each column.  */
-void fetch_column_info(const TupleDesc&, std::vector<Column_info_t>&);
+void fetch_column_info(const TupleDesc&, std::vector<Info>&);
 
 /** @brief Function gets the C string of a JSONB */
-char* get_jsonb(const HeapTuple, const TupleDesc&, const Column_info_t&);
+char* get_jsonb(const HeapTuple, const TupleDesc&, const Info&);
 
 /** @brief Function gets the @b double of a Postgres floating point */
-double get_anynumerical(const HeapTuple, const TupleDesc&, const Column_info_t&, double);
+double get_anynumerical(const HeapTuple, const TupleDesc&, const Info&, double);
 
 /** @brief Function gets a char of a CHAR*/
-char get_char(const HeapTuple, const TupleDesc&, const Column_info_t&, char);
+char get_char(const HeapTuple, const TupleDesc&, const Info&, char);
 
 template <typename T>
-T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, T opt_value) {
+T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, T opt_value) {
   switch (info.eType) {
     case ANY_INTEGER :
       return static_cast<T>(detail::get_integral<int64_t>(tuple, tupdesc,  info, static_cast<int64_t>(opt_value)));
@@ -117,7 +117,7 @@ T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t
 }
 
 template <typename T>
-T* get_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, size_t &size) {
+T* get_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, size_t &size) {
   switch (info.eType) {
     case ANY_POSITIVE_ARRAY:
       return detail::get_any_positive_array(tuple, tupdesc, info, size);
@@ -129,7 +129,7 @@ T* get_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_
 }
 
 template <typename T>
-T* get_uint_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Column_info_t &info, size_t &size) {
+T* get_uint_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, size_t &size) {
   switch (info.eType) {
     case ANY_UINT_ARRAY:
       return detail::get_uint_array(tuple, tupdesc, info, size);

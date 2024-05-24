@@ -50,7 +50,7 @@ template <typename Data_type, typename Func>
 std::vector<Data_type> get_data(
         const std::string& sql,
         bool flag,
-        std::vector<Column_info_t> info,
+        std::vector<Info> info,
         Func func) {
     const int tuple_limit = 1000000;
 

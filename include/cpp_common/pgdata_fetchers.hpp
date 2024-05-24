@@ -42,11 +42,11 @@ extern "C" {
 #include <vector>
 
 #include "c_types/typedefs.h"
-using Column_info_t = struct Column_info_t;
-using Info = struct Column_info_t;
+using Info = struct Info;
 
 namespace vrprouting {
 
+#if 0
 /** @brief for matrix */
 void fetch_breaks(
     const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
@@ -65,6 +65,7 @@ void fetch_tw(
 void fetch_vroom_vehicles(
     const HeapTuple, const TupleDesc&, const std::vector<Column_info_t>&,
     Vroom_vehicle_t*, bool);
+#endif
 
 namespace pgget {
 
@@ -85,10 +86,6 @@ Vroom_job_t fetch_jobs(const HeapTuple, const TupleDesc&, const std::vector<Info
 Vroom_break_t fetch_breaks(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 Vroom_shipment_t fetch_shipments(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 Vroom_vehicle_t fetch_vehicles(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
-
-
-
-
 }  // namespace vroom
 }  // namespace pgget
 }  // namespace vrprouting
