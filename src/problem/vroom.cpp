@@ -139,7 +139,7 @@ Vrp_vroom_problem::get_vroom_job(
         const std::vector<Vroom_time_window_t> &job_tws) const {
     vroom::Amount delivery = get_vroom_amounts(job.delivery);
     vroom::Amount pickup = get_vroom_amounts(job.pickup);
-    vroom::Skills skills = get_vroom_skills(job.skills);
+    vroom::Skills skills = job.skills;
     std::vector<vroom::TimeWindow> time_windows = get_vroom_time_windows(job_tws);
     vroom::Index location_id = static_cast<vroom::Index>(m_matrix.get_index(job.location_id));
     return vroom::Job(
@@ -194,7 +194,7 @@ Vrp_vroom_problem::get_vroom_shipment(
         const std::vector<Vroom_time_window_t> &delivery_tws) const {
 
     vroom::Amount amount = get_vroom_amounts(shipment.amount);
-    vroom::Skills skills = get_vroom_skills(shipment.skills);
+    vroom::Skills skills = shipment.skills;
     std::vector<vroom::TimeWindow> p_time_windows = get_vroom_time_windows(pickup_tws);
     std::vector<vroom::TimeWindow> d_time_windows = get_vroom_time_windows(delivery_tws);
     vroom::Index p_location_id = static_cast<vroom::Index>( m_matrix.get_index(shipment.p_location_id));
@@ -297,7 +297,7 @@ Vrp_vroom_problem::get_vroom_vehicle(
         const std::vector<Vroom_break_t> &breaks,
         const std::vector<Vroom_time_window_t> &breaks_tws) const {
     vroom::Amount capacity = get_vroom_amounts(vehicle.capacity);
-    vroom::Skills skills = get_vroom_skills(vehicle.skills);
+    vroom::Skills skills = vehicle.skills;
     vroom::TimeWindow time_window = get_vroom_time_window(vehicle.tw_open, vehicle.tw_close);
     std::vector<vroom::Break> v_breaks = get_vroom_breaks(breaks, breaks_tws);
 

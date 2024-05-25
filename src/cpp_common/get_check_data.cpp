@@ -41,7 +41,7 @@ extern "C" {
 }
 
 #include <vector>
-#include <set>
+#include <unordered_set>
 #include <string>
 #include <ctime>
 
@@ -384,10 +384,9 @@ char getChar(
  *
  * @returns set of elements on the PostgreSQL array
  */
-[[maybe_unused]]
-std::set<int64_t>
-get_pgset(ArrayType *v) {
-    std::set<int64_t> results;
+std::unordered_set<uint32_t>
+pgarray_to_unordered_set(ArrayType *v) {
+    std::unordered_set<uint32_t> results;
 
     if (!v) return results;
 
@@ -443,7 +442,14 @@ get_pgset(ArrayType *v) {
                     break;
             }
         }
-        results.insert(data);
+        /*
+         * Before saving, check if its a uint32_t
+         */
+
+        if (data < 0 || data > std::numeric_limits<uint32_t>::max()) {
+            throw std::string("Illegal value found on array");
+        }
+        results.insert(static_cast<uint32_t>(data));
     }
 
     pfree(elements);
@@ -566,7 +572,6 @@ get_BigIntArr_wEmpty(
 namespace vrprouting {
 
 namespace detail {
-
 std::vector<int64_t>
 get_any_positive_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info) {
     if (!column_found(info)) return std::vector<int64_t>();
@@ -752,5 +757,17 @@ get_char(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, char
 std::string get_jsonb(const HeapTuple tuple, const TupleDesc &tupdesc,  const vrprouting::Info &info) {
     return column_found(info)? DatumGetCString(SPI_getvalue(tuple, tupdesc, info.colNumber)) : "{}";
 }
+
+std::unordered_set<uint32_t>
+get_uint_unordered_set(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info) {
+    bool is_null = false;
+    Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
+    if (!raw_array) return  std::unordered_set<uint32_t>();
+
+    ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
+
+    return pgarray_to_unordered_set(pg_array);
+}
+
 
 }  // namespace vrprouting

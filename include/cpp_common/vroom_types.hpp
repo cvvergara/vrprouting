@@ -31,7 +31,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_C_TYPES_VROOM_TYPES_H_
 #pragma once
 
+#include <unordered_set>
 #include "c_types/typedefs.h"
+
 
 /** @brief Vehicle's break attributes
 
@@ -83,7 +85,7 @@ public:
   std::vector<Amount> pickup; /** Quantities for pickup */
   size_t pickup_size; /** Number of pickup quantities */
 
-  std::vector<Skill> skills; /** Mandatory skills */
+  std::unordered_set<Skill> skills; /** Mandatory skills */
   size_t skills_size; /** Number of mandatory skills */
 
   Priority priority; /** Priority level of job */
@@ -148,7 +150,7 @@ public:
   std::vector<Amount> amount; /** Quantities for shipment */
   size_t amount_size; /** Number of quantities */
 
-  std::vector<Skill> skills; /** Mandatory skills */
+  std::unordered_set<Skill> skills; /** Mandatory skills */
   size_t skills_size; /** Number of skills */
 
   Priority priority; /** Priority level of shipment */
@@ -202,7 +204,7 @@ public:
   std::vector<Amount> capacity; /** Vehicle's capacity array */
   size_t capacity_size; /** Vehicle's capacity array size */
 
-  std::vector<Skill> skills; /** Mandatory skills */
+  std::unordered_set<Skill> skills; /** Mandatory skills */
   size_t skills_size; /** Number of vehicle's skills */
 
   Duration tw_open; /** Time window start time */

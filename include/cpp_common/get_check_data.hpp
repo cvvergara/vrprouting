@@ -38,6 +38,7 @@ extern "C" {
 #include <string>
 #include <cstdint>
 #include <limits>
+#include <unordered_set>
 
 #include "c_types/typedefs.h"
 #include "cpp_common/info.hpp"
@@ -85,8 +86,11 @@ std::string get_jsonb(const HeapTuple, const TupleDesc&, const Info&);
 /** @brief Function gets the @b double of a Postgres floating point */
 double get_anynumerical(const HeapTuple, const TupleDesc&, const Info&, double);
 
-/** @brief Function gets a char of a CHAR*/
+/** @brief Function get a char of a CHAR*/
 char get_char(const HeapTuple, const TupleDesc&, const Info&, char);
+
+/** @brief Function get an unordered_set of uint32_t*/
+std::unordered_set<uint32_t> get_uint_unordered_set(const HeapTuple, const TupleDesc&, const Info&);
 
 template <typename T>
 T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, T opt_value) {
@@ -113,6 +117,7 @@ T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, T
       break;
   }
 }
+
 
 template <typename T>
 std::vector<T> get_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info) {
