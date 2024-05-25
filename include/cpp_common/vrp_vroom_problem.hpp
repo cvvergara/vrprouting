@@ -89,7 +89,7 @@ private:
    * @name vroom skills wrapper
    * @{
    */
-  vroom::Skills get_vroom_skills(const Skill*, size_t) const;
+  vroom::Skills get_vroom_skills(const std::vector<Skill>&) const;
   ///@}
 
 

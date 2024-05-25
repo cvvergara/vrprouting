@@ -41,6 +41,7 @@ extern "C" {
 }
 
 #include <vector>
+#include <set>
 #include <string>
 #include <ctime>
 
@@ -363,175 +364,6 @@ char getChar(
     return value;
 }
 
-int64_t*
-get_BigIntArr_wEmpty(
-        const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info, size_t &the_size) {
-    bool is_null = false;
-    the_size = 0;
-
-    Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
-    /*
-     * [DatumGetArrayTypeP](https://doxygen.postgresql.org/array_8h.html#aa1b8e77c103863862e06a7b7c07ec532)
-     * [pgr_get_bigIntArray](http://docs.vrprouting.org/doxy/2.2/arrays__input_8c_source.html)
-     */
-    if (!raw_array) return  nullptr;
-
-    ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
-
-    return vrp_get_bigIntArray_allowEmpty(&the_size, pg_array, info.name.c_str());
-}
-
-}  // namespace
-
-namespace vrprouting {
-
-namespace detail {
-
-int64_t*
-get_any_positive_array(
-        const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, size_t &the_size) {
-    if (!column_found(info)) return nullptr;
-    int64_t *array = get_BigIntArr_wEmpty(tuple, tupdesc, info, the_size);
-    for (size_t i = 0; i < the_size; i++) {
-        if (array[i] < 0) throw std::string("Unexpected negative value in array '") + info.name + "'";
-    }
-    return array;
-}
-
-uint32_t*
-get_uint_array(
-        const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info,
-        size_t &the_size) {
-    bool is_null = false;
-    the_size = 0;
-
-    Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
-    if (!raw_array) return  nullptr;
-
-    ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
-
-    return vrp_get_positiveIntArray_allowEmpty(&the_size, pg_array, info.name.c_str());
-}
-
-/**
- * @param [in] tuple
- * @param [in] tupdesc
- * @param [in] info about the column been fetched
- * @param [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for positive values only
- */
-TInterval
-get_interval(
-        const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, TInterval opt_value) {
-    TInterval value = column_found(info)? getInterval(tuple, tupdesc, info) : opt_value;
-    if (value < 0) throw std::string("Unexpected negative value in column '") + info.name + "'";
-    return (TInterval) value;
-}
-
-/**
- * @param [in] tuple
- * @param [in] tupdesc
- * @param [in] info about the column been fetched
- * @param [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- */
-TTimestamp
-get_timestamp(
-        const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, TTimestamp opt_value) {
-    return column_found(info)?  getTimeStamp(tuple, tupdesc, info) : opt_value;
-}
-
-/**
- * @param [in] tuple from postgres
- * @param [in] tupdesc from postgres
- * @param [in] info about the column been fetched
- * @param [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * Used with vrprouting::ANY_INTEGER
- */
-int64_t
-get_anyinteger(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, int64_t opt_value) {
-    return column_found(info)? getBigInt(tuple, tupdesc, info) : opt_value;
-}
-}  // namespace detail
-
-/**
- * @param[in] info column information
- * @return @b TRUE when colNumber exist.
- *         @b FALSE when colNumber was not found.
- *
- * [SPI_ERROR_NOATTRIBUTE](https://doxygen.postgresql.org/spi_8h.html#ac1512d8aaa23c2d57bb0d1eb8f453ee2)
- */
-bool column_found(const Info &info) {
-    return !(info.colNumber == SPI_ERROR_NOATTRIBUTE);
-}
-
-
-/**
- * @param[in] tupdesc  tuple descriptor
- * @param[in] info     contain one or more column information.
- *
- * @throw ERROR Unknown type of column.
- */
-void fetch_column_info(
-        const TupleDesc &tupdesc,
-        std::vector<vrprouting::Info> &info) {
-    for (auto &coldata : info) {
-        if (get_column_info(tupdesc, coldata)) {
-            switch (coldata.eType) {
-                case ANY_INTEGER:
-                case TINTERVAL:
-                case ANY_UINT:
-                    check_any_integer_type(coldata);
-                    break;
-                case ANY_NUMERICAL:
-                    check_any_numerical_type(coldata);
-                    break;
-                case TEXT:
-                    check_text_type(coldata);
-                    break;
-                case CHAR1:
-                    check_char_type(coldata);
-                    break;
-                case ANY_INTEGER_ARRAY:
-                case ANY_POSITIVE_ARRAY:
-                    check_any_integerarray_type(coldata);
-                    break;
-                case POSITIVE_INTEGER:
-                case INTEGER:
-                    check_integer_type(coldata);
-                    break;
-                case JSONB:
-                    check_jsonb_type(coldata);
-                    break;
-                case INTEGER_ARRAY:
-                case ANY_UINT_ARRAY:
-                    check_integerarray_type(coldata);
-                    break;
-                case TIMESTAMP:
-                    check_timestamp_type(coldata);
-                    break;
-                case INTERVAL:
-                    check_interval_type(coldata);
-                    break;
-                default:
-                    throw std::string("Case not found in column '") + coldata.name + "' Please inform the developers";
-            }
-        }
-    }
-}
-
-
 
 /** @brief get the array contents from postgres
  *
@@ -552,6 +384,7 @@ void fetch_column_info(
  *
  * @returns set of elements on the PostgreSQL array
  */
+[[maybe_unused]]
 std::set<int64_t>
 get_pgset(ArrayType *v) {
     std::set<int64_t> results;
@@ -708,6 +541,172 @@ get_pgarray(ArrayType *v, bool allow_empty) {
     pfree(elements);
     pfree(nulls);
     return results;
+}
+
+std::vector<int64_t>
+get_BigIntArr_wEmpty(
+        const HeapTuple tuple, const TupleDesc &tupdesc,
+        const vrprouting::Info &info) {
+    bool is_null = false;
+
+    Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
+    /*
+     * [DatumGetArrayTypeP](https://doxygen.postgresql.org/array_8h.html#aa1b8e77c103863862e06a7b7c07ec532)
+     * [pgr_get_bigIntArray](http://docs.vrprouting.org/doxy/2.2/arrays__input_8c_source.html)
+     */
+    if (!raw_array) return std::vector<int64_t>();
+
+    ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
+
+    return get_pgarray(pg_array, true);
+}
+
+}  // namespace
+
+namespace vrprouting {
+
+namespace detail {
+
+std::vector<int64_t>
+get_any_positive_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info) {
+    if (!column_found(info)) return std::vector<int64_t>();
+    auto data = get_BigIntArr_wEmpty(tuple, tupdesc, info);
+    for (const auto &e: data) {
+        if (e < 0) throw std::string("Unexpected negative value in array '") + info.name + "'";
+    }
+    return data;
+}
+
+std::vector<uint32_t>
+get_uint_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info) {
+    bool is_null = false;
+
+    Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
+    if (!raw_array) return  std::vector<uint32_t>();
+
+    ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
+
+    auto data = get_pgarray(pg_array, true);
+    std::vector<uint32_t> results(data.begin(), data.end());
+    return results;
+}
+
+/**
+ * @param [in] tuple
+ * @param [in] tupdesc
+ * @param [in] info about the column been fetched
+ * @param [in] opt_value default value when the column does not exist
+ *
+ * @returns The value found
+ * @returns opt_value when the column does not exist
+ *
+ * exceptions when the value is negative
+ * @pre for positive values only
+ */
+TInterval
+get_interval(
+        const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, TInterval opt_value) {
+    TInterval value = column_found(info)? getInterval(tuple, tupdesc, info) : opt_value;
+    if (value < 0) throw std::string("Unexpected negative value in column '") + info.name + "'";
+    return (TInterval) value;
+}
+
+/**
+ * @param [in] tuple
+ * @param [in] tupdesc
+ * @param [in] info about the column been fetched
+ * @param [in] opt_value default value when the column does not exist
+ *
+ * @returns The value found
+ * @returns opt_value when the column does not exist
+ */
+TTimestamp
+get_timestamp(
+        const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, TTimestamp opt_value) {
+    return column_found(info)?  getTimeStamp(tuple, tupdesc, info) : opt_value;
+}
+
+/**
+ * @param [in] tuple from postgres
+ * @param [in] tupdesc from postgres
+ * @param [in] info about the column been fetched
+ * @param [in] opt_value default value when the column does not exist
+ *
+ * @returns The value found
+ * @returns opt_value when the column does not exist
+ *
+ * Used with vrprouting::ANY_INTEGER
+ */
+int64_t
+get_anyinteger(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, int64_t opt_value) {
+    return column_found(info)? getBigInt(tuple, tupdesc, info) : opt_value;
+}
+}  // namespace detail
+
+/**
+ * @param[in] info column information
+ * @return @b TRUE when colNumber exist.
+ *         @b FALSE when colNumber was not found.
+ *
+ * [SPI_ERROR_NOATTRIBUTE](https://doxygen.postgresql.org/spi_8h.html#ac1512d8aaa23c2d57bb0d1eb8f453ee2)
+ */
+bool column_found(const Info &info) {
+    return !(info.colNumber == SPI_ERROR_NOATTRIBUTE);
+}
+
+
+/**
+ * @param[in] tupdesc  tuple descriptor
+ * @param[in] info     contain one or more column information.
+ *
+ * @throw ERROR Unknown type of column.
+ */
+void fetch_column_info(
+        const TupleDesc &tupdesc,
+        std::vector<vrprouting::Info> &info) {
+    for (auto &coldata : info) {
+        if (get_column_info(tupdesc, coldata)) {
+            switch (coldata.eType) {
+                case ANY_INTEGER:
+                case TINTERVAL:
+                case ANY_UINT:
+                    check_any_integer_type(coldata);
+                    break;
+                case ANY_NUMERICAL:
+                    check_any_numerical_type(coldata);
+                    break;
+                case TEXT:
+                    check_text_type(coldata);
+                    break;
+                case CHAR1:
+                    check_char_type(coldata);
+                    break;
+                case ANY_INTEGER_ARRAY:
+                case ANY_POSITIVE_ARRAY:
+                    check_any_integerarray_type(coldata);
+                    break;
+                case POSITIVE_INTEGER:
+                case INTEGER:
+                    check_integer_type(coldata);
+                    break;
+                case JSONB:
+                    check_jsonb_type(coldata);
+                    break;
+                case INTEGER_ARRAY:
+                case ANY_UINT_ARRAY:
+                    check_integerarray_type(coldata);
+                    break;
+                case TIMESTAMP:
+                    check_timestamp_type(coldata);
+                    break;
+                case INTERVAL:
+                    check_interval_type(coldata);
+                    break;
+                default:
+                    throw std::string("Case not found in column '") + coldata.name + "' Please inform the developers";
+            }
+        }
+    }
 }
 
 

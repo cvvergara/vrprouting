@@ -130,7 +130,7 @@ Vroom_job_t fetch_jobs(
   job.pickup = get_array<Amount>(tuple, tupdesc, info[5], job.pickup_size);
 
   job.skills_size = 0;
-  job.skills = get_uint_array<Skill>(tuple, tupdesc, info[6], job.skills_size);
+  job.skills = get_uint_array<Skill>(tuple, tupdesc, info[6]);
   job.priority = get_value<Priority>(tuple, tupdesc, info[7], 0);
   job.data = get_jsonb(tuple, tupdesc, info[8]);
 
@@ -160,7 +160,7 @@ Vroom_shipment_t fetch_shipments(
     shipment.amount = get_array<Amount>(tuple, tupdesc, info[7], shipment.amount_size);
 
     shipment.skills_size = 0;
-    shipment.skills = get_uint_array<Skill>(tuple, tupdesc, info[8], shipment.skills_size);
+    shipment.skills = get_uint_array<Skill>(tuple, tupdesc, info[8]);
 
     shipment.priority = get_value<Priority>(tuple, tupdesc, info[9], 0);
 
@@ -186,7 +186,7 @@ Vroom_vehicle_t fetch_vehicles(
     vehicle.capacity = get_array<Amount>(tuple, tupdesc, info[3], vehicle.capacity_size);
 
     vehicle.skills_size = 0;
-    vehicle.skills = get_uint_array<Skill>(tuple, tupdesc, info[4], vehicle.skills_size);
+    vehicle.skills = get_uint_array<Skill>(tuple, tupdesc, info[4]);
 
     vehicle.tw_open = get_value<Duration>(tuple, tupdesc, info[5], 0);
     vehicle.tw_close = get_value<Duration>(tuple, tupdesc, info[6], UINT_MAX);

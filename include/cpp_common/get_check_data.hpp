@@ -50,7 +50,7 @@ bool column_found(const Info&);
 
 namespace detail {
   int64_t* get_any_positive_array(const HeapTuple, const TupleDesc&, const Info&, size_t&);
-  uint32_t* get_uint_array(const HeapTuple, const TupleDesc&, const Info&, size_t&);
+  std::vector<uint32_t> get_uint_array(const HeapTuple, const TupleDesc&, const Info&);
   TInterval get_interval(const HeapTuple, const TupleDesc&, const Info&, TInterval);
   TTimestamp get_timestamp(const HeapTuple, const TupleDesc&, const Info&, TTimestamp);
   int64_t get_anyinteger(const HeapTuple, const TupleDesc&, const Info&, int64_t);
@@ -127,10 +127,10 @@ T* get_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, 
 }
 
 template <typename T>
-T* get_uint_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, size_t &size) {
+std::vector<T> get_uint_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info) {
   switch (info.eType) {
     case ANY_UINT_ARRAY:
-      return detail::get_uint_array(tuple, tupdesc, info, size);
+      return detail::get_uint_array(tuple, tupdesc, info);
       break;
     default:
       throw std::string("Missing case value on Uint array ") + info.name;

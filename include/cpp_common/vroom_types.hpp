@@ -83,7 +83,7 @@ public:
   Amount *pickup; /** Quantities for pickup */
   size_t pickup_size; /** Number of pickup quantities */
 
-  Skill *skills; /** Mandatory skills */
+  std::vector<Skill> skills; /** Mandatory skills */
   size_t skills_size; /** Number of mandatory skills */
 
   Priority priority; /** Priority level of job */
@@ -148,7 +148,7 @@ public:
   Amount *amount; /** Quantities for shipment */
   size_t amount_size; /** Number of quantities */
 
-  Skill *skills; /** Mandatory skills */
+  std::vector<Skill> skills; /** Mandatory skills */
   size_t skills_size; /** Number of skills */
 
   Priority priority; /** Priority level of shipment */
@@ -202,7 +202,7 @@ public:
   Amount *capacity; /** Vehicle's capacity array */
   size_t capacity_size; /** Vehicle's capacity array size */
 
-  Skill *skills; /** Vehicle's skills */
+  std::vector<Skill> skills; /** Mandatory skills */
   size_t skills_size; /** Number of vehicle's skills */
 
   Duration tw_open; /** Time window start time */
