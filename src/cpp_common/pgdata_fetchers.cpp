@@ -123,13 +123,9 @@ Vroom_job_t fetch_jobs(
   job.setup = get_value<Duration>(tuple, tupdesc, info[2], 0);
   job.service = get_value<Duration>(tuple, tupdesc, info[3], 0);
 
-  job.delivery_size = 0;
   job.delivery = get_array<Amount>(tuple, tupdesc, info[4]);
-
-  job.pickup_size = 0;
   job.pickup = get_array<Amount>(tuple, tupdesc, info[5]);
 
-  job.skills_size = 0;
   job.skills = get_uint_unordered_set(tuple, tupdesc, info[6]);
   job.priority = get_value<Priority>(tuple, tupdesc, info[7], 0);
   job.data = get_jsonb(tuple, tupdesc, info[8]);
@@ -156,10 +152,8 @@ Vroom_shipment_t fetch_shipments(
     shipment.d_setup = get_value<Duration>(tuple, tupdesc, info[5], 0);
     shipment.d_service = get_value<Duration>(tuple, tupdesc, info[6], 0);
 
-    shipment.amount_size = 0;
     shipment.amount = get_array<Amount>(tuple, tupdesc, info[7]);
 
-    shipment.skills_size = 0;
     shipment.skills = get_uint_unordered_set(tuple, tupdesc, info[8]);
 
     shipment.priority = get_value<Priority>(tuple, tupdesc, info[9], 0);
@@ -182,10 +176,8 @@ Vroom_vehicle_t fetch_vehicles(
     vehicle.start_id = get_value<MatrixIndex>(tuple, tupdesc, info[1], -1);
     vehicle.end_id = get_value<MatrixIndex>(tuple, tupdesc, info[2], -1);
 
-    vehicle.capacity_size = 0;
     vehicle.capacity = get_array<Amount>(tuple, tupdesc, info[3]);
 
-    vehicle.skills_size = 0;
     vehicle.skills = get_uint_unordered_set(tuple, tupdesc, info[4]);
 
     vehicle.tw_open = get_value<Duration>(tuple, tupdesc, info[5], 0);

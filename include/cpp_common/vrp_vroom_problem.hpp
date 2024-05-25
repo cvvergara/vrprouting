@@ -81,15 +81,6 @@ private:
    * @{
    */
   vroom::Amount get_vroom_amounts(const std::vector<Amount> &) const;
-  vroom::Amount get_vroom_amounts(const Amount*, size_t) const;
-  ///@}
-
-
-  /**
-   * @name vroom skills wrapper
-   * @{
-   */
-  vroom::Skills get_vroom_skills(const std::vector<Skill>&) const;
   ///@}
 
 

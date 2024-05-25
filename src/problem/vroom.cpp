@@ -103,26 +103,6 @@ Vrp_vroom_problem::get_vroom_amounts(const std::vector<Amount> &amounts) const {
     return amt;
 }
 
-#if 0
-vroom::Amount
-Vrp_vroom_problem::get_vroom_amounts(const Amount *amounts, size_t count) const {
-    return get_vroom_amounts(std::vector <Amount>(amounts, amounts + count));
-}
-#endif
-
-
-/**
- * @brief      Gets the vroom skills.
- *
- * @param[in]  skills  The skills array
- * @param[in]  count   The size of skills array
- *
- * @return     The vroom skills.
- */
-vroom::Skills
-Vrp_vroom_problem::get_vroom_skills(const std::vector<Skill> &skills) const {
-    return std::unordered_set<Skill>(skills.begin(), skills.end());
-}
 
 
 /**

@@ -80,13 +80,10 @@ public:
   Duration service; /** Job service duration */
 
   std::vector<Amount> delivery; /** Quantities for delivery */
-  size_t delivery_size; /** Number of delivery quantities */
 
   std::vector<Amount> pickup; /** Quantities for pickup */
-  size_t pickup_size; /** Number of pickup quantities */
 
   std::unordered_set<Skill> skills; /** Mandatory skills */
-  size_t skills_size; /** Number of mandatory skills */
 
   Priority priority; /** Priority level of job */
 
@@ -148,10 +145,8 @@ public:
   Duration d_service; /** Delivery service time */
 
   std::vector<Amount> amount; /** Quantities for shipment */
-  size_t amount_size; /** Number of quantities */
 
   std::unordered_set<Skill> skills; /** Mandatory skills */
-  size_t skills_size; /** Number of skills */
 
   Priority priority; /** Priority level of shipment */
 
@@ -205,7 +200,6 @@ public:
   size_t capacity_size; /** Vehicle's capacity array size */
 
   std::unordered_set<Skill> skills; /** Mandatory skills */
-  size_t skills_size; /** Number of vehicle's skills */
 
   Duration tw_open; /** Time window start time */
   Duration tw_close; /** Time window end time */
