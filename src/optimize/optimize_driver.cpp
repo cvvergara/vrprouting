@@ -168,8 +168,7 @@ get_initial_stops(
         ) {
     std::vector<Short_vehicle> the_stops;
     for (const auto &v : vehicles) {
-        std::vector<Id> stops(v.stops, v.stops + v.stops_size);
-        the_stops.push_back({v.id, stops});
+        the_stops.push_back({v.id, v.stops});
     }
     std::sort(the_stops.begin(), the_stops.end(), []
             (const Short_vehicle &lhs, const Short_vehicle &rhs) {return lhs.id < rhs.id;});

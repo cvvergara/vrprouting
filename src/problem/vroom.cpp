@@ -103,10 +103,12 @@ Vrp_vroom_problem::get_vroom_amounts(const std::vector<Amount> &amounts) const {
     return amt;
 }
 
+#if 0
 vroom::Amount
 Vrp_vroom_problem::get_vroom_amounts(const Amount *amounts, size_t count) const {
     return get_vroom_amounts(std::vector <Amount>(amounts, amounts + count));
 }
+#endif
 
 
 /**
@@ -135,8 +137,8 @@ vroom::Job
 Vrp_vroom_problem::get_vroom_job(
         const Vroom_job_t &job,
         const std::vector<Vroom_time_window_t> &job_tws) const {
-    vroom::Amount delivery = get_vroom_amounts(job.delivery, job.delivery_size);
-    vroom::Amount pickup = get_vroom_amounts(job.pickup, job.pickup_size);
+    vroom::Amount delivery = get_vroom_amounts(job.delivery);
+    vroom::Amount pickup = get_vroom_amounts(job.pickup);
     vroom::Skills skills = get_vroom_skills(job.skills);
     std::vector<vroom::TimeWindow> time_windows = get_vroom_time_windows(job_tws);
     vroom::Index location_id = static_cast<vroom::Index>(m_matrix.get_index(job.location_id));
@@ -191,7 +193,7 @@ Vrp_vroom_problem::get_vroom_shipment(
         const std::vector<Vroom_time_window_t> &pickup_tws,
         const std::vector<Vroom_time_window_t> &delivery_tws) const {
 
-    vroom::Amount amount = get_vroom_amounts(shipment.amount, shipment.amount_size);
+    vroom::Amount amount = get_vroom_amounts(shipment.amount);
     vroom::Skills skills = get_vroom_skills(shipment.skills);
     std::vector<vroom::TimeWindow> p_time_windows = get_vroom_time_windows(pickup_tws);
     std::vector<vroom::TimeWindow> d_time_windows = get_vroom_time_windows(delivery_tws);
@@ -294,7 +296,7 @@ Vrp_vroom_problem::get_vroom_vehicle(
         const Vroom_vehicle_t &vehicle,
         const std::vector<Vroom_break_t> &breaks,
         const std::vector<Vroom_time_window_t> &breaks_tws) const {
-    vroom::Amount capacity = get_vroom_amounts(vehicle.capacity, vehicle.capacity_size);
+    vroom::Amount capacity = get_vroom_amounts(vehicle.capacity);
     vroom::Skills skills = get_vroom_skills(vehicle.skills);
     vroom::TimeWindow time_window = get_vroom_time_window(vehicle.tw_open, vehicle.tw_close);
     std::vector<vroom::Break> v_breaks = get_vroom_breaks(breaks, breaks_tws);

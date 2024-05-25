@@ -77,10 +77,10 @@ public:
   Duration setup; /** Job setup duration */
   Duration service; /** Job service duration */
 
-  Amount *delivery; /** Quantities for delivery */
+  std::vector<Amount> delivery; /** Quantities for delivery */
   size_t delivery_size; /** Number of delivery quantities */
 
-  Amount *pickup; /** Quantities for pickup */
+  std::vector<Amount> pickup; /** Quantities for pickup */
   size_t pickup_size; /** Number of pickup quantities */
 
   std::vector<Skill> skills; /** Mandatory skills */
@@ -145,7 +145,7 @@ public:
   Duration d_setup; /** Delivery setup time */
   Duration d_service; /** Delivery service time */
 
-  Amount *amount; /** Quantities for shipment */
+  std::vector<Amount> amount; /** Quantities for shipment */
   size_t amount_size; /** Number of quantities */
 
   std::vector<Skill> skills; /** Mandatory skills */
@@ -199,7 +199,7 @@ public:
   MatrixIndex start_id; /** Start location index in matrix */
   MatrixIndex end_id; /** End location index in matrix */
 
-  Amount *capacity; /** Vehicle's capacity array */
+  std::vector<Amount> capacity; /** Vehicle's capacity array */
   size_t capacity_size; /** Vehicle's capacity array size */
 
   std::vector<Skill> skills; /** Mandatory skills */

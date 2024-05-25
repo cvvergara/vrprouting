@@ -30,6 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_C_TYPES_VEHICLE_T_H_
 #pragma once
 
+#include <vector>
 #include "c_types/typedefs.h"
 
 /** @brief vehicles's attributes
@@ -55,7 +56,7 @@ struct Vehicle_t {
   PAmount capacity; /** Vehicle's capacity */
   Speed speed;
   PAmount cant_v;   /** Number of vehicles with same description **/
-  Id *stops; /** Stops */
+  std::vector<Id> stops; /** Stops */
   size_t stops_size; /** Stops size */
 
   Id start_node_id; /** Start node's identifier */
