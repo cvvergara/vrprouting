@@ -345,7 +345,7 @@ Base_Matrix::Base_Matrix(
             m_time_matrix[eidx][sidx] = m_time_matrix[sidx][eidx];
         }
 
-        if (m_cost_matrix[eidx][sidx] == (std::numeric_limits<TInterval>::max)()) {
+        if (m_cost_matrix[eidx][sidx] == (std::numeric_limits<TravelCost>::max)()) {
             m_cost_matrix[eidx][sidx] = m_cost_matrix[sidx][eidx];
         }
     }
