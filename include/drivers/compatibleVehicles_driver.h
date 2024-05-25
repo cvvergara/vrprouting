@@ -32,18 +32,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_DRIVERS_COMPATIBLEVEHICLES_DRIVER_H_
 #pragma once
 
-/* for size-t */
 #ifdef __cplusplus
-#   include <cstddef>
+#include <cstddef>
+#include <cstdint>
+using CompatibleVehicles_rt = struct CompatibleVehicles_rt;
 #else
-#   include <stddef.h>
-#endif
-
-typedef struct PickDeliveryOrders_t PickDeliveryOrders_t;
-typedef struct Time_multipliers_t Time_multipliers_t;
-typedef struct Vehicle_t Vehicle_t;
-typedef struct Matrix_cell_t Matrix_cell_t;
+#include <stddef.h>
+#include <stdint.h>
+#include <stdbool.h>
 typedef struct CompatibleVehicles_rt CompatibleVehicles_rt;
+#endif
 
 #ifdef __cplusplus
 extern "C" {

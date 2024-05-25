@@ -34,11 +34,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #ifdef __cplusplus
 #include <cstddef>
+#include <cstdint>
+using Solution_rt = struct Solution_rt;
 #else
 #include <stddef.h>
+#include <stdint.h>
+#include <stdbool.h>
+typedef struct Solution_rt Solution_rt;
 #endif
-
-#include "c_types/typedefs.h"
 
 #ifdef __cplusplus
 extern "C" {

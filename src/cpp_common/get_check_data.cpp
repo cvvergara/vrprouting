@@ -49,7 +49,7 @@ extern "C" {
 #include "cpp_common/alloc.hpp"
 #include "cpp_common/info.hpp"
 
-#include "c_types/vroom_types.h"
+#include "cpp_common/vroom_types.hpp"
 #include "c_types/matrix_types.h"
 #include "c_types/vehicle_types.h"
 #include "c_types/order_types.h"

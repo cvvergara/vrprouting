@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: vroom_types.h
+File: vroom_types.hpp
 
 Copyright (c) 2021 pgRouting developers
 Mail: project@pgrouting.org

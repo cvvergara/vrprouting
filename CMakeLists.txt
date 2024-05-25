@@ -315,7 +315,7 @@ endif()
 
 message(STATUS "VROOM_INSTALL_PATH ${VROOM_INSTALL_PATH}")
 
-include_directories(${VROOM_INSTALL_PATH}/src)
+include_directories(SYSTEM ${VROOM_INSTALL_PATH}/src)
 link_libraries(${VROOM_INSTALL_PATH}/lib/libvroom.a)
 link_libraries(glpk)
 
