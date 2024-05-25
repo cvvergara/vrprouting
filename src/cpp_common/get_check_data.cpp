@@ -44,6 +44,9 @@ extern "C" {
 #include <string>
 #include <ctime>
 
+
+#include "cpp_common/undefPostgresDefine.hpp"
+
 #include "c_common/arrays_input.h"
 #include "c_common/timeconversion.h"
 #include "cpp_common/alloc.hpp"
@@ -60,30 +63,30 @@ namespace {
 
 void
 check_interval_type(const vrprouting::Info &info) {
-  if (!(info.type == 1186)) {
-    throw std::string("Unexpected type in column '") + info.name + "'. Expected INTERVAL";
-  }
+    if (!(info.type == 1186)) {
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected INTERVAL";
+    }
 }
 
 void
 check_jsonb_type(vrprouting::Info info) {
-  if (!(info.type == JSONBOID)) {
-    throw std::string("Unexpected type in column '") + info.name + "'. Expected JSONB";
-  }
+    if (!(info.type == JSONBOID)) {
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected JSONB";
+    }
 }
 
 void
 check_integer_type(vrprouting::Info info) {
-  if (!(info.type == INT2OID || info.type == INT4OID)) {
-    throw std::string("Unexpected type in column '") + info.name + "'. Expected SMALLINT or INTEGER";
-  }
+    if (!(info.type == INT2OID || info.type == INT4OID)) {
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected SMALLINT or INTEGER";
+    }
 }
 
 void
 check_integerarray_type(vrprouting::Info info) {
-  if (!(info.type == INT2ARRAYOID || info.type == INT4ARRAYOID)) {
-    throw std::string("Unexpected type in column '") + info.name + "'. Expected INTEGER-ARRAY";
-  }
+    if (!(info.type == INT2ARRAYOID || info.type == INT4ARRAYOID)) {
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected INTEGER-ARRAY";
+    }
 }
 
 /**
@@ -98,18 +101,18 @@ check_integerarray_type(vrprouting::Info info) {
 
 void
 check_any_integerarray_type(vrprouting::Info info) {
-  if (!(info.type == INT2ARRAYOID
-        || info.type == INT4ARRAYOID
-        || info.type == 1016)) {
-    throw std::string("Unexpected type in column '") + info.name + "'. Expected ANY-INTEGER-ARRAY";
-  }
+    if (!(info.type == INT2ARRAYOID
+                || info.type == INT4ARRAYOID
+                || info.type == 1016)) {
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected ANY-INTEGER-ARRAY";
+    }
 }
 
 void
 check_timestamp_type(vrprouting::Info info) {
-  if (!(info.type == 1114)) {
-    throw std::string("Unexpected type in column '") + info.name + "'. Expected TIMESTAMP";
-  }
+    if (!(info.type == 1114)) {
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected TIMESTAMP";
+    }
 }
 
 
@@ -209,44 +212,44 @@ check_char_type(const vrprouting::Info &info) {
 
 TInterval
 getInterval(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info) {
-  Datum binval;
-  bool isnull;
-  Interval*   interval;
+    Datum binval;
+    bool isnull;
+    Interval*   interval;
 
-  binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isnull);
+    binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isnull);
 
-  if (isnull) throw std::string("Unexpected Null value in column ") + info.name;
+    if (isnull) throw std::string("Unexpected Null value in column ") + info.name;
 
-  switch (info.type) {
-    case INTERVALOID:
-      interval = DatumGetIntervalP(binval);
-      break;
-    default:
-      throw std::string("Unexpected type value in column '") + info.name + "'. Expected INTERVALOID";
-  }
+    switch (info.type) {
+        case INTERVALOID:
+            interval = DatumGetIntervalP(binval);
+            break;
+        default:
+            throw std::string("Unexpected type value in column '") + info.name + "'. Expected INTERVALOID";
+    }
 
-  return interval->time / 1000000
-    + interval->day * SECS_PER_DAY
-    + (int64_t)(interval->month * ((DAYS_PER_YEAR / static_cast<double>(MONTHS_PER_YEAR)) * SECS_PER_DAY));
+    return interval->time / 1000000
+        + interval->day * SECS_PER_DAY
+        + (int64_t)(interval->month * ((DAYS_PER_YEAR / static_cast<double>(MONTHS_PER_YEAR)) * SECS_PER_DAY));
 }
 
 TTimestamp
 getTimeStamp(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info) {
-  Datum binval;
-  bool isnull;
-  TTimestamp value = 0;
-  binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isnull);
+    Datum binval;
+    bool isnull;
+    TTimestamp value = 0;
+    binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isnull);
 
-  if (isnull) throw std::string("Unexpected Null value in column ") + info.name;
+    if (isnull) throw std::string("Unexpected Null value in column ") + info.name;
 
-  switch (info.type) {
-    case 1114:
-      value = vrp_timestamp_without_timezone((TTimestamp) Int64GetDatum(binval));
-      break;
-    default:
-      throw std::string("Unexpected type value in column '") + info.name + "'. Expected 1114";
-  }
-  return value;
+    switch (info.type) {
+        case 1114:
+            value = vrp_timestamp_without_timezone((TTimestamp) Int64GetDatum(binval));
+            break;
+        default:
+            throw std::string("Unexpected type value in column '") + info.name + "'. Expected 1114";
+    }
+    return value;
 }
 
 /**
@@ -339,43 +342,43 @@ double getFloat8(
  * @return Char type of column value is returned.
  */
 char getChar(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info, char default_value) {
-  Datum binval;
-  bool isNull;
-  char value = default_value;
+        const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info, char default_value) {
+    Datum binval;
+    bool isNull;
+    char value = default_value;
 
-  binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isNull);
-  if (!(info.type == BPCHAROID)) {
-    throw std::string("Unexpected type in column type of ") + info.name + ". Expected CHAR";
-  }
-
-  if (!isNull) {
-    value =  reinterpret_cast<char*>(binval)[1];
-  } else {
-    if (info.strict) {
-      throw std::string("Unexpected Null value in column ") + info.name;
+    binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isNull);
+    if (!(info.type == BPCHAROID)) {
+        throw std::string("Unexpected type in column type of ") + info.name + ". Expected CHAR";
     }
-    value = default_value;
-  }
-  return value;
+
+    if (!isNull) {
+        value =  reinterpret_cast<char*>(binval)[1];
+    } else {
+        if (info.strict) {
+            throw std::string("Unexpected Null value in column ") + info.name;
+        }
+        value = default_value;
+    }
+    return value;
 }
 
 int64_t*
 get_BigIntArr_wEmpty(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info, size_t &the_size) {
-  bool is_null = false;
-  the_size = 0;
+        const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info, size_t &the_size) {
+    bool is_null = false;
+    the_size = 0;
 
-  Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
-  /*
-   * [DatumGetArrayTypeP](https://doxygen.postgresql.org/array_8h.html#aa1b8e77c103863862e06a7b7c07ec532)
-   * [pgr_get_bigIntArray](http://docs.vrprouting.org/doxy/2.2/arrays__input_8c_source.html)
-   */
-  if (!raw_array) return  nullptr;
+    Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
+    /*
+     * [DatumGetArrayTypeP](https://doxygen.postgresql.org/array_8h.html#aa1b8e77c103863862e06a7b7c07ec532)
+     * [pgr_get_bigIntArray](http://docs.vrprouting.org/doxy/2.2/arrays__input_8c_source.html)
+     */
+    if (!raw_array) return  nullptr;
 
-  ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
+    ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
 
-  return vrp_get_bigIntArray_allowEmpty(&the_size, pg_array, info.name.c_str());
+    return vrp_get_bigIntArray_allowEmpty(&the_size, pg_array, info.name.c_str());
 }
 
 }  // namespace
@@ -386,28 +389,28 @@ namespace detail {
 
 int64_t*
 get_any_positive_array(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, size_t &the_size) {
-  if (!column_found(info)) return nullptr;
-  int64_t *array = get_BigIntArr_wEmpty(tuple, tupdesc, info, the_size);
-  for (size_t i = 0; i < the_size; i++) {
-    if (array[i] < 0) throw std::string("Unexpected negative value in array '") + info.name + "'";
-  }
-  return array;
+        const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, size_t &the_size) {
+    if (!column_found(info)) return nullptr;
+    int64_t *array = get_BigIntArr_wEmpty(tuple, tupdesc, info, the_size);
+    for (size_t i = 0; i < the_size; i++) {
+        if (array[i] < 0) throw std::string("Unexpected negative value in array '") + info.name + "'";
+    }
+    return array;
 }
 
 uint32_t*
 get_uint_array(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info,
-    size_t &the_size) {
-  bool is_null = false;
-  the_size = 0;
+        const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info,
+        size_t &the_size) {
+    bool is_null = false;
+    the_size = 0;
 
-  Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
-  if (!raw_array) return  nullptr;
+    Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
+    if (!raw_array) return  nullptr;
 
-  ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
+    ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
 
-  return vrp_get_positiveIntArray_allowEmpty(&the_size, pg_array, info.name.c_str());
+    return vrp_get_positiveIntArray_allowEmpty(&the_size, pg_array, info.name.c_str());
 }
 
 /**
@@ -424,10 +427,10 @@ get_uint_array(
  */
 TInterval
 get_interval(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, TInterval opt_value) {
-  TInterval value = column_found(info)? getInterval(tuple, tupdesc, info) : opt_value;
-  if (value < 0) throw std::string("Unexpected negative value in column '") + info.name + "'";
-  return (TInterval) value;
+        const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, TInterval opt_value) {
+    TInterval value = column_found(info)? getInterval(tuple, tupdesc, info) : opt_value;
+    if (value < 0) throw std::string("Unexpected negative value in column '") + info.name + "'";
+    return (TInterval) value;
 }
 
 /**
@@ -441,8 +444,8 @@ get_interval(
  */
 TTimestamp
 get_timestamp(
-    const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, TTimestamp opt_value) {
-  return column_found(info)?  getTimeStamp(tuple, tupdesc, info) : opt_value;
+        const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, TTimestamp opt_value) {
+    return column_found(info)?  getTimeStamp(tuple, tupdesc, info) : opt_value;
 }
 
 /**
@@ -458,7 +461,7 @@ get_timestamp(
  */
 int64_t
 get_anyinteger(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, int64_t opt_value) {
-  return column_found(info)? getBigInt(tuple, tupdesc, info) : opt_value;
+    return column_found(info)? getBigInt(tuple, tupdesc, info) : opt_value;
 }
 }  // namespace detail
 
@@ -481,55 +484,231 @@ bool column_found(const Info &info) {
  * @throw ERROR Unknown type of column.
  */
 void fetch_column_info(
-    const TupleDesc &tupdesc,
-    std::vector<vrprouting::Info> &info) {
-  for (auto &coldata : info) {
-    if (get_column_info(tupdesc, coldata)) {
-      switch (coldata.eType) {
-        case ANY_INTEGER:
-        case TINTERVAL:
-        case ANY_UINT:
-          check_any_integer_type(coldata);
-          break;
-        case ANY_NUMERICAL:
-          check_any_numerical_type(coldata);
-          break;
-        case TEXT:
-          check_text_type(coldata);
-          break;
-        case CHAR1:
-          check_char_type(coldata);
-          break;
-        case ANY_INTEGER_ARRAY:
-        case ANY_POSITIVE_ARRAY:
-          check_any_integerarray_type(coldata);
-          break;
-        case POSITIVE_INTEGER:
-        case INTEGER:
-          check_integer_type(coldata);
-          break;
-        case JSONB:
-          check_jsonb_type(coldata);
-          break;
-        case INTEGER_ARRAY:
-        case ANY_UINT_ARRAY:
-          check_integerarray_type(coldata);
-          break;
-        case TIMESTAMP:
-          check_timestamp_type(coldata);
-          break;
-        case INTERVAL:
-          check_interval_type(coldata);
-          break;
-        default:
-          throw std::string("Case not found in column '") + coldata.name + "' Please inform the developers";
-      }
+        const TupleDesc &tupdesc,
+        std::vector<vrprouting::Info> &info) {
+    for (auto &coldata : info) {
+        if (get_column_info(tupdesc, coldata)) {
+            switch (coldata.eType) {
+                case ANY_INTEGER:
+                case TINTERVAL:
+                case ANY_UINT:
+                    check_any_integer_type(coldata);
+                    break;
+                case ANY_NUMERICAL:
+                    check_any_numerical_type(coldata);
+                    break;
+                case TEXT:
+                    check_text_type(coldata);
+                    break;
+                case CHAR1:
+                    check_char_type(coldata);
+                    break;
+                case ANY_INTEGER_ARRAY:
+                case ANY_POSITIVE_ARRAY:
+                    check_any_integerarray_type(coldata);
+                    break;
+                case POSITIVE_INTEGER:
+                case INTEGER:
+                    check_integer_type(coldata);
+                    break;
+                case JSONB:
+                    check_jsonb_type(coldata);
+                    break;
+                case INTEGER_ARRAY:
+                case ANY_UINT_ARRAY:
+                    check_integerarray_type(coldata);
+                    break;
+                case TIMESTAMP:
+                    check_timestamp_type(coldata);
+                    break;
+                case INTERVAL:
+                    check_interval_type(coldata);
+                    break;
+                default:
+                    throw std::string("Case not found in column '") + coldata.name + "' Please inform the developers";
+            }
+        }
     }
-  }
 }
 
 
 
+/** @brief get the array contents from postgres
+ *
+ * @details This function generates the array inputs according to their type
+ * received through @a ArrayType *v parameter and store them in @a c_array. It
+ * can be empty also if received @a allow_empty true. The cases of failure are:-
+ * 1. When @a ndim is not equal to one dimension.
+ * 2. When no element is found i.e. nitems is zero or negative.
+ * 3. If the element type doesn't lie in switch cases, give the error of expected array of any integer type
+ * 4. When size of @a c_array is out of range or memory.
+ * 5. When null value is found in the array.
+ *
+ * All these failures are represented as error through @a elog.
+ * @param[in] v Pointer to the postgres C array
+ *
+ * @pre the array has to be one dimension
+ * @pre Must have elements (when allow_empty is false)
+ *
+ * @returns set of elements on the PostgreSQL array
+ */
+std::set<int64_t>
+get_pgset(ArrayType *v) {
+    std::set<int64_t> results;
+
+    if (!v) return results;
+
+    auto    element_type = ARR_ELEMTYPE(v);
+    auto    dim = ARR_DIMS(v);
+    auto    ndim = ARR_NDIM(v);
+    auto    nitems = ArrayGetNItems(ndim, dim);
+    Datum  *elements = nullptr;
+    bool   *nulls = nullptr;
+    int16   typlen;
+    bool    typbyval;
+    char    typalign;
+
+
+    if (ndim == 0 || nitems <= 0) {
+        return results;
+    }
+
+    if (ndim != 1) {
+        throw std::string("One dimension expected");
+    }
+
+    get_typlenbyvalalign(element_type, &typlen, &typbyval, &typalign);
+
+    switch (element_type) {
+        case INT2OID:
+        case INT4OID:
+        case INT8OID:
+            break;
+        default:
+            throw std::string("Expected array of ANY-INTEGER");
+    }
+
+    deconstruct_array(v, element_type, typlen, typbyval,
+            typalign, &elements, &nulls,
+            &nitems);
+
+    int64_t data(0);
+
+    for (int i = 0; i < nitems; i++) {
+        if (nulls[i]) {
+            throw std::string("NULL value found in Array!");
+        } else {
+            switch (element_type) {
+                case INT2OID:
+                    data = static_cast<int64_t>(DatumGetInt16(elements[i]));
+                    break;
+                case INT4OID:
+                    data = static_cast<int64_t>(DatumGetInt32(elements[i]));
+                    break;
+                case INT8OID:
+                    data = DatumGetInt64(elements[i]);
+                    break;
+            }
+        }
+        results.insert(data);
+    }
+
+    pfree(elements);
+    pfree(nulls);
+    return results;
+}
+
+/** @brief get the array contents from postgres
+ *
+ * @details This function generates the array inputs according to their type
+ * received through @a ArrayType *v parameter and store them in @a c_array. It
+ * can be empty also if received @a allow_empty true. The cases of failure are:-
+ * 1. When @a ndim is not equal to one dimension.
+ * 2. When no element is found i.e. nitems is zero or negative.
+ * 3. If the element type doesn't lie in switch cases, give the error of expected array of any integer type
+ * 4. When size of @a c_array is out of range or memory.
+ * 5. When null value is found in the array.
+ *
+ * All these failures are represented as error through @a elog.
+ * @param[in] v Pointer to the postgres C array
+ * @param[in] allow_empty flag to allow empty arrays
+ *
+ * @pre the array has to be one dimension
+ * @pre Must have elements (when allow_empty is false)
+ *
+ * @returns Vector of elements of the PostgreSQL array
+ */
+std::vector<int64_t>
+get_pgarray(ArrayType *v, bool allow_empty) {
+    std::vector<int64_t> results;
+    if (!v) return results;
+
+    auto    element_type = ARR_ELEMTYPE(v);
+    auto    dim = ARR_DIMS(v);
+    auto    ndim = ARR_NDIM(v);
+    auto    nitems = ArrayGetNItems(ndim, dim);
+    Datum  *elements = nullptr;
+    bool   *nulls = nullptr;
+    int16   typlen;
+    bool    typbyval;
+    char    typalign;
+
+
+    if (allow_empty && (ndim == 0 || nitems <= 0)) {
+        return results;
+    }
+
+    if (ndim != 1) {
+        throw std::string("One dimension expected");
+    }
+
+    if (nitems <= 0) {
+        throw std::string("No elements found");
+    }
+
+    get_typlenbyvalalign(element_type, &typlen, &typbyval, &typalign);
+
+    /* validate input data type */
+    switch (element_type) {
+        case INT2OID:
+        case INT4OID:
+        case INT8OID:
+            break;
+        default:
+            throw std::string("Expected array of ANY-INTEGER");
+    }
+
+    deconstruct_array(v, element_type, typlen, typbyval,
+            typalign, &elements, &nulls,
+            &nitems);
+
+    int64_t data(0);
+
+    results.reserve(static_cast<size_t>(nitems));
+
+    for (int i = 0; i < nitems; i++) {
+        if (nulls[i]) {
+            throw std::string("NULL value found in Array!");
+        } else {
+            switch (element_type) {
+                case INT2OID:
+                    data = static_cast<int64_t>(DatumGetInt16(elements[i]));
+                    break;
+                case INT4OID:
+                    data = static_cast<int64_t>(DatumGetInt32(elements[i]));
+                    break;
+                case INT8OID:
+                    data = DatumGetInt64(elements[i]);
+                    break;
+            }
+        }
+        results.push_back(data);
+    }
+
+    pfree(elements);
+    pfree(nulls);
+    return results;
+}
 
 
 /**
@@ -545,7 +724,7 @@ void fetch_column_info(
  */
 double
 get_anynumerical(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, double opt_value) {
-  return column_found(info)? getFloat8(tuple, tupdesc, info) : opt_value;
+    return column_found(info)? getFloat8(tuple, tupdesc, info) : opt_value;
 }
 
 
@@ -560,7 +739,7 @@ get_anynumerical(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &in
  */
 char
 get_char(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, char opt_value) {
-  return getChar(tuple, tupdesc, info, opt_value);
+    return getChar(tuple, tupdesc, info, opt_value);
 }
 
 
@@ -572,7 +751,7 @@ get_char(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, char
  * @returns "{}" (empty jsonb) when when the column does not exist
  */
 std::string get_jsonb(const HeapTuple tuple, const TupleDesc &tupdesc,  const vrprouting::Info &info) {
-  return column_found(info)? DatumGetCString(SPI_getvalue(tuple, tupdesc, info.colNumber)) : "{}";
+    return column_found(info)? DatumGetCString(SPI_getvalue(tuple, tupdesc, info.colNumber)) : "{}";
 }
 
 }  // namespace vrprouting
