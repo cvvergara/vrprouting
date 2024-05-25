@@ -49,17 +49,29 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 namespace vrprouting {
 
 class Vrp_vroom_problem : public vrprouting::Messages {
- public:
-  std::vector<vroom::Job> jobs() const { return m_jobs; }
-  std::vector<std::pair<vroom::Job, vroom::Job>> shipments() const { return m_shipments; }
-  std::vector<vroom::Vehicle> vehicles() const { return m_vehicles; }
-  vrprouting::base::Base_Matrix matrix() const { return m_matrix; }
+public:
+    void add_matrix(vrprouting::base::Base_Matrix);
+    void add_jobs(const std::vector<Vroom_job_t>&, const std::vector<Vroom_time_window_t>&);
+    void add_shipments(
+            const std::vector<Vroom_shipment_t>&,
+            const std::vector<Vroom_time_window_t>&);
+    void add_vehicles(
+            const std::vector<Vroom_vehicle_t>&,
+            const std::vector<Vroom_break_t>&,
+            const std::vector<Vroom_time_window_t>&);
+    std::vector<Vroom_rt> solve(int32_t, int32_t, int32_t);
+
+private:
+    std::vector<vroom::Job> jobs() const { return m_jobs; }
+    std::vector<std::pair<vroom::Job, vroom::Job>> shipments() const { return m_shipments; }
+    std::vector<vroom::Vehicle> vehicles() const { return m_vehicles; }
+    vrprouting::base::Base_Matrix matrix() const { return m_matrix; }
 
   /**
    * @name vroom time window wrapper
    * @{
    */
-  vroom::TimeWindow get_vroom_time_window(const Vroom_time_window_t &) const;
+  vroom::TimeWindow get_vroom_time_window(const Vroom_time_window_t&) const;
   vroom::TimeWindow get_vroom_time_window(Duration, Duration) const;
   std::vector<vroom::TimeWindow> get_vroom_time_windows(const std::vector<Vroom_time_window_t>&) const;
 
@@ -100,7 +112,6 @@ class Vrp_vroom_problem : public vrprouting::Messages {
 
   void problem_add_job(const Vroom_job_t&, const std::vector<Vroom_time_window_t>&);
 
-  void add_jobs(const std::vector<Vroom_job_t>&, const std::vector<Vroom_time_window_t>&);
 
   ///@}
 
@@ -128,9 +139,6 @@ class Vrp_vroom_problem : public vrprouting::Messages {
       const std::vector<Vroom_time_window_t>&,
       const std::vector<Vroom_time_window_t>&);
 
-  void add_shipments(
-          const std::vector<Vroom_shipment_t>&,
-          const std::vector<Vroom_time_window_t>&);
   ///@}
 
 
@@ -163,23 +171,14 @@ class Vrp_vroom_problem : public vrprouting::Messages {
       const std::vector<Vroom_break_t>&,
       const std::vector<Vroom_time_window_t>&);
 
-  void add_vehicles(
-          const std::vector<Vroom_vehicle_t>&,
-          const std::vector<Vroom_break_t>&,
-          const std::vector<Vroom_time_window_t>&);
 
   ///@}
 
-
-  void add_matrix(vrprouting::base::Base_Matrix);
   void get_amount(vroom::Amount, Amount**);
   StepType get_job_step_type(vroom::JOB_TYPE);
   StepType get_step_type(vroom::Step);
 
   std::vector<Vroom_rt> get_results(vroom::Solution);
-
-  std::vector<Vroom_rt> solve(int32_t exploration_level, int32_t timeout,
-                              int32_t loading_time);
 
  private:
   std::vector<vroom::Job> m_jobs;
