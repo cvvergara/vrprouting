@@ -51,19 +51,17 @@ class Vroom_shipment_t;
 class Vroom_vehicle_t;
 
 namespace vrprouting {
-
-
 namespace pgget {
 
 
+namespace pickdeliver {
+
 Matrix_cell_t fetch_matrix(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
-
 PickDeliveryOrders_t fetch_orders(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
-
 Time_multipliers_t fetch_timeMultipliers(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
-
 Vehicle_t fetch_vehicles(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
-Vehicle_t fetch_vehicles_euclidean(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
+
+}  // namespace pickdeliver
 
 namespace vroom {
 Vroom_matrix_t fetch_matrix(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
@@ -73,6 +71,7 @@ Vroom_break_t fetch_breaks(const HeapTuple, const TupleDesc&, const std::vector<
 Vroom_shipment_t fetch_shipments(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 Vroom_vehicle_t fetch_vehicles(const HeapTuple, const TupleDesc&, const std::vector<Info>&, bool);
 }  // namespace vroom
+
 }  // namespace pgget
 }  // namespace vrprouting
 

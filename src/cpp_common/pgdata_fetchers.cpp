@@ -58,9 +58,8 @@ void check_pairs(vrprouting::Info lhs, vrprouting::Info rhs) {
 }  // namespace
 
 namespace vrprouting {
-
-
 namespace pgget {
+
 namespace vroom {
 
 Vroom_break_t fetch_breaks(
@@ -204,6 +203,8 @@ Vroom_vehicle_t fetch_vehicles(
 
 }  // namespace vroom
 
+namespace pickdeliver {
+
 Matrix_cell_t fetch_matrix(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Info> &info,
@@ -214,7 +215,6 @@ Matrix_cell_t fetch_matrix(
   row.cost = get_value<TInterval>(tuple, tupdesc, info[2], 0);
   return row;
 }
-
 
 Time_multipliers_t fetch_timeMultipliers(
         const HeapTuple tuple, const TupleDesc &tupdesc,
@@ -292,6 +292,8 @@ Vehicle_t fetch_vehicles(
 
   return vehicle;
 }
+
+}   // namespace pickdeliver
 
 }   // namespace pgget
 }   // namespace vrprouting
