@@ -58,10 +58,8 @@ namespace {
 
 /** @brief Executes an optimization with the input data
  *
- *  @param[in] shipments_arr A C Array of pickup and dropoff shipments
- *  @param[in] total_shipments size of the shipments_arr
- *  @param[in] vehicles_arr A C Array of vehicles
- *  @param[in] total_vehicles size of the vehicles_arr
+ *  @param[in] orders  orders to be processed
+ *  @param[in] vehicles  vehicles involved with in those orders
  *  @param[in] new_stops stops that override the original stops.
  *  @param[in] time_matrix The unique time matrix
  *  @param[in] max_cycles number of cycles to perform during the optimization phase
@@ -118,15 +116,14 @@ one_processing(
 
 
 
-/** @brief: extract the times where the orders opens or closes
+/** @brief extract the times where the orders opens or closes
  *
- *  @param[in] shipments_arr A C Array of pickup and dropoff shipments
- *  @param[in] total_shipments size of the shipments_arr
+ *  @param[in] orders  orders to be processed
  *
- *  @returns processing times
+ *  @returns the set of times where orders open or close
  */
 Identifiers<TTimestamp>
-processing_times_by_shipment(const std::vector<PickDeliveryOrders_t> orders) {
+processing_times_by_shipment(const std::vector<PickDeliveryOrders_t> &orders) {
     Identifiers<TTimestamp> processing_times;
     for (const auto &o : orders) {
         processing_times += o.pick_open_t;
@@ -136,13 +133,11 @@ processing_times_by_shipment(const std::vector<PickDeliveryOrders_t> orders) {
     }
     return processing_times;
 }
-
-/** @brief: extract the times where the vehicle opens or closes
+/** @brief extract the times where the vehicle opens or closes
  *
- *  @param[in] vehicles_arr A C Array of vehicles
- *  @param[in] total_vehicles size of the vehicles_arr
+ *  @param[in] vehicles  vehicles for processing
  *
- *  @returns processing times
+ *  @returns the set of times where vehicles are open or close
  */
 Identifiers<TTimestamp>
 processing_times_by_vehicle(const std::vector<Vehicle_t> &vehicles) {
@@ -158,14 +153,12 @@ processing_times_by_vehicle(const std::vector<Vehicle_t> &vehicles) {
 
 /** @brief get the stops of a set of vehicles
  *
- *  @param[in] vehicles
+ *  @param[in] vehicles  vehicles for processing
  *
  *  @returns vector of (vehicle id, stops vector) pairs ascending order of vehicles
  */
 std::vector<Short_vehicle>
-get_initial_stops(
-        const std::vector<Vehicle_t> &vehicles
-        ) {
+get_initial_stops(const std::vector<Vehicle_t> &vehicles) {
     std::vector<Short_vehicle> the_stops;
     for (const auto &v : vehicles) {
         the_stops.push_back({v.id, v.stops});
@@ -179,11 +172,12 @@ get_initial_stops(
 
 /** @brief Update the vehicle stops to the new values
  *
- *  @param[in,out] the_stops set of stops that are to be updated
- *  @param[in] new_values subset of stops that are to be used for the update
+ *  @param[in,out] the_stops (vehicle,stops) set to be modified
+ *  @param[in] new_values stops to be added to the_stops
  */
 void
-update_stops(std::vector<Short_vehicle>& the_stops,  // NOLINT [runtime/references]
+update_stops(
+        std::vector<Short_vehicle>& the_stops,  // NOLINT [runtime/references]
         const std::vector<Short_vehicle> new_values) {
     for (const auto &v : new_values) {
         auto v_id = v.id;
@@ -197,17 +191,15 @@ update_stops(std::vector<Short_vehicle>& the_stops,  // NOLINT [runtime/referenc
 
 /** @brief Executes an optimization by subdivision of data
  *
- *  @param [in] shipments_arr      C Array of pickup and dropoff shipments
- *  @param [in] total_shipments    size of the shipments_arr
- *  @param [in] vehicles_arr       C Array of vehicles
- *  @param [in] total_vehicles     size of the vehicles_arr
- *  @param [in] time_matrix        The unique time matrix
+ *  @param[in] orders  orders to be processed
+ *  @param[in] vehicles  vehicles involved with in those orders
+ *  @param[in] time_matrix The unique time matrix
  *  @param [in] max_cycles         number of cycles to perform during the optimization phase
  *  @param [in] execution_date     Value used for not moving shipments that are before this date
- *  @param [in] subdivide_by_vehicle @todo
+ *  @param [in] subdivide_by_vehicle When true: incremental optimization based on vehicles. otherwise by orders
  *  @param [in,out] log            log of function
  *
- *  @returns vector[vehicle id] = stops which hold the the new stops structure
+ *  @returns vector<Short_vehicle> stops which hold the the new stops structure
  */
 std::vector<Short_vehicle>
 subdivide_processing(
@@ -295,20 +287,19 @@ subdivide_processing(
 
 /**
  *
- *  @param[in] shipments_arr    A C Array of pickup and dropoff shipments
- *  @param[in] total_shipments  size of the shipments_arr
- *  @param[in] vehicles_arr     A C Array of vehicles
- *  @param[in] total_vehicles   size of the vehicles_arr
- *  @param[in] matrix_cells_arr A C Array of the (time) matrix cells
- *  @param[in] total_cells      size of the matrix_cells_arr
- *  @param[in] multipliers_arr  A C Array of the multipliers
- *  @param[in] total_multipliers size of the multipliers_arr
+ *  @param[in] orders_sql  SQL query for the orders
+ *  @param[in] vehicles_sql  SQL query for the vehicles
+ *  @param[in] matrix_sql  SQL query for the matrix
+ *  @param[in] multipliers_sql  SQL query for the multipliers
  *  @param[in] factor           A global multiplier for the (time) matrix cells
  *  @param[in] max_cycles       number of cycles to perform during the optimization phase
  *  @param[in] execution_date   Value used for not moving shipments that are before this date
  *  @param[in] check_triangle_inequality When true tirangle inequality will be checked
  *  @param[in] subdivide        @todo
  *  @param[in] subdivide_by_vehicle @todo
+ *  @param[in] use_timestamps When true: data comes with timestamps
+ *  @param[in] is_euclidean When true: Data comes with coordinates
+ *  @param[in] with_stops When true: Vehicles have stops assigned
  *  @param[out] return_tuples   C array of contents to be returned to postgres
  *  @param[out] return_count    number of tuples returned
  *  @param[out] log_msg special log message pointer

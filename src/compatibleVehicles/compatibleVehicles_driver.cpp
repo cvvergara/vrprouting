@@ -49,15 +49,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 /**
  *
- *  @param[in] customers_arr A C Array of pickup and dropoff orders
- *  @param[in] total_customers size of the customers_arr
- *  @param[in] vehicles_arr A C Array of vehicles
- *  @param[in] total_vehicles size of the vehicles_arr
- *  @param[in] matrix_cells_arr A C Array of the (time) matrix cells
- *  @param[in] total_cells size of the matrix_cells_arr
- *  @param[in] multipliers_arr A C Array of the multipliers
- *  @param[in] total_multipliers size of the multipliers_arr
+ *  @param[in] orders_sql  SQL query for the orders
+ *  @param[in] vehicles_sql  SQL query for the vehicles
+ *  @param[in] matrix_sql  SQL query for the matrix
+ *  @param[in] multipliers_sql  SQL query for the multipliers
  *  @param[in] factor A global multiplier for the (time) matrix cells
+ *  @param[in] use_timestamps When true: data comes with timestamps
+ *  @param[in] is_euclidean When true: Data comes with coordinates
+ *  @param[in] with_stops When true: Vehicles have stops assigned
  *  @param[out] return_tuples C array of contents to be returned to postgres
  *  @param[out] return_count number of tuples returned
  *  @param[out] log_msg special log message pointer
@@ -65,33 +64,31 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *  @param[out] err_msg special message pointer to be returned as ERROR
  *
  * @pre The messages: log_msg, notice_msg, err_msg must be empty (=nullptr)
- * @pre The C arrays: customers_arr, vehicles_arr, matrix_cells_arr must not be empty
  * @pre The C array: return_tuples must be empty
- * @pre Only matrix cells (i, i) can be missing and are considered as 0 (time units)
  *
- * @post The C arrays:  customers_arr, vehicles_arr, matrix_cells_arr Do not change
+ * @post log_msg contains some logging
+ * @post when err_msg is empty:
  * @post The C array: return_tuples contains the result for the problem given
  * @post The return_tuples array size is return_count
- * @post The return_tuples array size is return_count
- * @post err_msg is empty if no throw from the process is catched
- * @post log_msg contains some logging
+ * @post when err_msg is not empty:
+ * @post return_tuples == nullptr
+ * @post return_count == 0
  * @post notice_msg is empty
- *
  *
  @dot
 digraph G {
-  node[fontsize=11, nodesep=0.75,ranksep=0.75];
+  node[fontsize=8, nodesep=0.75,ranksep=0.75];
 
   start  [shape=Mdiamond];
-  n1  [label="Verify preconditions",shape=rect];
-  n3  [label="Verify matrix cells preconditions",shape=rect];
+  n1  [label="Read data",shape=rect];
+  n3  [label="Verify matrix preconditions",shape=rect];
   n4  [label="Construct problem",shape=cds,color=blue];
   n7  [label="Prepare results",shape=rect];
   end  [shape=Mdiamond];
   error [shape=Mdiamond,color=red]
   start -> n1 -> n3 -> n4 -> n7 -> end;
-  n1 -> error [ label="Caller error",color=red];
-  n3 -> error [ label="User error",color=red];
+  n1 -> error [ label="throw",color=red];
+  n3 -> error [ label="throw",color=red];
 
 }
 @enddot
@@ -135,7 +132,6 @@ do_compatibleVehicles(
         pgassert(!(*err_msg));
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
-        log << "do_compatibleVehicles\n";
 
         hint = orders_sql;
         auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);

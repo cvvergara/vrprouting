@@ -220,7 +220,6 @@ Base_Matrix::get_original_id(Idx index) const {
 
 /**
  * @param [in] data_costs  The set of costs
- * @param [in] size_matrix The size of the set of costs
  * @param [in] node_ids The selected node identifiers to be added
  * @param [in] multiplier All times are multiplied by this value
  *
@@ -290,8 +289,7 @@ Base_Matrix::Base_Matrix(
 /**
  * @brief Constructor for VROOM matrix input
  *
- * @param [in] matrix_rows    The set of costs
- * @param [in] total_matrix_rows  The size of the set of costs
+ * @param [in] matrix    The set of costs
  * @param [in] location_ids   The location identifiers
  * @param [in] scaling_factor Multiplier
  *
@@ -305,7 +303,8 @@ Base_Matrix::Base_Matrix(
  */
 Base_Matrix::Base_Matrix(
         const std::vector<Vroom_matrix_t> &matrix,
-        const Identifiers<Id> &location_ids, Multiplier scaling_factor) {
+        const Identifiers<Id> &location_ids,
+        Multiplier scaling_factor) {
     /*
      * Sets the selected nodes identifiers
      */

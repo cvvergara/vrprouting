@@ -91,8 +91,7 @@ class Orders : public std::vector<Order> {
       void build_orders(PickDeliveryOrders_t *, size_t, const PTR problem_ptr);
 
     /**
-      @param [in] orders
-      @param [in] size_orders
+      @param [in] orders set of orders
       @param [in] problem_ptr pointer to problem to get some needed information
       */
     template <typename PTR> void build_orders(

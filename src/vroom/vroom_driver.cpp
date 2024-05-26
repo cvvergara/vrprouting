@@ -56,25 +56,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * function `vrp_vroom` which calls the main function defined in the
  * C++ Header file. It also does exception handling.
  *
- * @param [in] jobs                Pointer to the array of jobs
- * @param [in] total_jobs          The total number of jobs
- * @param [in] jobs_tws            Pointer to the array of jobs time windows
- * @param [in] total_jobs_tws      The total number of jobs time windows
- * @param [in] shipments           Pointer to the array of shipments
- * @param [in] total_shipments     The total number of shipments
- * @param [in] shipments_tws       Pointer to the array of shipments time windows
- * @param [in] total_shipments_tws The total number of shipments time windows
- * @param [in] vehicles            Pointer to the array of vehicles
- * @param [in] total_vehicles      The total number of total vehicles
- * @param [in] breaks              Pointer to the array of breaks
- * @param [in] total_breaks        The total number of total breaks
- * @param [in] breaks_tws          Pointer to the array of breaks
- * @param [in] total_breaks_tws    The total number of total breaks
- * @param [in] matrix_rows         Pointer to the array of matrix rows
- * @param [in] total_matrix_rows   The total number of matrix rows
+ * @param[in] jobs_sql  SQL query for the jobs
+ * @param[in] jobs_tws_sql  SQL query for the jobs time windows
+ * @param[in] shipments_sql  SQL query for the shipments
+ * @param[in] shipments_tws_sql  SQL query for the shipments time windows
+ * @param[in] vehicles_sql  SQL query for the vehicles
+ * @param[in] breaks_sql  SQL query for the breaks
+ * @param[in] breaks_tws_sql  SQL query for the breaks time windows
+ * @param[in] matrix_sql  SQL query for the matrix
+ *
  * @param [in] exploration_level   Exploration level to use while solving.
  * @param [in] timeout             Timeout value to stop the solving process (seconds).
  * @param [in] loading_time        Additional time spent in loading the data from SQL Query (seconds).
+ * @param [in] fn_used             Depending of the function call, shipments and/or jobs mus exist.
+ *  @param[in] use_timestamps When true: data comes with timestamps
+ *
  * @param [out] return_tuples      The rows in the result
  * @param [out] return_count       The count of rows in the result
  * @param [out] log_msg            Stores the log message

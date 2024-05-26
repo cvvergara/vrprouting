@@ -52,25 +52,23 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 /**
  *
- *  @param[in] customers_arr A C Array of pickup and dropoff orders
- *  @param[in] total_customers size of the customers_arr
- *  @param[in] vehicles_arr A C Array of vehicles
- *  @param[in] total_vehicles size of the vehicles_arr
- *  @param[in] matrix_cells_arr A C Array of the (time) matrix cells
- *  @param[in] total_cells size of the matrix_cells_arr
- *  @param[in] multipliers_arr A C Array of the multipliers
- *  @param[in] total_multipliers size of the multipliers_arr
+ *  @param[in] orders_sql  SQL query for the orders
+ *  @param[in] vehicles_sql  SQL query for the vehicles
+ *  @param[in] matrix_sql  SQL query for the matrix
+ *  @param[in] multipliers_sql  SQL query for the multipliers
  *  @param[in] optimize flag to control optimization
  *  @param[in] factor A global multiplier for the (time) matrix cells
  *  @param[in] max_cycles number of cycles to perform during the optimization phase
  *  @param[in] stop_on_all_served Indicator to stop optimization when all orders are served
  *  @param[in] execution_date Value used for not moving orders that are before this date
+ *  @param[in] use_timestamps When true: data comes with timestamps
+ *  @param[in] is_euclidean When true: Data comes with coordinates
+ *  @param[in] with_stops When true: Vehicles have stops assigned
  *  @param[out] return_tuples C array of contents to be returned to postgres
  *  @param[out] return_count number of tuples returned
  *  @param[out] log_msg special log message pointer
  *  @param[out] notice_msg special message pointer to be returned as NOTICE
  *  @param[out] err_msg special message pointer to be returned as ERROR
- *  @return void
  *
  *
  * @pre The messages: log_msg, notice_msg, err_msg must be empty (=nullptr)

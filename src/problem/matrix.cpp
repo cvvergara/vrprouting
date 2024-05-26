@@ -49,7 +49,6 @@ namespace {
 
 /**
  * @param [in] p_multipliers time dependant multiplier data
- * @param [in] size_multipliers number of rows in the data
  * @returns time dependant multiplier container
  */
 std::vector<std::tuple<TTimestamp, Multiplier>>

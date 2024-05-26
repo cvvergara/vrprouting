@@ -46,6 +46,15 @@ namespace pgget {
 
 
 namespace vroom {
+/**
+  ~~~~{.c}
+  SELECT start_id, end_id, duration, cost
+  FROM matrix;
+  ~~~~
+ * @param[in] sql SQL query to execute
+ * @param[in] use_timestamps When true postgres Time datatypes are used
+ * @returns vector of Vroom_matrix_t containing the matrix cell contents
+ */
 std::vector<Vroom_matrix_t> get_matrix(
     const std::string &sql,
     bool use_timestamps) {
@@ -59,6 +68,15 @@ std::vector<Vroom_matrix_t> get_matrix(
     return pgget::get_data<Vroom_matrix_t>(sql, use_timestamps, info, &fetch_matrix);
 }
 
+/**
+  ~~~~{.c}
+  SELECT id, vehicle_id, service, data
+  FROM breaks;
+  ~~~~
+ * @param[in] sql SQL query to execute
+ * @param [in] use_timestamps When true postgres Time datatypes are used
+ * @returns vector of Vroom_break_t containing the breaks information
+ */
 std::vector<Vroom_break_t> get_breaks(
     const std::string &sql,
     bool use_timestamps) {
@@ -72,9 +90,20 @@ std::vector<Vroom_break_t> get_breaks(
     return pgget::get_data<Vroom_break_t>(sql, use_timestamps, info, &fetch_breaks);
 }
 
+/**
+  ~~~~{.c}
+  SELECT id, tw_open, tw_close, kind
+  FROM shipment_tws;
+  ~~~~
+ * @param[in] sql SQL query to execute
+ * @param [in] use_timestamps When true postgres Time datatypes are used
+ * @param [in] is_shipment When true c$the kind is compulsory
+ * @returns vector of Vroom_time_window_t containing the time windows information
+ */
 std::vector<Vroom_time_window_t> get_timewindows(
     const std::string &sql,
-    bool use_timestamps, bool is_shipment) {
+    bool use_timestamps,
+    bool is_shipment) {
   using vrprouting::Info;
   std::vector<Info> info{
       {-1, 0, true, "id", vrprouting::ANY_INTEGER},
@@ -86,11 +115,13 @@ std::vector<Vroom_time_window_t> get_timewindows(
 }
 
 /**
+  ~~~~{.c}
+  SELECT id, location_id, setup, service, delivery, delivery, skills, priority, data
+  FROM jobs;
+  ~~~~
  * @param[in] sql SQL query to execute
- * @param[out] rows C Container that holds the data
- * @param[out] total_rows Total rows recieved
  * @param [in] use_timestamps When true postgres Time datatypes are used
- * @param [out] err_msg When not empty there was an error
+ * @returns vector of Vroom_job_t containing the jobs information
  */
 std::vector<Vroom_job_t> get_jobs(
     const std::string &sql,
@@ -112,11 +143,16 @@ std::vector<Vroom_job_t> get_jobs(
 }
 
 /**
+  ~~~~{.c}
+  SELECT id,
+  p_location_id, p_setup, p_service, p_data,
+  d_location_id, d_setup, d_service, d_data,
+  amount, skills, priority, data
+  FROM jobs;
+  ~~~~
  * @param[in] sql SQL query to execute
- * @param[out] rows C Container that holds the data
- * @param[out] total_rows Total rows recieved
- * @param [in] use_timestamps When true postgres Time datatypes are used
- * @param [out] err_msg When not empty there was an error
+ * @param[in] use_timestamps When true postgres Time datatypes are used
+ * @returns vector of Vroom_shipment_t containing the shipment information
  */
 std::vector<Vroom_shipment_t>
 get_shipments(
@@ -141,11 +177,15 @@ get_shipments(
 }
 
 /**
+  ~~~~{.c}
+  SELECT id,
+  start_id, end_id, capacity,
+  skills, tw_open, tw_close, speed_factor, max_tasks, data
+  FROM jobs;
+  ~~~~
  * @param[in] sql SQL query to execute
- * @param[out] rows C Container that holds the data
- * @param[out] total_rows Total rows recieved
- * @param [in] use_timestamps When true postgres Time datatypes are used
- * @param [out] err_msg When not empty there was an error
+ * @param[in] use_timestamps When true postgres Time datatypes are used
+ * @returns vector of Vroom_vehicle_t containing the vehicle information
  */
 std::vector<Vroom_vehicle_t>
 get_vehicles(
@@ -182,6 +222,15 @@ std::vector<Time_multipliers_t> get_timeMultipliers(
     return pgget::get_data<Time_multipliers_t>(sql, use_timestamps, info, &fetch_timeMultipliers);
 }
 
+/**
+  ~~~~{.c}
+  SELECT start_vid, end_vid, [travel_time|agg_cost]
+  FROM matrix;
+  ~~~~
+ * @param[in] sql SQL query to execute
+ * @param [in] use_timestamps When true postgres Time datatypes are used
+ * @returns vector of Matrix_cell_t containing the matrix cell contents
+ */
 std::vector<Matrix_cell_t> get_matrix(
     const std::string &sql,
     bool use_timestamps) {
@@ -201,13 +250,21 @@ std::vector<Matrix_cell_t> get_matrix(
   For queries comming from pgRouting
   ~~~~{.c}
   SELECT id, demand
-  [p_node_id | p_x, p_y], p_open, p_close, p_service,
-  [d_node_id | d_x, d_y], d_open, d_close, d_service,
+  [p_id | p_x, p_y], p_open, p_close, p_service,
+  [d_id | d_x, d_y], d_open, d_close, d_service,
+  FROM orders;
+  ~~~~
+  For timestamps
+  ~~~~{.c}
+  SELECT id, demand
+  [p_id | p_x, p_y], p_tw_open, p_tw_close, p_t_service,
+  [d_id | d_x, d_y], d_tw_open, d_tw_close, d_t_service,
   FROM orders;
   ~~~~
 
   @param[in] sql The orders query
   @param [in]  is_euclidean When true coordintes are going to be used
+  @param [in]  use_timestamps When true data use postgres timestamps
   @returns vector of PickDeliveryOrders_t
   */
 std::vector<PickDeliveryOrders_t> get_orders(
@@ -256,14 +313,24 @@ std::vector<PickDeliveryOrders_t> get_orders(
   For queries of the type:
   ~~~~{.c}
   SELECT id, capacity, speed, number
-  [start_node_id | start_x, start_y], start_open, start_close, start_service,
-  [end_node_id | end_x, end_y], end_open, end_close, end_service,
+  [s_id | s_x, s_y], s_open, s_close, s_service,
+  [e_id | e_x, e_y], e_open, e_close, e_service,
+  FROM orders;
+  ~~~~
+
+  for timestamps:
+  ~~~~{.c}
+  SELECT id, capacity, speed, number
+  [s_id | s_x, s_y], s_tw_open, s_tw_close, s_t_service,
+  [e_id | e_x, e_y], e_tw_open, e_tw_close, e_t_service,
   FROM orders;
   ~~~~
 
   @param[in] sql The vehicles query
-  @param[in] with_id flag that idicates if id is to be used
-  @returns vector of `Vehicle_t`
+  @param[in] is_euclidean when true: use coordinates
+  @param[in] use_timestamps When true data use postgres timestamps
+  @param[in] with_stops use stops information otherwise ignore
+  @returns vector of Vehicle_t
   */
 std::vector<Vehicle_t> get_vehicles(
     const std::string &sql,

@@ -155,10 +155,6 @@ Vrp_vroom_problem::add_jobs(
 
 
 /**
- * @name vroom shipments wrapper
- */
-///@{
-/**
  * @brief      Gets the vroom shipments.
  *
  * @param[in]  shipment       The shipment C-style struct
@@ -259,7 +255,6 @@ Vrp_vroom_problem::get_vroom_breaks(
     }
     return v_breaks;
 }
-///@}
 
 
 /**
