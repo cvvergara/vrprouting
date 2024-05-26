@@ -209,6 +209,9 @@ get_vehicles(
 
 }  // namespace vroom
 
+
+namespace pickdeliver {
+
 std::vector<Time_multipliers_t> get_timeMultipliers(
     const std::string &sql,
     bool use_timestamps) {
@@ -375,6 +378,7 @@ std::vector<Vehicle_t> get_vehicles(
 
     return get_data<Vehicle_t>(sql, is_euclidean, info, &fetch_vehicles);
 }
+}  // namespace pickdeliver
 
 }  // namespace pgget
 }  // namespace pgrouting

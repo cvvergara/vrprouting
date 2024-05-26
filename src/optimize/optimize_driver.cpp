@@ -370,10 +370,10 @@ do_optimize(
         char **err_msg) {
     using vrprouting::msg;
     using vrprouting::alloc;
-    using vrprouting::pgget::get_matrix;
-    using vrprouting::pgget::get_orders;
-    using vrprouting::pgget::get_vehicles;
-    using vrprouting::pgget::get_timeMultipliers;
+    using vrprouting::pgget::pickdeliver::get_matrix;
+    using vrprouting::pgget::pickdeliver::get_orders;
+    using vrprouting::pgget::pickdeliver::get_vehicles;
+    using vrprouting::pgget::pickdeliver::get_timeMultipliers;
 
     std::ostringstream log;
     std::ostringstream notice;

@@ -136,8 +136,8 @@ vrp_do_pgr_pickDeliverEuclidean(
     char **err_msg) {
   using vrprouting::msg;
   using vrprouting::alloc;
-  using vrprouting::pgget::get_orders;
-  using vrprouting::pgget::get_vehicles;
+  using vrprouting::pgget::pickdeliver::get_orders;
+  using vrprouting::pgget::pickdeliver::get_vehicles;
 
   std::ostringstream log;
   std::ostringstream notice;

@@ -48,12 +48,7 @@ extern "C" {
 namespace vrprouting {
 namespace pgget {
 
-/** @brief Enforces the input array to be @b NOT empty */
-std::vector<int64_t> get_intArray(ArrayType*, bool);
-
-/** @brief Reads a postgres array saving it as set */
-std::set<int64_t> get_intSet(ArrayType*);
-
+namespace pickdeliver {
 /** @brief Get the matrix */
 std::vector<Matrix_cell_t> get_matrix(const std::string&, bool);
 
@@ -65,6 +60,8 @@ std::vector<Vehicle_t> get_vehicles(const std::string&, bool, bool, bool);
 
 /** @brief Get the time multipliers using interval*/
 std::vector<Time_multipliers_t> get_timeMultipliers(const std::string&, bool);
+
+}  // namespace pickdeliver
 
 namespace vroom {
 /** @brief Reads the VROOM matrix */
