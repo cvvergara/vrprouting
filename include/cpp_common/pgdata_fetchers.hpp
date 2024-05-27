@@ -41,7 +41,6 @@ extern "C" {
 
 #include <vector>
 
-#include "c_types/typedefs.h"
 class Info;
 class Vroom_matrix_t;
 class Vroom_time_window_t;
@@ -49,6 +48,10 @@ class Vroom_job_t;
 class Vroom_break_t;
 class Vroom_shipment_t;
 class Vroom_vehicle_t;
+class Matrix_cell_t;
+class PickDeliveryOrders_t;
+class Vehicle_t;
+class Time_multipliers_t;
 
 namespace vrprouting {
 namespace pgget {

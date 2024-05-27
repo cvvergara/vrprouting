@@ -33,7 +33,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <vector>
 #include <numeric>
 
-#include "c_types/typedefs.h"
 #include "cpp_common/pickdeliver_types.hpp"
 #include "cpp_common/short_vehicle.hpp"
 #include "problem/vehicle_pickDeliver.hpp"
