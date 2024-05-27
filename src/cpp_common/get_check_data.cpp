@@ -48,16 +48,9 @@ extern "C" {
 
 #include "cpp_common/undefPostgresDefine.hpp"
 
-#include "c_common/arrays_input.h"
 #include "c_common/timeconversion.h"
 #include "cpp_common/alloc.hpp"
 #include "cpp_common/info.hpp"
-
-#include "cpp_common/vroom_types.hpp"
-#include "c_types/matrix_types.h"
-#include "c_types/vehicle_types.h"
-#include "c_types/order_types.h"
-#include "c_types/multiplier_types.h"
 
 
 namespace {

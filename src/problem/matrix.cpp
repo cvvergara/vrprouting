@@ -38,8 +38,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 
 #include "cpp_common/assert.hpp"
-#include "c_types/matrix_types.h"
-#include "c_types/multiplier_types.h"
+#include "cpp_common/pickdeliver_types.hpp"
 
 
 namespace vrprouting {
@@ -67,6 +66,8 @@ set_tdm(std::vector<Time_multipliers_t> p_multipliers) {
     }
     return tdm;
 }
+
+#if 0
 std::vector<std::tuple<TTimestamp, Multiplier>>
 set_tdm(Time_multipliers_t *p_multipliers, size_t size_multipliers) {
     pgassert(size_multipliers > 1);
@@ -83,6 +84,7 @@ set_tdm(Time_multipliers_t *p_multipliers, size_t size_multipliers) {
     }
     return tdm;
 }
+#endif
 
 /**
  * @param [in] tdm time dependant multiplier container
@@ -191,6 +193,7 @@ Matrix::Matrix(
     Base_Matrix(matrix, node_ids, multiplier),
     m_multipliers(set_tdm(multipliers)) { }
 
+#if 0
 /*
  * constructor for euclidean with time dependant multipliers
  */
@@ -200,7 +203,7 @@ Matrix::Matrix(
         Multiplier multiplier) :
     Base_Matrix(euclidean_data, multiplier),
     m_multipliers(set_tdm(multipliers, size_multipliers)) { }
-
+#endif
 
 /*
  * constructor for euclidean default multipliers

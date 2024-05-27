@@ -35,10 +35,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <string>
 #include <deque>
 
-#include "c_types/order_types.h"
-#include "c_types/vehicle_types.h"
-#include "c_types/matrix_types.h"
-#include "c_types/multiplier_types.h"
 #include "c_types/return_types.h"
 
 #include "cpp_common/alloc.hpp"

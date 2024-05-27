@@ -37,6 +37,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "c_types/typedefs.h"
 #include "cpp_common/identifiers.hpp"
+#include "cpp_common/pickdeliver_types.hpp"
+#include "cpp_common/vroom_types.hpp"
 
 #include "structures/generic/matrix.h"
 

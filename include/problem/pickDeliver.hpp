@@ -35,14 +35,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <utility>
 
 #include "c_types/return_types.h"
-#include "c_types/order_types.h"
-#include "c_types/vehicle_types.h"
 
 #include "cpp_common/messages.hpp"
 #include "problem/vehicle_node.hpp"
 #include "problem/orders.hpp"
 #include "problem/fleet.hpp"
 #include "problem/matrix.hpp"
+#include "cpp_common/pickdeliver_types.hpp"
 
 namespace vrprouting {
 namespace problem {
@@ -92,6 +91,7 @@ class PickDeliver {
             m_orders.set_compatibles();
             m_trucks.set_compatibles(m_orders);
         }
+#if 0
     PickDeliver(
             PickDeliveryOrders_t* p_orders, size_t p_orders_size,
             Vehicle_t* p_vehicles, size_t p_vehicles_size,
@@ -105,6 +105,7 @@ class PickDeliver {
             m_orders.set_compatibles();
             m_trucks.set_compatibles(m_orders);
         }
+#endif
 
     virtual ~PickDeliver() = default;
 

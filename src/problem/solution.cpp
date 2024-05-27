@@ -35,7 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <tuple>
 #include <iomanip>
 #include "problem/pickDeliver.hpp"
-#include "c_types/vehicle_types.h"
+#include "cpp_common/pickdeliver_types.hpp"
 
 
 namespace vrprouting {

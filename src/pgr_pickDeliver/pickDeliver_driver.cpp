@@ -34,12 +34,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <vector>
 #include <utility>
 
-#include "c_types/order_types.h"
-#include "c_types/return_types.h"
-#include "c_types/matrix_types.h"
 #include "cpp_common/alloc.hpp"
 #include "cpp_common/assert.hpp"
 #include "cpp_common/pgdata_getters.hpp"
+
 #include "problem/solution.hpp"
 #include "initialsol/simple.h"
 #include "optimizers/simple.h"

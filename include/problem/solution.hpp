@@ -42,7 +42,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "problem/fleet.hpp"
 #include "cpp_common/short_vehicle.hpp"
 
-typedef struct Solution_rt Solution_rt;
+using Solution_rt = struct Solution_rt;
 
 namespace vrprouting {
 namespace problem {
