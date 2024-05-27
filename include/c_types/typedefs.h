@@ -52,7 +52,6 @@ using Coordinate = double;
 using Speed = double;
 using Multiplier = double;
 
-using Vroom_rt = struct Vroom_rt;
 /*
  * Index on a container
  */
@@ -79,7 +78,6 @@ typedef uint32_t Priority;
 typedef uint32_t Distance;
 typedef uint32_t Skill;
 typedef int32_t StepType;
-typedef struct Vroom_rt Vroom_rt;
 #endif
 
 /*************************************************************************/
