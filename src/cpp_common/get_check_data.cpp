@@ -1,12 +1,10 @@
 /*PGR-GNU*****************************************************************
-File: get_check_data.c
+File: get_check_data.cpp
 
+Copyright (c) 2023 Celia Virginia Vergara Castillo
+vicky at erosion.dev
 Copyright (c) 2015 pgRouting developers
-Mail: project@pgrouting.org
-
-Developer:
-Copyright (c) 2015 Celia Virginia Vergara Castillo
-
+Mail: project@vrprouting.org
 ------
 
 This program is free software; you can redistribute it and/or modify
@@ -25,922 +23,745 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
-#include <stdbool.h>
-#include <time.h>
-#include "c_common/postgres_connection.h"
-#include <utils/date.h>  // NOLINT [build/include_order]
-#include <utils/datetime.h>  // NOLINT [build/include_order]
+#include "cpp_common/get_check_data.hpp"
 
-#include "c_common/get_check_data.h"
-#include "c_common/arrays_input.h"
 
-#include "catalog/pg_type.h"
-
-#include "c_common/debug_macro.h"
-#include "c_types/typedefs.h"
-
-static
-void
-check_interval_type(Column_info_t info) {
-  if (!(info.type == 1186)) {
-    elog(ERROR,
-        "Unexpected Column '%s' type. Expected INTERVAL",
-        info.name);
-  }
+extern "C" {
+#include <postgres.h>
+#include <executor/spi.h>
+#include <funcapi.h>
+#include <fmgr.h>
+#include <access/htup_details.h>
+#include <catalog/pg_type.h>
+#include <utils/lsyscache.h>
+#include <utils/builtins.h>
+#include <utils/timestamp.h>
+#include <utils/date.h>
+#include <utils/datetime.h>
 }
 
-/*
- * [BPCHAROID](https://doxygen.postgresql.org/include_2catalog_2pg__type_8h.html#afa7749dbe36d31874205189d9d6b21d7)
- * [INT2ARRAYOID](https://doxygen.postgresql.org/include_2catalog_2pg__type_8h.html#ac265fe7b0bb75fead13b16bf072722e9)
- */
-static
+#include <vector>
+#include <unordered_set>
+#include <string>
+#include <ctime>
+#include <limits>
+
+
+#include "cpp_common/undefPostgresDefine.hpp"
+
+#include "c_common/timeconversion.h"
+#include "cpp_common/alloc.hpp"
+#include "cpp_common/info.hpp"
+
+
+namespace {
+
 void
-check_char_type(Column_info_t info) {
-  if (!(info.type == BPCHAROID)) {
-    elog(ERROR, "Unexpected Column '%s' type. Expected CHAR", info.name);
-  }
-}
-
-static
-void
-check_text_type(Column_info_t info) {
-  if (!(info.type == TEXTOID)) {
-    elog(ERROR, "Unexpected Column '%s' type. Expected TEXT", info.name);
-  }
-}
-
-static
-void
-check_jsonb_type(Column_info_t info) {
-  if (!(info.type == JSONBOID)) {
-    elog(ERROR, "Unexpected Column '%s' type. Expected JSONB %ld", info.name, info.type);
-  }
-}
-
-static
-void
-check_integer_type(Column_info_t info) {
-  if (!(info.type == INT2OID || info.type == INT4OID)) {
-    ereport(ERROR,
-            (errmsg_internal("Unexpected type in column '%s'.", info.name),
-             errhint("Expected SMALLINT or INTEGER")));
-  }
-}
-
-static
-void
-check_any_integer_type(Column_info_t info) {
-  if (!(info.type == INT2OID
-        || info.type == INT4OID
-        || info.type == INT8OID)) {
-    ereport(ERROR,
-        (errmsg_internal("Unexpected type in column '%s'.", info.name),
-         errhint("Expected ANY-INTEGER")));
-  }
-}
-
-static
-void
-check_integerarray_type(Column_info_t info) {
-  if (!(info.type == INT2ARRAYOID
-        || info.type == INT4ARRAYOID)) {
-    elog(ERROR,
-        "Unexpected Column '%s' type. Expected SMALLINT-ARRAY or INTEGER-ARRAY",
-        info.name);
-  }
-}
-
-static
-void
-check_any_integerarray_type(Column_info_t info) {
-  if (!(info.type == INT2ARRAYOID
-        || info.type == INT4ARRAYOID
-        || info.type == 1016)) {
-    elog(ERROR,
-        "Unexpected Column '%s' type. Expected ANY-INTEGER-ARRAY",
-        info.name);
-  }
-}
-
-static
-void
-check_any_numerical_type(Column_info_t info) {
-  if (!(info.type == INT2OID
-        || info.type == INT4OID
-        || info.type == INT8OID
-        || info.type == FLOAT4OID
-        || info.type == FLOAT8OID
-        || info.type == NUMERICOID)) {
-    ereport(ERROR,
-        (errmsg_internal("Unexpected type in column '%s'.", info.name),
-         errhint("Found: %lu\nExpected ANY-NUMERICAL", info.type)));
-  }
-}
-
-static
-void
-check_timestamp_type(Column_info_t info) {
-  if (!(info.type == 1114)) {
-    elog(ERROR,
-        "Unexpected Column '%s' type. Expected TIMESTAMP",
-        info.name);
-  }
-}
-
-static
-bool
-fetch_column_info(
-    Column_info_t *info) {
-  /*
-   * [SPI_fnumber](https://www.postgresql.org/docs/12/spi-spi-fnumber.html)
-   */
-  info->colNumber =  SPI_fnumber(SPI_tuptable->tupdesc, info->name);
-  if (info->strict && !column_found(info->colNumber)) {
-    elog(ERROR, "Column '%s' not Found", info->name);
-  }
-
-  if (column_found(info->colNumber)) {
-    /*
-     * [SPI_gettypeid](https://www.postgresql.org/docs/12/spi-spi-gettypeid.html)
-     */
-    (info->type) = SPI_gettypeid(SPI_tuptable->tupdesc, (info->colNumber));
-    PGR_DBG("%s %ld", info->name, info->type);
-    if (SPI_result == SPI_ERROR_NOATTRIBUTE) {
-      elog(ERROR, "Type of column '%s' not Found", info->name);
+check_interval_type(const vrprouting::Info &info) {
+    if (!(info.type == 1186)) {
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected INTERVAL";
     }
-    return true;
-  }
-  return false;
 }
 
-static
-int32_t
-spi_getInt(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info) {
-  Datum binval;
-  bool isnull;
-  int32_t value = 0;
-  binval = SPI_getbinval(*tuple, *tupdesc, info.colNumber, &isnull);
-
-  if (isnull) elog(ERROR, "Unexpected Null value in column %s", info.name);
-
-  switch (info.type) {
-    case INT2OID:
-      value = (int32_t) DatumGetInt16(binval);
-      break;
-    case INT4OID:
-      value = (int32_t) DatumGetInt32(binval);
-      break;
-    default:
-    ereport(ERROR,
-        (errmsg_internal("Unexpected type in column '%s'.", info.name),
-         errhint("Found: %lu\nExpected INTEGER", info.type)));
-  }
-  return value;
+void
+check_jsonb_type(vrprouting::Info info) {
+    if (!(info.type == JSONBOID)) {
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected JSONB";
+    }
 }
 
-static
-int64_t
-spi_getBigInt(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info) {
-  Datum binval;
-  bool isnull;
-  int64_t value = 0;
-  binval = SPI_getbinval(*tuple, *tupdesc, info.colNumber, &isnull);
-
-  if (isnull) elog(ERROR, "Unexpected Null value in column %s", info.name);
-
-  switch (info.type) {
-    case INT2OID:
-      value = (int64_t) DatumGetInt16(binval);
-      break;
-    case INT4OID:
-      value = (int64_t) DatumGetInt32(binval);
-      break;
-    case INT8OID:
-      value = DatumGetInt64(binval);
-      break;
-    default:
-    ereport(ERROR,
-        (errmsg_internal("Unexpected type in column '%s'.", info.name),
-         errhint("Found: %lu\nExpected ANY-INTEGER", info.type)));
-  }
-  return value;
+void
+check_integer_type(vrprouting::Info info) {
+    if (!(info.type == INT2OID || info.type == INT4OID)) {
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected SMALLINT or INTEGER";
+    }
 }
 
-static
-TTimestamp
-spi_getTimeStamp(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info) {
-  Datum binval;
-  bool isnull;
-  TTimestamp value = 0;
-  binval = SPI_getbinval(*tuple, *tupdesc, info.colNumber, &isnull);
-
-  if (isnull) elog(ERROR, "Unexpected Null value in column %s", info.name);
-
-  switch (info.type) {
-    case 1114:
-      value = timestamp_without_timezone((TTimestamp) Int64GetDatum(binval));
-      break;
-    default:
-      elog(ERROR,
-          "[SPI_getTimeStamp] Unexpected type in column %s. found %ld expected 1114",
-          info.name, info.type);
-  }
-  return value;
+void
+check_integerarray_type(vrprouting::Info info) {
+    if (!(info.type == INT2ARRAYOID || info.type == INT4ARRAYOID)) {
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected INTEGER-ARRAY";
+    }
 }
 
-static
+/**
+ * @brief The function check whether column type is ANY-INTEGER-ARRAY or not.
+ *
+ * Where ANY-INTEGER-ARRAY is SQL type:
+ *   SMALLINT[], INTEGER[], BIGINT[]
+ *
+ * @param[in] info contain column information.
+ * @throw ERROR Unexpected type in column. Expected ANY-INTEGER-ARRAY.
+ */
+
+void
+check_any_integerarray_type(vrprouting::Info info) {
+    if (!(info.type == INT2ARRAYOID
+                || info.type == INT4ARRAYOID
+                || info.type == 1016)) {
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected ANY-INTEGER-ARRAY";
+    }
+}
+
+void
+check_timestamp_type(vrprouting::Info info) {
+    if (!(info.type == 1114)) {
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected TIMESTAMP";
+    }
+}
+
+
+/** @brief Function tells expected type of each column and then check the correspondence type of each column.
+ *
+ * [SPI_fnumber](https://www.postgresql.org/docs/current/spi-spi-fnumber.html)
+ * [SPI_gettypeid](https://www.postgresql.org/docs/9.1/static/spi-spi-gettypeid.html)
+ * @param[in] tupdesc  tuple description.
+ * @param[in] info     contain one or more column information.
+ * @throw column not found.
+ * @throw ERROR Unknown type of column.
+ * @return @b TRUE when column exist.
+ *        @b FALSE when column was not found.
+ */
+bool
+get_column_info(const TupleDesc &tupdesc, vrprouting::Info &info) {
+    info.colNumber =  SPI_fnumber(tupdesc, info.name.c_str());
+    if (info.strict && info.colNumber == SPI_ERROR_NOATTRIBUTE) {
+        throw std::string("Column '") + info.name + "' not Found";
+    }
+
+    if (info.colNumber != SPI_ERROR_NOATTRIBUTE) {
+        info.type = SPI_gettypeid(tupdesc, info.colNumber);
+        if (info.type == InvalidOid) {
+            throw std::string("Type of column '") + info.name + "' not Found";
+        }
+        return true;
+    }
+    return false;
+}
+
+/** @brief The function check whether column type is ANY-INTEGER or not.
+ *
+ * Where ANY-INTEGER is SQL type: SMALLINT, INTEGER, BIGINT
+ *
+ * @param[in] info contain column information.
+ * @throw ERROR Unexpected type in column. Expected column type is ANY-INTEGER.
+ */
+void
+check_any_integer_type(const vrprouting::Info &info) {
+    if (!(info.type == INT2OID
+                || info.type == INT4OID
+                || info.type == INT8OID)) {
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected ANY-INTEGER";
+    }
+}
+
+/**
+ * @brief The function check whether column type is ANY-NUMERICAL.
+ *        Where ANY-NUMERICAL is SQL type:
+ *             SMALLINT, INTEGER, BIGINT, REAL, FLOAT
+ *
+ * @param[in] info contain column information.
+ * @throw ERROR Unexpected type in column. Expected column type is ANY-NUMERICAL.
+ */
+void check_any_numerical_type(const vrprouting::Info &info) {
+    if (!(info.type == INT2OID
+                || info.type == INT4OID
+                || info.type == INT8OID
+                || info.type == FLOAT4OID
+                || info.type == FLOAT8OID
+                || info.type == NUMERICOID)) {
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected ANY-NUMERICAL";
+    }
+}
+
+/**
+ * @brief The function check whether column type is TEXT or not.
+ *       Where TEXT is SQL type:
+ *             TEXT
+ *
+ * @param[in] info contain column information.
+ * @throw ERROR Unexpected type in column. Expected column type is TEXT.
+ */
+void
+check_text_type(const vrprouting::Info &info) {
+    if (!(info.type == TEXTOID)) {
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected TEXT";
+    }
+}
+
+/**
+ * @brief The function check whether column type is CHAR or not.
+ *        Where CHAR is SQL type:
+ *             CHARACTER
+ *
+ * [BPCHAROID](https://doxygen.postgresql.org/include_2catalog_2pg__type_8h.html#afa7749dbe36d31874205189d9d6b21d7)
+ * @param[in] info contain column information.
+ * @throw ERROR Unexpected type in column. Expected column type is CHAR.
+ */
+void
+check_char_type(const vrprouting::Info &info) {
+    if (!(info.type == BPCHAROID)) {
+        throw std::string("Unexpected type in column '") + info.name + "'. Expected TEXT";
+    }
+}
+
 TInterval
-spi_getInterval(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info) {
-  Datum binval;
-  bool isnull;
-  Interval*   interval;
+getInterval(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info) {
+    Datum binval;
+    bool isnull;
+    Interval*   interval;
 
-  binval = SPI_getbinval(*tuple, *tupdesc, info.colNumber, &isnull);
+    binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isnull);
 
-  if (isnull) elog(ERROR, "Unexpected Null value in column %s", info.name);
+    if (isnull) throw std::string("Unexpected Null value in column ") + info.name;
 
-  switch (info.type) {
-    case INTERVALOID:
-      interval = DatumGetIntervalP(binval);
-      break;
-    default:
-      elog(ERROR,
-          "[spi_getInterval] Unexpected type in column %s. found %ld expected %d",
-          info.name, info.type, INTERVALOID);
-  }
-  PGR_DBG("time %ld secs %ld", interval->time,
-      interval->time / 1000000
-      + interval->day * SECS_PER_DAY
-      + (int64_t)(interval->month * ((DAYS_PER_YEAR / (double) MONTHS_PER_YEAR) * SECS_PER_DAY)));
+    switch (info.type) {
+        case INTERVALOID:
+            interval = DatumGetIntervalP(binval);
+            break;
+        default:
+            throw std::string("Unexpected type value in column '") + info.name + "'. Expected INTERVALOID";
+    }
 
-  return interval->time / 1000000
-    + interval->day * SECS_PER_DAY
-    + (int64_t)(interval->month * ((DAYS_PER_YEAR / (double) MONTHS_PER_YEAR) * SECS_PER_DAY));
+    return interval->time / 1000000
+        + interval->day * SECS_PER_DAY
+        + (int64_t)(interval->month * ((DAYS_PER_YEAR / static_cast<double>(MONTHS_PER_YEAR)) * SECS_PER_DAY));
 }
 
-/*
-  @param[in]  tuple         input row to be examined.
-  @param[in]  tupdesc       input row description.
-  @param[in]  info          contain column information.
-  @param[in]  default_value returned when column contain NULL value.
+TTimestamp
+getTimeStamp(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info) {
+    Datum binval;
+    bool isnull;
+    TTimestamp value = 0;
+    binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isnull);
 
-  @throw ERROR Unexpected Column type. Expected column type is CHAR.
-  @throw ERROR When value of column is NULL.
+    if (isnull) throw std::string("Unexpected Null value in column ") + info.name;
 
-  @return Char type of column value is returned.
+    switch (info.type) {
+        case 1114:
+            value = vrp_timestamp_without_timezone((TTimestamp) Int64GetDatum(binval));
+            break;
+        default:
+            throw std::string("Unexpected type value in column '") + info.name + "'. Expected 1114";
+    }
+    return value;
+}
 
+/**
+ * @param[in] tuple   input row to be examined.
+ * @param[in] tupdesc  tuple descriptor
+ * @param[in] info    contain column information.
+ * @throw ERROR Unexpected type in column. Expected column type is ANY-INTEGER.
+ * @throw ERROR When value of column is NULL.
+ *
+ * @return Integer type of column value is returned.
+ */
+int64_t getBigInt(
+        const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info) {
+    Datum binval;
+    bool isnull;
+    int64_t value = 0;
+    binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isnull);
+    if (isnull)
+        throw std::string("Unexpected Null value in column ") + info.name;
+    switch (info.type) {
+        case INT2OID:
+            value = (int64_t) DatumGetInt16(binval);
+            break;
+        case INT4OID:
+            value = (int64_t) DatumGetInt32(binval);
+            break;
+        case INT8OID:
+            value = DatumGetInt64(binval);
+            break;
+        default:
+            throw std::string("Unexpected type in column type of ") + info.name + ". Expected ANY-INTEGER";
+    }
+    return value;
+}
+
+/**
+ * @param[in] tuple   input row to be examined.
+ * @param[in] tupdesc  tuple descriptor
+ * @param[in] info    contain column information.
+ * @throw ERROR Unexpected type in column. Expected column type is ANY-NUMERICAL.
+ * @throw ERROR When value of column is NULL.
+ * @return Double type of column value is returned.
+ */
+double getFloat8(
+        const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info) {
+    Datum binval;
+    bool isnull = false;
+    binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isnull);
+    if (isnull)
+        throw std::string("Unexpected Null value in column ") + info.name;
+
+    switch (info.type) {
+        case INT2OID:
+            return static_cast<double>(DatumGetInt16(binval));
+            break;
+        case INT4OID:
+            return static_cast<double>(DatumGetInt32(binval));
+            break;
+        case INT8OID:
+            return static_cast<double>(DatumGetInt64(binval));
+            break;
+        case FLOAT4OID:
+            return static_cast<double>(DatumGetFloat4(binval));
+            break;
+        case FLOAT8OID:
+            return static_cast<double>(DatumGetFloat8(binval));
+            break;
+        case NUMERICOID:
+            /* Note: out-of-range values will be clamped to +-HUGE_VAL */
+            return static_cast<double>(DatumGetFloat8(DirectFunctionCall1(numeric_float8_no_overflow, binval)));
+            break;
+        default:
+            throw std::string("Unexpected type in column type of ") + info.name + ". Expected ANY-NUMERICAL";
+    }
+    return 0.0;
+}
+
+/**
  * http://doxygen.postgresql.org/include_2catalog_2pg__type_8h.html;
  * [SPI_getbinval](https://www.postgresql.org/docs/8.1/static/spi-spi-getbinval.html)
  * [Datum](https://doxygen.postgresql.org/datum_8h.html)
  * [DatumGetInt16](https://doxygen.postgresql.org/postgres_8h.html#aec991e04209850f29a8a63df0c78ba2d)
+ *
+ * @param[in] tuple         input row to be examined.
+ * @param[in] tupdesc       tuple descriptor
+ * @param[in] info          contain column information.
+ * @param[in] default_value returned when column contain NULL value.
+ * @throw ERROR Unexpected type in column. Expected column type is CHAR.
+ * @throw ERROR When value of column is NULL.
+ * @return Char type of column value is returned.
  */
-char
-spi_getChar(
-    HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, char default_value) {
-  Datum binval;
-  bool isNull;
-  char value = default_value;
+char getChar(
+        const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::Info &info, char default_value) {
+    Datum binval;
+    bool isNull;
+    char value = default_value;
 
-  binval = SPI_getbinval(*tuple, *tupdesc, info.colNumber, &isNull);
-  if (!(info.type == BPCHAROID)) {
-    elog(ERROR, "Unexpected Column type of %s. Expected CHAR", info.name);
-  }
-  if (!isNull) {
-    value =  ((char*)binval)[1];
-  } else {
-    if (info.strict) {
-      elog(ERROR, "Unexpected Null value in column %s", info.name);
+    binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isNull);
+    if (!(info.type == BPCHAROID)) {
+        throw std::string("Unexpected type in column type of ") + info.name + ". Expected CHAR";
     }
-    value = default_value;
-  }
-  return value;
-}
 
-int32_t
-spi_getMaxTasks(
-    HeapTuple *tuple,
-    TupleDesc *tupdesc,
-    Column_info_t info) {
-  int32_t value = spi_getInt(tuple, tupdesc, info);
-  if (value < 0) {
-    ereport(
-        ERROR,
-        (errmsg("Invalid max_tasks value %d", value),
-         errhint(
-             "Maximum number of tasks must be greater than or equal to 0")));
-  }
-  return value;
-}
-
-int64_t*
-spi_getBigIntArr(
-    HeapTuple *tuple,
-    TupleDesc *tupdesc,
-    Column_info_t info,
-    size_t *the_size) {
-  bool is_null = false;
-
-  Datum raw_array = SPI_getbinval(*tuple, *tupdesc, info.colNumber, &is_null);
-  /*
-   * [DatumGetArrayTypeP](https://doxygen.postgresql.org/array_8h.html#aa1b8e77c103863862e06a7b7c07ec532)
-   * [pgr_get_bigIntArray](http://docs.pgrouting.org/doxy/2.2/arrays__input_8c_source.html)
-   */
-  ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
-
-  return pgr_get_bigIntArray((size_t*)the_size, pg_array);
-}
-
-int64_t*
-spi_getBigIntArr_allowEmpty(
-    HeapTuple *tuple,
-    TupleDesc *tupdesc,
-    Column_info_t info,
-    size_t *the_size) {
-  bool is_null = false;
-
-  Datum raw_array = SPI_getbinval(*tuple, *tupdesc, info.colNumber, &is_null);
-  /*
-   * [DatumGetArrayTypeP](https://doxygen.postgresql.org/array_8h.html#aa1b8e77c103863862e06a7b7c07ec532)
-   * [pgr_get_bigIntArray](http://docs.pgrouting.org/doxy/2.2/arrays__input_8c_source.html)
-   */
-  if (!raw_array) {
-    *the_size = 0;
-    return  NULL;
-  }
-
-  ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
-
-  return pgr_get_bigIntArray_allowEmpty(the_size, pg_array);
-}
-
-int64_t*
-spi_getPositiveBigIntArr_allowEmpty(
-    HeapTuple *tuple,
-    TupleDesc *tupdesc,
-    Column_info_t info,
-    size_t *the_size) {
-  int64_t *array = spi_getBigIntArr_allowEmpty(tuple, tupdesc, info, the_size);
-  for (size_t i = 0; i < *the_size; i++) {
-    if (array[i] < 0) {
-      elog(ERROR, "Unexpected Negative value %ld in array", array[i]);
+    if (!isNull) {
+        value =  reinterpret_cast<char*>(binval)[1];
+    } else {
+        if (info.strict) {
+            throw std::string("Unexpected Null value in column ") + info.name;
+        }
+        value = default_value;
     }
-  }
-  return array;
-}
-
-
-uint32_t*
-spi_getPositiveIntArr_allowEmpty(
-    HeapTuple *tuple,
-    TupleDesc *tupdesc,
-    Column_info_t info,
-    size_t *the_size) {
-  bool is_null = false;
-
-  Datum raw_array = SPI_getbinval(*tuple, *tupdesc, info.colNumber, &is_null);
-  if (!raw_array) {
-    *the_size = 0;
-    return  NULL;
-  }
-
-  ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
-
-  return pgr_get_positiveIntArray_allowEmpty(the_size, pg_array);
-}
-
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- */
-TTimestamp
-get_TTimestamp_plain(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, TTimestamp opt_value) {
-  return column_found(info.colNumber)?
-    (TTimestamp)spi_getBigInt(tuple, tupdesc, info)
-    : opt_value;
-}
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for positive values only
- */
-TTimestamp
-get_PositiveTTimestamp_plain(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, TTimestamp opt_value) {
-  TTimestamp value = get_TTimestamp_plain(tuple, tupdesc, info, opt_value);
-  if (value < 0) elog(ERROR, "Unexpected Negative value in column %s", info.name);
-  return value;
-}
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- */
-TTimestamp
-get_TTimestamp(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, TTimestamp opt_value) {
-  return column_found(info.colNumber)?
-    spi_getTimeStamp(tuple, tupdesc, info)
-    : opt_value;
-}
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for positive values only
- */
-TTimestamp
-get_PositiveTTimestamp(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, TTimestamp opt_value) {
-  TTimestamp value = get_TTimestamp(tuple, tupdesc, info, opt_value);
-  if (value < 0) elog(ERROR, "Unexpected Negative value in column %s", info.name);
-  return value;
-}
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- */
-TInterval
-get_TInterval(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, TInterval opt_value) {
-  return column_found(info.colNumber)?
-    (TInterval)spi_getInterval(tuple, tupdesc, info)
-    : opt_value;
-}
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for positive values only
- */
-TInterval
-get_PositiveTInterval(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, TInterval opt_value) {
-  TInterval value = get_TInterval(tuple, tupdesc, info, opt_value);
-  if (value < 0) elog(ERROR, "Unexpected Negative value in column %s", info.name);
-  return (TInterval) value;
-}
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- */
-TInterval
-get_TInterval_plain(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, TInterval opt_value) {
-  return column_found(info.colNumber)?
-    (TInterval)spi_getBigInt(tuple, tupdesc, info)
-    : opt_value;
-}
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for positive values only
- */
-TInterval
-get_PositiveTInterval_plain(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, TInterval opt_value) {
-  TInterval value = get_TInterval_plain(tuple, tupdesc, info, opt_value);
-  if (value < 0) elog(ERROR, "Unexpected Negative value in column %s", info.name);
-  return (TInterval) value;
-}
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- */
-Id
-get_Id(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, Id opt_value) {
-  return column_found(info.colNumber)?
-    (Id)spi_getBigInt(tuple, tupdesc, info)
-    : opt_value;
-}
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is not positive
- * @pre for positive values only
- */
-Idx
-get_Idx(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, Idx opt_value) {
-  Id value = get_Id(tuple, tupdesc, info, 0);
-  if (value <= 0) elog(ERROR, "Unexpected Negative value or Zero in column %s", info.name);
-  return column_found(info.colNumber)? (Idx) value : opt_value;
-}
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- */
-StepType get_StepType(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info,
-                  StepType opt_value) {
-  StepType step_type = column_found(info.colNumber)
-                           ? spi_getInt(tuple, tupdesc, info)
-                           : opt_value;
-  StepType min_value = 1;
-  StepType max_value = 6;
-  if (step_type < min_value || step_type > max_value) {
-    elog(ERROR, "Step value should lie between %d and %d", min_value, max_value);
-  }
-  return step_type;
-}
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- */
-Amount
-get_Amount(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, Amount opt_value) {
-  return (Amount) column_found(info.colNumber)?
-    spi_getBigInt(tuple, tupdesc, info)
-    : opt_value;
-}
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for non-negative values only
- */
-PAmount
-get_PositiveAmount(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, PAmount opt_value) {
-  Amount value = get_Amount(tuple, tupdesc, info, 0);
-  if (value < 0) elog(ERROR, "Unexpected Negative value in column %s", info.name);
-  return column_found(info.colNumber)? (PAmount) value : opt_value;
-}
-
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is not positive
- * @pre for positive values only
- */
-MatrixIndex
-get_MatrixIndex(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, MatrixIndex opt_value) {
-  if (column_found(info.colNumber)) {
-    int64_t value = spi_getBigInt(tuple, tupdesc, info);
-    if (value < 0) elog(ERROR, "Unexpected Negative value in column %s", info.name);
-    return (MatrixIndex) value;
-  }
-  return opt_value;
-}
-
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for non-negative values only
- */
-Duration
-get_Duration(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, Duration opt_value) {
-  if (column_found(info.colNumber)) {
-    int32_t value = spi_getInt(tuple, tupdesc, info);
-    if (value < 0) elog(ERROR, "Unexpected Negative value in column %s", info.name);
-    return (Duration) value;
-  }
-  return opt_value;
-}
-
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for non-negative values only
- */
-TravelCost
-get_Cost(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, TravelCost opt_value) {
-  if (column_found(info.colNumber)) {
-    int32_t value = spi_getInt(tuple, tupdesc, info);
-    if (value < 0) elog(ERROR, "Unexpected Negative value in column %s", info.name);
-    return (TravelCost)value;
-  }
-  return opt_value;
-}
-
-
-/**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
- *
- * @returns The value found
- * @returns opt_value when the column does not exist
- *
- */
-char
-get_Kind(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, char opt_value) {
-  if (column_found(info.colNumber)) {
-    char value = spi_getChar(tuple, tupdesc, info, opt_value);
     return value;
-  }
-  return opt_value;
 }
 
 
+/** @brief get the array contents from postgres
+ *
+ * @details This function generates the array inputs according to their type
+ * received through @a ArrayType *v parameter and store them in @a c_array. It
+ * can be empty also if received @a allow_empty true. The cases of failure are:-
+ * 1. When @a ndim is not equal to one dimension.
+ * 2. When no element is found i.e. nitems is zero or negative.
+ * 3. If the element type doesn't lie in switch cases, give the error of expected array of any integer type
+ * 4. When size of @a c_array is out of range or memory.
+ * 5. When null value is found in the array.
+ *
+ * All these failures are represented as error through @a elog.
+ * @param[in] v Pointer to the postgres C array
+ *
+ * @pre the array has to be one dimension
+ * @pre Must have elements (when allow_empty is false)
+ *
+ * @returns set of elements on the PostgreSQL array
+ */
+std::unordered_set<uint32_t>
+pgarray_to_unordered_set(ArrayType *v) {
+    std::unordered_set<uint32_t> results;
+
+    if (!v) return results;
+
+    auto    element_type = ARR_ELEMTYPE(v);
+    auto    dim = ARR_DIMS(v);
+    auto    ndim = ARR_NDIM(v);
+    auto    nitems = ArrayGetNItems(ndim, dim);
+    Datum  *elements = nullptr;
+    bool   *nulls = nullptr;
+    int16   typlen;
+    bool    typbyval;
+    char    typalign;
+
+
+    if (ndim == 0 || nitems <= 0) {
+        return results;
+    }
+
+    if (ndim != 1) {
+        throw std::string("One dimension expected");
+    }
+
+    get_typlenbyvalalign(element_type, &typlen, &typbyval, &typalign);
+
+    switch (element_type) {
+        case INT2OID:
+        case INT4OID:
+        case INT8OID:
+            break;
+        default:
+            throw std::string("Expected array of ANY-INTEGER");
+    }
+
+    deconstruct_array(v, element_type, typlen, typbyval,
+            typalign, &elements, &nulls,
+            &nitems);
+
+    int64_t data(0);
+
+    for (int i = 0; i < nitems; i++) {
+        if (nulls[i]) {
+            throw std::string("NULL value found in Array!");
+        } else {
+            switch (element_type) {
+                case INT2OID:
+                    data = static_cast<int64_t>(DatumGetInt16(elements[i]));
+                    break;
+                case INT4OID:
+                    data = static_cast<int64_t>(DatumGetInt32(elements[i]));
+                    break;
+                case INT8OID:
+                    data = DatumGetInt64(elements[i]);
+                    break;
+            }
+        }
+        /*
+         * Before saving, check if its a uint32_t
+         */
+
+        if (data < 0 || data > std::numeric_limits<uint32_t>::max()) {
+            throw std::string("Illegal value found on array");
+        }
+        results.insert(static_cast<uint32_t>(data));
+    }
+
+    pfree(elements);
+    pfree(nulls);
+    return results;
+}
+
+/** @brief get the array contents from postgres
+ *
+ * @details This function generates the array inputs according to their type
+ * received through @a ArrayType *v parameter and store them in @a c_array. It
+ * can be empty also if received @a allow_empty true. The cases of failure are:-
+ * 1. When @a ndim is not equal to one dimension.
+ * 2. When no element is found i.e. nitems is zero or negative.
+ * 3. If the element type doesn't lie in switch cases, give the error of expected array of any integer type
+ * 4. When size of @a c_array is out of range or memory.
+ * 5. When null value is found in the array.
+ *
+ * All these failures are represented as error through @a elog.
+ * @param[in] v Pointer to the postgres C array
+ * @param[in] allow_empty flag to allow empty arrays
+ *
+ * @pre the array has to be one dimension
+ * @pre Must have elements (when allow_empty is false)
+ *
+ * @returns Vector of elements of the PostgreSQL array
+ */
+std::vector<int64_t>
+get_pgarray(ArrayType *v, bool allow_empty) {
+    std::vector<int64_t> results;
+    if (!v) return results;
+
+    auto    element_type = ARR_ELEMTYPE(v);
+    auto    dim = ARR_DIMS(v);
+    auto    ndim = ARR_NDIM(v);
+    auto    nitems = ArrayGetNItems(ndim, dim);
+    Datum  *elements = nullptr;
+    bool   *nulls = nullptr;
+    int16   typlen;
+    bool    typbyval;
+    char    typalign;
+
+
+    if (allow_empty && (ndim == 0 || nitems <= 0)) {
+        return results;
+    }
+
+    if (ndim != 1) {
+        throw std::string("One dimension expected");
+    }
+
+    if (nitems <= 0) {
+        throw std::string("No elements found");
+    }
+
+    get_typlenbyvalalign(element_type, &typlen, &typbyval, &typalign);
+
+    /* validate input data type */
+    switch (element_type) {
+        case INT2OID:
+        case INT4OID:
+        case INT8OID:
+            break;
+        default:
+            throw std::string("Expected array of ANY-INTEGER");
+    }
+
+    deconstruct_array(v, element_type, typlen, typbyval,
+            typalign, &elements, &nulls,
+            &nitems);
+
+    int64_t data(0);
+
+    results.reserve(static_cast<size_t>(nitems));
+
+    for (int i = 0; i < nitems; i++) {
+        if (nulls[i]) {
+            throw std::string("NULL value found in Array!");
+        } else {
+            switch (element_type) {
+                case INT2OID:
+                    data = static_cast<int64_t>(DatumGetInt16(elements[i]));
+                    break;
+                case INT4OID:
+                    data = static_cast<int64_t>(DatumGetInt32(elements[i]));
+                    break;
+                case INT8OID:
+                    data = DatumGetInt64(elements[i]);
+                    break;
+            }
+        }
+        results.push_back(data);
+    }
+
+    pfree(elements);
+    pfree(nulls);
+    return results;
+}
+
+std::vector<int64_t>
+get_BigIntArr_wEmpty(
+        const HeapTuple tuple, const TupleDesc &tupdesc,
+        const vrprouting::Info &info) {
+    bool is_null = false;
+
+    Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
+    /*
+     * [DatumGetArrayTypeP](https://doxygen.postgresql.org/array_8h.html#aa1b8e77c103863862e06a7b7c07ec532)
+     * [pgr_get_bigIntArray](http://docs.vrprouting.org/doxy/2.2/arrays__input_8c_source.html)
+     */
+    if (!raw_array) return std::vector<int64_t>();
+
+    ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
+
+    return get_pgarray(pg_array, true);
+}
+
+}  // namespace
+
+namespace vrprouting {
+
+namespace detail {
+std::vector<int64_t>
+get_any_positive_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info) {
+    if (!column_found(info)) return std::vector<int64_t>();
+    auto data = get_BigIntArr_wEmpty(tuple, tupdesc, info);
+    for (const auto &e : data) {
+        if (e < 0) throw std::string("Unexpected negative value in array '") + info.name + "'";
+    }
+    return data;
+}
+
+std::vector<uint32_t>
+get_uint_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info) {
+    bool is_null = false;
+
+    Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
+    if (!raw_array) return  std::vector<uint32_t>();
+
+    ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
+
+    auto data = get_pgarray(pg_array, true);
+    std::vector<uint32_t> results(data.begin(), data.end());
+    return results;
+}
+
 /**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
+ * @param [in] tuple
+ * @param [in] tupdesc
+ * @param [in] info about the column been fetched
+ * @param [in] opt_value default value when the column does not exist
  *
  * @returns The value found
  * @returns opt_value when the column does not exist
  *
  * exceptions when the value is negative
- * @pre for non-negative values only
+ * @pre for positive values only
  */
-Priority
-get_Priority(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, Priority opt_value) {
-  if (column_found(info.colNumber)) {
-    int32_t value = spi_getInt(tuple, tupdesc, info);
-    if (value < 0) elog(ERROR, "Unexpected Negative value in column %s", info.name);
-    if (value > 100) elog(ERROR, "Priority exceeds the max priority 100");
-    return (Priority) value;
-  }
-  return opt_value;
+TInterval
+get_interval(
+        const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, TInterval opt_value) {
+    TInterval value = column_found(info)? getInterval(tuple, tupdesc, info) : opt_value;
+    if (value < 0) throw std::string("Unexpected negative value in column '") + info.name + "'";
+    return (TInterval) value;
 }
 
-
 /**
- * @params [in] tuple
- * @params [in] tupdesc
- * @params [in] info about the column been fetched
- * @params [in] opt_value default value when the column does not exist
+ * @param [in] tuple
+ * @param [in] tupdesc
+ * @param [in] info about the column been fetched
+ * @param [in] opt_value default value when the column does not exist
  *
  * @returns The value found
  * @returns opt_value when the column does not exist
- *
- * exceptions when the value is negative
- * @pre for non-negative values only
- */
-Distance
-get_Distance(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, Distance opt_value) {
-  if (column_found(info.colNumber)) {
-    int32_t value = spi_getInt(tuple, tupdesc, info);
-    if (value < 0) elog(ERROR, "Unexpected Negative value in column %s", info.name);
-    return (Distance) value;
-  }
-  return opt_value;
-}
-
-
-double
-spi_getFloat8(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info) {
-  Datum binval;
-  bool isnull = false;
-  double value = 0.0;
-  binval = SPI_getbinval(*tuple, *tupdesc, info.colNumber, &isnull);
-  if (isnull)
-    elog(ERROR, "Unexpected Null value in column %s", info.name);
-
-  switch (info.type) {
-    case INT2OID:
-      value = (double) DatumGetInt16(binval);
-      break;
-    case INT4OID:
-      value = (double) DatumGetInt32(binval);
-      break;
-    case INT8OID:
-      value = (double) DatumGetInt64(binval);
-      break;
-    case FLOAT4OID:
-      value = (double) DatumGetFloat4(binval);
-      break;
-    case FLOAT8OID:
-      value = DatumGetFloat8(binval);
-      break;
-    case NUMERICOID:
-      /* Note: out-of-range values will be clamped to +-HUGE_VAL */
-      value = (double) DatumGetFloat8(DirectFunctionCall1(numeric_float8_no_overflow, binval));
-      break;
-    default:
-    ereport(ERROR,
-        (errmsg_internal("Unexpected type in column '%s'.", info.name),
-         errhint("Found: %lu\nExpected ANY-NUMERICAL", info.type)));
-  }
-  return value;
-}
-
-Coordinate
-spi_getCoordinate(HeapTuple *tuple, TupleDesc *tupdesc, Column_info_t info, Coordinate opt_value) {
-  return column_found(info.colNumber)?
-    (Coordinate) spi_getFloat8(tuple, tupdesc, info)
-    : opt_value;
-}
-
-/**
- * under development
- */
-/*
- * [DatumGetCString](https://doxygen.postgresql.org/postgres_8h.html#ae401c8476d1a12b420e3061823a206a7)
- */
-char*
-spi_getText(HeapTuple *tuple, TupleDesc *tupdesc,  Column_info_t info) {
-  char *val = DatumGetCString(SPI_getvalue(*tuple, *tupdesc, info.colNumber));
-  return val;
-}
-
-/**
- * Steps:
- * 1) Similar to: https://doxygen.postgresql.org/backend_2utils_2adt_2timestamp_8c.html#a52973f03ed8296b632d4028121f7e077
- * 2) Using time.h to convert
- *
- * from time.h
- * struct tm
- * timezone
  */
 TTimestamp
-timestamp_without_timezone(TTimestamp timestamp) {
-  /*
-   * step 1
-   */
-  Timestamp date;
-  Timestamp time = timestamp;
-  TMODULO(time, date, USECS_PER_DAY);
-  if (time < INT64CONST(0)) {
-    time += USECS_PER_DAY;
-    date -= 1;
-  }
-  date += POSTGRES_EPOCH_JDATE;
-  /* Julian day routine does not work for negative Julian days */
-  if (date < 0 || date > (Timestamp) INT_MAX) {
-    ereport(ERROR,
-        (errcode(ERRCODE_INTERNAL_ERROR),
-         errmsg("Julian day routine does not work for negative Julian days")));
-  }
-
-  /*
-   * using structure from time.h to store values
-   */
-  struct tm info;
-  fsec_t fsec;
-
-  /*
-   * calling postgres functions
-   */
-  j2date((int) date, &info.tm_year, &info.tm_mon, &info.tm_mday);
-  dt2time(time, &info.tm_hour, &info.tm_min, &info.tm_sec, &fsec);
-
-  /*
-   * adjust values before calling mktime
-   */
-  info.tm_isdst = -1;
-  info.tm_year = info.tm_year - 1900;
-  info.tm_mon = info.tm_mon - 1;
-
-  /*
-   * mktime & timezone are defined in time.h
-   */
-  return mktime(&info) - timezone;
+get_timestamp(
+        const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, TTimestamp opt_value) {
+    return column_found(info)?  getTimeStamp(tuple, tupdesc, info) : opt_value;
 }
 
+/**
+ * @param [in] tuple from postgres
+ * @param [in] tupdesc from postgres
+ * @param [in] info about the column been fetched
+ * @param [in] opt_value default value when the column does not exist
+ *
+ * @returns The value found
+ * @returns opt_value when the column does not exist
+ *
+ * Used with vrprouting::ANY_INTEGER
+ */
+int64_t
+get_anyinteger(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, int64_t opt_value) {
+    return column_found(info)? getBigInt(tuple, tupdesc, info) : opt_value;
+}
+}  // namespace detail
 
-/*
- * @param[in] colNumber Column number (count starts at 1).
-
- * [SPI_ERROR_NOATTRIBUTE](https://doxygen.postgresql.org/spi_8h.html#ac1512d8aaa23c2d57bb0d1eb8f453ee2)
+/**
+ * @param[in] info column information
  * @return @b TRUE when colNumber exist.
  *         @b FALSE when colNumber was not found.
-*/
-bool
-column_found(int colNumber) {
-    return !(colNumber == SPI_ERROR_NOATTRIBUTE);
+ *
+ * [SPI_ERROR_NOATTRIBUTE](https://doxygen.postgresql.org/spi_8h.html#ac1512d8aaa23c2d57bb0d1eb8f453ee2)
+ */
+bool column_found(const Info &info) {
+    return !(info.colNumber == SPI_ERROR_NOATTRIBUTE);
 }
 
 
-void pgr_fetch_column_info(
-    Column_info_t info[],
-    int info_size) {
-  for (int i = 0; i < info_size; ++i) {
-    if (fetch_column_info(&info[i])) {
-      switch (info[i].eType) {
-        case INTEGER:
-          check_integer_type(info[i]);
-          break;
-        case ANY_INTEGER:
-          check_any_integer_type(info[i]);
-          break;
-        case ANY_NUMERICAL:
-          check_any_numerical_type(info[i]);
-          break;
-        case TEXT:
-          check_text_type(info[i]);
-          break;
-        case JSONB:
-          check_jsonb_type(info[i]);
-          break;
-        case CHAR1:
-          check_char_type(info[i]);
-          break;
-        case INTEGER_ARRAY:
-          check_integerarray_type(info[i]);
-          break;
-        case ANY_INTEGER_ARRAY:
-          check_any_integerarray_type(info[i]);
-          break;
-        case TIMESTAMP:
-          check_timestamp_type(info[i]);
-          break;
-        case INTERVAL:
-          check_interval_type(info[i]);
-          break;
-        default:
-          elog(ERROR, "Unknown type of column %s", info[i].name);
-      }
+/**
+ * @param[in] tupdesc  tuple descriptor
+ * @param[in] info     contain one or more column information.
+ *
+ * @throw ERROR Unknown type of column.
+ */
+void fetch_column_info(
+        const TupleDesc &tupdesc,
+        std::vector<vrprouting::Info> &info) {
+    for (auto &coldata : info) {
+        if (get_column_info(tupdesc, coldata)) {
+            switch (coldata.eType) {
+                case ANY_INTEGER:
+                case TINTERVAL:
+                case ANY_UINT:
+                    check_any_integer_type(coldata);
+                    break;
+                case ANY_NUMERICAL:
+                    check_any_numerical_type(coldata);
+                    break;
+                case TEXT:
+                    check_text_type(coldata);
+                    break;
+                case CHAR1:
+                    check_char_type(coldata);
+                    break;
+                case ANY_INTEGER_ARRAY:
+                case ANY_POSITIVE_ARRAY:
+                    check_any_integerarray_type(coldata);
+                    break;
+                case POSITIVE_INTEGER:
+                case INTEGER:
+                    check_integer_type(coldata);
+                    break;
+                case JSONB:
+                    check_jsonb_type(coldata);
+                    break;
+                case INTEGER_ARRAY:
+                case ANY_UINT_ARRAY:
+                    check_integerarray_type(coldata);
+                    break;
+                case TIMESTAMP:
+                    check_timestamp_type(coldata);
+                    break;
+                case INTERVAL:
+                    check_interval_type(coldata);
+                    break;
+                default:
+                    throw std::string("Case not found in column '") + coldata.name + "' Please inform the developers";
+            }
+        }
     }
-  }
 }
+
+
+/**
+ * @param [in] tuple from postgres
+ * @param [in] tupdesc from postgres
+ * @param [in] info about the column been fetched
+ * @param [in] opt_value default value when the column does not exist
+ *
+ * @returns The value found
+ * @returns opt_value when the column does not exist
+ *
+ * Used with vrprouting::ANY_NUMERICAL
+ */
+double
+get_anynumerical(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, double opt_value) {
+    return column_found(info)? getFloat8(tuple, tupdesc, info) : opt_value;
+}
+
+
+/**
+ * @param [in] tuple
+ * @param [in] tupdesc
+ * @param [in] info about the column been fetched
+ * @param [in] opt_value default value when the column does not exist
+ *
+ * @returns The value found
+ * @returns opt_value when the column does not exist
+ */
+char
+get_char(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, char opt_value) {
+    return getChar(tuple, tupdesc, info, opt_value);
+}
+
+
+/**
+ * @param [in] tuple
+ * @param [in] tupdesc
+ * @param [in] info about the column been fetched
+ *
+ * @returns "{}" (empty jsonb) when when the column does not exist
+ */
+std::string get_jsonb(const HeapTuple tuple, const TupleDesc &tupdesc,  const vrprouting::Info &info) {
+    return column_found(info)? DatumGetCString(SPI_getvalue(tuple, tupdesc, info.colNumber)) : "{}";
+}
+
+std::unordered_set<uint32_t>
+get_uint_unordered_set(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info) {
+    bool is_null = false;
+    Datum raw_array = SPI_getbinval(tuple, tupdesc, info.colNumber, &is_null);
+    if (!raw_array) return  std::unordered_set<uint32_t>();
+
+    ArrayType *pg_array = DatumGetArrayTypeP(raw_array);
+
+    return pgarray_to_unordered_set(pg_array);
+}
+
+
+}  // namespace vrprouting
