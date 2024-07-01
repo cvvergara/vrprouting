@@ -1,11 +1,11 @@
 /*PGR-GNU*****************************************************************
 File: undefPostgresDefine.hpp
 
-Copyright (c) 2024 pgRouting developers
-Mail: project@pgrouting.org
-
 Copyright (c) 2024 Celia Virginia Vergara Castillo
 Mail: vicky at erosion.dev
+
+Copyright (c) 2024 pgRouting developers
+Mail: project@pgrouting.org
 
 ------
 
@@ -47,9 +47,10 @@ extern "C" {
 #include <utils/array.h>
 }
 
+#include "cpp_common/undefPostgresDefine.hpp"
+
 #include <system files>
 
-#include "cpp_common/undefPostgresDefine.hpp"
 ~~~
 
 */
