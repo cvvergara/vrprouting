@@ -30,32 +30,32 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_DRIVERS_VROOM_VROOM_DRIVER_H_
 #pragma once
 
-#include "c_types/typedefs.h"
+#ifdef __cplusplus
+#include <cstddef>
+#include <cstdint>
+using Vroom_rt = struct Vroom_rt;
+#else
+#include <stddef.h>
+#include <stdint.h>
+#include <stdbool.h>
+typedef struct Vroom_rt Vroom_rt;
+#endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-  void do_vrp_vroom(
-      Vroom_job_t *jobs, size_t total_jobs,
-      Vroom_time_window_t *jobs_tws, size_t total_jobs_tws,
-      Vroom_shipment_t *shipments, size_t total_shipments,
-      Vroom_time_window_t *shipments_tws, size_t total_shipments_tws,
-      Vroom_vehicle_t *vehicles, size_t total_vehicles,
-      Vroom_break_t *breaks, size_t total_breaks,
-      Vroom_time_window_t *breaks_tws, size_t total_breaks_tws,
-      Vroom_matrix_t *matrix_cells_arr, size_t total_cells,
+  void vrp_do_vroom(
+      char*, char*, char*, char*,
+      char*, char*, char*, char*,
 
-      int32_t exploration_level,
-      int32_t timeout,
-      int32_t loading_time,
+      int32_t, int32_t, int32_t, int16_t,
+      bool,
 
-      Vroom_rt **return_tuples,
-      size_t *return_count,
+      Vroom_rt**,
+      size_t*,
 
-      char ** log_msg,
-      char ** notice_msg,
-      char ** err_msg);
+      char**, char**, char**);
 
 #ifdef __cplusplus
 }
