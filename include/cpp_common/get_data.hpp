@@ -35,9 +35,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/alloc.hpp"
 
 namespace vrprouting {
-
-
 namespace pgget {
+
 /** @brief Retrives the tuples
  * @tparam Data_type Scructure of data
  * @tparam Func fetcher function
@@ -47,11 +46,7 @@ namespace pgget {
  * @param[in] func fetcher function to be used
  */
 template <typename Data_type, typename Func>
-std::vector<Data_type> get_data(
-        const std::string& sql,
-        bool flag,
-        std::vector<Info> info,
-        Func func) {
+std::vector<Data_type> get_data(const std::string& sql, bool flag, std::vector<Info> info, Func func) {
     const int tuple_limit = 1000000;
 
     size_t total_tuples = 0;
@@ -87,6 +82,6 @@ std::vector<Data_type> get_data(
 }
 
 }  // namespace pgget
-}  // namespace pgrouting
+}  // namespace vrprouting
 
 #endif  // INCLUDE_CPP_COMMON_GET_DATA_HPP_

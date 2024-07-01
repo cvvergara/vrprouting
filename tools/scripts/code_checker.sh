@@ -56,9 +56,8 @@ if test -z "$DIRECTORY"; then
     echo "--------------------"
     echo "------ HEADERS  ------"
     echo "--------------------"
-    code_linter/cpplint/cpplint.py --extensions=hpp,h --headers=hpp,h  --linelength=120 --filter=-runtime/references,-whitespace/indent_namespace \
-        include/*/*.h* \
-        include/*/*/*.h*
+    code_linter/cpplint/cpplint.py --extensions=hpp,h --headers=hpp,h  --linelength=120 --filter=-runtime/references \
+        include/*/*.h*
 
 else
     if [ "$DIRECTORY" = "h" ]; then
@@ -67,8 +66,7 @@ else
     echo "------ IN PLACE HEADERS  ------"
     echo "--------------------"
     code_linter/cpplint/cpplint.py --extensions=hpp,h --headers=hpp,h  --linelength=120 --filter=-runtime/references \
-        include/*/*.h* \
-        include/*/*/*.h*
+        include/*/*.h*
 
     else
         echo "--------------------"
@@ -79,21 +77,12 @@ else
         echo "------ *.cpp  ------"
         echo "--------------------"
         code_linter/cpplint/cpplint.py  --linelength=120 --filter=-runtime/references,-whitespace/indent_namespace src/"$DIRECTORY"/*.cpp
-        echo "--------------------"
-        echo "------   C HEADER  ------"
-        echo "--------------------"
-        code_linter/cpplint/cpplint.py \
-            include/drivers/"$DIRECTORY"/*.h \
-            include/c_types/"$DIRECTORY"/*.h
 
         echo "--------------------"
         echo "------ C++ HEADER  ------"
         echo "--------------------"
-        code_linter/cpplint/cpplint.py  --extensions=hpp,h --headers=hpp  --linelength=120 --filter=-runtime/references,-whitespace/indent_namespace include/"$DIRECTORY"/*.h*
-        echo "--------------------"
-        echo "------ this shouild fail  ------"
-        echo "--------------------"
-        code_linter/cpplint/cpplint.py src/"$DIRECTORY"/src/*.h*
+        code_linter/cpplint/cpplint.py  --extensions=hpp,h --headers=hpp,h  --linelength=120 --filter=-runtime/references \
+            include/"$DIRECTORY"/*.h*
     fi
 fi
 

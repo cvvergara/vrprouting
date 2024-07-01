@@ -30,8 +30,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #pragma once
 
 #include <map>
-#include <utility>
-#include <tuple>
 #include <string>
 #include <vector>
 
@@ -47,7 +45,10 @@ class Matrix : public base::Base_Matrix {
     Matrix() = default;
 
     /** brief constructor for matrix version with time dependant multipliers */
-    Matrix(const std::vector<Matrix_cell_t>&, const std::vector<Time_multipliers_t>&, const Identifiers<Id>&, Multiplier = 1.0);
+    Matrix(
+            const std::vector<Matrix_cell_t>&,
+            const std::vector<Time_multipliers_t>&,
+            const Identifiers<Id>&, Multiplier = 1.0);
 
 #if 0
     /** brief constructor for euclidean version with time dependant multipliers */
