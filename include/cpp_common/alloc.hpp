@@ -1,8 +1,11 @@
 /*PGR-GNU*****************************************************************
-File: pgr_palloc.hpp
+File: alloc.hpp
 
-Copyright (c) 2015 Celia Virginia Vergara Castillo
-Mail: vicky_vergara@hotmail.com
+Copyright (c) 2024 Celia Virginia Vergara Castillo
+Mail: vicky at erosion.dev
+
+Copyright (c) 2015 pgRouting developers
+Mail: project@pgrouting.org
 
 ------
 
@@ -24,8 +27,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 /*! @file */
 
-#ifndef INCLUDE_C_COMMON_PGR_ALLOC_HPP_
-#define INCLUDE_C_COMMON_PGR_ALLOC_HPP_
+#ifndef INCLUDE_CPP_COMMON_PGR_ALLOC_HPP_
+#define INCLUDE_CPP_COMMON_PGR_ALLOC_HPP_
 #pragma once
 
 
@@ -45,7 +48,9 @@ SPI_pfree(void *pointer);
 }
 
 
-/*! \fn pgr_alloc(std::size_t size, T *ptr)
+namespace vrprouting {
+
+/*! \fn alloc(std::size_t size, T *ptr)
 
 \brief allocates memory
 
@@ -63,7 +68,7 @@ SPI_pfree(void *pointer);
 
 template <typename T>
 T*
-pgr_alloc(std::size_t size, T* ptr) {
+alloc(std::size_t size, T* ptr) {
     if (!ptr) {
         ptr = static_cast<T*>(SPI_palloc(size * sizeof(T)));
     } else {
@@ -74,14 +79,15 @@ pgr_alloc(std::size_t size, T* ptr) {
 
 template <typename T>
 T*
-pgr_free(T* ptr) {
+free(T* ptr) {
     if (ptr) {
         SPI_pfree(ptr);
     }
     return nullptr;
 }
 
-char *
-pgr_msg(const std::string &msg);
+char* msg(const std::string &);
 
-#endif  // INCLUDE_C_COMMON_PGR_ALLOC_HPP_
+}  // namespace vrprouting
+
+#endif  // INCLUDE_CPP_COMMON_PGR_ALLOC_HPP_
