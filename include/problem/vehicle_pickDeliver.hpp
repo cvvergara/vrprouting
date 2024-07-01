@@ -1,6 +1,6 @@
 /*PGR-GNU*****************************************************************
 
-FILE: vehicle_pickDeliver.h
+FILE: vehicle_pickDeliver.hpp
 
 Copyright (c) 2016 pgRouting developers
 Mail: project@pgrouting.org
@@ -25,18 +25,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 /*! @file */
 
-#ifndef INCLUDE_PROBLEM_VEHICLE_PICKDELIVER_H_
-#define INCLUDE_PROBLEM_VEHICLE_PICKDELIVER_H_
+#ifndef INCLUDE_PROBLEM_VEHICLE_PICKDELIVER_HPP_
+#define INCLUDE_PROBLEM_VEHICLE_PICKDELIVER_HPP_
 #pragma once
 
 #include <limits>
 #include <vector>
-#include "c_types/typedefs.h"
-#include "cpp_common/pgr_assert.h"
-#include "cpp_common/pgr_messages.h"
+#include "cpp_common/assert.hpp"
+#include "cpp_common/messages.hpp"
 #include "cpp_common/identifiers.hpp"
-#include "problem/vehicle.h"
-#include "problem/orders.h"
+#include "problem/vehicle.hpp"
+#include "problem/orders.hpp"
 
 namespace vrprouting {
 namespace problem {
@@ -78,7 +77,6 @@ class Vehicle_pickDeliver : public Vehicle {
 
 
      Vehicle_pickDeliver() = delete;
-     Vehicle_pickDeliver(const Vehicle_pickDeliver &) = default;
      Vehicle_pickDeliver(
              Idx p_idx,
              Id p_id,
@@ -147,7 +145,7 @@ class Vehicle_pickDeliver : public Vehicle {
 
      const Orders& orders() const {pgassert(m_orders.size() != 0); return m_orders;}
 
-     Pgr_messages& msg() {return m_msg;}
+     Messages& msg() {return m_msg;}
 
  protected:
      using Vehicle::begin;
@@ -165,7 +163,7 @@ class Vehicle_pickDeliver : public Vehicle {
 
      Orders m_orders;
 
-     Pgr_messages m_msg;
+     Messages m_msg;
 
  private:
      /**
@@ -178,4 +176,4 @@ class Vehicle_pickDeliver : public Vehicle {
 }  //  namespace problem
 }  //  namespace vrprouting
 
-#endif  // INCLUDE_PROBLEM_VEHICLE_PICKDELIVER_H_
+#endif  // INCLUDE_PROBLEM_VEHICLE_PICKDELIVER_HPP_

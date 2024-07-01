@@ -32,7 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include <string>
 
-#include "problem/tw_node.h"
+#include "problem/tw_node.hpp"
 
 typedef struct Solution_rt Solution_rt;
 
@@ -54,9 +54,6 @@ class Vehicle_node: public Tw_node {
 
      /** @brief Construction without information is not allowed */
      Vehicle_node() = delete;
-
-     /** @brief Copy constructor */
-     Vehicle_node(const Vehicle_node &) = default;
 
      /** @brief Construction of a Vehicle node based on a time windows node */
      explicit Vehicle_node(const Tw_node &node);

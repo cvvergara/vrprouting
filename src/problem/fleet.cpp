@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 /** @file */
 
-#include "problem/fleet.h"
+#include "problem/fleet.hpp"
 
 #include <iostream>
 #include <vector>
@@ -34,7 +34,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <utility>
 #include <algorithm>
 
-#include "c_types/vehicle_t.h"
+#include "cpp_common/pickdeliver_types.hpp"
 
 namespace vrprouting {
 namespace problem {
@@ -188,6 +188,7 @@ Fleet::is_order_ok(const Order &order) const {
 
 /**
 @param [in] vehicle
+@param [in] new_stops
 @param [in] p_orders
 @param [in,out] p_nodes
 @param [in,out] node_id
@@ -266,7 +267,7 @@ Fleet::add_vehicle(
              * stops can only be assigned when there is only one vehicle
              */
             vehicle.cant_v == 1 ?
-              std::vector<int64_t>(vehicle.stops, vehicle.stops + vehicle.stops_size) :
+              std::vector<int64_t>(vehicle.stops.begin(), vehicle.stops.end()) :
               std::vector<int64_t>(),
 
             vehicle.capacity,
@@ -355,11 +356,88 @@ Fleet::set_compatibles(const Orders &orders) {
   builds a fleet from a vector of Vehicle_t
 
   @param[in] vehicles  the list of vehicles
-  @param[in] size_vehicles  size of vehicles
+  @param [in] new_stops overides vehicles stops
   @param[in] p_orders
   @param[in,out] p_nodes
   @param[in,out] node_id
   */
+void Fleet::build_fleet(
+    std::vector<Vehicle_t> vehicles,
+    const std::vector<Short_vehicle>& new_stops,
+    const Orders& p_orders,
+    std::vector<Vehicle_node>& p_nodes,
+    size_t& node_id) {
+    /**
+     * Sort vehicles: ASC start_open_t, end_close_t, id
+     */
+    std::sort(vehicles.begin(), vehicles.end(),
+            [] (const Vehicle_t &lhs, const Vehicle_t &rhs) {
+                if (lhs.start_open_t == rhs.start_open_t) {
+                    if (lhs.end_close_t == rhs.end_close_t) {
+                        return lhs.id < rhs.id;
+                    } else {
+                        return lhs.end_close_t < rhs.end_close_t;
+                    }
+                } else {
+                    return lhs.start_open_t < rhs.start_open_t;
+                }
+            });
+
+    /**
+     * Add the vehicles
+     */
+    for (const auto &v : vehicles) {
+        add_vehicle(v, new_stops, p_orders, p_nodes, node_id);
+    }
+
+    /**
+     *  creating a phony vehicle with max capacity and max window
+     *  with the start & end points of the first vehicle given
+     */
+    Vehicle_t phony_v({
+            /*
+             * id, capacity
+             */
+            -1,
+            (std::numeric_limits<PAmount>::max)(),
+            vehicles[0].speed,
+            1,
+            std::vector<Id>(),
+            0,
+
+            /*
+             * Start values
+             */
+            vehicles[0].start_node_id,
+            0,
+            (std::numeric_limits<TTimestamp>::max)(),
+            0,
+            vehicles[0].start_x,
+            vehicles[0].start_y,
+
+            /*
+             * End values
+             */
+            vehicles[0].end_node_id,
+            0,
+            (std::numeric_limits<TTimestamp>::max)(),
+            0,
+            vehicles[0].end_x,
+            vehicles[0].end_y,
+    });
+
+    /*
+     * Add the phony vehicle
+     */
+    add_vehicle(phony_v, new_stops, p_orders, p_nodes, node_id);
+
+    Identifiers<size_t> unused(this->size());
+    m_size = size();
+    m_unused = unused;
+    pgassert(m_unused.size() == size());
+    invariant();
+}
+
 void
 Fleet::build_fleet(
     Vehicle_t *vehicles, size_t size_vehicles,
@@ -401,7 +479,7 @@ Fleet::build_fleet(
             (std::numeric_limits<PAmount>::max)(),
             vehicles[0].speed,
             1,
-            nullptr,
+            std::vector<Id>(),
             0,
 
             /*

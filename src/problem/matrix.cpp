@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
-#include "problem/matrix.h"
+#include "problem/matrix.hpp"
 
 #include <string>
 #include <sstream>
@@ -37,9 +37,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <tuple>
 
 
-#include "cpp_common/pgr_assert.h"
-#include "c_types/matrix_cell_t.h"
-#include "c_types/time_multipliers_t.h"
+#include "cpp_common/assert.hpp"
+#include "cpp_common/pickdeliver_types.hpp"
 
 
 namespace vrprouting {
@@ -49,9 +48,26 @@ namespace {
 
 /**
  * @param [in] p_multipliers time dependant multiplier data
- * @param [in] size_multipliers number of rows in the data
  * @returns time dependant multiplier container
  */
+std::vector<std::tuple<TTimestamp, Multiplier>>
+set_tdm(std::vector<Time_multipliers_t> p_multipliers) {
+    pgassert(!p_multipliers.empty());
+    std::vector<std::tuple<TTimestamp, Multiplier>> tdm;
+    /*
+     * Sort the multipliers info
+     */
+    std::sort(p_multipliers.begin(), p_multipliers.end(),
+            [] (const Time_multipliers_t &lhs, const Time_multipliers_t &rhs) {
+                return lhs.start_time < rhs.start_time;
+            });
+    for (const auto &m : p_multipliers) {
+        tdm.emplace_back(m.start_time, m.multiplier);
+    }
+    return tdm;
+}
+
+#if 0
 std::vector<std::tuple<TTimestamp, Multiplier>>
 set_tdm(Time_multipliers_t *p_multipliers, size_t size_multipliers) {
     pgassert(size_multipliers > 1);
@@ -68,6 +84,7 @@ set_tdm(Time_multipliers_t *p_multipliers, size_t size_multipliers) {
     }
     return tdm;
 }
+#endif
 
 /**
  * @param [in] tdm time dependant multiplier container
@@ -164,14 +181,19 @@ time_change(const std::vector<std::tuple<TTimestamp, Multiplier>> &tdm, TTimesta
 
 }  // namespace
 
+
+/*
+ * constructor
+ */
 Matrix::Matrix(
-        Matrix_cell_t *matrix, size_t size_matrix,
-        Time_multipliers_t *multipliers, size_t size_multipliers,
+        const std::vector<Matrix_cell_t>& matrix,
+        const std::vector<Time_multipliers_t>& multipliers,
         const Identifiers<Id>& node_ids,
         Multiplier multiplier) :
-    Base_Matrix(matrix, size_matrix, node_ids, multiplier),
-    m_multipliers(set_tdm(multipliers, size_multipliers)) { }
+    Base_Matrix(matrix, node_ids, multiplier),
+    m_multipliers(set_tdm(multipliers)) { }
 
+#if 0
 /*
  * constructor for euclidean with time dependant multipliers
  */
@@ -181,15 +203,16 @@ Matrix::Matrix(
         Multiplier multiplier) :
     Base_Matrix(euclidean_data, multiplier),
     m_multipliers(set_tdm(multipliers, size_multipliers)) { }
+#endif
 
 /*
  * constructor for euclidean default multipliers
  */
 Matrix::Matrix(
-        Matrix_cell_t *matrix, size_t size_matrix,
+        const std::vector<Matrix_cell_t>& costs,
         const Identifiers<Id>& node_ids,
         Multiplier multiplier) :
-    Base_Matrix(matrix, size_matrix, node_ids, multiplier),
+    Base_Matrix(costs, node_ids, multiplier),
     m_multipliers{{0, 1}} { }
 
 /*

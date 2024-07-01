@@ -23,15 +23,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
-#include "problem/tw_node.h"
+#include "problem/tw_node.hpp"
 
 #include <limits>
 #include <string>
 
-#include "cpp_common/pgr_assert.h"
-#include "problem/matrix.h"
-#include "c_types/pickDeliveryOrders_t.h"
-#include "c_types/vehicle_t.h"
+#include "cpp_common/assert.hpp"
+#include "cpp_common/pickdeliver_types.hpp"
+
+#include "problem/matrix.hpp"
 
 
 namespace vrprouting {
@@ -312,7 +312,7 @@ bool Tw_node::is_valid() const {
   */
 Tw_node::Tw_node(
     size_t id,
-    const PickDeliveryOrders_t &data,
+    const Orders_t &data,
     const NodeType &type) :
   Identifier(id, data.pick_node_id),
   m_order(data.id),

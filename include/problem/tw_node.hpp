@@ -31,11 +31,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include <string>
 #include "c_types/typedefs.h"
-#include "cpp_common/identifier.h"
-#include "problem/node_types.h"
+
+#include "cpp_common/identifier.hpp"
+#include "problem/node_types.hpp"
+
 
 
 namespace vrprouting {
+class Orders_t;
+class Vehicle_t;
 namespace problem {
 
 class Matrix;
@@ -56,13 +60,10 @@ class Tw_node : public Identifier {
      /** @brief Creating a Tw_node is not permitted */
      Tw_node() = delete;
 
-     /** @brief Copy constructor */
-     Tw_node(const Tw_node &) = default;
-
      /** @brief Creating a Tw_node from a postgreSQL order */
      Tw_node(
              size_t id,
-             const PickDeliveryOrders_t &data,
+             const Orders_t &data,
              const NodeType &type);
 
      /** @brief Creating a Tw_node from a postgreSQL vehicle */

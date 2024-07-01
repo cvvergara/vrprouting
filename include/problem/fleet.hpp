@@ -33,14 +33,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <vector>
 #include <numeric>
 
-#include "c_types/typedefs.h"
-#include "c_types/short_vehicle.h"
-#include "problem/vehicle_pickDeliver.h"
-
-typedef struct Vehicle_t Vehicle_t;
+#include "cpp_common/pickdeliver_types.hpp"
+#include "cpp_common/short_vehicle.hpp"
+#include "problem/vehicle_pickDeliver.hpp"
 
 namespace vrprouting {
-class Pgr_messages;
+class Messages;
 
 namespace problem {
 class Orders;
@@ -66,20 +64,32 @@ class Fleet: protected std::vector<Vehicle_pickDeliver> {
         build_fleet(vehicles, size_vehicles, {}, p_orders, p_nodes, node_id);
       }
 
-    /** @brief Create a fleet based on the Vehicles of the problem */
-    Fleet(Vehicle_t* vehicles , size_t size_vehicles,
-        const std::vector<Short_vehicle> &new_stops,
+    Fleet(
+        const std::vector<Vehicle_t> &vehicles,
         const Orders& p_orders, std::vector<Vehicle_node>& p_nodes, size_t& node_id)
       : m_used(),
       m_unused() {
-        build_fleet(vehicles, size_vehicles, new_stops, p_orders, p_nodes, node_id);
+        build_fleet(vehicles, {}, p_orders, p_nodes, node_id);
       }
+
+    /** @brief Create a fleet based on the Vehicles of the problem */
+    Fleet(
+            const std::vector<Vehicle_t> &vehicles,
+            const std::vector<Short_vehicle> &new_stops,
+            const Orders& p_orders, std::vector<Vehicle_node>& p_nodes, size_t& node_id)
+        : m_used(), m_unused() {
+            build_fleet(vehicles, new_stops, p_orders, p_nodes, node_id);
+        }
+    Fleet(Vehicle_t* vehicles , size_t size_vehicles,
+            const std::vector<Short_vehicle> &new_stops,
+            const Orders& p_orders, std::vector<Vehicle_node>& p_nodes, size_t& node_id)
+        : m_used(),
+        m_unused() {
+            build_fleet(vehicles, size_vehicles, new_stops, p_orders, p_nodes, node_id);
+        }
 
     /** @brief creating a fleet without information is not allowed */
     Fleet() = delete;
-
-    /** @brief Copy constructor */
-    Fleet(const Fleet &fleet) = default;
 
     /** @brief Get all the unused vehicles */
     std::vector<Vehicle_pickDeliver> get_unused_trucks();
@@ -123,7 +133,7 @@ class Fleet: protected std::vector<Vehicle_pickDeliver> {
     /** @brief set the vehicle's user's initial solution */
     void set_initial_solution(const Orders&, Identifiers<size_t>&, Identifiers<size_t>&, TTimestamp, bool);
 
-    Pgr_messages& msg() {return m_msg;}
+    Messages& msg() {return m_msg;}
 
  protected:
     /** @brief add a new vehicle to the fleet */
@@ -133,6 +143,11 @@ class Fleet: protected std::vector<Vehicle_pickDeliver> {
         std::vector<Vehicle_node>& p_nodes, size_t& node_id);
 
     /** @brief build the fleet */
+    void build_fleet(
+        std::vector<Vehicle_t>, const std::vector<Short_vehicle>&,
+        const Orders&,
+        std::vector<Vehicle_node>&, size_t&);
+
     void build_fleet(
         Vehicle_t*, size_t, const std::vector<Short_vehicle>&,
         const Orders&,
@@ -149,7 +164,7 @@ class Fleet: protected std::vector<Vehicle_pickDeliver> {
     /** set of invalid vehicles */
     Identifiers<size_t> m_invalid;
 
-    mutable Pgr_messages m_msg;
+    mutable Messages m_msg;
 
     /* for the invariant */
     size_t m_size;
