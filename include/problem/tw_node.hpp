@@ -36,10 +36,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "problem/node_types.hpp"
 
 
-class PickDeliveryOrders_t;
-class Vehicle_t;
 
 namespace vrprouting {
+class Orders_t;
+class Vehicle_t;
 namespace problem {
 
 class Matrix;
@@ -63,7 +63,7 @@ class Tw_node : public Identifier {
      /** @brief Creating a Tw_node from a postgreSQL order */
      Tw_node(
              size_t id,
-             const PickDeliveryOrders_t &data,
+             const Orders_t &data,
              const NodeType &type);
 
      /** @brief Creating a Tw_node from a postgreSQL vehicle */

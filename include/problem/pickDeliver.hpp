@@ -52,7 +52,7 @@ class PickDeliver {
     /** @brief General Constructor */
 #if 0
     PickDeliver(
-        PickDeliveryOrders_t* p_orders, size_t p_orders_size,
+        Orders_t* p_orders, size_t p_orders_size,
         Vehicle_t* p_vehicles, size_t p_vehicles_size,
         const Matrix &p_cost_matrix) :
       m_cost_matrix(p_cost_matrix),
@@ -65,7 +65,7 @@ class PickDeliver {
       }
 #endif
     PickDeliver(
-        const std::vector<PickDeliveryOrders_t> &p_orders,
+        const std::vector<Orders_t> &p_orders,
         const std::vector<Vehicle_t> &p_vehicles,
         const Matrix &p_cost_matrix) :
       m_cost_matrix(p_cost_matrix),
@@ -79,7 +79,7 @@ class PickDeliver {
 
     /** @brief Override stops constructor */
     PickDeliver(
-            const std::vector<PickDeliveryOrders_t> &p_orders,
+            const std::vector<Orders_t> &p_orders,
             const std::vector<Vehicle_t> &p_vehicles,
             std::vector<Short_vehicle> new_stops,
             const Matrix &p_cost_matrix) :
@@ -93,7 +93,7 @@ class PickDeliver {
         }
 #if 0
     PickDeliver(
-            PickDeliveryOrders_t* p_orders, size_t p_orders_size,
+            Orders_t* p_orders, size_t p_orders_size,
             Vehicle_t* p_vehicles, size_t p_vehicles_size,
             std::vector<Short_vehicle> new_stops,
             const Matrix &p_cost_matrix) :

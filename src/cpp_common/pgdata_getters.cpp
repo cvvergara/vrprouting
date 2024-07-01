@@ -265,9 +265,9 @@ std::vector<Matrix_cell_t> get_matrix(
   @param[in] sql The orders query
   @param [in]  is_euclidean When true coordintes are going to be used
   @param [in]  use_timestamps When true data use postgres timestamps
-  @returns vector of PickDeliveryOrders_t
+  @returns vector of Orders_t
   */
-std::vector<PickDeliveryOrders_t> get_orders(
+std::vector<Orders_t> get_orders(
     const std::string &sql,
     bool is_euclidean,
     bool use_timestamps) {
@@ -304,7 +304,7 @@ std::vector<PickDeliveryOrders_t> get_orders(
       use_timestamps? "d_t_service" : "d_service",
       use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL}};
 
-    return pgget::get_data<PickDeliveryOrders_t>(sql, is_euclidean, info, &fetch_orders);
+    return pgget::get_data<Orders_t>(sql, is_euclidean, info, &fetch_orders);
 }
 
 

@@ -222,11 +222,11 @@ Time_multipliers_t fetch_timeMultipliers(
    return row;
 }
 
-PickDeliveryOrders_t fetch_orders(
+Orders_t fetch_orders(
     const HeapTuple tuple, const TupleDesc &tupdesc,
     const std::vector<Info> &info,
     bool is_euclidean) {
-  PickDeliveryOrders_t pd_order;
+  Orders_t pd_order;
   pd_order.id = get_value<Id>(tuple, tupdesc, info[0], -1);
   pd_order.demand = get_value<PAmount>(tuple, tupdesc, info[1], 0);
 

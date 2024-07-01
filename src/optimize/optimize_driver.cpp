@@ -66,8 +66,8 @@ namespace {
 
 std::vector<Short_vehicle>
 one_processing(
-        const std::vector<PickDeliveryOrders_t> &orders,
-        const std::vector<Vehicle_t> &vehicles,
+        const std::vector<vrprouting::Orders_t> &orders,
+        const std::vector<vrprouting::Vehicle_t> &vehicles,
         const std::vector<Short_vehicle> &new_stops,
         const vrprouting::problem::Matrix &time_matrix,
         int max_cycles,
@@ -119,7 +119,7 @@ one_processing(
  *  @returns the set of times where orders open or close
  */
 Identifiers<TTimestamp>
-processing_times_by_shipment(const std::vector<PickDeliveryOrders_t> &orders) {
+processing_times_by_shipment(const std::vector<vrprouting::Orders_t> &orders) {
     Identifiers<TTimestamp> processing_times;
     for (const auto &o : orders) {
         processing_times += o.pick_open_t;
@@ -136,7 +136,7 @@ processing_times_by_shipment(const std::vector<PickDeliveryOrders_t> &orders) {
  *  @returns the set of times where vehicles are open or close
  */
 Identifiers<TTimestamp>
-processing_times_by_vehicle(const std::vector<Vehicle_t> &vehicles) {
+processing_times_by_vehicle(const std::vector<vrprouting::Vehicle_t> &vehicles) {
     Identifiers<TTimestamp> processing_times;
     for (const auto &v : vehicles) {
         processing_times += v.start_open_t;
@@ -154,7 +154,7 @@ processing_times_by_vehicle(const std::vector<Vehicle_t> &vehicles) {
  *  @returns vector of (vehicle id, stops vector) pairs ascending order of vehicles
  */
 std::vector<Short_vehicle>
-get_initial_stops(const std::vector<Vehicle_t> &vehicles) {
+get_initial_stops(const std::vector<vrprouting::Vehicle_t> &vehicles) {
     std::vector<Short_vehicle> the_stops;
     for (const auto &v : vehicles) {
         the_stops.push_back({v.id, v.stops});
@@ -199,8 +199,8 @@ update_stops(
  */
 std::vector<Short_vehicle>
 subdivide_processing(
-        const std::vector<PickDeliveryOrders_t> &orders,
-        const std::vector<Vehicle_t> &vehicles,
+        const std::vector<vrprouting::Orders_t> &orders,
+        const std::vector<vrprouting::Vehicle_t> &vehicles,
         const vrprouting::problem::Matrix &time_matrix,
         int max_cycles,
         int64_t execution_date,
@@ -222,11 +222,11 @@ subdivide_processing(
             /*
              * Get active vehicles at time t
              */
-            std::vector<Vehicle_t> active_vehicles;
-            std::vector<Vehicle_t> inactive_vehicles;
+            std::vector<vrprouting::Vehicle_t> active_vehicles;
+            std::vector<vrprouting::Vehicle_t> inactive_vehicles;
             std::partition_copy(vehicles.begin(), vehicles.end(),
                     std::back_inserter(active_vehicles), std::back_inserter(inactive_vehicles),
-                    [&](const Vehicle_t& v)
+                    [&](const vrprouting::Vehicle_t& v)
                     {return v.start_open_t <= t && t <= v.end_close_t;});
 
 
@@ -256,12 +256,12 @@ subdivide_processing(
             log << "\nOptimizing at time: " << t;
 
             prev_shipments_in_stops = orders_in_active_vehicles;
-            std::vector<PickDeliveryOrders_t> active_orders;
-            std::vector<PickDeliveryOrders_t> inactive_orders;
+            std::vector<vrprouting::Orders_t> active_orders;
+            std::vector<vrprouting::Orders_t> inactive_orders;
 
             std::partition_copy(orders.begin(), orders.end(),
                     std::back_inserter(active_orders), std::back_inserter(inactive_orders),
-                    [&](const PickDeliveryOrders_t& o)
+                    [&](const vrprouting::Orders_t& o)
                     {return orders_in_active_vehicles.has(o.id);});
 
             pgassert(active_orders.size() == orders_in_active_vehicles.size());
@@ -425,18 +425,18 @@ do_optimize(
          * 3. remove vehicles that closes(end) before the execution time
          */
         std::sort(vehicles.begin(), vehicles.end(),
-                [](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id < rhs.id;});
+                [](const vrprouting::Vehicle_t& lhs, const vrprouting::Vehicle_t& rhs){return lhs.id < rhs.id;});
 
         vehicles.erase(
                     std::unique(
                         vehicles.begin(), vehicles.end(),
-                        [&](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id == rhs.id;}),
+                        [&](const vrprouting::Vehicle_t& lhs, const vrprouting::Vehicle_t& rhs){return lhs.id == rhs.id;}),
                     vehicles.end());
 
         vehicles.erase(
                     std::remove_if(
                         vehicles.begin(), vehicles.end(),
-                        [&](const Vehicle_t& v){return v.end_close_t < execution_date;}),
+                        [&](const vrprouting::Vehicle_t& v){return v.end_close_t < execution_date;}),
                     vehicles.end());
 
 
@@ -458,12 +458,12 @@ do_optimize(
 
 
         std::sort(orders.begin(), orders.end(),
-                [](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id < rhs.id;});
+                [](const vrprouting::Orders_t& lhs, const vrprouting::Orders_t& rhs){return lhs.id < rhs.id;});
 
         orders.erase(
                     std::unique(
                         orders.begin(), orders.end(),
-                        [&](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id == rhs.id;}),
+                        [&](const vrprouting::Orders_t& lhs, const vrprouting::Orders_t& rhs){return lhs.id == rhs.id;}),
                     orders.end());
 
 
@@ -471,7 +471,7 @@ do_optimize(
         orders.erase(
                     std::remove_if(
                         orders.begin(), orders.end(),
-                        [&](const PickDeliveryOrders_t& s){return !shipments_in_stops.has(s.id);}),
+                        [&](const vrprouting::Orders_t& s){return !shipments_in_stops.has(s.id);}),
                     orders.end());
 
 

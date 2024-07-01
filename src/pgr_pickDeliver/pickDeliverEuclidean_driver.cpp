@@ -71,7 +71,7 @@ get_initial_solution(vrprouting::problem::PickDeliver* problem_ptr, int m_initia
 
 bool
 are_shipments_ok(
-    std::vector<PickDeliveryOrders_t> orders,
+    std::vector<vrprouting::Orders_t> orders,
     std::string *err_string,
     std::string *hint_string) {
   // TODO idea: do this checks when reading the data

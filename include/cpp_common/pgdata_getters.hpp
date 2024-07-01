@@ -52,7 +52,7 @@ namespace pickdeliver {
 std::vector<Matrix_cell_t> get_matrix(const std::string&, bool);
 
 /** @brief Reads the pick-Deliver shipments for timestams and intervals*/
-std::vector<PickDeliveryOrders_t> get_orders(const std::string&, bool, bool);
+std::vector<Orders_t> get_orders(const std::string&, bool, bool);
 
 /** @brief Reads the vehicles information */
 std::vector<Vehicle_t> get_vehicles(const std::string&, bool, bool, bool);
