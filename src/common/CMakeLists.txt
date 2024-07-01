@@ -6,6 +6,5 @@ ADD_LIBRARY(common OBJECT
 
     time_msg.c
     e_report.c
-    alloc.cpp
 
     )
