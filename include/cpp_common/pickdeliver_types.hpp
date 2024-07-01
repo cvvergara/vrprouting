@@ -1,7 +1,7 @@
 /*PGR-GNU*****************************************************************
-File: pickdeliver_types.h
+File: pickdeliver_types.hpp
 
-Copyright (c) 2034 Celia Virginia Vergara Castillo
+Copyright (c) 2024 Celia Virginia Vergara Castillo
 Mail: vicky at erosion.dev
 
 ------
@@ -28,6 +28,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include <vector>
 #include "c_types/typedefs.h"
+
+namespace vrprouting {
 
 /** @brief traveling costs
 
@@ -85,7 +87,7 @@ deliver_open_t | Deliver open time
 deliver_close_t | Deliver close time
 deliver_service_t | Deliver service duration
 */
-class PickDeliveryOrders_t{
+class Orders_t{
  public:
      Id      id;     /** Order's identifier */
      PAmount  demand; /** Number of demand */
@@ -107,7 +109,6 @@ class PickDeliveryOrders_t{
      TInterval deliver_service_t; /** Deliver service duration */
 };
 
-#include "c_types/typedefs.h"
 
 /** @brief vehicles's attributes
 
@@ -151,4 +152,5 @@ class Vehicle_t {
      Coordinate end_y;
 };
 
+}  // namespace vrprouting
 #endif  // INCLUDE_CPP_COMMON_PICKDELIVER_TYPES_HPP_
