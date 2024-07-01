@@ -47,20 +47,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_common/e_report.h"
 #include "c_common/time_msg.h"
 
-#include "c_types/vroom/vroom_rt.h"
-#include "c_types/vroom/vroom_job_t.h"
-#include "c_types/vroom/vroom_shipment_t.h"
-#include "c_types/vroom/vroom_vehicle_t.h"
-#include "c_types/vroom/vroom_matrix_t.h"
+#include "c_types/return_types.h"
 
-#include "c_common/vroom/jobs_input.h"
-#include "c_common/vroom/breaks_input.h"
-#include "c_common/vroom/time_windows_input.h"
-#include "c_common/vroom/shipments_input.h"
-#include "c_common/vroom/vehicles_input.h"
-#include "c_common/vroom/matrix_input.h"
-
-#include "drivers/vroom/vroom_driver.h"
+#include "drivers/vroom_driver.h"
 
 PGDLLEXPORT Datum _vrp_vroom(PG_FUNCTION_ARGS);
 PG_FUNCTION_INFO_V1(_vrp_vroom);
@@ -73,22 +62,20 @@ PG_FUNCTION_INFO_V1(_vrp_vroom);
  * in the `vroom_driver.h` file for further processing.
  * Finally, it frees the memory and disconnects the C function to the SPI manager.
  *
- * @param jobs_sql          SQL query describing the jobs
- * @param jobs_tw_sql       SQL query describing the time window for jobs
- * @param shipments_sql     SQL query describing the shipments
- * @param shipments_tw_sql  SQL query describing the time windows for shipment
- * @param vehicles_sql      SQL query describing the vehicles
- * @param breaks_sql        SQL query describing the driver breaks.
- * @param breaks_tws_sql    SQL query describing the time windows for break start.
- * @param matrix_sql        SQL query describing the cells of the cost matrix
- * @param exploration_level Exploration level to use while solving.
- * @param timeout           Timeout value to stop the solving process.
- * @param fn                Value denoting the function used.
- * @param is_plain          Value denoting whether the plain/timestamp function is used.
- * @param result_tuples     the rows in the result
- * @param result_count      the count of rows in the result
- *
- * @returns void
+ * @param [in] jobs_sql          SQL query describing the jobs
+ * @param [in] jobs_tws_sql      SQL query describing the time window for jobs
+ * @param [in] shipments_sql     SQL query describing the shipments
+ * @param [in] shipments_tws_sql SQL query describing the time windows for shipment
+ * @param [in] vehicles_sql      SQL query describing the vehicles
+ * @param [in] breaks_sql        SQL query describing the driver breaks.
+ * @param [in] breaks_tws_sql    SQL query describing the time windows for break start.
+ * @param [in] matrix_sql        SQL query describing the cells of the cost matrix
+ * @param [in] exploration_level Exploration level to use while solving.
+ * @param [in] timeout           Timeout value to stop the solving process.
+ * @param [in] fn                Value denoting the function used.
+ * @param [in] use_timestamps    When true Postgres time data is used.
+ * @param [out] result_tuples    the rows in the result
+ * @param [out] result_count     the count of rows in the result
  */
 static
 void
@@ -105,118 +92,43 @@ process(
     int32_t exploration_level,
     int32_t timeout,
     int16_t fn,
-    bool is_plain,
+    bool use_timestamps,
 
     Vroom_rt **result_tuples,
     size_t *result_count) {
-  clock_t start_loading = clock();
-  pgr_SPI_connect();
-
-  (*result_tuples) = NULL;
-  (*result_count) = 0;
-
-  Vroom_job_t *jobs = NULL;
-  size_t total_jobs = 0;
-  if (jobs_sql) {
-    get_vroom_jobs(jobs_sql, &jobs, &total_jobs, is_plain);
-  }
-
-  Vroom_shipment_t *shipments = NULL;
-  size_t total_shipments = 0;
-  if (shipments_sql) {
-    get_vroom_shipments(shipments_sql, &shipments, &total_shipments, is_plain);
-  }
-
-  if (total_jobs == 0 && total_shipments == 0) {
-    if (fn == 0) {
-      ereport(WARNING, (errmsg("Insufficient data found on Jobs SQL and Shipments SQL query."),
-                        errhint("%s, %s", jobs_sql, shipments_sql)));
-    } else if (fn == 1) {
-      ereport(WARNING, (errmsg("Insufficient data found on Jobs SQL query."),
-                        errhint("%s", jobs_sql)));
-    } else if (fn == 2) {
-      ereport(WARNING, (errmsg("Insufficient data found on Shipments SQL query."),
-                        errhint("%s", shipments_sql)));
-    }
-    (*result_count) = 0;
-    (*result_tuples) = NULL;
-    pgr_SPI_finish();
-    return;
-  }
-
-  Vroom_time_window_t *jobs_tws = NULL;
-  size_t total_jobs_tws = 0;
-  if (jobs_tws_sql) {
-    get_vroom_time_windows(jobs_tws_sql, &jobs_tws, &total_jobs_tws,
-                           is_plain);
-  }
-
-  Vroom_time_window_t *shipments_tws = NULL;
-  size_t total_shipments_tws = 0;
-  if (shipments_tws_sql) {
-    get_vroom_shipments_time_windows(shipments_tws_sql, &shipments_tws,
-                                     &total_shipments_tws, is_plain);
-  }
-
-  Vroom_vehicle_t *vehicles = NULL;
-  size_t total_vehicles = 0;
-  get_vroom_vehicles(vehicles_sql, &vehicles, &total_vehicles, is_plain);
-
-  if (total_vehicles == 0) {
-    ereport(WARNING, (errmsg("Insufficient data found on Vehicles SQL query."),
-                      errhint("%s", vehicles_sql)));
-    (*result_count) = 0;
-    (*result_tuples) = NULL;
-    pgr_SPI_finish();
-    return;
-  }
-
-  Vroom_break_t *breaks = NULL;
-  size_t total_breaks = 0;
-  if (breaks_sql) {
-    get_vroom_breaks(breaks_sql, &breaks, &total_breaks, is_plain);
-  }
-
-  Vroom_time_window_t *breaks_tws = NULL;
-  size_t total_breaks_tws = 0;
-  if (breaks_tws_sql) {
-    get_vroom_time_windows(breaks_tws_sql, &breaks_tws, &total_breaks_tws,
-                           is_plain);
-  }
-
-  Vroom_matrix_t *matrix_rows = NULL;
-  size_t total_matrix_rows = 0;
-  get_vroom_matrix(matrix_sql, &matrix_rows, &total_matrix_rows, is_plain);
-
-  if (total_matrix_rows == 0) {
-    ereport(WARNING, (errmsg("Insufficient data found on Matrix SQL query."),
-                      errhint("%s", matrix_sql)));
-    (*result_count) = 0;
-    (*result_tuples) = NULL;
-    pgr_SPI_finish();
-    return;
-  }
-
-  clock_t start_t = clock();
   char *log_msg = NULL;
   char *notice_msg = NULL;
   char *err_msg = NULL;
 
+  clock_t start_loading = clock();
+  vrp_SPI_connect();
+
+  (*result_tuples) = NULL;
+  (*result_count) = 0;
+
+
+
+
+  clock_t start_t = clock();
+
   int32_t loading_time = (int)((clock() - start_loading) / CLOCKS_PER_SEC) * 1000;
 
-  do_vrp_vroom(
-    jobs, total_jobs,
-    jobs_tws, total_jobs_tws,
-    shipments, total_shipments,
-    shipments_tws, total_shipments_tws,
-    vehicles, total_vehicles,
-    breaks, total_breaks,
-    breaks_tws, total_breaks_tws,
-    matrix_rows, total_matrix_rows,
+  vrp_do_vroom(
+    jobs_sql,
+    jobs_tws_sql,
+    shipments_sql,
+    shipments_tws_sql,
+    vehicles_sql,
+    breaks_sql,
+    breaks_tws_sql,
+    matrix_sql,
 
     exploration_level,
     timeout,
     loading_time,
+    fn,
+
+    use_timestamps,
 
     result_tuples,
     result_count,
@@ -233,18 +145,13 @@ process(
     (*result_count) = 0;
   }
 
-  pgr_global_report(log_msg, notice_msg, err_msg);
+  vrp_global_report(log_msg, notice_msg, err_msg);
 
   if (log_msg) pfree(log_msg);
   if (notice_msg) pfree(notice_msg);
   if (err_msg) pfree(err_msg);
 
-  if (jobs) pfree(jobs);
-  if (shipments) pfree(shipments);
-  if (vehicles) pfree(vehicles);
-  if (matrix_rows) pfree(matrix_rows);
-
-  pgr_SPI_finish();
+  vrp_SPI_finish();
 }
 
 
@@ -256,34 +163,13 @@ PGDLLEXPORT Datum _vrp_vroom(PG_FUNCTION_ARGS) {
   FuncCallContext   *funcctx;
   TupleDesc       tuple_desc;
 
-  /**********************************************************************/
   Vroom_rt *result_tuples = NULL;
   size_t result_count = 0;
-  /**********************************************************************/
 
   if (SRF_IS_FIRSTCALL()) {
     MemoryContext   oldcontext;
     funcctx = SRF_FIRSTCALL_INIT();
     oldcontext = MemoryContextSwitchTo(funcctx->multi_call_memory_ctx);
-
-    /***********************************************************************
-     *
-     *   _vrp_vroom(
-     *     jobs_sql TEXT,
-     *     jobs_time_windows_sql TEXT,
-     *     shipments_sql TEXT,
-     *     shipments_time_windows_sql TEXT,
-     *     vehicles_sql TEXT,
-     *     breaks_sql TEXT,
-     *     breaks_time_windows_sql TEXT,
-     *     matrix_sql TEXT,
-     *     exploration_level INTEGER default 5,
-     *     timeout INTEGER default -1,
-     *     fn SMALLINT,
-     *     is_plain BOOLEAN
-     *   );
-     *
-     **********************************************************************/
 
     char *args[8];
     for (int i = 0; i < 8; i++) {
@@ -330,18 +216,12 @@ PGDLLEXPORT Datum _vrp_vroom(PG_FUNCTION_ARGS) {
         exploration_level,
         timeout,
         fn,
-        is_plain,
+        !is_plain,
         &result_tuples,
         &result_count);
 
-    /**********************************************************************/
 
-
-#if PGSQL_VERSION > 95
     funcctx->max_calls = result_count;
-#else
-    funcctx->max_calls = (uint32_t)result_count;
-#endif
     funcctx->user_fctx = result_tuples;
     if (get_call_result_type(fcinfo, NULL, &tuple_desc)
         != TYPEFUNC_COMPOSITE) {
@@ -426,7 +306,6 @@ PGDLLEXPORT Datum _vrp_vroom(PG_FUNCTION_ARGS) {
     values[14] = Int32GetDatum(result_tuples[call_cntr].departure_time);
     values[15] = PointerGetDatum(arrayType);
 
-    /**********************************************************************/
 
     tuple = heap_form_tuple(tuple_desc, values, nulls);
     result = HeapTupleGetDatum(tuple);
