@@ -106,11 +106,7 @@ process(
   (*result_tuples) = NULL;
   (*result_count) = 0;
 
-
-
-
   clock_t start_t = clock();
-
   int32_t loading_time = (int)((clock() - start_loading) / CLOCKS_PER_SEC) * 1000;
 
   vrp_do_vroom(
@@ -154,10 +150,6 @@ process(
   vrp_SPI_finish();
 }
 
-
-/** @brief Helps in converting postgres variables to C variables, and returns the result.
- *
- */
 
 PGDLLEXPORT Datum _vrp_vroom(PG_FUNCTION_ARGS) {
   FuncCallContext   *funcctx;
