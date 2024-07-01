@@ -246,6 +246,7 @@ sub run_test {
     mysystem("$psql $connopts -A -t -q -f tools/testers/sampledata.sql $DBNAME >> $TMP2 2>\&1 ");
     mysystem("$psql $connopts -A -t -q -f tools/testers/vroomdata.sql $DBNAME >> $TMP2 2>\&1 ");
     mysystem("$psql $connopts -A -t -q -f tools/testers/matrix_new_values.sql $DBNAME >> $TMP2 2>\&1 ");
+    mysystem("$psql $connopts -A -t -q -f tools/testers/functions.sql $DBNAME >> $TMP2 2>\&1 ");
 
     # process data for the tests (if any)
     for my $data_file (@{$t->{data}}) {
@@ -396,12 +397,12 @@ sub createTestDB {
 
     #TODO put as parameter
     my $encoding = "SET client_encoding TO 'UTF8';";
-    
+
+    mysystem("$psql $connopts -c \"$encoding DROP EXTENSION IF EXISTS vrprouting CASCADE\"  $DBNAME");
+    mysystem("$psql $connopts -c \"$encoding CREATE EXTENSION vrprouting CASCADE\"  $DBNAME");
     mysystem("$psql $connopts -c \"$encoding CREATE EXTENSION IF NOT EXISTS plpython3u \" $DBNAME");
     mysystem("$psql $connopts -c \"$encoding CREATE EXTENSION IF NOT EXISTS postgis $postgis_ver \" $DBNAME");
     mysystem("$psql $connopts -c \"$encoding CREATE EXTENSION IF NOT EXISTS pgrouting $pgrouting_ver \" $DBNAME");
-    mysystem("$psql $connopts -c \"$encoding DROP EXTENSION IF EXISTS vrprouting CASCADE\"  $DBNAME");
-    mysystem("$psql $connopts -c \"$encoding CREATE EXTENSION vrprouting\"  $DBNAME");
 
     # print database information
     print `$psql $connopts -c "select version();" postgres `, "\n";
