@@ -37,10 +37,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "c_types/typedefs.h"
 #include "cpp_common/identifiers.hpp"
+#include "cpp_common/pickdeliver_types.hpp"
+#include "cpp_common/vroom_types.hpp"
 
 #include "structures/generic/matrix.h"
 
-typedef struct Matrix_cell_t Matrix_cell_t;
+
+class Vroom_matrix_t;
 
 namespace vrprouting {
 namespace base {
@@ -63,9 +66,9 @@ class Base_Matrix {
     /** @brief Constructs an emtpy matrix */
     Base_Matrix() = default;
     /** @brief Constructs a matrix for only specific identifiers */
-    Base_Matrix(Matrix_cell_t *, size_t, const Identifiers<Id>&, Multiplier);
-    Base_Matrix(Vroom_matrix_t *, size_t, const Identifiers<Id> &, double);
-    explicit Base_Matrix(const std::map<std::pair<Coordinate, Coordinate>, Id> &, Multiplier);
+    Base_Matrix(const std::vector<Matrix_cell_t>&, const Identifiers<Id>&, Multiplier);
+    Base_Matrix(const std::vector<Vroom_matrix_t>&, const Identifiers<Id>&, Multiplier);
+    Base_Matrix(const std::map<std::pair<Coordinate, Coordinate>, Id> &, Multiplier);
 
     /** @name status of the matrix
      * @{
