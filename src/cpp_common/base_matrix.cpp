@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 /** @file */
 
-#include "cpp_common/base_matrix.h"
+#include "cpp_common/base_matrix.hpp"
 
 #include <string>
 #include <sstream>
@@ -37,10 +37,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <cmath>
 #include <utility>
 
-#include "cpp_common/identifiers.hpp"
-#include "cpp_common/pgr_assert.h"
-#include "c_types/matrix_cell_t.h"
-#include "c_types/vroom/vroom_matrix_t.h"
+#include "cpp_common/assert.hpp"
 
 
 namespace vrprouting {
@@ -49,9 +46,9 @@ namespace base {
 namespace detail {
 double
 get_distance(std::pair<Coordinate, Coordinate> p1 , std::pair<Coordinate, Coordinate> p2) {
-  auto dx = p1.first - p2.first;
-  auto dy = p1.second - p2.second;
-  return std::sqrt(dx * dx + dy * dy);
+    auto dx = p1.first - p2.first;
+    auto dy = p1.second - p2.second;
+    return std::sqrt(dx * dx + dy * dy);
 }
 }  // namespace detail
 
@@ -83,22 +80,22 @@ get_distance(std::pair<Coordinate, Coordinate> p1 , std::pair<Coordinate, Coordi
  */
 void
 Base_Matrix::set_ids(const std::vector<Matrix_cell_t> &data) {
-  pgassert(m_ids.empty());
-  Identifiers<Id> node_ids;
-  /*
-   * Cycle the information
-   */
-  for (const auto &cost : data) {
+    pgassert(m_ids.empty());
+    Identifiers<Id> node_ids;
     /*
-     * extract the original identifiers
+     * Cycle the information
      */
-    node_ids += cost.from_vid;
-    node_ids += cost.to_vid;
-  }
-  /*
-   * Save the extracted information
-   */
-  m_ids.insert(m_ids.begin(), node_ids.begin(), node_ids.end());
+    for (const auto &cost : data) {
+        /*
+         * extract the original identifiers
+         */
+        node_ids += cost.from_vid;
+        node_ids += cost.to_vid;
+    }
+    /*
+     * Save the extracted information
+     */
+    m_ids.insert(m_ids.begin(), node_ids.begin(), node_ids.end());
 }
 
 
@@ -124,15 +121,15 @@ Base_Matrix::set_ids(const std::vector<Matrix_cell_t> &data) {
  */
 bool
 Base_Matrix::has_id(Id id) const {
-  /*
-   * binary search the stored identifiers
-   */
-  auto pos = std::lower_bound(m_ids.cbegin(), m_ids.cend(), id);
+    /*
+     * binary search the stored identifiers
+     */
+    auto pos = std::lower_bound(m_ids.cbegin(), m_ids.cend(), id);
 
-  /*
-   * Return search results
-   */
-  return pos != m_ids.end() && *pos == id;
+    /*
+     * Return search results
+     */
+    return pos != m_ids.end() && *pos == id;
 }
 
 
@@ -159,27 +156,27 @@ Base_Matrix::has_id(Id id) const {
  */
 Idx
 Base_Matrix::get_index(Id id) const {
-  /*
-   * binary search the stored identifiers
-   */
-  auto pos = std::lower_bound(m_ids.begin(), m_ids.end(), id);
-  if (pos == m_ids.end()) {
-    std::ostringstream msg;
-    msg << *this << "\nNot found" << id;
-    pgassertwm(false, msg.str());
-    throw std::make_pair(std::string("(INTERNAL) Base_Matrix: Unable to find node on matrix"), msg.str());
-  }
-  pgassert(pos != m_ids.end());
+    /*
+     * binary search the stored identifiers
+     */
+    auto pos = std::lower_bound(m_ids.begin(), m_ids.end(), id);
+    if (pos == m_ids.end()) {
+        std::ostringstream msg;
+        msg << *this << "\nNot found" << id;
+        pgassertwm(false, msg.str());
+        throw std::make_pair(std::string("(INTERNAL) Base_Matrix: Unable to find node on matrix"), msg.str());
+    }
+    pgassert(pos != m_ids.end());
 
-  /*
-   * return the index found
-   */
-  return static_cast<Idx>(pos - m_ids.begin());
+    /*
+     * return the index found
+     */
+    return static_cast<Idx>(pos - m_ids.begin());
 }
 
 /** Given the internal index, returns the original node identifier
  *
- * @param [in] id
+ * @param [in] index
  * @returns the original node identifier
  *
  @dot
@@ -200,27 +197,26 @@ Base_Matrix::get_index(Id id) const {
  */
 Id
 Base_Matrix::get_original_id(Idx index) const {
-  /*
-   * Go to the index in the identifiers vector
-   */
+    /*
+     * Go to the index in the identifiers vector
+     */
 
-  if (index >= m_ids.size()) {
-    std::ostringstream msg;
-    msg << *this << "\nOut of range" << index;
-    pgassertwm(false, msg.str());
-    throw std::make_pair(std::string("(INTERNAL) Base_Matrix: The given index is out of range"), msg.str());
-  }
-  pgassert(index < m_ids.size());
+    if (index >= m_ids.size()) {
+        std::ostringstream msg;
+        msg << *this << "\nOut of range" << index;
+        pgassertwm(false, msg.str());
+        throw std::make_pair(std::string("(INTERNAL) Base_Matrix: The given index is out of range"), msg.str());
+    }
+    pgassert(index < m_ids.size());
 
-  /*
-   * return the original id found
-   */
-  return static_cast<Id>(m_ids[index]);
+    /*
+     * return the original id found
+     */
+    return static_cast<Id>(m_ids[index]);
 }
 
 /**
  * @param [in] data_costs  The set of costs
- * @param [in] size_matrix The size of the set of costs
  * @param [in] node_ids The selected node identifiers to be added
  * @param [in] multiplier All times are multiplied by this value
  *
@@ -233,66 +229,66 @@ Base_Matrix::get_original_id(Idx index) const {
  *
  */
 Base_Matrix::Base_Matrix(
-    Matrix_cell_t *data_costs, size_t size_matrix,
-    const Identifiers<Id>& node_ids,
-    Multiplier multiplier) {
-  /*
-   * Sets the selected nodes identifiers
-   */
-  m_ids.insert(m_ids.begin(), node_ids.begin(), node_ids.end());
+        const std::vector<Matrix_cell_t> &data_costs,
+        const Identifiers<Id>& node_ids,
+        Multiplier multiplier) {
+    /*
+     * Sets the selected nodes identifiers
+     */
+    m_ids.insert(m_ids.begin(), node_ids.begin(), node_ids.end());
 
-  /*
-   * Create matrix
-   */
-  m_time_matrix.resize(
-      m_ids.size(),
-      std::vector<TInterval>(
-        m_ids.size(),
+    /*
+     * Create matrix
+     */
+    m_time_matrix.resize(
+            m_ids.size(),
+            std::vector<TInterval>(
+                m_ids.size(),
+                /*
+                 * Set initial values to infinity
+                 */
+                (std::numeric_limits<TInterval>::max)()));
+
+    Identifiers<Idx> inserted;
+    /*
+     * Cycle the matrix data
+     */
+    for (const auto &data : data_costs) {
         /*
-         * Set initial values to infinity
+         * skip if row is not from selected nodes
          */
-        (std::numeric_limits<TInterval>::max)()));
+        if (!(has_id(data.from_vid) && has_id(data.to_vid))) continue;
 
-  Identifiers<Idx> inserted;
-  /*
-   * Cycle the matrix data
-   */
-  for (size_t i = 0; i < size_matrix; ++i) {
-    auto data = data_costs[i];
-    /*
-     * skip if row is not from selected nodes
-     */
-    if (!(has_id(data.from_vid) && has_id(data.to_vid))) continue;
+        /*
+         * Save the information
+         */
+        m_time_matrix[get_index(data.from_vid)][get_index(data.to_vid)] =
+            static_cast<TInterval>(static_cast<Multiplier>(data.cost) * multiplier);
 
-    /*
-     * Save the information
-     */
-    m_time_matrix[get_index(data.from_vid)][get_index(data.to_vid)] =
-      static_cast<TInterval>(static_cast<Multiplier>(data.cost) * multiplier);
-
-    /*
-     * If the opposite direction is infinity insert the same cost
-     */
-    if (m_time_matrix[get_index(data.to_vid)][get_index(data.from_vid)] == (std::numeric_limits<TInterval>::max)()) {
-      m_time_matrix[get_index(data.to_vid)][get_index(data.from_vid)] =
-        m_time_matrix[get_index(data.from_vid)][get_index(data.to_vid)];
+        /*
+         * If the opposite direction is infinity insert the same cost
+         */
+        if (m_time_matrix[get_index(data.to_vid)][get_index(data.from_vid)] == (std::numeric_limits<TInterval>::max)()) {
+            m_time_matrix[get_index(data.to_vid)][get_index(data.from_vid)] =
+                m_time_matrix[get_index(data.from_vid)][get_index(data.to_vid)];
+        }
     }
-  }
 
-  /*
-   * Set the diagonal values to 0
-   */
-  for (size_t i = 0; i < m_time_matrix.size(); ++i) {
-    m_time_matrix[i][i] = 0;
-  }
+    /*
+     * Set the diagonal values to 0
+     */
+    for (size_t i = 0; i < m_time_matrix.size(); ++i) {
+        m_time_matrix[i][i] = 0;
+    }
 }
+
 
 /**
  * @brief Constructor for VROOM matrix input
  *
- * @param [in] data_costs  The set of costs
- * @param [in] size_matrix The size of the set of costs
- * @param [in] location_ids The location identifiers
+ * @param [in] matrix    The set of costs
+ * @param [in] location_ids   The location identifiers
+ * @param [in] scaling_factor Multiplier
  *
  * @pre data_costs is not empty
  * @post ids has all the ids of node_ids
@@ -302,97 +298,91 @@ Base_Matrix::Base_Matrix(
  * @post costs[from_vid, to_vid] = 0 when from_vid = to_vid
  *
  */
-Base_Matrix::Base_Matrix(Vroom_matrix_t *matrix_rows, size_t total_matrix_rows,
-                         const Identifiers<Id> &location_ids, double scaling_factor) {
-  /*
-   * Sets the selected nodes identifiers
-   */
-  m_ids.insert(m_ids.begin(), location_ids.begin(), location_ids.end());
-
-  /*
-   * Create matrix
-   */
-  m_time_matrix.resize(
-      m_ids.size(),
-      std::vector<TInterval>(m_ids.size(),
-                             /*
-                              * Set initial values to infinity
-                              */
-                             (std::numeric_limits<TInterval>::max)()));
-  m_cost_matrix.resize(
-      m_ids.size(),
-      std::vector<TravelCost>(m_ids.size(), (std::numeric_limits<TravelCost>::max)()));
-
-  Identifiers<Idx> inserted;
-  /*
-   * Cycle the matrix data
-   */
-  for (size_t i = 0; i < total_matrix_rows; ++i) {
-    auto cell = matrix_rows[i];
+Base_Matrix::Base_Matrix(
+        const std::vector<Vroom_matrix_t> &matrix,
+        const Identifiers<Id> &location_ids,
+        Multiplier scaling_factor) {
     /*
+     * Sets the selected nodes identifiers
+     */
+    m_ids.insert(m_ids.begin(), location_ids.begin(), location_ids.end());
+
+    /*
+     * Create matrix
+     * Set initial values to infinity
+     */
+    m_time_matrix.resize(m_ids.size(), std::vector<TInterval>(m_ids.size(), (std::numeric_limits<TInterval>::max)()));
+    m_cost_matrix.resize(m_ids.size(), std::vector<TravelCost>(m_ids.size(), (std::numeric_limits<TravelCost>::max)()));
+
+    Identifiers<Idx> inserted;
+    /*
+     * Cycle the matrix data
      * skip if row is not from selected nodes
      */
-    if (!(has_id(cell.start_id) && has_id(cell.end_id))) continue;
+    for (const auto &cell : matrix) {
+        /*
+         * skip if cell is not from selected nodes
+         */
+        if (!(has_id(cell.start_id) && has_id(cell.end_id))) continue;
+
+        auto sidx = get_index(cell.start_id);
+        auto eidx = get_index(cell.end_id);
+
+        /*
+         * Save the information. Scale the time matrix according to scaling_factor
+         */
+        m_time_matrix[sidx][eidx] = static_cast<Duration>(std::round(cell.duration / scaling_factor));
+        m_cost_matrix[sidx][eidx] = static_cast<Duration>(cell.cost);
+
+        /*
+         * If the opposite direction is infinity insert the same values
+         */
+        if (m_time_matrix[eidx][sidx] == (std::numeric_limits<TInterval>::max)()) {
+            m_time_matrix[eidx][sidx] = m_time_matrix[sidx][eidx];
+        }
+
+        if (m_cost_matrix[eidx][sidx] == (std::numeric_limits<TravelCost>::max)()) {
+            m_cost_matrix[eidx][sidx] = m_cost_matrix[sidx][eidx];
+        }
+    }
 
     /*
-     * Save the information. Scale the time matrix according to scaling_factor
+     * Set the diagonal values to 0
      */
-    m_time_matrix[get_index(cell.start_id)][get_index(cell.end_id)] =
-      static_cast<Duration>(std::round(cell.duration / scaling_factor));
-    m_cost_matrix[get_index(cell.start_id)][get_index(cell.end_id)] =
-      static_cast<Duration>(cell.cost);
-
-    /*
-     * If the opposite direction is infinity insert the same cost
-     */
-    if (m_time_matrix[get_index(cell.end_id)][get_index(cell.start_id)] ==
-        (std::numeric_limits<TInterval>::max)()) {
-      m_time_matrix[get_index(cell.end_id)][get_index(cell.start_id)] =
-        m_time_matrix[get_index(cell.start_id)][get_index(cell.end_id)];
+    for (size_t i = 0; i < m_time_matrix.size(); ++i) {
+        m_time_matrix[i][i] = static_cast<Duration>(scaling_factor - scaling_factor);
+        m_cost_matrix[i][i] = static_cast<Duration>(scaling_factor - scaling_factor);
     }
-    if (m_cost_matrix[get_index(cell.end_id)][get_index(cell.start_id)] ==
-        (std::numeric_limits<TravelCost>::max)()) {
-      m_cost_matrix[get_index(cell.end_id)][get_index(cell.start_id)] =
-          m_cost_matrix[get_index(cell.start_id)][get_index(cell.end_id)];
-    }
-  }
-
-  /*
-   * Set the diagonal values to 0
-   */
-  for (size_t i = 0; i < m_time_matrix.size(); ++i) {
-    m_time_matrix[i][i] = 0;
-    m_cost_matrix[i][i] = 0;
-  }
 }
+
 
 /*
  * constructor for euclidean
  */
 Base_Matrix::Base_Matrix(const std::map<std::pair<Coordinate, Coordinate>, Id> &euclidean_data, Multiplier multiplier) {
-  m_ids.reserve(euclidean_data.size());
-  for (const auto &e : euclidean_data) {
-    m_ids.push_back(e.second);
-  }
-  m_time_matrix.resize(
-      m_ids.size(),
-      std::vector<TInterval>(
-        m_ids.size(),
-        (std::numeric_limits<TInterval>::max)()));
-
-  for (const auto &from : euclidean_data) {
-    for (const auto &to : euclidean_data) {
-      auto from_id = get_index(from.second);
-      auto to_id = get_index(to.second);
-      m_time_matrix[from_id][to_id] =
-        static_cast<TInterval>(static_cast<Multiplier>(detail::get_distance(from.first, to.first)) * multiplier);
-      m_time_matrix[to_id][from_id] = m_time_matrix[from_id][to_id];
+    m_ids.reserve(euclidean_data.size());
+    for (const auto &e : euclidean_data) {
+        m_ids.push_back(e.second);
     }
-  }
+    m_time_matrix.resize(
+            m_ids.size(),
+            std::vector<TInterval>(
+                m_ids.size(),
+                (std::numeric_limits<TInterval>::max)()));
 
-  for (size_t i = 0; i < m_time_matrix.size(); ++i) {
-    m_time_matrix[i][i] = 0;
-  }
+    for (const auto &from : euclidean_data) {
+        for (const auto &to : euclidean_data) {
+            auto from_id = get_index(from.second);
+            auto to_id = get_index(to.second);
+            m_time_matrix[from_id][to_id] =
+                static_cast<TInterval>(static_cast<Multiplier>(detail::get_distance(from.first, to.first)) * multiplier);
+            m_time_matrix[to_id][from_id] = m_time_matrix[from_id][to_id];
+        }
+    }
+
+    for (size_t i = 0; i < m_time_matrix.size(); ++i) {
+        m_time_matrix[i][i] = 0;
+    }
 }
 
 /**
@@ -402,14 +392,14 @@ Base_Matrix::Base_Matrix(const std::map<std::pair<Coordinate, Coordinate>, Id> &
  */
 vroom::Matrix<vroom::Duration>
 Base_Matrix::get_vroom_duration_matrix() const {
-  size_t matrix_size = m_ids.size();
-  vroom::Matrix<vroom::Cost> vroom_matrix(matrix_size);
-  for (size_t i = 0; i < matrix_size; i++) {
-    for (size_t j = 0; j < matrix_size; j++) {
-      vroom_matrix[i][j] = static_cast<vroom::Duration>(m_time_matrix[i][j]);
+    size_t matrix_size = m_ids.size();
+    vroom::Matrix<vroom::Cost> vroom_matrix(matrix_size);
+    for (size_t i = 0; i < matrix_size; i++) {
+        for (size_t j = 0; j < matrix_size; j++) {
+            vroom_matrix[i][j] = static_cast<vroom::Duration>(m_time_matrix[i][j]);
+        }
     }
-  }
-  return vroom_matrix;
+    return vroom_matrix;
 }
 
 /**
@@ -419,14 +409,14 @@ Base_Matrix::get_vroom_duration_matrix() const {
  */
 vroom::Matrix<vroom::Cost>
 Base_Matrix::get_vroom_cost_matrix() const {
-  size_t matrix_size = m_ids.size();
-  vroom::Matrix<vroom::Cost> vroom_matrix(matrix_size);
-  for (size_t i = 0; i < matrix_size; i++) {
-    for (size_t j = 0; j < matrix_size; j++) {
-      vroom_matrix[i][j] = static_cast<vroom::Cost>(m_cost_matrix[i][j]);
+    size_t matrix_size = m_ids.size();
+    vroom::Matrix<vroom::Cost> vroom_matrix(matrix_size);
+    for (size_t i = 0; i < matrix_size; i++) {
+        for (size_t j = 0; j < matrix_size; j++) {
+            vroom_matrix[i][j] = static_cast<vroom::Cost>(m_cost_matrix[i][j]);
+        }
     }
-  }
-  return vroom_matrix;
+    return vroom_matrix;
 }
 
 /**
@@ -457,23 +447,25 @@ a -> error [color=red,label="fail",fontcolor=red];
 */
 bool
 Base_Matrix::has_no_infinity() const {
-  /*
-   * Cycle the matrix
-   */
-  for (const auto &row : m_time_matrix) {
-    for (const auto &val : row) {
-      /*
-       * found infinity?
-       *
-       * yes -> return false
-       */
-      if (val == (std::numeric_limits<TInterval>::max)()) return false;
+    /*
+     * Cycle the matrix
+     */
+    for (const auto &row : m_time_matrix) {
+        for (const auto &val : row) {
+            /*
+             * found infinity?
+             *
+             * yes -> return false
+             */
+            if (val == (std::numeric_limits<TInterval>::max)()) {
+                return false;
+            }
+        }
     }
-  }
-  /*
-   * return true
-   */
-  return true;
+    /*
+     * return true
+     */
+    return true;
 }
 
 /*!
@@ -485,16 +477,16 @@ Base_Matrix::has_no_infinity() const {
  */
 bool
 Base_Matrix::obeys_triangle_inequality() const {
-  for (size_t i = 0; i < m_time_matrix.size(); ++i) {
-    for (size_t j = 0; j < m_time_matrix.size(); ++j) {
-      for (size_t k = 0; k < m_time_matrix.size(); ++k) {
-        if (m_time_matrix[i][k] > (m_time_matrix[i][j] + m_time_matrix[j][k])) {
-          return false;
+    for (size_t i = 0; i < m_time_matrix.size(); ++i) {
+        for (size_t j = 0; j < m_time_matrix.size(); ++j) {
+            for (size_t k = 0; k < m_time_matrix.size(); ++k) {
+                if (m_time_matrix[i][k] > (m_time_matrix[i][j] + m_time_matrix[j][k])) {
+                    return false;
+                }
+            }
         }
-      }
     }
-  }
-  return true;
+    return true;
 }
 
 /*!
@@ -506,38 +498,38 @@ Base_Matrix::obeys_triangle_inequality() const {
  */
 size_t
 Base_Matrix::fix_triangle_inequality(size_t depth) {
-  if (depth > m_time_matrix.size()) return depth;
-  for (auto & i : m_time_matrix) {
-    for (size_t j = 0; j < m_time_matrix.size(); ++j) {
-      for (size_t k = 0; k < m_time_matrix.size(); ++k) {
-        if (i[k] > (i[j] + m_time_matrix[j][k])) {
-          i[k] = i[j] + m_time_matrix[j][k];
-          return fix_triangle_inequality(++depth);
+    if (depth > m_time_matrix.size()) return depth;
+    for (auto & i : m_time_matrix) {
+        for (size_t j = 0; j < m_time_matrix.size(); ++j) {
+            for (size_t k = 0; k < m_time_matrix.size(); ++k) {
+                if (i[k] > (i[j] + m_time_matrix[j][k])) {
+                    i[k] = i[j] + m_time_matrix[j][k];
+                    return fix_triangle_inequality(++depth);
+                }
+            }
         }
-      }
     }
-  }
-  return depth;
+    return depth;
 }
 
 bool
 Base_Matrix::is_symmetric() const {
-  for (size_t i = 0; i < m_time_matrix.size(); ++i) {
-    for (size_t j = 0; j < m_time_matrix.size(); ++j) {
-      if (0.000001 < std::fabs(m_time_matrix[i][j] - m_time_matrix[j][i])) {
-        std::ostringstream log;
-        log << "i \t" << i
-          << "j \t" << j
-          << "m_time_matrix[i][j] \t" << m_time_matrix[i][j]
-          << "m_time_matrix[j][i] \t" << m_time_matrix[j][i]
-          << "\n";
-        log << (*this);
-        pgassertwm(false, log.str());
-        return false;
-      }
+    for (size_t i = 0; i < m_time_matrix.size(); ++i) {
+        for (size_t j = 0; j < m_time_matrix.size(); ++j) {
+            if (0.000001 < std::fabs(m_time_matrix[i][j] - m_time_matrix[j][i])) {
+                std::ostringstream log;
+                log << "i \t" << i
+                    << "j \t" << j
+                    << "m_time_matrix[i][j] \t" << m_time_matrix[i][j]
+                    << "m_time_matrix[j][i] \t" << m_time_matrix[j][i]
+                    << "\n";
+                log << (*this);
+                pgassertwm(false, log.str());
+                return false;
+            }
+        }
     }
-  }
-  return true;
+    return true;
 }
 
 
@@ -565,33 +557,33 @@ Base_Matrix::is_symmetric() const {
  @enddot
  */
 std::ostream& operator<<(std::ostream &log, const Base_Matrix &matrix) {
-  /*
-   * print the identifiers
-   */
-  for (const auto id : matrix.m_ids) {
-    log << "\t" << id;
-  }
-  log << "\n";
-  size_t i = 0;
-
-  /*
-   * Cycle the cells
-   */
-  for (const auto &row : matrix.m_time_matrix) {
-    size_t j = 0;
-    for (const auto cost : row) {
-      /*
-       * print the information
-       */
-      log << "Internal(" << i << "," << j << ")"
-        << "\tOriginal(" << matrix.m_ids[i] << "," << matrix.m_ids[j] << ")"
-        << "\t = " << cost
-        << "\n";
-      ++j;
+    /*
+     * print the identifiers
+     */
+    for (const auto id : matrix.m_ids) {
+        log << "\t" << id;
     }
-    ++i;
-  }
-  return log;
+    log << "\n";
+    size_t i = 0;
+
+    /*
+     * Cycle the cells
+     */
+    for (const auto &row : matrix.m_time_matrix) {
+        size_t j = 0;
+        for (const auto cost : row) {
+            /*
+             * print the information
+             */
+            log << "Internal(" << i << "," << j << ")"
+                << "\tOriginal(" << matrix.m_ids[i] << "," << matrix.m_ids[j] << ")"
+                << "\t = " << cost
+                << "\n";
+            ++j;
+        }
+        ++i;
+    }
+    return log;
 }
 
 
