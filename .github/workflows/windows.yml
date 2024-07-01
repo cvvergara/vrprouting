@@ -1,5 +1,7 @@
 name: Build for Windows
 
+# TODO fix for windows
+
 on:
   workflow_dispatch:
 
@@ -10,7 +12,7 @@ jobs:
 
     strategy:
         matrix:
-          psql: [10]
+          psql: [12]
           os: [windows-latest]
 
     steps:
@@ -35,7 +37,7 @@ jobs:
       #       python-sphinx
 
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # - name: Prepare
       #   run: |

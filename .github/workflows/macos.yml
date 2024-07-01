@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: install deps
         run: |
@@ -61,7 +61,7 @@ jobs:
 
       - name: Get pgtap repo
         if: steps.cache-pgtap.outputs.cache-hit != 'true'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: theory/pgtap
           path: ./pgTapExtension/
