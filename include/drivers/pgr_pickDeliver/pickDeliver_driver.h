@@ -50,16 +50,12 @@ extern "C" {
   void vrp_do_pgr_pickDeliver(
       char*, char*, char*,
 
-      double factor,
-      int max_cycles,
-      int initial_solution_id,
+      double, int, int,
 
-      Solution_rt **return_tuples,
-      size_t *return_count,
+      Solution_rt**,
+      size_t*,
 
-      char **log_msg,
-      char **notice_msg,
-      char **err_msg);
+      char**, char**, char**);
 
 
 #ifdef __cplusplus

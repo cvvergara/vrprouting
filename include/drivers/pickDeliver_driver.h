@@ -49,24 +49,16 @@ extern "C" {
 
   /** @brief Driver for processing a pickupDeliver problem */
   void do_pickDeliver(
-      char*,
-      char*,
-      char*,
-      char*,
+      char*, char*, char*, char*,
 
-      bool,
-      double factor,
-      int max_cycles,
-      bool stop_on_all_served,
-      int64_t execution_date,
+      bool, double, int,
+      bool, int64_t,
       bool, bool, bool,
 
-      Solution_rt **return_tuples,
-      size_t *return_count,
+      Solution_rt**,
+      size_t*,
 
-      char **log_msg,
-      char **notice_msg,
-      char **err_msg);
+      char **, char **, char **);
 
 
 #ifdef __cplusplus

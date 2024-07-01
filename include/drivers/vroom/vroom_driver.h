@@ -46,25 +46,16 @@ extern "C" {
 #endif
 
   void vrp_do_vroom(
-      char*, char*,
-      char*, char*,
-      char*,
-      char*, char*,
-      char*,
+      char*, char*, char*, char*,
+      char*, char*, char*, char*,
 
-      int32_t exploration_level,
-      int32_t timeout,
-      int32_t loading_time,
-      int16_t,
-
+      int32_t, int32_t, int32_t, int16_t,
       bool,
 
-      Vroom_rt **return_tuples,
-      size_t *return_count,
+      Vroom_rt**,
+      size_t*,
 
-      char ** log_msg,
-      char ** notice_msg,
-      char ** err_msg);
+      char**, char**, char**);
 
 #ifdef __cplusplus
 }

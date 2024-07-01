@@ -47,22 +47,17 @@ typedef struct CompatibleVehicles_rt CompatibleVehicles_rt;
 extern "C" {
 #endif
 
-    /** @brief Driver for processing a "compatible vehicles" problem */
-  void do_compatibleVehicles(
-      char*,
-      char*,
-      char*,
-      char*,
+/** @brief Driver for processing a "compatible vehicles" problem */
+void do_compatibleVehicles(
+        char*, char*, char*, char*,
 
-      double factor,
-      bool, bool, bool,
+        double,
+        bool, bool, bool,
 
-      CompatibleVehicles_rt **return_tuples,
-      size_t *return_count,
+        CompatibleVehicles_rt **,
+        size_t*,
 
-      char **log_msg,
-      char **notice_msg,
-      char **err_msg);
+        char**, char**, char**);
 
 
 #ifdef __cplusplus

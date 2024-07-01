@@ -51,20 +51,15 @@ extern "C" {
     void do_optimize(
             char*, char*, char*, char*,
 
-            double,
-            int,
-            int64_t,
+            double, int, int64_t,
 
             bool, bool, bool,
-
             bool, bool, bool,
 
             Short_vehicle_rt**,
             size_t*,
 
-            char**,
-            char**,
-            char**);
+            char**, char**, char**);
 
 
 #ifdef __cplusplus
