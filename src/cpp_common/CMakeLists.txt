@@ -1,6 +1,9 @@
 ADD_LIBRARY(cpp_common OBJECT
   base_matrix.cpp
-  pgr_messages.cpp
+  messages.cpp
+  pgdata_fetchers.cpp
+  pgdata_getters.cpp
+  get_check_data.cpp
   identifier.cpp
-  pgr_assert.cpp
+  assert.cpp
   )
