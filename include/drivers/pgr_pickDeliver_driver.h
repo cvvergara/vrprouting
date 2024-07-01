@@ -32,44 +32,29 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_DRIVERS_PGR_PICKDELIVER_PICKDELIVER_DRIVER_H_
 #pragma once
 
-/* for size-t */
 #ifdef __cplusplus
-#   include <cstddef>
+#include <cstddef>
+#include <cstdint>
+using Solution_rt = struct Solution_rt;
 #else
-#   include <stddef.h>
-#endif
-
-#include "c_types/vehicle_t.h"
-#include "c_types/matrix_cell_t.h"
-
-typedef struct PickDeliveryOrders_t PickDeliveryOrders_t;
+#include <stddef.h>
+#include <stdint.h>
 typedef struct Solution_rt Solution_rt;
+#endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-  /*********************************************************
-    orders_sql TEXT,
-    max_vehicles INTEGER,
-    capacity FLOAT,
-    max_cycles INTEGER,
-   ********************************************************/
-  void do_pgr_pickDeliver(
-      PickDeliveryOrders_t *pd_orders_arr, size_t total_pd_orders,
-      Vehicle_t *vehicles_arr, size_t total_vehicles,
-      Matrix_cell_t *matrix_cells_arr, size_t total_cells,
+  void vrp_do_pgr_pickDeliver(
+      char*, char*, char*,
 
-      double factor,
-      int max_cycles,
-      int initial_solution_id,
+      double, int, int,
 
-      Solution_rt **return_tuples,
-      size_t *return_count,
+      Solution_rt**,
+      size_t*,
 
-      char **log_msg,
-      char **notice_msg,
-      char **err_msg);
+      char**, char**, char**);
 
 
 #ifdef __cplusplus
