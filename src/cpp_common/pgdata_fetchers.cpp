@@ -44,11 +44,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 namespace {
 
 void check_pairs(vrprouting::Info lhs, vrprouting::Info rhs) {
-  if (!(vrprouting::column_found(lhs)) && vrprouting::column_found(rhs)) {
-    throw std::string("Column found: '") + rhs.name + "', missing column: '" + lhs.name + "'";
-  } else if (!(vrprouting::column_found(rhs)) && vrprouting::column_found(lhs)) {
-    throw std::string("Column found: '") + lhs.name + "', missing column: '" + rhs.name + "'";
-  }
+    if (!(vrprouting::column_found(lhs)) && vrprouting::column_found(rhs)) {
+        throw std::string("Column found: '") + rhs.name + "', missing column: '" + lhs.name + "'";
+    } else if (!(vrprouting::column_found(rhs)) && vrprouting::column_found(lhs)) {
+        throw std::string("Column found: '") + lhs.name + "', missing column: '" + rhs.name + "'";
+    }
 }
 
 }  // namespace
@@ -59,27 +59,27 @@ namespace pgget {
 namespace vroom {
 
 Vroom_break_t fetch_breaks(
-    const HeapTuple tuple, const TupleDesc &tupdesc,
-    const std::vector<Info> &info,
-    bool) {
-  Vroom_break_t vroom_break;
-  vroom_break.id = get_value<Idx>(tuple, tupdesc, info[0], 0);
-  vroom_break.vehicle_id = get_value<Idx>(tuple, tupdesc, info[1], 0);
-  vroom_break.service = get_value<Duration>(tuple, tupdesc, info[2], 0);
-  vroom_break.data = get_jsonb(tuple, tupdesc, info[3]);
-  return vroom_break;
+        const HeapTuple tuple, const TupleDesc &tupdesc,
+        const std::vector<Info> &info,
+        bool) {
+    Vroom_break_t vroom_break;
+    vroom_break.id = get_value<Idx>(tuple, tupdesc, info[0], 0);
+    vroom_break.vehicle_id = get_value<Idx>(tuple, tupdesc, info[1], 0);
+    vroom_break.service = get_value<Duration>(tuple, tupdesc, info[2], 0);
+    vroom_break.data = get_jsonb(tuple, tupdesc, info[3]);
+    return vroom_break;
 }
 
 Vroom_matrix_t fetch_matrix(
-    const HeapTuple tuple, const TupleDesc &tupdesc,
-    const std::vector<Info> &info,
-    bool) {
-  Vroom_matrix_t matrix;
-  matrix.start_id = get_value<MatrixIndex>(tuple, tupdesc, info[0], -1);
-  matrix.end_id = get_value<MatrixIndex>(tuple, tupdesc, info[1], -1);
-  matrix.duration = get_value<Duration>(tuple, tupdesc, info[2], 0);
-  matrix.cost = get_value<TravelCost>(tuple, tupdesc, info[3], matrix.duration);
-  return matrix;
+        const HeapTuple tuple, const TupleDesc &tupdesc,
+        const std::vector<Info> &info,
+        bool) {
+    Vroom_matrix_t matrix;
+    matrix.start_id = get_value<MatrixIndex>(tuple, tupdesc, info[0], -1);
+    matrix.end_id = get_value<MatrixIndex>(tuple, tupdesc, info[1], -1);
+    matrix.duration = get_value<Duration>(tuple, tupdesc, info[2], 0);
+    matrix.cost = get_value<TravelCost>(tuple, tupdesc, info[3], matrix.duration);
+    return matrix;
 }
 
 Vroom_time_window_t fetch_timewindows(
@@ -107,28 +107,28 @@ Vroom_time_window_t fetch_timewindows(
 }
 
 Vroom_job_t fetch_jobs(
-    const HeapTuple tuple, const TupleDesc &tupdesc,
-    const std::vector<Info> &info,
-    bool) {
-  Vroom_job_t job;
+        const HeapTuple tuple, const TupleDesc &tupdesc,
+        const std::vector<Info> &info,
+        bool) {
+    Vroom_job_t job;
 
-  job.id = get_value<Idx>(tuple, tupdesc, info[0], 0);
-  job.location_id = get_value<MatrixIndex>(tuple, tupdesc, info[1], 0);
+    job.id = get_value<Idx>(tuple, tupdesc, info[0], 0);
+    job.location_id = get_value<MatrixIndex>(tuple, tupdesc, info[1], 0);
 
-  job.setup = get_value<Duration>(tuple, tupdesc, info[2], 0);
-  job.service = get_value<Duration>(tuple, tupdesc, info[3], 0);
+    job.setup = get_value<Duration>(tuple, tupdesc, info[2], 0);
+    job.service = get_value<Duration>(tuple, tupdesc, info[3], 0);
 
-  job.delivery = get_array<Amount>(tuple, tupdesc, info[4]);
-  job.pickup = get_array<Amount>(tuple, tupdesc, info[5]);
+    job.delivery = get_array<Amount>(tuple, tupdesc, info[4]);
+    job.pickup = get_array<Amount>(tuple, tupdesc, info[5]);
 
-  job.skills = get_uint_unordered_set(tuple, tupdesc, info[6]);
-  job.priority = get_value<Priority>(tuple, tupdesc, info[7], 0);
-  job.data = get_jsonb(tuple, tupdesc, info[8]);
+    job.skills = get_uint_unordered_set(tuple, tupdesc, info[6]);
+    job.priority = get_value<Priority>(tuple, tupdesc, info[7], 0);
+    job.data = get_jsonb(tuple, tupdesc, info[8]);
 
-  if (job.priority > 100) {
-    throw std::string("Invalid value in column '") + info[7].name + "'. Maximum value allowed 100";
-  }
-  return job;
+    if (job.priority > 100) {
+        throw std::string("Invalid value in column '") + info[7].name + "'. Maximum value allowed 100";
+    }
+    return job;
 }
 
 Vroom_shipment_t fetch_shipments(
@@ -202,91 +202,91 @@ Vroom_vehicle_t fetch_vehicles(
 namespace pickdeliver {
 
 Matrix_cell_t fetch_matrix(
-    const HeapTuple tuple, const TupleDesc &tupdesc,
-    const std::vector<Info> &info,
-    bool) {
-  Matrix_cell_t row;
-  row.from_vid = get_value<Id>(tuple, tupdesc,  info[0], -1);
-  row.to_vid = get_value<Id>(tuple, tupdesc,  info[1], -1);
-  row.cost = get_value<TInterval>(tuple, tupdesc, info[2], 0);
-  return row;
+        const HeapTuple tuple, const TupleDesc &tupdesc,
+        const std::vector<Info> &info,
+        bool) {
+    Matrix_cell_t row;
+    row.from_vid = get_value<Id>(tuple, tupdesc,  info[0], -1);
+    row.to_vid = get_value<Id>(tuple, tupdesc,  info[1], -1);
+    row.cost = get_value<TInterval>(tuple, tupdesc, info[2], 0);
+    return row;
 }
 
 Time_multipliers_t fetch_timeMultipliers(
         const HeapTuple tuple, const TupleDesc &tupdesc,
         const std::vector<Info> &info,
         bool) {
-   Time_multipliers_t row;
-   row.start_time = get_value<TTimestamp>(tuple, tupdesc, info[0], 0);
-   row.multiplier = get_anynumerical(tuple, tupdesc,  info[1], 1);
-   return row;
+    Time_multipliers_t row;
+    row.start_time = get_value<TTimestamp>(tuple, tupdesc, info[0], 0);
+    row.multiplier = get_anynumerical(tuple, tupdesc,  info[1], 1);
+    return row;
 }
 
 Orders_t fetch_orders(
-    const HeapTuple tuple, const TupleDesc &tupdesc,
-    const std::vector<Info> &info,
-    bool is_euclidean) {
-  Orders_t pd_order;
-  pd_order.id = get_value<Id>(tuple, tupdesc, info[0], -1);
-  pd_order.demand = get_value<PAmount>(tuple, tupdesc, info[1], 0);
+        const HeapTuple tuple, const TupleDesc &tupdesc,
+        const std::vector<Info> &info,
+        bool is_euclidean) {
+    Orders_t pd_order;
+    pd_order.id = get_value<Id>(tuple, tupdesc, info[0], -1);
+    pd_order.demand = get_value<PAmount>(tuple, tupdesc, info[1], 0);
 
-  pd_order.pick_node_id = is_euclidean? 0 : get_value<Id>(tuple, tupdesc, info[2], -1);
-  pd_order.pick_x = is_euclidean? get_anynumerical(tuple, tupdesc, info[3], 0) : 0;
-  pd_order.pick_y = is_euclidean? get_anynumerical(tuple, tupdesc, info[4], 0) : 0;
-  pd_order.pick_open_t    = get_value<TTimestamp>(tuple, tupdesc, info[5], -1);
-  pd_order.pick_close_t   = get_value<TTimestamp>(tuple, tupdesc, info[6], -1);
-  pd_order.pick_service_t = get_value<TInterval>(tuple, tupdesc, info[7], 0);
+    pd_order.pick_node_id = is_euclidean? 0 : get_value<Id>(tuple, tupdesc, info[2], -1);
+    pd_order.pick_x = is_euclidean? get_anynumerical(tuple, tupdesc, info[3], 0) : 0;
+    pd_order.pick_y = is_euclidean? get_anynumerical(tuple, tupdesc, info[4], 0) : 0;
+    pd_order.pick_open_t    = get_value<TTimestamp>(tuple, tupdesc, info[5], -1);
+    pd_order.pick_close_t   = get_value<TTimestamp>(tuple, tupdesc, info[6], -1);
+    pd_order.pick_service_t = get_value<TInterval>(tuple, tupdesc, info[7], 0);
 
-  pd_order.deliver_node_id   = is_euclidean? 0 : get_value<Id>(tuple, tupdesc, info[8], pd_order.pick_node_id);
-  pd_order.deliver_x =   is_euclidean? get_anynumerical(tuple, tupdesc, info[9], pd_order.pick_x) : 0;
-  pd_order.deliver_y =   is_euclidean? get_anynumerical(tuple, tupdesc, info[10], pd_order.pick_y) : 0;
-  pd_order.deliver_open_t    = get_value<TTimestamp>(tuple, tupdesc, info[11], -1);
-  pd_order.deliver_close_t   = get_value<TTimestamp>(tuple, tupdesc, info[12], -1);
-  pd_order.deliver_service_t = get_value<TInterval>(tuple, tupdesc, info[13], 0);
-  return pd_order;
+    pd_order.deliver_node_id   = is_euclidean? 0 : get_value<Id>(tuple, tupdesc, info[8], pd_order.pick_node_id);
+    pd_order.deliver_x =   is_euclidean? get_anynumerical(tuple, tupdesc, info[9], pd_order.pick_x) : 0;
+    pd_order.deliver_y =   is_euclidean? get_anynumerical(tuple, tupdesc, info[10], pd_order.pick_y) : 0;
+    pd_order.deliver_open_t    = get_value<TTimestamp>(tuple, tupdesc, info[11], -1);
+    pd_order.deliver_close_t   = get_value<TTimestamp>(tuple, tupdesc, info[12], -1);
+    pd_order.deliver_service_t = get_value<TInterval>(tuple, tupdesc, info[13], 0);
+    return pd_order;
 }
 
 Vehicle_t fetch_vehicles(
-    const HeapTuple tuple, const TupleDesc &tupdesc,
-    const std::vector<Info> &info,
-    bool is_euclidean) {
+        const HeapTuple tuple, const TupleDesc &tupdesc,
+        const std::vector<Info> &info,
+        bool is_euclidean) {
 
-  Vehicle_t vehicle;
+    Vehicle_t vehicle;
 
-  if (is_euclidean) {
-    check_pairs(info[5], info[6]);
-    check_pairs(info[11], info[12]);
-  };
+    if (is_euclidean) {
+        check_pairs(info[5], info[6]);
+        check_pairs(info[11], info[12]);
+    };
 
-  vehicle.id = get_value<Id>(tuple, tupdesc, info[0], -1);
-  vehicle.capacity = get_value<PAmount>(tuple, tupdesc, info[1], 0);
-  vehicle.cant_v =  get_value<PAmount>(tuple, tupdesc, info[2], 1);
-  vehicle.speed  =  get_anynumerical(tuple, tupdesc, info[3], 1);
+    vehicle.id = get_value<Id>(tuple, tupdesc, info[0], -1);
+    vehicle.capacity = get_value<PAmount>(tuple, tupdesc, info[1], 0);
+    vehicle.cant_v =  get_value<PAmount>(tuple, tupdesc, info[2], 1);
+    vehicle.speed  =  get_anynumerical(tuple, tupdesc, info[3], 1);
 
-  /*
-   * start values
-   */
-  vehicle.start_node_id = is_euclidean? 0 : get_value<Id>(tuple, tupdesc, info[4], -1);
-  vehicle.start_x = is_euclidean? get_anynumerical(tuple, tupdesc, info[5], 0) : 0;
-  vehicle.start_y = is_euclidean? get_anynumerical(tuple, tupdesc, info[6], 0) : 0;
-  vehicle.start_open_t = get_value<TTimestamp>(tuple, tupdesc, info[7], 0);
-  vehicle.start_close_t = get_value<TTimestamp>(tuple, tupdesc, info[8], INT64_MAX);
-  vehicle.start_service_t = get_value<TInterval>(tuple, tupdesc, info[9], 0);
+    /*
+     * start values
+     */
+    vehicle.start_node_id = is_euclidean? 0 : get_value<Id>(tuple, tupdesc, info[4], -1);
+    vehicle.start_x = is_euclidean? get_anynumerical(tuple, tupdesc, info[5], 0) : 0;
+    vehicle.start_y = is_euclidean? get_anynumerical(tuple, tupdesc, info[6], 0) : 0;
+    vehicle.start_open_t = get_value<TTimestamp>(tuple, tupdesc, info[7], 0);
+    vehicle.start_close_t = get_value<TTimestamp>(tuple, tupdesc, info[8], INT64_MAX);
+    vehicle.start_service_t = get_value<TInterval>(tuple, tupdesc, info[9], 0);
 
-  /*
-   * end values
-   */
-  vehicle.end_node_id   = is_euclidean? 0 : get_value<Id>(tuple, tupdesc, info[10], vehicle.start_node_id);
-  vehicle.end_x =   is_euclidean? get_anynumerical(tuple, tupdesc, info[11], vehicle.start_x) : 0;
-  vehicle.end_y =   is_euclidean? get_anynumerical(tuple, tupdesc, info[12], vehicle.start_y) : 0;
-  vehicle.end_open_t = get_value<TTimestamp>(tuple, tupdesc, info[13], vehicle.start_open_t);
-  vehicle.end_close_t = get_value<TTimestamp>(tuple, tupdesc, info[14], vehicle.start_close_t);
-  vehicle.end_service_t   = get_value<TInterval>(tuple, tupdesc, info[15], 0);
+    /*
+     * end values
+     */
+    vehicle.end_node_id   = is_euclidean? 0 : get_value<Id>(tuple, tupdesc, info[10], vehicle.start_node_id);
+    vehicle.end_x =   is_euclidean? get_anynumerical(tuple, tupdesc, info[11], vehicle.start_x) : 0;
+    vehicle.end_y =   is_euclidean? get_anynumerical(tuple, tupdesc, info[12], vehicle.start_y) : 0;
+    vehicle.end_open_t = get_value<TTimestamp>(tuple, tupdesc, info[13], vehicle.start_open_t);
+    vehicle.end_close_t = get_value<TTimestamp>(tuple, tupdesc, info[14], vehicle.start_close_t);
+    vehicle.end_service_t   = get_value<TInterval>(tuple, tupdesc, info[15], 0);
 
-  vehicle.stops_size = 0;
-  vehicle.stops = get_array<Id>(tuple, tupdesc, info[16]);
+    vehicle.stops_size = 0;
+    vehicle.stops = get_array<Id>(tuple, tupdesc, info[16]);
 
-  return vehicle;
+    return vehicle;
 }
 
 }   // namespace pickdeliver

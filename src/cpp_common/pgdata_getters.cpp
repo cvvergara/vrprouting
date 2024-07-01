@@ -4,6 +4,13 @@ File: pgdata_getters.cpp
 Copyright (c) 2015 pgRouting developers
 Mail: project@pgrouting.org
 
+Developers:
+Copyright (c) 2015 Vicky Vergara
+Mail: vicky at erosion.dev
+
+Copyright (c) 2021 Ashish Kumar
+Mail: ashishkr23438 at gmail.com
+
 ------
 
 This program is free software; you can redistribute it and/or modify
@@ -53,14 +60,14 @@ namespace vroom {
  * @returns vector of Vroom_matrix_t containing the matrix cell contents
  */
 std::vector<Vroom_matrix_t> get_matrix(
-    const std::string &sql,
-    bool use_timestamps) {
-  using vrprouting::Info;
-  std::vector<Info> info{
-    {-1, 0, true, "start_id", vrprouting::MATRIX_INDEX},
-    {-1, 0, true, "end_id", vrprouting::MATRIX_INDEX},
-    {-1, 0, true, "duration", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
-    {-1, 0, false, "cost", vrprouting::INTEGER}};
+        const std::string &sql,
+        bool use_timestamps) {
+    using vrprouting::Info;
+    std::vector<Info> info{
+        {-1, 0, true, "start_id", vrprouting::MATRIX_INDEX},
+        {-1, 0, true, "end_id", vrprouting::MATRIX_INDEX},
+        {-1, 0, true, "duration", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+        {-1, 0, false, "cost", vrprouting::INTEGER}};
 
     return pgget::get_data<Vroom_matrix_t>(sql, use_timestamps, info, &fetch_matrix);
 }
@@ -75,14 +82,14 @@ std::vector<Vroom_matrix_t> get_matrix(
  * @returns vector of Vroom_break_t containing the breaks information
  */
 std::vector<Vroom_break_t> get_breaks(
-    const std::string &sql,
-    bool use_timestamps) {
-  using vrprouting::Info;
-  std::vector<Info> info{
-    {-1, 0, true, "id", vrprouting::IDX},
-    {-1, 0, true, "vehicle_id", vrprouting::IDX},
-    {-1, 0, false, "service", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
-    {-1, 0, false, "data", vrprouting::JSONB}};
+        const std::string &sql,
+        bool use_timestamps) {
+    using vrprouting::Info;
+    std::vector<Info> info{
+        {-1, 0, true, "id", vrprouting::IDX},
+        {-1, 0, true, "vehicle_id", vrprouting::IDX},
+        {-1, 0, false, "service", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+        {-1, 0, false, "data", vrprouting::JSONB}};
 
     return pgget::get_data<Vroom_break_t>(sql, use_timestamps, info, &fetch_breaks);
 }
@@ -98,15 +105,15 @@ std::vector<Vroom_break_t> get_breaks(
  * @returns vector of Vroom_time_window_t containing the time windows information
  */
 std::vector<Vroom_time_window_t> get_timewindows(
-    const std::string &sql,
-    bool use_timestamps,
-    bool is_shipment) {
-  using vrprouting::Info;
-  std::vector<Info> info{
-      {-1, 0, true, "id", vrprouting::ANY_INTEGER},
-      {-1, 0, true, "tw_open", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
-      {-1, 0, true, "tw_close", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
-      {-1, 0, is_shipment, "kind", vrprouting::CHAR1}};
+        const std::string &sql,
+        bool use_timestamps,
+        bool is_shipment) {
+    using vrprouting::Info;
+    std::vector<Info> info{
+        {-1, 0, true, "id", vrprouting::ANY_INTEGER},
+        {-1, 0, true, "tw_open", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+        {-1, 0, true, "tw_close", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+        {-1, 0, is_shipment, "kind", vrprouting::CHAR1}};
 
     return pgget::get_data<Vroom_time_window_t>(sql, is_shipment, info, &fetch_timewindows);
 }
@@ -121,20 +128,20 @@ std::vector<Vroom_time_window_t> get_timewindows(
  * @returns vector of Vroom_job_t containing the jobs information
  */
 std::vector<Vroom_job_t> get_jobs(
-    const std::string &sql,
-    bool use_timestamps) {
+        const std::string &sql,
+        bool use_timestamps) {
     using vrprouting::Info;
-    std::vector<Info> info{
+    std::vector<Info> info {
 
-    {-1, 0, true, "id", vrprouting::IDX},
-    {-1, 0, true, "location_id", vrprouting::MATRIX_INDEX},
-    {-1, 0, false, "setup",   use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
-    {-1, 0, false, "service", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
-    {-1, 0, false, "delivery", vrprouting::ANY_POSITIVE_ARRAY},
-    {-1, 0, false, "pickup", vrprouting::ANY_POSITIVE_ARRAY},
-    {-1, 0, false, "skills", vrprouting::ANY_UINT_ARRAY},
-    {-1, 0, false, "priority", vrprouting::POSITIVE_INTEGER},
-    {-1, 0, false, "data", vrprouting::JSONB}};
+        {-1, 0, true, "id", vrprouting::IDX},
+        {-1, 0, true, "location_id", vrprouting::MATRIX_INDEX},
+        {-1, 0, false, "setup",   use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+        {-1, 0, false, "service", use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+        {-1, 0, false, "delivery", vrprouting::ANY_POSITIVE_ARRAY},
+        {-1, 0, false, "pickup", vrprouting::ANY_POSITIVE_ARRAY},
+        {-1, 0, false, "skills", vrprouting::ANY_UINT_ARRAY},
+        {-1, 0, false, "priority", vrprouting::POSITIVE_INTEGER},
+        {-1, 0, false, "data", vrprouting::JSONB}};
 
     return pgget::get_data<Vroom_job_t>(sql, use_timestamps, info, &fetch_jobs);
 }
@@ -153,8 +160,8 @@ std::vector<Vroom_job_t> get_jobs(
  */
 std::vector<Vroom_shipment_t>
 get_shipments(
-    const std::string &sql,
-    bool use_timestamps) {
+        const std::string &sql,
+        bool use_timestamps) {
     using vrprouting::Info;
     std::vector<Info> info{
         {-1, 0, true, "id", vrprouting::IDX},
@@ -210,14 +217,14 @@ get_vehicles(
 namespace pickdeliver {
 
 std::vector<Time_multipliers_t> get_timeMultipliers(
-    const std::string &sql,
-    bool use_timestamps) {
-  using vrprouting::Info;
-  std::vector<Info> info{
-    {-1, 0, true,
-      use_timestamps? "start_time" :  "start_value",
-      use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
-    {-1, 0, true, "multiplier", vrprouting::ANY_NUMERICAL}};
+        const std::string &sql,
+        bool use_timestamps) {
+    using vrprouting::Info;
+    std::vector<Info> info{
+        {-1, 0, true,
+            use_timestamps? "start_time" :  "start_value",
+            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+        {-1, 0, true, "multiplier", vrprouting::ANY_NUMERICAL}};
 
     return pgget::get_data<Time_multipliers_t>(sql, use_timestamps, info, &fetch_timeMultipliers);
 }
@@ -232,15 +239,15 @@ std::vector<Time_multipliers_t> get_timeMultipliers(
  * @returns vector of Matrix_cell_t containing the matrix cell contents
  */
 std::vector<Matrix_cell_t> get_matrix(
-    const std::string &sql,
-    bool use_timestamps) {
-  using vrprouting::Info;
-  std::vector<Info> info{
-    {-1, 0, true, "start_vid", vrprouting::ID},
-    {-1, 0, true, "end_vid", vrprouting::ID},
-    {-1, 0, true,
-      use_timestamps? "travel_time" : "agg_cost",
-      use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL}};
+        const std::string &sql,
+        bool use_timestamps) {
+    using vrprouting::Info;
+    std::vector<Info> info{
+        {-1, 0, true, "start_vid", vrprouting::ID},
+        {-1, 0, true, "end_vid", vrprouting::ID},
+        {-1, 0, true,
+            use_timestamps? "travel_time" : "agg_cost",
+            use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL}};
 
     return pgget::get_data<Matrix_cell_t>(sql, use_timestamps, info, &fetch_matrix);
 }
@@ -268,41 +275,41 @@ std::vector<Matrix_cell_t> get_matrix(
   @returns vector of Orders_t
   */
 std::vector<Orders_t> get_orders(
-    const std::string &sql,
-    bool is_euclidean,
-    bool use_timestamps) {
-  using vrprouting::Info;
+        const std::string &sql,
+        bool is_euclidean,
+        bool use_timestamps) {
+    using vrprouting::Info;
 
-  std::vector<Info> info{
-    {-1, 0, true, "id", vrprouting::ID},
-    {-1, 0, true, "amount", vrprouting::PAMOUNT},
+    std::vector<Info> info{
+        {-1, 0, true, "id", vrprouting::ID},
+        {-1, 0, true, "amount", vrprouting::PAMOUNT},
 
-    {-1, 0, !is_euclidean, "p_id", vrprouting::ID},
-    {-1, 0, is_euclidean, "p_x", vrprouting::COORDINATE},
-    {-1, 0, is_euclidean, "p_y", vrprouting::COORDINATE},
+        {-1, 0, !is_euclidean, "p_id", vrprouting::ID},
+        {-1, 0, is_euclidean, "p_x", vrprouting::COORDINATE},
+        {-1, 0, is_euclidean, "p_y", vrprouting::COORDINATE},
 
-    {-1, 0, true,
-      use_timestamps? "p_tw_open" : "p_open",
-      use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
-    {-1, 0, true,
-      use_timestamps? "p_tw_close" : "p_close",
-      use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
-    {-1, 0, false,
-      use_timestamps? "p_t_service" : "p_service",
-      use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+        {-1, 0, true,
+            use_timestamps? "p_tw_open" : "p_open",
+            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+        {-1, 0, true,
+            use_timestamps? "p_tw_close" : "p_close",
+            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+        {-1, 0, false,
+            use_timestamps? "p_t_service" : "p_service",
+            use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
 
-    {-1, 0, !is_euclidean, "d_id", vrprouting::ID},
-    {-1, 0, is_euclidean, "d_x", vrprouting::COORDINATE},
-    {-1, 0, is_euclidean, "d_y", vrprouting::COORDINATE},
-    {-1, 0, true,
-      use_timestamps? "d_tw_open" : "d_open",
-      use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
-    {-1, 0, true,
-      use_timestamps? "d_tw_close" : "d_close",
-      use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
-    {-1, 0, false,
-      use_timestamps? "d_t_service" : "d_service",
-      use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL}};
+        {-1, 0, !is_euclidean, "d_id", vrprouting::ID},
+        {-1, 0, is_euclidean, "d_x", vrprouting::COORDINATE},
+        {-1, 0, is_euclidean, "d_y", vrprouting::COORDINATE},
+        {-1, 0, true,
+            use_timestamps? "d_tw_open" : "d_open",
+            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+        {-1, 0, true,
+            use_timestamps? "d_tw_close" : "d_close",
+            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+        {-1, 0, false,
+            use_timestamps? "d_t_service" : "d_service",
+            use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL}};
 
     return pgget::get_data<Orders_t>(sql, is_euclidean, info, &fetch_orders);
 }
@@ -333,45 +340,45 @@ std::vector<Orders_t> get_orders(
   @returns vector of Vehicle_t
   */
 std::vector<Vehicle_t> get_vehicles(
-    const std::string &sql,
-    bool is_euclidean,
-    bool use_timestamps,
-    bool with_stops) {
-  using vrprouting::Info;
+        const std::string &sql,
+        bool is_euclidean,
+        bool use_timestamps,
+        bool with_stops) {
+    using vrprouting::Info;
 
-  std::vector<Info> info{
-    {-1, 0, true, "id", vrprouting::ID},
-    {-1, 0, true, "capacity", vrprouting::PAMOUNT},
-    {-1, 0, false, "number", vrprouting::PAMOUNT},
-    {-1, 0, false, "speed", vrprouting::SPEED},
+    std::vector<Info> info{
+        {-1, 0, true, "id", vrprouting::ID},
+        {-1, 0, true, "capacity", vrprouting::PAMOUNT},
+        {-1, 0, false, "number", vrprouting::PAMOUNT},
+        {-1, 0, false, "speed", vrprouting::SPEED},
 
-    {-1, 0, !is_euclidean, "s_id", vrprouting::ID},
-    {-1, 0, is_euclidean, "s_x", vrprouting::COORDINATE},
-    {-1, 0, is_euclidean, "s_y", vrprouting::COORDINATE},
-    {-1, 0, false,
-      use_timestamps? "s_tw_open" : "s_open",
-      use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
-    {-1, 0, false,
-      use_timestamps? "s_tw_close" : "s_close",
-      use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
-    {-1, 0, false,
-      use_timestamps? "s_t_service" : "s_service",
-      use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+        {-1, 0, !is_euclidean, "s_id", vrprouting::ID},
+        {-1, 0, is_euclidean, "s_x", vrprouting::COORDINATE},
+        {-1, 0, is_euclidean, "s_y", vrprouting::COORDINATE},
+        {-1, 0, false,
+            use_timestamps? "s_tw_open" : "s_open",
+            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+        {-1, 0, false,
+            use_timestamps? "s_tw_close" : "s_close",
+            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+        {-1, 0, false,
+            use_timestamps? "s_t_service" : "s_service",
+            use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
 
-    {-1, 0, false, "e_id", vrprouting::ID},
-    {-1, 0, false, "e_x", vrprouting::COORDINATE},
-    {-1, 0, false, "e_y", vrprouting::COORDINATE},
-    {-1, 0, false,
-      use_timestamps? "e_tw_open" : "e_open",
-      use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
-    {-1, 0, false,
-      use_timestamps? "e_tw_close" : "e_close",
-      use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
-    {-1, 0, false,
-      use_timestamps? "e_t_service" : "e_service",
-      use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+        {-1, 0, false, "e_id", vrprouting::ID},
+        {-1, 0, false, "e_x", vrprouting::COORDINATE},
+        {-1, 0, false, "e_y", vrprouting::COORDINATE},
+        {-1, 0, false,
+            use_timestamps? "e_tw_open" : "e_open",
+            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+        {-1, 0, false,
+            use_timestamps? "e_tw_close" : "e_close",
+            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+        {-1, 0, false,
+            use_timestamps? "e_t_service" : "e_service",
+            use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
 
-    {-1, 0, with_stops, "stops", vrprouting::ANY_POSITIVE_ARRAY}};
+        {-1, 0, with_stops, "stops", vrprouting::ANY_POSITIVE_ARRAY}};
 
     return get_data<Vehicle_t>(sql, is_euclidean, info, &fetch_vehicles);
 }
