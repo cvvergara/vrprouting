@@ -32,7 +32,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_DRIVERS_PICKDELIVER_DRIVER_H_
 #pragma once
 
-#include "c_types/typedefs.h"
+#ifdef __cplusplus
+#include <cstddef>
+#include <cstdint>
+using Solution_rt = struct Solution_rt;
+#else
+#include <stddef.h>
+#include <stdint.h>
+#include <stdbool.h>
+typedef struct Solution_rt Solution_rt;
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,23 +49,16 @@ extern "C" {
 
   /** @brief Driver for processing a pickupDeliver problem */
   void do_pickDeliver(
-      PickDeliveryOrders_t customers_arr[], size_t total_customers,
-      Vehicle_t *vehicles_arr, size_t total_vehicles,
-      Matrix_cell_t *matrix_cells_arr, size_t total_cells,
-      Time_multipliers_t *multipliers_arr, size_t total_multipliers,
+      char*, char*, char*, char*,
 
-      bool,
-      double factor,
-      int max_cycles,
-      bool stop_on_all_served,
-      int64_t execution_date,
+      bool, double, int,
+      bool, int64_t,
+      bool, bool, bool,
 
-      Solution_rt **return_tuples,
-      size_t *return_count,
+      Solution_rt**,
+      size_t*,
 
-      char **log_msg,
-      char **notice_msg,
-      char **err_msg);
+      char **, char **, char **);
 
 
 #ifdef __cplusplus
