@@ -50,28 +50,29 @@ namespace vrprouting {
 bool column_found(const Info&);
 
 namespace detail {
-    std::vector<int64_t> get_any_positive_array(const HeapTuple, const TupleDesc&, const Info&);
-    std::vector<uint32_t> get_uint_array(const HeapTuple, const TupleDesc&, const Info&);
-    TInterval get_interval(const HeapTuple, const TupleDesc&, const Info&, TInterval);
-    TTimestamp get_timestamp(const HeapTuple, const TupleDesc&, const Info&, TTimestamp);
-    int64_t get_anyinteger(const HeapTuple, const TupleDesc&, const Info&, int64_t);
 
-  template <typename T>
-    T get_integral(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, T opt_value) {
-      static_assert(std::is_integral<T>::value, "Integral required.");
-      return static_cast<T>(get_anyinteger(tuple, tupdesc, info, static_cast<int64_t>(opt_value)));
-    }
+std::vector<int64_t> get_any_positive_array(const HeapTuple, const TupleDesc&, const Info&);
+std::vector<uint32_t> get_uint_array(const HeapTuple, const TupleDesc&, const Info&);
+TInterval get_interval(const HeapTuple, const TupleDesc&, const Info&, TInterval);
+TTimestamp get_timestamp(const HeapTuple, const TupleDesc&, const Info&, TTimestamp);
+int64_t get_anyinteger(const HeapTuple, const TupleDesc&, const Info&, int64_t);
 
-  template <typename T>
-    T get_positive(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, T opt_value) {
-      static_assert(std::is_integral<T>::value, "Integral required.");
+template <typename T>
+T get_integral(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, T opt_value) {
+    static_assert(std::is_integral<T>::value, "Integral required.");
+    return static_cast<T>(get_anyinteger(tuple, tupdesc, info, static_cast<int64_t>(opt_value)));
+}
 
-      if (!column_found(info)) return opt_value;
+template <typename T>
+T get_positive(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, T opt_value) {
+    static_assert(std::is_integral<T>::value, "Integral required.");
 
-      auto value = get_anyinteger(tuple, tupdesc, info, 0);
-      if (value < 0) throw std::string("Unexpected negative value in column '") + info.name + "'";
-      return static_cast<T>(value);
-    }
+    if (!column_found(info)) return opt_value;
+
+    auto value = get_anyinteger(tuple, tupdesc, info, 0);
+    if (value < 0) throw std::string("Unexpected negative value in column '") + info.name + "'";
+    return static_cast<T>(value);
+}
 
 }  // namespace detail
 
