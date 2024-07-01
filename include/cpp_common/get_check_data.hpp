@@ -1,8 +1,8 @@
 /*PGR-GNU*****************************************************************
-File: get_check_data.h
+File: get_check_data.hpp
 
-Copyright (c) 2015 Celia Virginia Vergara Castillo
-vicky_vergara@hotmail.com
+Copyright (c) 2023 Celia Virginia Vergara Castillo
+vicky at erosion.dev
 
 ------
 
@@ -22,151 +22,129 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
-#ifndef INCLUDE_C_COMMON_GET_CHECK_DATA_H_
-#define INCLUDE_C_COMMON_GET_CHECK_DATA_H_
+#ifndef INCLUDE_C_COMMON_GET_CHECK_DATA_HPP_
+#define INCLUDE_C_COMMON_GET_CHECK_DATA_HPP_
 #pragma once
 
-#include "c_common/postgres_connection.h"
-#include "c_types/column_info_t.h"
-#include "c_types/typedefs.h"
 
-/** @brief  Check whether the colNumber represent any specific column or NULL (SPI_ERROR_NOATTRIBUTE). */
-bool column_found(int colNumber);
+extern "C" {
+#include <postgres.h>
+#include <utils/array.h>
+#include <access/htup_details.h>
+#include <catalog/pg_type.h>
+}
+
+#include <vector>
+#include <string>
+#include <cstdint>
+#include <limits>
+#include <unordered_set>
+
+#include "c_types/typedefs.h"
+#include "cpp_common/info.hpp"
+
+
+namespace vrprouting {
+
+/** @brief  Function will check whether the colNumber represent any specific column or NULL (SPI_ERROR_NOATTRIBUTE).  */
+bool column_found(const Info&);
+
+namespace detail {
+    std::vector<int64_t> get_any_positive_array(const HeapTuple, const TupleDesc&, const Info&);
+    std::vector<uint32_t> get_uint_array(const HeapTuple, const TupleDesc&, const Info&);
+    TInterval get_interval(const HeapTuple, const TupleDesc&, const Info&, TInterval);
+    TTimestamp get_timestamp(const HeapTuple, const TupleDesc&, const Info&, TTimestamp);
+    int64_t get_anyinteger(const HeapTuple, const TupleDesc&, const Info&, int64_t);
+
+  template <typename T>
+    T get_integral(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, T opt_value) {
+      static_assert(std::is_integral<T>::value, "Integral required.");
+      return static_cast<T>(get_anyinteger(tuple, tupdesc, info, static_cast<int64_t>(opt_value)));
+    }
+
+  template <typename T>
+    T get_positive(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, T opt_value) {
+      static_assert(std::is_integral<T>::value, "Integral required.");
+
+      if (!column_found(info)) return opt_value;
+
+      auto value = get_anyinteger(tuple, tupdesc, info, 0);
+      if (value < 0) throw std::string("Unexpected negative value in column '") + info.name + "'";
+      return static_cast<T>(value);
+    }
+
+}  // namespace detail
+
+
 
 /** @brief Function tells expected type of each column and then check the correspondence type of each column.  */
-void pgr_fetch_column_info(
-    Column_info_t info[],
-    int info_size);
+void fetch_column_info(const TupleDesc&, std::vector<Info>&);
 
-/*! @brief get value of specified column in char type. */
-char
-spi_getChar(
-    HeapTuple *tuple,
-    TupleDesc *tupdesc,
-    Column_info_t info,
-    char default_value);
+/** @brief Function gets the C string of a JSONB */
+std::string get_jsonb(const HeapTuple, const TupleDesc&, const Info&);
 
-/** @brief Function returns the values of specified columns in array.  */
-int64_t*
-spi_getBigIntArr(
-    HeapTuple *tuple,
-    TupleDesc *tupdesc,
-    Column_info_t info,
-    size_t *the_size);
+/** @brief Function gets the @b double of a Postgres floating point */
+double get_anynumerical(const HeapTuple, const TupleDesc&, const Info&, double);
 
-/** @brief Function returns the values of specified columns in array.  */
-int64_t*
-spi_getBigIntArr_allowEmpty(
-    HeapTuple *tuple,
-    TupleDesc *tupdesc,
-    Column_info_t info,
-    size_t *the_size);
+/** @brief Function get a char of a CHAR*/
+char get_char(const HeapTuple, const TupleDesc&, const Info&, char);
 
-/** @brief Function returns the values of specified columns in array.  */
-int64_t*
-spi_getPositiveBigIntArr_allowEmpty(
-    HeapTuple *tuple,
-    TupleDesc *tupdesc,
-    Column_info_t info,
-    size_t *the_size);
+/** @brief Function get an unordered_set of uint32_t*/
+std::unordered_set<uint32_t> get_uint_unordered_set(const HeapTuple, const TupleDesc&, const Info&);
 
-/** @brief Function returns the values of specified columns in array. */
-uint32_t*
-spi_getPositiveIntArr_allowEmpty(
-    HeapTuple *tuple,
-    TupleDesc *tupdesc,
-    Column_info_t info,
-    size_t *the_size);
-
-/** @brief gets value of specified column in double type. */
-double
-spi_getFloat8(
-    HeapTuple *tuple,
-    TupleDesc *tupdesc,
-    Column_info_t info);
-
-/** @brief gets string representation of the value of specified column. */
-char*
-spi_getText(
-    HeapTuple *tuple,
-    TupleDesc *tupdesc,
-    Column_info_t info);
-
-/** @brief  gets the vehicle max tasks value */
-int32_t
-spi_getMaxTasks(
-    HeapTuple *tuple,
-    TupleDesc *tupdesc,
-    Column_info_t info);
-
-/** @name timestamp related
- * @{ */
-/** @brief  Converts timestamp to timestamp without timezone */
-TTimestamp timestamp_without_timezone(TTimestamp timestamp);
-
-/** @brief gets a timestamp value from postgres type TIMESTAMP */
-TTimestamp get_TTimestamp(HeapTuple*, TupleDesc*, Column_info_t, TTimestamp);
-
-/** @brief gets a timestamp value from postgres type TIMESTAMP >= 1970-01-01 00:00:00*/
-TTimestamp get_PositiveTTimestamp(HeapTuple*, TupleDesc*, Column_info_t, TTimestamp);
-
-/** @brief gets a timestamp value from ANY-INTEGER */
-TTimestamp get_TTimestamp_plain(HeapTuple*, TupleDesc*, Column_info_t, TTimestamp);
-
-/** @brief gets a timestamp value from ANY-INTEGER > 0 */
-TTimestamp get_PositiveTTimestamp_plain(HeapTuple*, TupleDesc*, Column_info_t, TTimestamp);
-/* @} */
-
-/** @name interval related
- * @{ */
-/** @brief gets an interval value from postgres type INTERVAL */
-TInterval get_TInterval(HeapTuple*, TupleDesc*, Column_info_t, TInterval);
-
-/** @brief gets an interval value from postgres type INTERVAL > 0 */
-TInterval get_PositiveTInterval(HeapTuple*, TupleDesc*, Column_info_t, TInterval);
-
-/** @brief gets an interval value from ANY-INTEGER */
-TInterval get_TInterval_plain(HeapTuple*, TupleDesc*, Column_info_t, TInterval);
-
-/** @brief gets an interval value from ANY-INTEGER > 0 */
-TInterval get_PositiveTInterval_plain(HeapTuple*, TupleDesc*, Column_info_t, TInterval);
-/* @} */
-
-/** get Id from data */
-Id get_Id(HeapTuple*, TupleDesc*, Column_info_t, Id);
-
-/** get Idx from data */
-Idx get_Idx(HeapTuple*, TupleDesc*, Column_info_t, Idx);
-
-/** get StepType from data */
-StepType get_StepType(HeapTuple *, TupleDesc *, Column_info_t, StepType);
-
-/** get MatrixIndex from data */
-MatrixIndex get_MatrixIndex(HeapTuple*, TupleDesc*, Column_info_t, MatrixIndex);
-
-/** get Duration from data */
-Duration get_Duration(HeapTuple*, TupleDesc*, Column_info_t, Duration);
-
-/** get TravelCost from data */
-TravelCost get_Cost(HeapTuple*, TupleDesc*, Column_info_t, TravelCost);
-
-/** get Kind from data */
-char get_Kind(HeapTuple*, TupleDesc*, Column_info_t, char);
-
-/** get Priority from data */
-Priority get_Priority(HeapTuple*, TupleDesc*, Column_info_t, Priority);
-
-/** get Distance from data */
-Distance get_Distance(HeapTuple*, TupleDesc*, Column_info_t, Distance);
-
-/** get Amount from data */
-Amount get_Amount(HeapTuple*, TupleDesc*, Column_info_t, Amount);
-
-/** get positive Amount from data */
-PAmount get_PositiveAmount(HeapTuple*, TupleDesc*, Column_info_t, PAmount);
-
-/** get a coordinate value */
-Coordinate spi_getCoordinate(HeapTuple*, TupleDesc*, Column_info_t, Coordinate);
+template <typename T>
+T get_value(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, T opt_value) {
+  switch (info.eType) {
+    case ANY_INTEGER :
+      return static_cast<T>(detail::get_integral<int64_t>(tuple, tupdesc,  info, static_cast<int64_t>(opt_value)));
+      break;
+    case INTEGER:
+      return static_cast<T>(detail::get_integral<T>(tuple, tupdesc,  info, opt_value));
+      break;
+    case ANY_UINT :
+    case TINTERVAL :
+    case POSITIVE_INTEGER:
+      return static_cast<T>(detail::get_positive<T>(tuple, tupdesc,  info, opt_value));
+      break;
+    case TIMESTAMP :
+      return static_cast<T>(detail::get_timestamp(tuple, tupdesc,  info, static_cast<TTimestamp>(opt_value)));
+      break;
+    case INTERVAL :
+      return static_cast<T>(detail::get_interval(tuple, tupdesc,  info, static_cast<TInterval>(opt_value)));
+      break;
+    default:
+      throw std::string("Missing case value ") + info.name;
+      break;
+  }
+}
 
 
-#endif  // INCLUDE_C_COMMON_GET_CHECK_DATA_H_
+template <typename T>
+std::vector<T> get_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info) {
+  switch (info.eType) {
+    case ANY_POSITIVE_ARRAY:
+      return detail::get_any_positive_array(tuple, tupdesc, info);
+      break;
+    default:
+      throw std::string("Missing case value on array ") + info.name;
+      break;
+  }
+}
+
+template <typename T>
+std::vector<T> get_uint_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info) {
+  switch (info.eType) {
+    case ANY_UINT_ARRAY:
+      return detail::get_uint_array(tuple, tupdesc, info);
+      break;
+    default:
+      throw std::string("Missing case value on Uint array ") + info.name;
+      break;
+  }
+}
+
+
+}  // namespace vrprouting
+
+
+#endif  // INCLUDE_C_COMMON_GET_CHECK_DATA_HPP_
