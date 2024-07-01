@@ -44,6 +44,7 @@ extern "C" {
 #include <unordered_set>
 #include <string>
 #include <ctime>
+#include <limits>
 
 
 #include "cpp_common/undefPostgresDefine.hpp"
@@ -569,7 +570,7 @@ std::vector<int64_t>
 get_any_positive_array(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info) {
     if (!column_found(info)) return std::vector<int64_t>();
     auto data = get_BigIntArr_wEmpty(tuple, tupdesc, info);
-    for (const auto &e: data) {
+    for (const auto &e : data) {
         if (e < 0) throw std::string("Unexpected negative value in array '") + info.name + "'";
     }
     return data;
