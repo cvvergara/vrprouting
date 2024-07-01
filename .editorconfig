@@ -20,7 +20,7 @@ indent_size = 2
 # C++ files want tab indentation
 [*.{c,h,cpp,hpp,inl}]
 indent_style = space
-indent_size = 2
+indent_size = 4
 
 # Makefiles want tab indentation
 [Makefile]
