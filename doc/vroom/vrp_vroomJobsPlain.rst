@@ -94,9 +94,9 @@ Inner Queries
 Jobs SQL
 ...............................................................................
 
-.. include:: ../../src/common/vroom/jobs_input.c
-   :start-after: vrp_vroom start
-   :end-before: vrp_vroom end
+.. include:: concepts.rst
+   :start-after: jobs_start
+   :end-before: jobs_end
 
 .. include:: vroom-category.rst
    :start-after: inner_queries_start
