@@ -4,7 +4,8 @@ File: pgdata_getters.cpp
 Copyright (c) 2015 pgRouting developers
 Mail: project@pgrouting.org
 
-Copyright (c) 2024 Vicky Vergara
+Developers:
+Copyright (c) 2015 Vicky Vergara
 Mail: vicky at erosion.dev
 
 Copyright (c) 2021 Ashish Kumar
