@@ -32,41 +32,30 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_DRIVERS_PGR_PICKDELIVER_PICKDELIVEREUCLIDEAN_DRIVER_H_
 #pragma once
 
-/* for size-t */
 #ifdef __cplusplus
-#   include <cstddef>
+#include <cstddef>
+#include <cstdint>
+using Solution_rt = struct Solution_rt;
 #else
-#   include <stddef.h>
+#include <stddef.h>
+#include <stdint.h>
+typedef struct Solution_rt Solution_rt;
 #endif
 
-#include "c_types/vehicle_t.h"
-typedef struct PickDeliveryOrders_t PickDeliveryOrders_t;
-typedef struct Solution_rt Solution_rt;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-  /*********************************************************
-    orders_sql TEXT,
-    max_vehicles INTEGER,
-    capacity FLOAT,
-    max_cycles INTEGER,
-   ********************************************************/
-  void do_pgr_pickDeliverEuclidean(
-      PickDeliveryOrders_t *pd_orders_arr, size_t total_pd_orders,
-      Vehicle_t *vehicles_arr, size_t total_vehicles,
+  void vrp_do_pgr_pickDeliverEuclidean(
+      char*, char*,
 
-      double factor,
-      int max_cycles,
-      int initial_solution_id,
+      double, int, int,
 
-      Solution_rt **return_tuples,
-      size_t *return_count,
+      Solution_rt**,
+      size_t*,
 
-      char **log_msg,
-      char **notice_msg,
-      char **err_msg);
+      char**, char**, char**);
 
 
 #ifdef __cplusplus
