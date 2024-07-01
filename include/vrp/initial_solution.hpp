@@ -1,6 +1,6 @@
 /*PGR-GNU*****************************************************************
 
-FILE: initial_solution.h
+FILE: initial_solution.hpp
 
 Copyright (c) 2015 pgRouting developers
 Mail: project@pgrouting.org
@@ -25,8 +25,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 /*! @file */
 
-#ifndef INCLUDE_VRP_INITIAL_SOLUTION_H_
-#define INCLUDE_VRP_INITIAL_SOLUTION_H_
+#ifndef INCLUDE_VRP_INITIAL_SOLUTION_HPP_
+#define INCLUDE_VRP_INITIAL_SOLUTION_HPP_
 #pragma once
 
 #include <set>
@@ -69,4 +69,4 @@ class Initial_solution : public Solution {
 }  //  namespace vrp
 }  //  namespace vrprouting
 
-#endif  // INCLUDE_VRP_INITIAL_SOLUTION_H_
+#endif  // INCLUDE_VRP_INITIAL_SOLUTION_HPP_
