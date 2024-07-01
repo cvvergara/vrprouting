@@ -31,7 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "cpp_common/identifiers.hpp"
 #include "problem/solution.hpp"
-#include "initialsol/initials_code.h"
+#include "initialsol/initials_code.hpp"
 
 namespace vrprouting {
 namespace problem {

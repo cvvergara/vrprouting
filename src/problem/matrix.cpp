@@ -61,7 +61,7 @@ set_tdm(std::vector<Time_multipliers_t> p_multipliers) {
             [] (const Time_multipliers_t &lhs, const Time_multipliers_t &rhs) {
                 return lhs.start_time < rhs.start_time;
             });
-    for (const auto &m: p_multipliers) {
+    for (const auto &m : p_multipliers) {
         tdm.emplace_back(m.start_time, m.multiplier);
     }
     return tdm;

@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
-#include "cpp_common/vrp_vroom_problem.hpp"
+#include "cpp_common/vroom/vroom.hpp"
 
 #include <map>
 #include <string>
@@ -33,13 +33,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <utility>
 #include <vector>
 
+#include "structures/vroom/input/input.h"
+#include "structures/vroom/job.h"
+#include "structures/vroom/vehicle.h"
 #include "cpp_common/vroom_types.hpp"
 #include "cpp_common/base_matrix.hpp"
 #include "cpp_common/interruption.hpp"
 #include "cpp_common/messages.hpp"
-#include "structures/vroom/input/input.h"
-#include "structures/vroom/job.h"
-#include "structures/vroom/vehicle.h"
 
 namespace vrprouting {
 
@@ -166,15 +166,14 @@ Vrp_vroom_problem::get_vroom_shipment(
         const Vroom_shipment_t &shipment,
         const std::vector<Vroom_time_window_t> &pickup_tws,
         const std::vector<Vroom_time_window_t> &delivery_tws) const {
-
     vroom::Amount amount = get_vroom_amounts(shipment.amount);
     vroom::Skills skills = shipment.skills;
     std::vector<vroom::TimeWindow> p_time_windows = get_vroom_time_windows(pickup_tws);
     std::vector<vroom::TimeWindow> d_time_windows = get_vroom_time_windows(delivery_tws);
-    vroom::Index p_location_id = static_cast<vroom::Index>( m_matrix.get_index(shipment.p_location_id));
-    vroom::Index d_location_id = static_cast<vroom::Index>( m_matrix.get_index(shipment.d_location_id));
+    vroom::Index p_location_id = static_cast<vroom::Index>(m_matrix.get_index(shipment.p_location_id));
+    vroom::Index d_location_id = static_cast<vroom::Index>(m_matrix.get_index(shipment.d_location_id));
 
-    vroom::Job pickup = vroom::Job( shipment.id, vroom::JOB_TYPE::PICKUP, p_location_id,
+    vroom::Job pickup = vroom::Job(shipment.id, vroom::JOB_TYPE::PICKUP, p_location_id,
             shipment.p_setup, shipment.p_service, amount,
             skills, shipment.priority, p_time_windows, shipment.p_data);
     vroom::Job delivery = vroom::Job(

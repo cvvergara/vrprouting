@@ -29,10 +29,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "drivers/compatibleVehicles_driver.h"
 
-#include <cstring>
+#include <utility>
 #include <sstream>
 #include <string>
-#include <deque>
 
 #include "c_types/return_types.h"
 

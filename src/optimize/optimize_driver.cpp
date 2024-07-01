@@ -30,12 +30,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "drivers/optimize_driver.h"
 
-#include <cstring>
-#include <sstream>
-#include <string>
+#include <set>
 #include <vector>
-#include <utility>
 #include <algorithm>
+#include <utility>
+#include <string>
 
 #include "c_types/return_types.h"
 
@@ -47,8 +46,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "problem/pickDeliver.hpp"
 #include "problem/matrix.hpp"
-#include "initialsol/tabu.h"
-#include "optimizers/tabu.h"
+#include "initialsol/tabu.hpp"
+#include "optimizers/tabu.hpp"
 
 namespace {
 
@@ -267,7 +266,8 @@ subdivide_processing(
             pgassert(active_orders.size() == orders_in_active_vehicles.size());
             pgassert(active_orders.size() > 0);
 
-            auto new_stops = one_processing(active_orders, active_vehicles, the_stops, time_matrix, max_cycles, execution_date);
+            auto new_stops = one_processing(
+                    active_orders, active_vehicles, the_stops, time_matrix, max_cycles, execution_date);
 
             update_stops(the_stops, new_stops);
         }
@@ -430,7 +430,8 @@ do_optimize(
         vehicles.erase(
                     std::unique(
                         vehicles.begin(), vehicles.end(),
-                        [&](const vrprouting::Vehicle_t& lhs, const vrprouting::Vehicle_t& rhs){return lhs.id == rhs.id;}),
+                        [&](const vrprouting::Vehicle_t& lhs, const vrprouting::Vehicle_t& rhs)
+                        {return lhs.id == rhs.id;}),
                     vehicles.end());
 
         vehicles.erase(
@@ -463,7 +464,8 @@ do_optimize(
         orders.erase(
                     std::unique(
                         orders.begin(), orders.end(),
-                        [&](const vrprouting::Orders_t& lhs, const vrprouting::Orders_t& rhs){return lhs.id == rhs.id;}),
+                        [&](const vrprouting::Orders_t& lhs, const vrprouting::Orders_t& rhs)
+                        {return lhs.id == rhs.id;}),
                     orders.end());
 
 

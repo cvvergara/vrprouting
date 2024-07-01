@@ -39,11 +39,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/pgdata_getters.hpp"
 
 #include "problem/solution.hpp"
-#include "initialsol/simple.h"
-#include "optimizers/simple.h"
+#include "initialsol/simple.hpp"
+#include "optimizers/simple.hpp"
 
 #include "problem/pickDeliver.hpp"
-#include "initialsol/initials_code.h"
+#include "initialsol/initials_code.hpp"
 #include "problem/matrix.hpp"
 
 namespace  {
@@ -148,7 +148,7 @@ vrp_do_pgr_pickDeliver(
         for (const auto &v : vehicles) {
             node_ids += v.start_node_id;
             node_ids += v.end_node_id;
-            log << "id" << v.id <<", sid"<<v.start_node_id<<", eid"<<v.end_node_id<<"\n";
+            log << "id" << v.id << ", sid"<< v.start_node_id << ", eid" << v.end_node_id << "\n";
         }
 
         log << "node_ids" << node_ids << "\n";

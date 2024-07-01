@@ -41,8 +41,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/assert.hpp"
 #include "cpp_common/pgdata_getters.hpp"
 
-#include "initialsol/simple.h"
-#include "optimizers/simple.h"
+#include "initialsol/simple.hpp"
+#include "optimizers/simple.hpp"
 #include "problem/pickDeliver.hpp"
 #include "problem/matrix.hpp"
 
@@ -74,7 +74,7 @@ are_shipments_ok(
     std::vector<vrprouting::Orders_t> orders,
     std::string *err_string,
     std::string *hint_string) {
-  // TODO idea: do this checks when reading the data
+  // TODO(idea): do this checks when reading the data
   /**
    * - demand > 0 (the type is unsigned so no need to check for negative values, only for it to be non 0
    * - pick_service_t >=0
@@ -216,7 +216,7 @@ vrp_do_pgr_pickDeliverEuclidean(
       log << e.second << "(" << e.first.first << "," << e.first.second << ")\n";
     }
 
-    for (auto &o: orders) {
+    for (auto &o : orders) {
       o.pick_node_id    = matrix_data[std::pair<Coordinate, Coordinate>(o.pick_x, o.pick_y)];
       o.deliver_node_id = matrix_data[std::pair<Coordinate, Coordinate>(o.deliver_x, o.deliver_y)];
     }

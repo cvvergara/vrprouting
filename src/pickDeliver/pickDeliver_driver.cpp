@@ -27,10 +27,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 /** @file */
 
-
 #include "drivers/pickDeliver_driver.h"
 
-#include <cstring>
+#include <utility>
 #include <sstream>
 #include <string>
 #include <deque>
@@ -43,8 +42,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "problem/pickDeliver.hpp"
 #include "problem/matrix.hpp"
-#include "initialsol/tabu.h"
-#include "optimizers/tabu.h"
+#include "initialsol/tabu.hpp"
+#include "optimizers/tabu.hpp"
 
 /**
  *

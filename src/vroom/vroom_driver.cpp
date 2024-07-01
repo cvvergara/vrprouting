@@ -27,12 +27,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "drivers/vroom_driver.h"
 
-#include <sstream>
 #include <vector>
+#include <sstream>
 #include <algorithm>
 #include <string>
-#include <limits>
-#include <cmath>
+#include <utility>
 
 #include "cpp_common/alloc.hpp"
 #include "cpp_common/assert.hpp"
@@ -230,7 +229,7 @@ vrp_do_vroom(
      * Create the matrix. Also, scale the time matrix according to min_speed_factor
      */
     log << "the min speed factor " << min_speed_factor << "\tmax speed factor " << min_speed_factor << "\n";
-    for (const auto c: costs) {
+    for (const auto c : costs) {
         log << "start_id" << c.start_id << "\tend_id" << c.end_id
             << "\tduration" << c.duration << "\tcost" << c.cost << "\n";
     }
