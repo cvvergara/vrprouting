@@ -33,6 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/pgdata_fetchers.hpp"
 
 #include <string>
+#include <climits>
 #include <vector>
 
 #include "cpp_common/info.hpp"
