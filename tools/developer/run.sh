@@ -12,14 +12,13 @@ pushd "${DIR}" > /dev/null || exit 1
 # copy this file into the root of your repository
 # adjust to your needs
 
-# This run.sh is intended for 3.x.x
 VERSION=$(grep -Po '(?<=project\(VRPROUTING VERSION )[^;]+' CMakeLists.txt)
 echo "pgRouting VERSION ${VERSION}"
 
 # set up your postgres version, port and compiler (if more than one)
-PGVERSION="13"
+PGVERSION="15"
 PGPORT="5432"
-PGBIN="/usr/lib/postgresql/${PGVERSION}/bin"
+#PGBIN="/usr/lib/postgresql/${PGVERSION}/bin"
 PGINC="/usr/include/postgresql/${PGVERSION}/server"
 # When more than one compiler is installed
 GCC=""
@@ -27,17 +26,25 @@ GCC=""
 QUERIES_DIRS=$(ls docqueries -1)
 TAP_DIRS=$(ls pgtap -1)
 
-QUERIES_DIRS=""
-TAP_DIRS=""
+QUERIES_DIRS=QUERIES_DIRS=$(ls docqueries -1)
+TAP_DIRS=$(ls pgtap -1)
 
 function install_vroom {
     cd "${DIR}"
-    rm -rf ./vroom-v1.12.0
-    git clone --depth 1 --branch v1.12.0  https://github.com/VROOM-Project/vroom ./vroom-v1.12.0
-    pushd vroom-v1.12.0/
+    rm -rf "./vroom-${VROOMVER}"
+    git clone --depth 1 --branch "${VROOMVER}" https://github.com/VROOM-Project/vroom "./vroom-${VROOMVER}"
+    pushd "./vroom-${VROOMVER}"
     git submodule update --init
     cd src/
-    USE_ROUTING=false make shared
+    sed -i 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
+    make
+    popd
+}
+
+function install_data {
+    cd "${DIR}"
+    pushd tools/testers
+    tar -xf matrix_new_values.tar.gz
     popd
 }
 
@@ -57,9 +64,10 @@ function set_cmake {
     # with developers documentation
     #cmake  -DWITH_DOC=ON -DBUILD_DOXY=ON ..
 
-    #CXX=clang++ CC=clang cmake -DPOSTGRESQL_BIN=${PGBIN} -DCMAKE_BUILD_TYPE=Debug ..
+    #CXX=clang++ CC=clang cmake -DPOSTGRESQL_BIN=${PGBIN} -DCMAKE_BUILD_TYPE=Debug -DVROOM_INSTALL_PATH="${DIR}/vroom-${VROOMVER}" ..
+    CXX=clang++ CC=clang cmake "-DPostgreSQL_INCLUDE_DIR=${PGINC}" -DCMAKE_BUILD_TYPE=Debug  -DVROOM_INSTALL_PATH="${DIR}/vroom-${VROOMVER}" ..
 
-    cmake "-DPostgreSQL_INCLUDE_DIR=${PGINC}" -DCMAKE_BUILD_TYPE=Debug -DWITH_DOC=OFF "-DVROOM_INSTALL_PATH=$DIR/vroom-v1.12.0" ..
+    #cmake "-DPostgreSQL_INCLUDE_DIR=${PGINC}" -DCMAKE_BUILD_TYPE=Debug -DWITH_DOC=ON -DVROOM_INSTALL_PATH="${DIR}/vroom-${VROOMVER}" ..
 }
 
 function tap_test {
@@ -67,11 +75,16 @@ function tap_test {
     echo pgTap test all
     echo --------------------------------------------
 
-    dropdb --if-exists -p $PGPORT ___pgr___test___
-    createdb  -p $PGPORT ___pgr___test___
-    echo $PGPORT
-    tools/testers/pg_prove_tests.sh vicky $PGPORT
-    dropdb  -p $PGPORT ___pgr___test___
+    PGDATABASE="___vrp___pgtaptest___"
+    dropdb --if-exists -p $PGPORT "$PGDATABASE"
+    createdb  -p $PGPORT "$PGDATABASE"
+    echo "testing on port $PGPORT"
+
+    pushd ./tools/testers/
+    psql -p "$PGPORT" -U vicky -d  "$PGDATABASE" -X  -v ON_ERROR_STOP=1 --pset pager=off -f setup_db.sql
+    popd
+    pg_prove -U vicky --failures --quiet --recurse -p "$PGPORT" -d "$PGDATABASE"  pgtap/
+    #dropdb  -p $PGPORT "$PGDATABASE"
 }
 
 function action_tests {
@@ -79,8 +92,8 @@ function action_tests {
     echo  Update signatures
     echo --------------------------------------------
 
-    tools/release-scripts/get_signatures.sh -p ${PGPORT}
-    tools/release-scripts/notes2news.pl
+    bash tools/scripts/get_signatures.sh -p ${PGPORT}
+    tools/scripts/notes2news.pl
     bash tools/scripts/test_signatures.sh
     bash tools/scripts/test_shell.sh
     bash tools/scripts/test_license.sh
@@ -124,6 +137,7 @@ function test_compile {
     set_compiler "${GCC}"
 
     #install_vroom
+    install_data
     build
 
     echo --------------------------------------------
@@ -145,11 +159,11 @@ function test_compile {
         bash taptest.sh  "${d}" "-p ${PGPORT}"
     done
 
-    #build_doc
-    #tools/testers/doc_queries_generator.pl -pgport $PGPORT
-    #exit 0
-
+    exit 0
     tap_test
+    build_doc
+    tools/testers/doc_queries_generator.pl -pgport $PGPORT
+
     action_tests
 }
 test_compile
