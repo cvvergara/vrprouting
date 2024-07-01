@@ -32,7 +32,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_DRIVERS_OPTIMIZE_DRIVER_H_
 #pragma once
 
-#include "c_types/typedefs.h"
+#ifdef __cplusplus
+#include <cstddef>
+#include <cstdint>
+using Short_vehicle_rt = struct Short_vehicle_rt;
+#else
+#include <stddef.h>
+#include <stdint.h>
+#include <stdbool.h>
+typedef struct Short_vehicle_rt Short_vehicle_rt;
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,23 +49,17 @@ extern "C" {
 
     /** @brief Driver for processing a pickupDeliver problem */
     void do_optimize(
-            PickDeliveryOrders_t customers_arr[], size_t,
-            Vehicle_t *vehicles_arr, size_t,
-            Matrix_cell_t *, size_t,
-            Time_multipliers_t *, size_t,
+            char*, char*, char*, char*,
 
-            double,
-            int,
-            int64_t,
+            double, int, int64_t,
 
+            bool, bool, bool,
             bool, bool, bool,
 
             Short_vehicle_rt**,
             size_t*,
 
-            char**,
-            char**,
-            char**);
+            char**, char**, char**);
 
 
 #ifdef __cplusplus
