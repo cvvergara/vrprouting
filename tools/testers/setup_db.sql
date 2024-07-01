@@ -29,5 +29,6 @@ BEGIN;
     \i general_pgtap_tests.sql
     \i vroomdata.sql
     \i ortoolsdata.sql
+    \i functions.sql
 
 END;
