@@ -27,17 +27,35 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #pragma once
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <postgres.h>
 #include <utils/array.h>
 
+#ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#if 0
 /** @brief enforces the input array to be @b NOT empty */
-int64_t* pgr_get_bigIntArray(size_t *arrlen, ArrayType *input);
+int64_t* vrp_get_bigIntArray(size_t *arrlen, ArrayType *input);
+#endif
 
 /** @brief Allows the input array to be empty */
-int64_t* pgr_get_bigIntArray_allowEmpty(size_t *arrlen, ArrayType *input);
+int64_t* vrp_get_bigIntArray_allowEmpty(size_t *arrlen, ArrayType *input, const char*);
 
 /** @brief Allows the input array, with non-negative elements to be empty */
-uint32_t* pgr_get_positiveIntArray_allowEmpty(size_t *arrlen, ArrayType *input);
+uint32_t* vrp_get_positiveIntArray_allowEmpty(size_t*, ArrayType*, const char*);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // INCLUDE_C_COMMON_ARRAYS_INPUT_H_
