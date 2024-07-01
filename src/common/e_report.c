@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_common/e_report.h"
 
 void
-pgr_global_report(
+vrp_global_report(
         char* log,
         char* notice,
         char* err) {
@@ -56,5 +56,18 @@ pgr_global_report(
             ereport(ERROR,
                     (errmsg_internal("%s", err)));
         }
+    }
+}
+
+/**
+ * @param[in] err string with an error message
+ * @param[in] hint string with the hint to be used
+ *
+ * Generates an ERROR on postgres when err in not null
+ */
+void
+vrp_throw_error(char *err, char *hint) {
+    if (err) {
+        ereport(ERROR, (errmsg("%s", err), errhint("%s", hint)));
     }
 }
