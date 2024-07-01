@@ -39,6 +39,7 @@ using Solution_rt = struct Solution_rt;
 #else
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 typedef struct Solution_rt Solution_rt;
 #endif
 
