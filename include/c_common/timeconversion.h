@@ -1,8 +1,8 @@
 /*PGR-GNU*****************************************************************
-File: matrixRows_input.h
+File: timeconversion.h
 
-Copyright (c) 2015 Celia Virginia Vergara Castillo
-vicky_vergara@hotmail.com
+Copyright (c) 2023 Celia Virginia Vergara Castillo
+vicky at erosion.dev
 
 ------
 
@@ -22,24 +22,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
-#ifndef INCLUDE_C_COMMON_MATRIXROWS_INPUT_H_
-#define INCLUDE_C_COMMON_MATRIXROWS_INPUT_H_
+#ifndef INCLUDE_C_COMMON_TIMECONVERSION_H_
+#define INCLUDE_C_COMMON_TIMECONVERSION_H_
 #pragma once
 
-#include <stddef.h>
 
-typedef struct Matrix_cell_t Matrix_cell_t;
+#include "c_types/typedefs.h"
 
-/** @brief Get the travel time matrix */
-void get_matrixRows(
-    char *sql,
-    Matrix_cell_t **rows,
-    size_t *total_rows);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-/** @brief Get the travel time matrix with numerical types*/
-void get_matrixRows_plain(
-    char *sql,
-    Matrix_cell_t **rows,
-    size_t *total_rows);
+TTimestamp vrp_timestamp_without_timezone(TTimestamp timestamp);
 
-#endif  // INCLUDE_C_COMMON_MATRIXROWS_INPUT_H_
+#ifdef __cplusplus
+}
+#endif
+
+
+#endif  // INCLUDE_C_COMMON_TIMECONVERSION_H_
