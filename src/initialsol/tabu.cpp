@@ -26,16 +26,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 
 
-#include "initialsol/tabu.h"
+#include "initialsol/tabu.hpp"
 #include <deque>
 #include <algorithm>
 #include <limits>
 
-#include "cpp_common/pgr_assert.h"
-#include "cpp_common/pgr_messages.h"
-#include "problem/pickDeliver.h"
+#include "cpp_common/assert.hpp"
+#include "cpp_common/messages.hpp"
+#include "problem/pickDeliver.hpp"
 #if 0
-#include "cpp_common/fleet.h"
+#include "cpp_common/fleet.hpp"
 #endif
 
 namespace vrprouting {
