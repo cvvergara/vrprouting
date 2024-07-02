@@ -34,7 +34,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <deque>
 #include <set>
 
-#include "optimizers/move.h"
+#include "optimizers/move.hpp"
 
 namespace vrprouting {
 namespace optimizers {
