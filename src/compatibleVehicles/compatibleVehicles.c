@@ -30,12 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_common/debug_macro.h"
 #include "c_common/e_report.h"
 #include "c_common/time_msg.h"
-#include "c_common/orders_input.h"
-#include "c_common/vehicles_input.h"
-#include "c_common/matrixRows_input.h"
-#include "c_common/time_multipliers_input.h"
-#include "c_types/pickDeliveryOrders_t.h"
-#include "c_types/compatibleVehicles_rt.h"
+#include "c_types/return_types.h"
 #include "drivers/compatibleVehicles_driver.h"
 
 PGDLLEXPORT Datum
@@ -55,6 +50,13 @@ process(
 
         CompatibleVehicles_rt **result_tuples,
         size_t *result_count) {
+    char *log_msg = NULL;
+    char *notice_msg = NULL;
+    char *err_msg = NULL;
+
+    bool with_stops = false;
+    bool is_euclidean = false;
+
     if (factor <= 0) {
         ereport(ERROR,
                 (errcode(ERRCODE_INTERNAL_ERROR),
@@ -62,110 +64,20 @@ process(
                  errhint("Value found: %f <= 0", factor)));
     }
 
-    pgr_SPI_connect();
+    vrp_SPI_connect();
 
-    PickDeliveryOrders_t *pd_orders_arr = NULL;
-    size_t total_pd_orders = 0;
 
-    if (use_timestamps) {
-      get_shipments(pd_orders_sql, &pd_orders_arr, &total_pd_orders);
-    } else {
-      get_shipments_raw(pd_orders_sql, &pd_orders_arr, &total_pd_orders);
-    }
-
-    if (total_pd_orders == 0) {
-        (*result_count) = 0;
-        (*result_tuples) = NULL;
-
-        /* freeing memory before return */
-        if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-
-        pgr_SPI_finish();
-        return;
-    }
-
-    Vehicle_t *vehicles_arr = NULL;
-    size_t total_vehicles = 0;
-    if (use_timestamps) {
-      get_vehicles(vehicles_sql, &vehicles_arr, &total_vehicles, false);
-    } else {
-      get_vehicles_raw(vehicles_sql, &vehicles_arr, &total_vehicles, false);
-    }
-
-    if (total_vehicles == 0) {
-        (*result_count) = 0;
-        (*result_tuples) = NULL;
-
-        /* freeing memory before return */
-        if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-        if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
-
-        pgr_SPI_finish();
-        return;
-    }
-
-    Time_multipliers_t *multipliers_arr = NULL;
-    size_t total_multipliers_arr = 0;
-    if (use_timestamps) {
-      get_timeMultipliers(multipliers_sql, &multipliers_arr, &total_multipliers_arr);
-    } else {
-      get_timeMultipliers_raw(multipliers_sql, &multipliers_arr, &total_multipliers_arr);
-    }
-
-    if (total_multipliers_arr == 0) {
-        (*result_count) = 0;
-        (*result_tuples) = NULL;
-
-        /* freeing memory before return */
-        if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-        if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
-        if (multipliers_arr) {pfree(multipliers_arr); multipliers_arr = NULL;}
-
-        pgr_SPI_finish();
-        return;
-    }
-
-    Matrix_cell_t *matrix_cells_arr = NULL;
-    size_t total_cells = 0;
-    if (use_timestamps) {
-      get_matrixRows(matrix_sql, &matrix_cells_arr, &total_cells);
-    } else {
-      get_matrixRows_plain(matrix_sql, &matrix_cells_arr, &total_cells);
-    }
-
-    if (total_cells == 0) {
-        (*result_count) = 0;
-        (*result_tuples) = NULL;
-
-        /* freeing memory before return */
-        if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-        if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
-        if (multipliers_arr) {pfree(multipliers_arr); multipliers_arr = NULL;}
-        if (matrix_cells_arr) {pfree(matrix_cells_arr); matrix_cells_arr = NULL;}
-
-        pgr_SPI_finish();
-        return;
-    }
-
-    PGR_DBG("Total %ld orders in query:", total_pd_orders);
-    PGR_DBG("Total %ld vehicles in query:", total_vehicles);
-    PGR_DBG("Total %ld matrix cells in query:", total_cells);
-    PGR_DBG("Total %ld multipliers in query:", total_cells);
-
-#ifdef PROFILE
     clock_t start_t = clock();
-#endif
-    char *log_msg = NULL;
-    char *notice_msg = NULL;
-    char *err_msg = NULL;
-
     do_compatibleVehicles(
-            pd_orders_arr, total_pd_orders,
-            vehicles_arr, total_vehicles,
-            matrix_cells_arr, total_cells,
-            multipliers_arr, total_multipliers_arr,
+            pd_orders_sql,
+            vehicles_sql,
+            matrix_sql,
+            multipliers_sql,
 
             factor,
+            use_timestamps,
+            is_euclidean,
+            with_stops,
 
             result_tuples,
             result_count,
@@ -174,32 +86,21 @@ process(
             &notice_msg,
             &err_msg);
 
-#ifdef PROFILE
     time_msg("vrp_compatibleVehicles", start_t, clock());
-#endif
     if (err_msg && (*result_tuples)) {
         pfree(*result_tuples);
         (*result_count) = 0;
         (*result_tuples) = NULL;
     }
 
-    pgr_global_report(log_msg, notice_msg, err_msg);
+    vrp_global_report(log_msg, notice_msg, err_msg);
 
     /* freeing memory before return */
     if (log_msg) {pfree(log_msg); log_msg = NULL;}
     if (notice_msg) {pfree(notice_msg); notice_msg = NULL;}
     if (err_msg) {pfree(err_msg); err_msg = NULL;}
-    if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-    if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
-    if (multipliers_arr) {pfree(multipliers_arr); multipliers_arr = NULL;}
-    if (matrix_cells_arr) {pfree(matrix_cells_arr); matrix_cells_arr = NULL;}
-
-    pgr_SPI_finish();
+    vrp_SPI_finish();
 }
-
-
-
-/******************************************************************************/
 
 
 PGDLLEXPORT Datum
@@ -207,22 +108,13 @@ _vrp_compatiblevehicles(PG_FUNCTION_ARGS) {
     FuncCallContext     *funcctx;
     TupleDesc            tuple_desc;
 
-    /**************************************************************************/
     CompatibleVehicles_rt *result_tuples = 0;
     size_t result_count = 0;
-    /**************************************************************************/
 
     if (SRF_IS_FIRSTCALL()) {
         MemoryContext   oldcontext;
         funcctx = SRF_FIRSTCALL_INIT();
         oldcontext = MemoryContextSwitchTo(funcctx->multi_call_memory_ctx);
-
-        /**********************************************************************
-           orders_sql TEXT,
-           vehicles_sql TEXT,
-           matrix_cell_sql TEXT,
-           factor FLOAT DEFAULT 1,
-         **********************************************************************/
 
         process(
                 text_to_cstring(PG_GETARG_TEXT_P(0)),
@@ -233,8 +125,6 @@ _vrp_compatiblevehicles(PG_FUNCTION_ARGS) {
                 PG_GETARG_BOOL(5),
                 &result_tuples,
                 &result_count);
-
-        /*********************************************************************/
 
         funcctx->max_calls = result_count;
         funcctx->user_fctx = result_tuples;
