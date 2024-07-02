@@ -6,6 +6,7 @@ Mail: project@pgrouting.org
 
 Function's developer:
 Copyright (c) 2015 Celia Virginia Vergara Castillo
+Mail: vicky at erosion.dev
 
 ------
 
@@ -29,12 +30,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_common/debug_macro.h"
 #include "c_common/e_report.h"
 #include "c_common/time_msg.h"
-#include "c_common/orders_input.h"
-#include "c_common/vehicles_input.h"
-#include "c_common/matrixRows_input.h"
-#include "c_types/pickDeliveryOrders_t.h"
-#include "c_types/solution_rt.h"
-#include "drivers/pgr_pickDeliver/pickDeliver_driver.h"
+#include "c_types/return_types.h"
+#include "drivers/pgr_pickDeliver_driver.h"
 
 PGDLLEXPORT Datum
 _vrp_pgr_pickdeliver(PG_FUNCTION_ARGS);
@@ -53,6 +50,10 @@ process(
 
         Solution_rt **result_tuples,
         size_t *result_count) {
+    char *log_msg = NULL;
+    char *notice_msg = NULL;
+    char *err_msg = NULL;
+
     if (factor <= 0) {
         ereport(ERROR,
                 (errcode(ERRCODE_INTERNAL_ERROR),
@@ -83,140 +84,13 @@ process(
         return;
     }
 
-    pgr_SPI_connect();
+    vrp_SPI_connect();
 
-    PickDeliveryOrders_t *pd_orders_arr = NULL;
-    size_t total_pd_orders = 0;
-    get_shipments_raw(pd_orders_sql,
-           &pd_orders_arr, &total_pd_orders);
-
-    if (total_pd_orders == 0) {
-        (*result_count) = 0;
-        (*result_tuples) = NULL;
-
-        /* freeing memory before return */
-        if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-
-        pgr_SPI_finish();
-        ereport(ERROR,
-                (errcode(ERRCODE_INTERNAL_ERROR),
-                 errmsg("No orders found")));
-        return;
-    }
-
-
-    Vehicle_t *vehicles_arr = NULL;
-    size_t total_vehicles = 0;
-    get_vehicles_raw(vehicles_sql,
-           &vehicles_arr, &total_vehicles,
-           false);
-
-    if (total_vehicles == 0) {
-        (*result_count) = 0;
-        (*result_tuples) = NULL;
-
-        /* freeing memory before return */
-        if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-        if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
-
-        pgr_SPI_finish();
-        ereport(ERROR,
-                (errcode(ERRCODE_INTERNAL_ERROR),
-                 errmsg("No vehicles found")));
-        return;
-    }
-
-#if 0
-    PGR_DBG("total orders %ld", total_pd_orders);
-    for (size_t i = 0; i < total_pd_orders; i++) {
-        PGR_DBG("%ld %f pick %ld - %ld %ld %ld"
-                "deliver %ld - %ld %ld %ld ",
-                pd_orders_arr[i].id,
-                pd_orders_arr[i].demand,
-
-                pd_orders_arr[i].pick_node_id,
-
-                pd_orders_arr[i].pick_open_t,
-                pd_orders_arr[i].pick_close_t,
-                pd_orders_arr[i].pick_service_t,
-
-                pd_orders_arr[i].deliver_node_id,
-
-                pd_orders_arr[i].deliver_open_t,
-                pd_orders_arr[i].deliver_close_t,
-                pd_orders_arr[i].deliver_service_t);
-    }
-
-
-
-    PGR_DBG("total vehicles %ld", total_vehicles);
-    for (size_t i = 0; i < total_vehicles; i++) {
-        PGR_DBG("%ld %f %f , start %ld %ld %ld %ld "
-                "end %ld %ld %ld %ld number %ld ",
-               vehicles_arr[i].id,
-               vehicles_arr[i].capacity,
-               vehicles_arr[i].speed,
-
-               vehicles_arr[i].start_node_id,
-               vehicles_arr[i].start_open_t,
-               vehicles_arr[i].start_close_t,
-               vehicles_arr[i].start_service_t,
-
-               vehicles_arr[i].end_node_id,
-               vehicles_arr[i].end_open_t,
-               vehicles_arr[i].end_close_t,
-               vehicles_arr[i].end_service_t,
-
-               vehicles_arr[i].cant_v);
-    }
-#endif
-
-    Matrix_cell_t *matrix_cells_arr = NULL;
-    size_t total_cells = 0;
-    get_matrixRows_plain(matrix_sql, &matrix_cells_arr, &total_cells);
-
-    PGR_DBG("total matrix rows %ld", total_cells);
-#if 0
-    for (size_t i = 0; i < total_cells; i++) {
-        PGR_DBG("%ld %ld %f",
-               matrix_cells_arr[i].from_vid,
-               matrix_cells_arr[i].to_vid,
-               matrix_cells_arr[i].cost);
-    }
-#endif
-
-    if (total_cells == 0) {
-        (*result_count) = 0;
-        (*result_tuples) = NULL;
-
-        /* freeing memory before return */
-        if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-        if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
-        if (matrix_cells_arr) {pfree(matrix_cells_arr); matrix_cells_arr = NULL;}
-
-        ereport(WARNING,
-                (errcode(ERRCODE_INTERNAL_ERROR),
-                 errmsg("No matrix found")));
-        pgr_SPI_finish();
-        return;
-    }
-
-
-    PGR_DBG("Total %ld orders in query:", total_pd_orders);
-    PGR_DBG("Total %ld vehicles in query:", total_vehicles);
-    PGR_DBG("Total %ld matrix cells in query:", total_cells);
-
-
-    PGR_DBG("Starting processing");
     clock_t start_t = clock();
-    char *log_msg = NULL;
-    char *notice_msg = NULL;
-    char *err_msg = NULL;
-
-    do_pgr_pickDeliver(
-            pd_orders_arr, total_pd_orders,
-            vehicles_arr, total_vehicles,
-            matrix_cells_arr, total_cells,
+    vrp_do_pgr_pickDeliver(
+            pd_orders_sql,
+            vehicles_sql,
+            matrix_sql,
 
             factor,
             max_cycles,
@@ -236,22 +110,15 @@ process(
         (*result_count) = 0;
         (*result_tuples) = NULL;
     }
-    pgr_global_report(log_msg, notice_msg, err_msg);
+    vrp_global_report(log_msg, notice_msg, err_msg);
 
     /* freeing memory before return */
     if (log_msg) {pfree(log_msg); log_msg = NULL;}
     if (notice_msg) {pfree(notice_msg); notice_msg = NULL;}
     if (err_msg) {pfree(err_msg); err_msg = NULL;}
-    if (pd_orders_arr) {pfree(pd_orders_arr); pd_orders_arr = NULL;}
-    if (vehicles_arr) {pfree(vehicles_arr); vehicles_arr = NULL;}
-    if (matrix_cells_arr) {pfree(matrix_cells_arr); matrix_cells_arr = NULL;}
-
-    pgr_SPI_finish();
+    vrp_SPI_finish();
 }
 
-
-
-/******************************************************************************/
 
 
 PGDLLEXPORT Datum
@@ -259,24 +126,13 @@ _vrp_pgr_pickdeliver(PG_FUNCTION_ARGS) {
     FuncCallContext     *funcctx;
     TupleDesc            tuple_desc;
 
-    /**************************************************************************/
     Solution_rt *result_tuples = 0;
     size_t result_count = 0;
-    /**************************************************************************/
 
     if (SRF_IS_FIRSTCALL()) {
         MemoryContext   oldcontext;
         funcctx = SRF_FIRSTCALL_INIT();
         oldcontext = MemoryContextSwitchTo(funcctx->multi_call_memory_ctx);
-
-        /**********************************************************************
-           orders_sql TEXT,
-           vehicles_sql TEXT,
-           matrix_cell_sql TEXT,
-           factor FLOAT DEFAULT 1,
-           max_cycles  INTEGER DEFAULT 10,
-           initial_sol INTEGER DEFAULT 4,
-         **********************************************************************/
 
         process(
                 text_to_cstring(PG_GETARG_TEXT_P(0)),
@@ -287,8 +143,6 @@ _vrp_pgr_pickdeliver(PG_FUNCTION_ARGS) {
                 PG_GETARG_INT32(5),
                 &result_tuples,
                 &result_count);
-
-        /*********************************************************************/
 
         funcctx->max_calls = result_count;
         funcctx->user_fctx = result_tuples;
@@ -315,24 +169,6 @@ _vrp_pgr_pickdeliver(PG_FUNCTION_ARGS) {
         bool*       nulls;
         size_t      call_cntr = funcctx->call_cntr;
 
-        /*********************************************************************
-
-          OUT seq INTEGER,
-          OUT vehicle_number INTEGER,
-          OUT vehicle_id BIGINT,
-          OUT vehicle_seq INTEGER,
-          OUT order_id BIGINT,
-          OUT stop_type INT,
-          OUT cargo FLOAT,
-          OUT travel_time FLOAT,
-          OUT arrival_time FLOAT,
-          OUT wait_time FLOAT,
-          OUT service_time FLOAT,
-          OUT departure_time FLOAT
-
-         *********************************************************************/
-
-
         size_t numb = 13;
         values = palloc(numb * sizeof(Datum));
         nulls = palloc(numb * sizeof(bool));
@@ -356,8 +192,6 @@ _vrp_pgr_pickdeliver(PG_FUNCTION_ARGS) {
         values[10] = Int64GetDatum(result_tuples[call_cntr].waitDuration);
         values[11] = Int64GetDatum(result_tuples[call_cntr].serviceDuration);
         values[12] = Int64GetDatum(result_tuples[call_cntr].departureTime);
-
-        /*********************************************************************/
 
         tuple = heap_form_tuple(tuple_desc, values, nulls);
         result = HeapTupleGetDatum(tuple);

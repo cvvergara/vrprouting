@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 
 
-#include "drivers/pgr_pickDeliver/pickDeliverEuclidean_driver.h"
+#include "drivers/pgr_pickDeliverEuclidean_driver.h"
 
 #include <sstream>
 #include <utility>
@@ -35,15 +35,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <vector>
 #include <map>
 
-#include "c_types/pickDeliveryOrders_t.h"
-#include "c_types/solution_rt.h"
-#include "c_common/pgr_alloc.hpp"
-#include "cpp_common/pgr_assert.h"
+#include "c_types/return_types.h"
 
-#include "problem/matrix.h"
-#include "initialsol/simple.h"
-#include "optimizers/simple.h"
-#include "problem/pickDeliver.h"
+#include "cpp_common/alloc.hpp"
+#include "cpp_common/assert.hpp"
+#include "cpp_common/pgdata_getters.hpp"
+
+#include "initialsol/simple.hpp"
+#include "optimizers/simple.hpp"
+#include "problem/pickDeliver.hpp"
+#include "problem/matrix.hpp"
 
 namespace {
 vrprouting::problem::Solution
@@ -70,10 +71,10 @@ get_initial_solution(vrprouting::problem::PickDeliver* problem_ptr, int m_initia
 
 bool
 are_shipments_ok(
-    PickDeliveryOrders_t *customers_arr,
-    size_t total_customers,
+    std::vector<vrprouting::Orders_t> orders,
     std::string *err_string,
     std::string *hint_string) {
+  // TODO(idea): do this checks when reading the data
   /**
    * - demand > 0 (the type is unsigned so no need to check for negative values, only for it to be non 0
    * - pick_service_t >=0
@@ -81,34 +82,34 @@ are_shipments_ok(
    * - p_open <= p_close
    * - d_open <= d_close
    */
-  for (size_t i = 0; i < total_customers; ++i) {
-    if (customers_arr[i].demand == 0) {
+  for (const auto &o : orders) {
+    if (o.demand == 0) {
       *err_string = "Unexpected zero value found on column 'demand' of shipments";
-      *hint_string = "Check shipment id #:" + std::to_string(customers_arr[i].id);
+      *hint_string = "Check shipment id #:" + std::to_string(o.id);
       return false;
     }
 
-    if (customers_arr[i].pick_service_t < 0) {
+    if (o.pick_service_t < 0) {
       *err_string = "Unexpected negative value found on column 'p_service_t' of shipments";
-      *hint_string = "Check shipment id #:" + std::to_string(customers_arr[i].id);
+      *hint_string = "Check shipment id #:" + std::to_string(o.id);
       return false;
     }
 
-    if (customers_arr[i].deliver_service_t < 0) {
+    if (o.deliver_service_t < 0) {
       *err_string = "Unexpected negative value found on column 'd_service_t' of shipments";
-      *hint_string = "Check shipment id #:" + std::to_string(customers_arr[i].id);
+      *hint_string = "Check shipment id #:" + std::to_string(o.id);
       return false;
     }
 
-    if (customers_arr[i].pick_open_t > customers_arr[i].pick_close_t) {
+    if (o.pick_open_t > o.pick_close_t) {
       *err_string = "Unexpected pickup time windows found on shipments";
-      *hint_string = "Check shipment id #:" + std::to_string(customers_arr[i].id);
+      *hint_string = "Check shipment id #:" + std::to_string(o.id);
       return false;
     }
 
-    if (customers_arr[i].deliver_open_t > customers_arr[i].deliver_close_t) {
+    if (o.deliver_open_t > o.deliver_close_t) {
       *err_string = "Unexpected delivery time windows found on shipments";
-      *hint_string = "Check shipment id #:" + std::to_string(customers_arr[i].id);
+      *hint_string = "Check shipment id #:" + std::to_string(o.id);
       return false;
     }
   }
@@ -118,16 +119,13 @@ are_shipments_ok(
 }  // namespace
 
 void
-do_pgr_pickDeliverEuclidean(
-    PickDeliveryOrders_t *customers_arr,
-    size_t total_customers,
+vrp_do_pgr_pickDeliverEuclidean(
+    char* orders_sql,
+    char* vehicles_sql,
 
-    Vehicle_t *vehicles_arr,
-    size_t total_vehicles,
-
-    double factor,
-    int max_cycles,
-    int initial_solution_id,
+        double factor,
+        int max_cycles,
+        int initial_solution_id,
 
     Solution_rt **return_tuples,
     size_t *return_count,
@@ -135,27 +133,60 @@ do_pgr_pickDeliverEuclidean(
     char **log_msg,
     char **notice_msg,
     char **err_msg) {
+  using vrprouting::msg;
+  using vrprouting::alloc;
+  using vrprouting::pgget::pickdeliver::get_orders;
+  using vrprouting::pgget::pickdeliver::get_vehicles;
+
   std::ostringstream log;
   std::ostringstream notice;
   std::ostringstream err;
+
+  char* hint = nullptr;
+
   try {
-    *return_tuples = nullptr;
-    *return_count = 0;
+    pgassert(!(*log_msg));
+    pgassert(!(*notice_msg));
+    pgassert(!(*err_msg));
+    pgassert(*return_count == 0);
+    pgassert(!(*return_tuples));
+    log << "do_pgr_pickDeliverEuclidean\n";
+
+    bool use_timestamps = false;
+    bool is_euclidean = true;
+    bool with_stops = false;
+
+    Identifiers<Id> node_ids;
+
     std::string err_string;
     std::string hint_string;
-    if (!are_shipments_ok(customers_arr, total_customers, &err_string, &hint_string)) {
-      *err_msg = pgr_msg(err_string.c_str());
-      *log_msg = pgr_msg(hint_string.c_str());
+
+    hint = orders_sql;
+    auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);
+    if (orders.size() == 0) {
+      *notice_msg = msg("Insufficient data found on inner query");
+      *log_msg = hint? msg(hint) : nullptr;
+      return;
+    }
+
+    hint = vehicles_sql;
+    auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps, with_stops);
+    if (vehicles.size() == 0) {
+      *notice_msg = msg("Insufficient data found on inner query");
+      *log_msg = hint? msg(hint) : nullptr;
+      return;
+    }
+    hint = nullptr;
+
+    if (!are_shipments_ok(orders, &err_string, &hint_string)) {
+      *err_msg = msg(err_string.c_str());
+      *log_msg = msg(hint_string.c_str());
       return;
     }
 
     /*
      * transform to C++ containers
      */
-    std::vector<PickDeliveryOrders_t> orders(
-        customers_arr, customers_arr + total_customers);
-    std::vector<Vehicle_t> vehicles(
-        vehicles_arr, vehicles_arr + total_vehicles);
 
     std::map<std::pair<Coordinate, Coordinate>, Id> matrix_data;
 
@@ -185,13 +216,11 @@ do_pgr_pickDeliverEuclidean(
       log << e.second << "(" << e.first.first << "," << e.first.second << ")\n";
     }
 
-    for (size_t i = 0; i < total_customers; ++i) {
-      customers_arr[i].pick_node_id =
-        matrix_data[std::pair<Coordinate, Coordinate>(customers_arr[i].pick_x, customers_arr[i].pick_y)];
-
-      customers_arr[i].deliver_node_id =
-        matrix_data[std::pair<Coordinate, Coordinate>(customers_arr[i].deliver_x, customers_arr[i].deliver_y)];
+    for (auto &o : orders) {
+      o.pick_node_id    = matrix_data[std::pair<Coordinate, Coordinate>(o.pick_x, o.pick_y)];
+      o.deliver_node_id = matrix_data[std::pair<Coordinate, Coordinate>(o.deliver_x, o.deliver_y)];
     }
+
     for (auto &v : vehicles) {
       v.start_node_id = matrix_data[std::pair<Coordinate, Coordinate>(v.start_x, v.start_y)];
       v.end_node_id = matrix_data[std::pair<Coordinate, Coordinate>(v.end_x, v.end_y)];
@@ -200,10 +229,7 @@ do_pgr_pickDeliverEuclidean(
     vrprouting::problem::Matrix cost_matrix(matrix_data, static_cast<Multiplier>(factor));
 
     log << "Initialize problem\n";
-    vrprouting::problem::PickDeliver pd_problem(
-        customers_arr, total_customers,
-        vehicles_arr, total_vehicles,
-        cost_matrix);
+    vrprouting::problem::PickDeliver pd_problem(orders, vehicles, cost_matrix);
 
     err << pd_problem.msg.get_error();
     if (!err.str().empty()) {
@@ -211,8 +237,8 @@ do_pgr_pickDeliverEuclidean(
       log.clear();
       log << pd_problem.msg.get_error();
       log << pd_problem.msg.get_log();
-      *log_msg = pgr_msg(log.str().c_str());
-      *err_msg = pgr_msg(err.str().c_str());
+      *log_msg = msg(log.str().c_str());
+      *err_msg = msg(err.str().c_str());
       return;
     }
     log << pd_problem.msg.get_log();
@@ -243,7 +269,7 @@ do_pgr_pickDeliverEuclidean(
 
 
     if (!solution.empty()) {
-      (*return_tuples) = pgr_alloc(solution.size(), (*return_tuples));
+      (*return_tuples) = alloc(solution.size(), (*return_tuples));
       int seq = 0;
       for (const auto &row : solution) {
         (*return_tuples)[seq] = row;
@@ -257,35 +283,38 @@ do_pgr_pickDeliverEuclidean(
     pgassert(*err_msg == NULL);
     *log_msg = log.str().empty()?
       nullptr :
-      pgr_msg(log.str().c_str());
+      msg(log.str().c_str());
     *notice_msg = notice.str().empty()?
       nullptr :
-      pgr_msg(notice.str().c_str());
+      msg(notice.str().c_str());
   } catch (AssertFailedException &except) {
     if (*return_tuples) free(*return_tuples);
     (*return_count) = 0;
     err << except.what();
-    *err_msg = pgr_msg(err.str().c_str());
-    *log_msg = pgr_msg(log.str().c_str());
+    *err_msg = msg(err.str().c_str());
+    *log_msg = msg(log.str().c_str());
   } catch (std::exception& except) {
     if (*return_tuples) free(*return_tuples);
     (*return_count) = 0;
     err << except.what();
-    *err_msg = pgr_msg(err.str().c_str());
-    *log_msg = pgr_msg(log.str().c_str());
+    *err_msg = msg(err.str().c_str());
+    *log_msg = msg(log.str().c_str());
+  } catch (const std::string &ex) {
+    *err_msg = msg(ex.c_str());
+    *log_msg = hint? msg(hint) : msg(log.str().c_str());
   } catch (const std::pair<std::string, std::string>& ex) {
     (*return_count) = 0;
     err << ex.first;
     log.str("");
     log.clear();
     log << ex.second;
-    *err_msg = pgr_msg(err.str().c_str());
-    *log_msg = pgr_msg(log.str().c_str());
+    *err_msg = msg(err.str().c_str());
+    *log_msg = msg(log.str().c_str());
   } catch(...) {
     if (*return_tuples) free(*return_tuples);
     (*return_count) = 0;
     err << "Caught unknown exception!";
-    *err_msg = pgr_msg(err.str().c_str());
-    *log_msg = pgr_msg(log.str().c_str());
+    *err_msg = msg(err.str().c_str());
+    *log_msg = msg(log.str().c_str());
   }
 }
