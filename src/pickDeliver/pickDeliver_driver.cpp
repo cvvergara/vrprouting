@@ -27,46 +27,43 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 /** @file */
 
-
 #include "drivers/pickDeliver_driver.h"
 
-#include <cstring>
+#include <utility>
 #include <sstream>
 #include <string>
 #include <deque>
 
-#include "problem/pickDeliver.h"
-#include "c_types/pickDeliveryOrders_t.h"
-#include "c_types/solution_rt.h"
-#include "c_types/vehicle_t.h"
-#include "problem/matrix.h"
+#include "c_types/return_types.h"
 
-#include "cpp_common/pgr_assert.h"
-#include "initialsol/tabu.h"
-#include "optimizers/tabu.h"
-#include "c_common/pgr_alloc.hpp"
+#include "cpp_common/alloc.hpp"
+#include "cpp_common/assert.hpp"
+#include "cpp_common/pgdata_getters.hpp"
+
+#include "problem/pickDeliver.hpp"
+#include "problem/matrix.hpp"
+#include "initialsol/tabu.hpp"
+#include "optimizers/tabu.hpp"
 
 /**
  *
- *  @param[in] customers_arr A C Array of pickup and dropoff orders
- *  @param[in] total_customers size of the customers_arr
- *  @param[in] vehicles_arr A C Array of vehicles
- *  @param[in] total_vehicles size of the vehicles_arr
- *  @param[in] matrix_cells_arr A C Array of the (time) matrix cells
- *  @param[in] total_cells size of the matrix_cells_arr
- *  @param[in] multipliers_arr A C Array of the multipliers
- *  @param[in] total_multipliers size of the multipliers_arr
+ *  @param[in] orders_sql  SQL query for the orders
+ *  @param[in] vehicles_sql  SQL query for the vehicles
+ *  @param[in] matrix_sql  SQL query for the matrix
+ *  @param[in] multipliers_sql  SQL query for the multipliers
  *  @param[in] optimize flag to control optimization
  *  @param[in] factor A global multiplier for the (time) matrix cells
  *  @param[in] max_cycles number of cycles to perform during the optimization phase
  *  @param[in] stop_on_all_served Indicator to stop optimization when all orders are served
  *  @param[in] execution_date Value used for not moving orders that are before this date
+ *  @param[in] use_timestamps When true: data comes with timestamps
+ *  @param[in] is_euclidean When true: Data comes with coordinates
+ *  @param[in] with_stops When true: Vehicles have stops assigned
  *  @param[out] return_tuples C array of contents to be returned to postgres
  *  @param[out] return_count number of tuples returned
  *  @param[out] log_msg special log message pointer
  *  @param[out] notice_msg special message pointer to be returned as NOTICE
  *  @param[out] err_msg special message pointer to be returned as ERROR
- *  @return void
  *
  *
  * @pre The messages: log_msg, notice_msg, err_msg must be empty (=nullptr)
@@ -106,192 +103,244 @@ digraph G {
  */
 void
 do_pickDeliver(
-    PickDeliveryOrders_t *customers_arr, size_t total_customers,
-    Vehicle_t *vehicles_arr, size_t total_vehicles,
-    Matrix_cell_t *matrix_cells_arr, size_t total_cells,
-    Time_multipliers_t *multipliers_arr, size_t total_multipliers,
+        char* orders_sql,
+        char* vehicles_sql,
+        char* matrix_sql,
+        char* multipliers_sql,
 
 
-    bool optimize,
-    double factor,
-    int max_cycles,
-    bool stop_on_all_served,
-    int64_t execution_date,
+        bool optimize,
+        double factor,
+        int max_cycles,
+        bool stop_on_all_served,
+        int64_t execution_date,
+        bool use_timestamps,
+        bool is_euclidean,
+        bool with_stops,
 
-    Solution_rt **return_tuples,
-    size_t *return_count,
+        Solution_rt **return_tuples,
+        size_t *return_count,
 
-    char **log_msg,
-    char **notice_msg,
-    char **err_msg) {
-  std::ostringstream log;
-  std::ostringstream notice;
-  std::ostringstream err;
-  try {
-    /*
-     * verify preconditions
-     */
-    pgassert(!(*log_msg));
-    pgassert(!(*notice_msg));
-    pgassert(!(*err_msg));
-    pgassert(total_customers);
-    pgassert(total_vehicles);
-    pgassert(total_cells);
-    pgassert(*return_count == 0);
-    pgassert(!(*return_tuples));
-    log << "do_pickDeliver\n";
+        char **log_msg,
+        char **notice_msg,
+        char **err_msg) {
+    using vrprouting::msg;
+    using vrprouting::alloc;
+    using vrprouting::pgget::pickdeliver::get_matrix;
+    using vrprouting::pgget::pickdeliver::get_orders;
+    using vrprouting::pgget::pickdeliver::get_vehicles;
+    using vrprouting::pgget::pickdeliver::get_timeMultipliers;
 
-    *return_tuples = nullptr;
-    *return_count = 0;
+    std::ostringstream log;
+    std::ostringstream notice;
+    std::ostringstream err;
 
-    Identifiers<Id> node_ids;
-    Identifiers<Id> order_ids;
+    char* hint = nullptr;
 
-    for (size_t i = 0; i < total_customers; ++i) {
-      node_ids += customers_arr[i].pick_node_id;
-      node_ids += customers_arr[i].deliver_node_id;
-      order_ids += customers_arr[i].id;
-    }
-
-    bool missing = false;
-    for (size_t i = 0; i < total_vehicles; ++i) {
-      auto vehicle = vehicles_arr[i];
-      node_ids += vehicle.start_node_id;
-      node_ids += vehicle.end_node_id;
-      for (size_t j = 0; j < vehicle.stops_size; ++j) {
-        if (!order_ids.has(vehicle.stops[j])) {
-          if (!missing) err << "Order in 'stops' information missing";
-          missing = true;
-          err << "Missing information of order " << vehicle.stops[j] << "\n";
-        }
-      }
-      if (missing) {
-        *err_msg = pgr_msg(err.str());
-        return;
-      }
-    }
-
-    vrprouting::problem::Matrix cost_matrix(
-        matrix_cells_arr, total_cells,
-        multipliers_arr, total_multipliers,
-        node_ids, static_cast<Multiplier>(factor));
-#if 1
-    /*
-     * Verify matrix triangle inequality
-     */
-    if (!cost_matrix.obeys_triangle_inequality()) {
-      log << "[PickDeliver] Fixing Matrix that does not obey triangle inequality ";
-      log << cost_matrix.fix_triangle_inequality() << " cycles used";
-
-      if (!cost_matrix.obeys_triangle_inequality()) {
-        log << "[pickDeliver] Matrix Still does not obey triangle inequality ";
-      }
-    }
-#endif
-    /*
-     * Verify matrix cells preconditions
-     */
-    if (!cost_matrix.has_no_infinity()) {
-      err << "An Infinity value was found on the Matrix";
-      *err_msg = pgr_msg(err.str());
-      return;
-    }
-
-
-    log << "stop_on_all_served" << stop_on_all_served << "\n";
-    log << "execution_date" << execution_date << "\n";
-    log << "Initialize problem\n";
-    /*
-     * Construct problem
-     */
-    vrprouting::problem::PickDeliver pd_problem(
-        customers_arr, total_customers,
-        vehicles_arr, total_vehicles,
-        cost_matrix);
-
-    err << pd_problem.msg.get_error();
-    if (!err.str().empty()) {
-      log << pd_problem.msg.get_error();
-      log << pd_problem.msg.get_log();
-      *log_msg = pgr_msg(log.str());
-      *err_msg = pgr_msg(err.str());
-      return;
-    }
-    log << pd_problem.msg.get_log();
-    pd_problem.msg.clear();
-
-    log << "Finish Initialize problem\n";
-
-#if 0
     try {
+        pgassert(!(*log_msg));
+        pgassert(!(*notice_msg));
+        pgassert(!(*err_msg));
+        pgassert(*return_count == 0);
+        pgassert(!(*return_tuples));
+        log << "do_pickDeliver\n";
+
+        hint = orders_sql;
+        auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);
+        if (orders.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+
+        hint = vehicles_sql;
+        auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps, with_stops);
+        if (vehicles.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+
+        hint = matrix_sql;
+        auto costs = get_matrix(std::string(matrix_sql), use_timestamps);
+
+        if (costs.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+
+        hint = multipliers_sql;
+        auto multipliers = get_timeMultipliers(std::string(multipliers_sql), use_timestamps);
+        hint = nullptr;
+
+        Identifiers<Id> node_ids;
+        Identifiers<Id> order_ids;
+
+        for (const auto &o : orders) {
+            node_ids += o.pick_node_id;
+            node_ids += o.deliver_node_id;
+            order_ids += o.id;
+        }
+
+        bool missing = false;
+        for (const auto &v : vehicles) {
+            node_ids += v.start_node_id;
+            node_ids += v.end_node_id;
+            for (size_t j = 0; j < v.stops_size; ++j) {
+                if (!order_ids.has(v.stops[j])) {
+                    if (!missing) err << "Order in 'stops' information missing";
+                    missing = true;
+                    err << "Missing information of order " << v.stops[j] << "\n";
+                }
+            }
+            if (missing) {
+                *err_msg = msg(err.str());
+                return;
+            }
+        }
+
+        vrprouting::problem::Matrix cost_matrix(
+                costs,
+                multipliers,
+                node_ids, static_cast<Multiplier>(factor));
+#if 1
+        /*
+         * Verify matrix triangle inequality
+         */
+        if (!cost_matrix.obeys_triangle_inequality()) {
+            log << "[PickDeliver] Fixing Matrix that does not obey triangle inequality ";
+            log << cost_matrix.fix_triangle_inequality() << " cycles used";
+
+            if (!cost_matrix.obeys_triangle_inequality()) {
+                log << "[pickDeliver] Matrix Still does not obey triangle inequality ";
+            }
+        }
 #endif
-      /*
-       * get initial solutions
-       */
-      using Initial_solution = vrprouting::initialsol::tabu::Initial_solution;
-      using Solution = vrprouting::problem::Solution;
-      auto sol = static_cast<Solution>(Initial_solution(execution_date, optimize, &pd_problem));
-      /*
-       * Solve (optimize)
-       */
-      using Optimize = vrprouting::optimizers::tabu::Optimize;
-      sol = Optimize(sol, static_cast<size_t>(max_cycles), stop_on_all_served, optimize);
+        /*
+         * Verify matrix cells preconditions
+         */
+        if (!cost_matrix.has_no_infinity()) {
+            err << "An Infinity value was found on the Matrix";
+            *err_msg = msg(err.str());
+            return;
+        }
+
+
+        log << "stop_on_all_served" << stop_on_all_served << "\n";
+        log << "execution_date" << execution_date << "\n";
+        log << "Initialize problem\n";
+        /*
+         * Construct problem
+         */
+        vrprouting::problem::PickDeliver pd_problem(
+                orders,
+                vehicles,
+                cost_matrix);
+
+        err << pd_problem.msg.get_error();
+        if (!err.str().empty()) {
+            log << pd_problem.msg.get_error();
+            log << pd_problem.msg.get_log();
+            *log_msg = msg(log.str().c_str());
+            *err_msg = msg(err.str().c_str());
+            return;
+        }
+        log << pd_problem.msg.get_log();
+        log << "Finish Reading data\n";
+        pd_problem.msg.clear();
+
+        log << "Finish Initialize problem\n";
+
 #if 0
-    } catch (AssertFailedException &except) {
-      log << pd_problem.msg.get_log();
-      throw;
-    } catch(...) {
-      log << "Caught unknown exception!";
-      throw;
-    }
+        try {
+#endif
+            /*
+             * get initial solutions
+             */
+            using Initial_solution = vrprouting::initialsol::tabu::Initial_solution;
+            using Solution = vrprouting::problem::Solution;
+            auto sol = static_cast<Solution>(Initial_solution(execution_date, optimize, &pd_problem));
+            /*
+             * Solve (optimize)
+             */
+            using Optimize = vrprouting::optimizers::tabu::Optimize;
+            sol = Optimize(sol, static_cast<size_t>(max_cycles), stop_on_all_served, optimize);
+#if 0
+        } catch (AssertFailedException &except) {
+            log << pd_problem.msg.get_log();
+            pd_problem.msg.clear();
+            throw;
+        } catch(...) {
+            log << "Caught unknown exception!";
+            throw;
+        }
 #endif
 
-    log << pd_problem.msg.get_log();
-    pd_problem.msg.clear();
-    log << "Finish solve\n";
+        log << pd_problem.msg.get_log();
+        pd_problem.msg.clear();
+        log << "Finish solve\n";
 
-    /*
-     * Prepare results
-     */
-    auto solution = sol.get_postgres_result();
-    log << pd_problem.msg.get_log();
-    pd_problem.msg.clear();
-    log << "solution size: " << solution.size() << "\n";
+        /*
+         * Prepare results
+         */
+        auto solution = sol.get_postgres_result();
+        log << pd_problem.msg.get_log();
+        pd_problem.msg.clear();
+        log << "solution size: " << solution.size() << "\n";
 
 
-    if (!solution.empty()) {
-      (*return_tuples) = pgr_alloc(solution.size(), (*return_tuples));
-      int seq = 0;
-      for (const auto &row : solution) {
-        (*return_tuples)[seq] = row;
-        ++seq;
-      }
+        if (!solution.empty()) {
+            (*return_tuples) = alloc(solution.size(), (*return_tuples));
+            int seq = 0;
+            for (const auto &row : solution) {
+                (*return_tuples)[seq] = row;
+                ++seq;
+            }
+        }
+        (*return_count) = solution.size();
+
+        log << pd_problem.msg.get_log();
+
+        pgassert(*err_msg == nullptr);
+        *log_msg = log.str().empty()?
+            nullptr :
+            msg(log.str().c_str());
+        *notice_msg = notice.str().empty()?
+            nullptr :
+            msg(notice.str().c_str());
+    } catch (AssertFailedException &except) {
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << except.what();
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch (std::exception& except) {
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << except.what();
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch (const std::string &ex) {
+        *err_msg = msg(ex.c_str());
+        *log_msg = hint? msg(hint) : msg(log.str().c_str());
+    } catch (const std::pair<std::string, std::string>& ex) {
+        (*return_count) = 0;
+        err << ex.first;
+        log << ex.second;
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch (const std::pair<std::string, int64_t>& ex) {
+        (*return_count) = 0;
+        err << ex.first;
+        log << "FOOOO missing on matrix: id =  " << ex.second;
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch(...) {
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << "Caught unknown exception!";
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
     }
-    (*return_count) = solution.size();
-
-    log << pd_problem.msg.get_log();
-
-    pgassert(*err_msg == nullptr);
-    *log_msg = log.str().empty()?
-      nullptr :
-      pgr_msg(log.str());
-    *notice_msg = notice.str().empty()?
-      nullptr :
-      pgr_msg(notice.str());
-  } catch (AssertFailedException &except) {
-    if (*return_tuples) free(*return_tuples);
-    (*return_count) = 0;
-    err << except.what() << log.str();
-    *err_msg = pgr_msg(err.str());
-  } catch (std::exception& except) {
-    if (*return_tuples) free(*return_tuples);
-    (*return_count) = 0;
-    err << except.what() << log.str();
-    *err_msg = pgr_msg(err.str());
-  } catch(...) {
-    if (*return_tuples) free(*return_tuples);
-    (*return_count) = 0;
-    err << "Caught unknown exception!" << log.str();
-    *err_msg = pgr_msg(err.str());
-  }
 }
