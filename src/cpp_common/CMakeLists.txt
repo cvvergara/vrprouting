@@ -6,4 +6,5 @@ ADD_LIBRARY(cpp_common OBJECT
   get_check_data.cpp
   identifier.cpp
   assert.cpp
+  alloc.cpp
   )
