@@ -17,14 +17,13 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 #---------------------------------------------
 #---------------------------------------------
 
-project(VRPROUTING VERSION 0.4.0
+project(VRPROUTING VERSION 0.3.0
   LANGUAGES C CXX )
-set(PROJECT_VERSION_DEV "-dev")
+set(PROJECT_VERSION_DEV "")
 string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
 
-set(MINORS 0.4 0.3 0.2 0.1)
+set(MINORS 0.3 0.2 0.1)
 set(OLD_SIGNATURES
-    0.3.0
     0.2.0
     0.1.0
   )
@@ -54,7 +53,7 @@ set(DOXYGEN_MINIMUM_VERSION "1.7")
 set(SPHINX_MINIMUM_VERSION "1.8")
 set(POSTGRESQL_MINIMUM_VERSION "12.0")
 set(BOOST_MINIMUM_VERSION "1.65.0")
-set(VROOM_MINIMUM_VERSION "1.12.0")
+set(VROOM_MINIMUM_VERSION "1.11.0")
 
 message(STATUS "DOXYGEN_MINIMUM_VERSION=${DOXYGEN_MINIMUM_VERSION}")
 message(STATUS "SPHINX_MINIMUM_VERSION=${SPHINX_MINIMUM_VERSION}")
@@ -133,7 +132,7 @@ find_package(Perl REQUIRED)
 # PostgreSQL
 #---------------------------------------------
 #---------------------------------------------
-set(PostgreSQL_ADDITIONAL_VERSIONS "12" "13" "14" "15" "16")
+set(PostgreSQL_ADDITIONAL_VERSIONS "12" "13" "14")
 find_package(PostgreSQL ${POSTGRESQL_MINIMUM_VERSION} REQUIRED)
 if(POSTGRESQL_BIN)
   # Checking POSTGRESQL_PG_CONFIG
@@ -160,16 +159,16 @@ find_program(POSTGRESQL_EXECUTABLE NAMES postgres
   NO_DEFAULT_PATH
   )
 
-# for XbetaY XalphaY XrcY -> X.Y
-string(REGEX REPLACE "([0-9]+)[beta|alpha|rc|devel].*" "\\1.0" POSTGRESQL_VERSION_STRING "${PostgreSQL_VERSION_STRING}")
-message(STATUS "POSTGRESQL_VERSION_STRING=${POSTGRESQL_VERSION_STRING}")
 
-STRING(REGEX MATCH "([0-9]+)\.([0-9]+)" POSTGRESQL_VERSION "${POSTGRESQL_VERSION_STRING}")
-message(STATUS "POSTGRESQL_VERSION=${POSTGRESQL_VERSION}")
+
+# for XbetaY XalphaY XrcY -> X.Y
+string(REGEX REPLACE "^([0-9]+)[beta|alpha|rc|devel].*" "\\1.0" PostgreSQL_VERSION_STRING ${PostgreSQL_VERSION_STRING})
 
 #for X.Y.Z -> XY  Y<10
-string(REGEX REPLACE "^([0-9]+)\\.([0-9]+).*" "\\1\\2" PGSQL_VERSION "${POSTGRESQL_VERSION}")
-message(STATUS "PGSQL_VERSION=${PGSQL_VERSION}")
+string(REGEX REPLACE "^([0-9]+)\\.([0-9]+).*" "\\1" PostgreSQL_VERSION_MAYOR ${PostgreSQL_VERSION_STRING})
+string(REGEX REPLACE "^([0-9]+)\\.([0-9]+).*" "\\2" PostgreSQL_VERSION_MINOR ${PostgreSQL_VERSION_STRING})
+math(EXPR PostgreSQL_VERSION_NUM "${PostgreSQL_VERSION_MAYOR} * 10000 + ${PostgreSQL_VERSION_MINOR}")
+
 
 #-------
 include_directories(SYSTEM ${PostgreSQL_INCLUDE_DIRS})
@@ -315,7 +314,7 @@ endif()
 
 message(STATUS "VROOM_INSTALL_PATH ${VROOM_INSTALL_PATH}")
 
-include_directories(SYSTEM ${VROOM_INSTALL_PATH}/src)
+include_directories(${VROOM_INSTALL_PATH}/src)
 link_libraries(${VROOM_INSTALL_PATH}/lib/libvroom.a)
 link_libraries(glpk)
 
