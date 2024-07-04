@@ -69,7 +69,7 @@ FROM vrp_viewRoute(
     $$SELECT start_vid, end_vid, travel_time FROM timeMatrix$$,
     $$SELECT * FROM tdm('2019-12-09'::TIMESTAMP, '2019-12-13'::TIMESTAMP)$$,
     699::BIGINT, factor => 1.0::float);
-NOTICE:  Insufficient data found on inner query
+NOTICE:  Insufficient data found on orders inner query
 HINT:
           WITH
             __shipments AS (SELECT * FROM shipments),
