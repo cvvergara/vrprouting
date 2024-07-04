@@ -268,7 +268,8 @@ Base_Matrix::Base_Matrix(
         /*
          * If the opposite direction is infinity insert the same cost
          */
-        if (m_time_matrix[get_index(data.to_vid)][get_index(data.from_vid)] == (std::numeric_limits<TInterval>::max)()) {
+        if (m_time_matrix[get_index(data.to_vid)][get_index(data.from_vid)]
+                == (std::numeric_limits<TInterval>::max)()) {
             m_time_matrix[get_index(data.to_vid)][get_index(data.from_vid)] =
                 m_time_matrix[get_index(data.from_vid)][get_index(data.to_vid)];
         }
@@ -375,7 +376,8 @@ Base_Matrix::Base_Matrix(const std::map<std::pair<Coordinate, Coordinate>, Id> &
             auto from_id = get_index(from.second);
             auto to_id = get_index(to.second);
             m_time_matrix[from_id][to_id] =
-                static_cast<TInterval>(static_cast<Multiplier>(detail::get_distance(from.first, to.first)) * multiplier);
+                static_cast<TInterval>(
+                        static_cast<Multiplier>(detail::get_distance(from.first, to.first)) * multiplier);
             m_time_matrix[to_id][from_id] = m_time_matrix[from_id][to_id];
         }
     }
