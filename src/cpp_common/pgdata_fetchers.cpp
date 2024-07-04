@@ -32,9 +32,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "cpp_common/pgdata_fetchers.hpp"
 
-#include <limits.h>
-#include <float.h>
-#include <assert.h>
+#include <string>
+#include <climits>
+#include <vector>
 
 #include "cpp_common/info.hpp"
 #include "cpp_common/get_check_data.hpp"
@@ -250,13 +250,12 @@ Vehicle_t fetch_vehicles(
         const HeapTuple tuple, const TupleDesc &tupdesc,
         const std::vector<Info> &info,
         bool is_euclidean) {
-
     Vehicle_t vehicle;
 
     if (is_euclidean) {
         check_pairs(info[5], info[6]);
         check_pairs(info[11], info[12]);
-    };
+    }
 
     vehicle.id = get_value<Id>(tuple, tupdesc, info[0], -1);
     vehicle.capacity = get_value<PAmount>(tuple, tupdesc, info[1], 0);
