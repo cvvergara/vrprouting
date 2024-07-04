@@ -125,55 +125,55 @@ void vrp_do_vroom(
 
     hint = vehicles_sql;
     auto vehicles = vehicles_sql? get_vehicles(std::string(vehicles_sql), use_timestamps)
-      : std::vector<vrprouting::Vroom_vehicle_t>();
+        : std::vector<vrprouting::Vroom_vehicle_t>();
 
     if (vehicles.size() == 0) {
-      *notice_msg = msg("Insufficient data found on inner query");
-      *log_msg = msg(matrix_sql);
-      return;
+        *notice_msg = msg("Insufficient data found on vehicles inner query");
+        *log_msg = msg(matrix_sql);
+        return;
     }
 
     hint = breaks_sql;
     auto breaks = breaks_sql? get_breaks(std::string(breaks_sql), use_timestamps)
-      : std::vector<vrprouting::Vroom_break_t>();
+        : std::vector<vrprouting::Vroom_break_t>();
 
     hint = breaks_tws_sql;
     auto breaks_tw = breaks_tws_sql? get_timewindows(std::string(breaks_tws_sql), use_timestamps, false)
-      : std::vector<vrprouting::Vroom_time_window_t>();
+        : std::vector<vrprouting::Vroom_time_window_t>();
 
     hint = jobs_sql;
     auto jobs  = jobs_sql? get_jobs(std::string(jobs_sql), use_timestamps)
-      : std::vector<vrprouting::Vroom_job_t>();
+        : std::vector<vrprouting::Vroom_job_t>();
 
     hint = jobs_tws_sql;
     auto jobs_tw  = jobs_tws_sql? get_timewindows(std::string(jobs_tws_sql), use_timestamps, false)
-      : std::vector<vrprouting::Vroom_time_window_t>();
+        : std::vector<vrprouting::Vroom_time_window_t>();
 
     hint = shipments_sql;
     auto shipments  = shipments_sql? get_shipments(std::string(shipments_sql), use_timestamps)
-      : std::vector<vrprouting::Vroom_shipment_t>();
+        : std::vector<vrprouting::Vroom_shipment_t>();
 
     hint = shipments_tws_sql;
     auto shipments_tw  = shipments_tws_sql? get_timewindows(std::string(shipments_tws_sql), use_timestamps, true)
-      : std::vector<vrprouting::Vroom_time_window_t>();
+        : std::vector<vrprouting::Vroom_time_window_t>();
 
     hint = matrix_sql;
     auto costs = get_matrix(std::string(matrix_sql), use_timestamps);
 
     if (costs.size() == 0) {
-      *notice_msg = msg("Insufficient data found on inner query");
-      *log_msg = msg(matrix_sql);
-      return;
+        *notice_msg = msg("Insufficient data found on inner query");
+        *log_msg = msg(matrix_sql);
+        return;
     }
 
     if ((fn_used == 0 || fn_used == 1) && jobs.empty()) {
-      *notice_msg = msg("Insufficient data found on inner query");
-      *log_msg = msg(jobs_sql);
-      return;
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = msg(jobs_sql);
+            return;
     } else if ((fn_used == 0 || fn_used == 2) && shipments.empty()) {
-      *notice_msg = msg("Insufficient data found on inner query");
-      *log_msg = msg("shipments_sql");
-      return;
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = msg("shipments_sql");
+            return;
     }
 
     auto start_time = std::chrono::high_resolution_clock::now();
@@ -211,7 +211,7 @@ void vrp_do_vroom(
       (*return_tuples) = NULL;
       (*return_count) = 0;
       err << "The speed_factor " << max_speed_factor << " is more than five times "
-        "the speed factor " << min_speed_factor;
+             "the speed factor " << min_speed_factor;
       *err_msg = msg(err.str());
       return;
     }
@@ -228,8 +228,8 @@ void vrp_do_vroom(
      */
     log << "the min speed factor " << min_speed_factor << "\tmax speed factor " << min_speed_factor << "\n";
     for (const auto c : costs) {
-      log << "start_id" << c.start_id << "\tend_id" << c.end_id
-        << "\tduration" << c.duration << "\tcost" << c.cost << "\n";
+        log << "start_id" << c.start_id << "\tend_id" << c.end_id
+            << "\tduration" << c.duration << "\tcost" << c.cost << "\n";
     }
     vrprouting::base::Base_Matrix matrix(costs, location_ids, min_speed_factor);
     log << matrix;
@@ -266,7 +266,7 @@ void vrp_do_vroom(
     auto end_time = std::chrono::high_resolution_clock::now();
     loading_time += static_cast<int32_t>(
         std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time)
-        .count());
+            .count());
 
     std::vector < Vroom_rt > results = problem.solve(exploration_level, timeout, loading_time);
 
@@ -295,38 +295,38 @@ void vrp_do_vroom(
     *notice_msg = notice.str().empty()?
       *notice_msg :
       msg(notice.str().c_str());
-  } catch (AssertFailedException &except) {
-    if (*return_tuples) free(*return_tuples);
-    (*return_count) = 0;
-    err << except.what();
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  } catch (std::exception& except) {
-    if (*return_tuples) free(*return_tuples);
-    (*return_count) = 0;
-    err << except.what();
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  } catch (const std::string &ex) {
-    *err_msg = msg(ex.c_str());
-    *log_msg = hint? msg(hint) : msg(log.str().c_str());
-  } catch (const std::pair<std::string, std::string>& ex) {
-    (*return_count) = 0;
-    err << ex.first;
-    log << ex.second;
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  } catch (const std::pair<std::string, int64_t>& ex) {
-    (*return_count) = 0;
-    err << ex.first;
-    log << "FOOOO missing on matrix: id =  " << ex.second;
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  } catch(...) {
-    if (*return_tuples) free(*return_tuples);
-    (*return_count) = 0;
-    err << "Caught unknown exception!";
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  }
+    } catch (AssertFailedException &except) {
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << except.what();
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch (std::exception& except) {
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << except.what();
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch (const std::string &ex) {
+        *err_msg = msg(ex.c_str());
+        *log_msg = hint? msg(hint) : msg(log.str().c_str());
+    } catch (const std::pair<std::string, std::string>& ex) {
+        (*return_count) = 0;
+        err << ex.first;
+        log << ex.second;
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch (const std::pair<std::string, int64_t>& ex) {
+        (*return_count) = 0;
+        err << ex.first;
+        log << "FOOOO missing on matrix: id =  " << ex.second;
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch(...) {
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << "Caught unknown exception!";
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
     }
+}
