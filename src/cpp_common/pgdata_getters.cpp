@@ -30,12 +30,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 
 #include "cpp_common/pgdata_getters.hpp"
-#include <vector>
+
 #include <string>
-#include <cmath>
-#include <cfloat>
-#include <sstream>
-#include <set>
+#include <vector>
 
 #include "cpp_common/get_data.hpp"
 #include "cpp_common/get_check_data.hpp"
@@ -132,7 +129,6 @@ std::vector<Vroom_job_t> get_jobs(
         bool use_timestamps) {
     using vrprouting::Info;
     std::vector<Info> info {
-
         {-1, 0, true, "id", vrprouting::IDX},
         {-1, 0, true, "location_id", vrprouting::MATRIX_INDEX},
         {-1, 0, false, "setup",   use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
@@ -385,4 +381,4 @@ std::vector<Vehicle_t> get_vehicles(
 }  // namespace pickdeliver
 
 }  // namespace pgget
-}  // namespace pgrouting
+}  // namespace vrprouting
