@@ -128,7 +128,7 @@ void vrp_do_vroom(
         : std::vector<vrprouting::Vroom_vehicle_t>();
 
     if (vehicles.size() == 0) {
-        *notice_msg = msg("Insufficient data found on inner query");
+        *notice_msg = msg("Insufficient data found on vehicles inner query");
         *log_msg = msg(matrix_sql);
         return;
     }

@@ -148,7 +148,7 @@ do_pickDeliver(
         hint = orders_sql;
         auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);
         if (orders.size() == 0) {
-            *notice_msg = msg("Insufficient data found on inner query");
+            *notice_msg = msg("Insufficient data found on orders inner query");
             *log_msg = hint? msg(hint) : nullptr;
             return;
         }
@@ -156,7 +156,7 @@ do_pickDeliver(
         hint = vehicles_sql;
         auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps, with_stops);
         if (vehicles.size() == 0) {
-            *notice_msg = msg("Insufficient data found on inner query");
+            *notice_msg = msg("Insufficient data found on vehicles inner query");
             *log_msg = hint? msg(hint) : nullptr;
             return;
         }
@@ -165,7 +165,7 @@ do_pickDeliver(
         auto costs = get_matrix(std::string(matrix_sql), use_timestamps);
 
         if (costs.size() == 0) {
-            *notice_msg = msg("Insufficient data found on inner query");
+            *notice_msg = msg("Insufficient data found on matrix inner query");
             *log_msg = hint? msg(hint) : nullptr;
             return;
         }
