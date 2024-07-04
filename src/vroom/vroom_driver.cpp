@@ -27,8 +27,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "drivers/vroom_driver.h"
 
-#include <vector>
 #include <sstream>
+#include <vector>
 #include <algorithm>
 #include <string>
 #include <utility>
@@ -77,14 +77,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * @param [out] notice_msg         Stores the notice message
  * @param [out] err_msg            Stores the error message
  */
-void
-vrp_do_vroom(
+void vrp_do_vroom(
     char* jobs_sql,
     char* jobs_tws_sql,
-
     char* shipments_sql,
     char* shipments_tws_sql,
-
     char* vehicles_sql,
     char* breaks_sql,
     char* breaks_tws_sql,
@@ -97,12 +94,12 @@ vrp_do_vroom(
 
     bool use_timestamps,
 
-    Vroom_rt **return_tuples,
+    Vroom_rt**return_tuples,
     size_t *return_count,
 
-    char ** log_msg,
-    char ** notice_msg,
-    char ** err_msg) {
+    char** log_msg,
+    char** notice_msg,
+    char** err_msg) {
   using vrprouting::msg;
   using vrprouting::free;
   using vrprouting::alloc;
