@@ -41,178 +41,173 @@ PG_FUNCTION_INFO_V1(_vrp_optimize);
 static
 void
 process(
-        char* pd_orders_sql,
-        char* vehicles_sql,
-        char* matrix_sql,
-        char* multipliers_sql,
+    char* pd_orders_sql,
+    char* vehicles_sql,
+    char* matrix_sql,
+    char* multipliers_sql,
 
-        double  factor,
-        int     max_cycles,
-        int64_t execution_date,
+    double  factor,
+    int     max_cycles,
+    int64_t execution_date,
 
-        bool    check_triangle_inequality,
-        int     subdivision_kind,
-        bool    use_timestamps,
+    bool    check_triangle_inequality,
+    int     subdivision_kind,
+    bool    use_timestamps,
 
-        Short_vehicle_rt **result_tuples,
-        size_t *result_count) {
-    char *log_msg = NULL;
-    char *notice_msg = NULL;
-    char *err_msg = NULL;
+    Short_vehicle_rt **result_tuples,
+    size_t *result_count) {
+  //! [Factor must be postive]
+  if (factor <= 0) {
+    ereport(ERROR,
+        (errcode(ERRCODE_INTERNAL_ERROR),
+         errmsg("Illegal value in parameter: factor"),
+         errhint("Value found: %f <= 0", factor)));
+  }
 
-    bool with_stops = false;
-    bool is_euclidean = false;
+  //! [max_cycles must be postive]
+  if (max_cycles < 0) {
+    ereport(ERROR,
+        (errcode(ERRCODE_INTERNAL_ERROR),
+         errmsg("Illegal value in parameter: max_cycles"),
+         errhint("Value found: %d <= 0", max_cycles)));
+  }
 
-    //! [Factor must be postive]
-    if (factor <= 0) {
-        ereport(ERROR,
-                (errcode(ERRCODE_INTERNAL_ERROR),
-                 errmsg("Illegal value in parameter: factor"),
-                 errhint("Value found: %f <= 0", factor)));
-    }
+  //! [subdivision_kind can be: 0, 1, or 2]
+  if (subdivision_kind < 0 || subdivision_kind > 2) {
+    ereport(ERROR,
+        (errcode(ERRCODE_INTERNAL_ERROR),
+         errmsg("Illegal value in parameter: subdivision_kind"),
+         errhint("Value found: %d", max_cycles)));
+  }
 
-    //! [max_cycles must be postive]
-    if (max_cycles < 0) {
-        ereport(ERROR,
-                (errcode(ERRCODE_INTERNAL_ERROR),
-                 errmsg("Illegal value in parameter: max_cycles"),
-                 errhint("Value found: %d <= 0", max_cycles)));
-    }
+  vrp_SPI_connect();
 
-    //! [subdivision_kind can be: 0, 1, or 2]
-    if (subdivision_kind < 0 || subdivision_kind > 2) {
-        ereport(ERROR,
-                (errcode(ERRCODE_INTERNAL_ERROR),
-                 errmsg("Illegal value in parameter: subdivision_kind"),
-                 errhint("Value found: %d", max_cycles)));
-    }
+  clock_t start_t = clock();
+  char *log_msg = NULL;
+  char *notice_msg = NULL;
+  char *err_msg = NULL;
 
-    vrp_SPI_connect();
+  do_optimize(
+      pd_orders_sql,
+      vehicles_sql,
+      matrix_sql,
+      multipliers_sql,
 
+      factor,
+      max_cycles,
+      execution_date,
 
-    clock_t start_t = clock();
+      check_triangle_inequality,
+      subdivision_kind != 0,
+      subdivision_kind == 1,
 
-    do_optimize(
-            pd_orders_sql,
-            vehicles_sql,
-            matrix_sql,
-            multipliers_sql,
+      use_timestamps,
+      false,  // is_euclidean
+      false,  // with stops
 
-            factor,
-            max_cycles,
-            execution_date,
+      result_tuples,
+      result_count,
 
-            check_triangle_inequality,
-            subdivision_kind != 0,
-            subdivision_kind == 1,
+      &log_msg,
+      &notice_msg,
+      &err_msg);
 
-            use_timestamps,
-            is_euclidean,
-            with_stops,
+  time_msg("pgr_pickDeliver", start_t, clock());
 
-            result_tuples,
-            result_count,
+  if (err_msg && (*result_tuples)) {
+    pfree(*result_tuples);
+    (*result_count) = 0;
+    (*result_tuples) = NULL;
+  }
+  vrp_global_report(log_msg, notice_msg, err_msg);
 
-            &log_msg,
-            &notice_msg,
-            &err_msg);
-
-    time_msg("pgr_pickDeliver", start_t, clock());
-
-    if (err_msg && (*result_tuples)) {
-        pfree(*result_tuples);
-        (*result_count) = 0;
-        (*result_tuples) = NULL;
-    }
-    vrp_global_report(log_msg, notice_msg, err_msg);
-
-    /* freeing memory before return */
-    if (log_msg) {pfree(log_msg); log_msg = NULL;}
-    if (notice_msg) {pfree(notice_msg); notice_msg = NULL;}
-    if (err_msg) {pfree(err_msg); err_msg = NULL;}
-    vrp_SPI_finish();
+  /* freeing memory before return */
+  if (log_msg) {pfree(log_msg); log_msg = NULL;}
+  if (notice_msg) {pfree(notice_msg); notice_msg = NULL;}
+  if (err_msg) {pfree(err_msg); err_msg = NULL;}
+  vrp_SPI_finish();
 }
 
 
 PGDLLEXPORT Datum
 _vrp_optimize(PG_FUNCTION_ARGS) {
-    FuncCallContext     *funcctx;
-    TupleDesc            tuple_desc;
+  FuncCallContext     *funcctx;
+  TupleDesc            tuple_desc;
 
-    Short_vehicle_rt *result_tuples = 0;
-    size_t result_count = 0;
+  Short_vehicle_rt *result_tuples = 0;
+  size_t result_count = 0;
 
-    if (SRF_IS_FIRSTCALL()) {
-        MemoryContext   oldcontext;
-        funcctx = SRF_FIRSTCALL_INIT();
-        oldcontext = MemoryContextSwitchTo(funcctx->multi_call_memory_ctx);
+  if (SRF_IS_FIRSTCALL()) {
+    MemoryContext   oldcontext;
+    funcctx = SRF_FIRSTCALL_INIT();
+    oldcontext = MemoryContextSwitchTo(funcctx->multi_call_memory_ctx);
 
-        process(
-                text_to_cstring(PG_GETARG_TEXT_P(0)),
-                text_to_cstring(PG_GETARG_TEXT_P(1)),
-                text_to_cstring(PG_GETARG_TEXT_P(2)),
-                text_to_cstring(PG_GETARG_TEXT_P(3)),
+    process(
+        text_to_cstring(PG_GETARG_TEXT_P(0)),
+        text_to_cstring(PG_GETARG_TEXT_P(1)),
+        text_to_cstring(PG_GETARG_TEXT_P(2)),
+        text_to_cstring(PG_GETARG_TEXT_P(3)),
 
-                PG_GETARG_FLOAT8(4),
-                PG_GETARG_INT32(5),
-                PG_GETARG_INT64(6),
+        PG_GETARG_FLOAT8(4),
+        PG_GETARG_INT32(5),
+        PG_GETARG_INT64(6),
 
-                PG_GETARG_BOOL(7),
-                PG_GETARG_INT32(8),
-                PG_GETARG_BOOL(9),
+        PG_GETARG_BOOL(7),
+        PG_GETARG_INT32(8),
+        PG_GETARG_BOOL(9),
 
-                &result_tuples,
-                &result_count);
+        &result_tuples,
+        &result_count);
 
-        funcctx->max_calls = result_count;
-        funcctx->user_fctx = result_tuples;
-        if (get_call_result_type(fcinfo, NULL, &tuple_desc)
-                != TYPEFUNC_COMPOSITE) {
-            ereport(ERROR,
-                    (errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-                     errmsg("function returning record called in context "
-                         "that cannot accept type record")));
-        }
-
-        funcctx->tuple_desc = tuple_desc;
-        MemoryContextSwitchTo(oldcontext);
+    funcctx->max_calls = result_count;
+    funcctx->user_fctx = result_tuples;
+    if (get_call_result_type(fcinfo, NULL, &tuple_desc)
+        != TYPEFUNC_COMPOSITE) {
+      ereport(ERROR,
+          (errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
+           errmsg("function returning record called in context "
+             "that cannot accept type record")));
     }
 
-    funcctx = SRF_PERCALL_SETUP();
-    tuple_desc = funcctx->tuple_desc;
-    result_tuples = (Short_vehicle_rt*) funcctx->user_fctx;
+    funcctx->tuple_desc = tuple_desc;
+    MemoryContextSwitchTo(oldcontext);
+  }
 
-    if (funcctx->call_cntr <  funcctx->max_calls) {
-        HeapTuple   tuple;
-        Datum       result;
-        Datum       *values;
-        bool*       nulls;
-        size_t      call_cntr = funcctx->call_cntr;
+  funcctx = SRF_PERCALL_SETUP();
+  tuple_desc = funcctx->tuple_desc;
+  result_tuples = (Short_vehicle_rt*) funcctx->user_fctx;
 
-        size_t numb = 3;
-        values = palloc(numb * sizeof(Datum));
-        nulls = palloc(numb * sizeof(bool));
+  if (funcctx->call_cntr <  funcctx->max_calls) {
+    HeapTuple   tuple;
+    Datum       result;
+    Datum       *values;
+    bool*       nulls;
+    size_t      call_cntr = funcctx->call_cntr;
 
-        size_t i;
-        for (i = 0; i < numb; ++i) {
-            nulls[i] = false;
-        }
+    size_t numb = 3;
+    values = palloc(numb * sizeof(Datum));
+    nulls = palloc(numb * sizeof(bool));
 
-
-        values[0] = Int32GetDatum(funcctx->call_cntr + 1);
-        values[1] = Int64GetDatum(result_tuples[call_cntr].vehicle_id);
-        values[2] = Int64GetDatum(result_tuples[call_cntr].order_id);
-
-        tuple = heap_form_tuple(tuple_desc, values, nulls);
-        result = HeapTupleGetDatum(tuple);
-
-        pfree(values); values = NULL;
-        pfree(nulls); nulls = NULL;
-
-        SRF_RETURN_NEXT(funcctx, result);
-    } else {
-        if (result_tuples) {pfree(result_tuples); result_tuples = NULL;}
-        funcctx->user_fctx = NULL;
-        SRF_RETURN_DONE(funcctx);
+    size_t i;
+    for (i = 0; i < numb; ++i) {
+      nulls[i] = false;
     }
+
+
+    values[0] = Int32GetDatum(funcctx->call_cntr + 1);
+    values[1] = Int64GetDatum(result_tuples[call_cntr].vehicle_id);
+    values[2] = Int64GetDatum(result_tuples[call_cntr].order_id);
+
+    tuple = heap_form_tuple(tuple_desc, values, nulls);
+    result = HeapTupleGetDatum(tuple);
+
+    pfree(values); values = NULL;
+    pfree(nulls); nulls = NULL;
+
+    SRF_RETURN_NEXT(funcctx, result);
+  } else {
+    if (result_tuples) {pfree(result_tuples); result_tuples = NULL;}
+    funcctx->user_fctx = NULL;
+    SRF_RETURN_DONE(funcctx);
+  }
 }
