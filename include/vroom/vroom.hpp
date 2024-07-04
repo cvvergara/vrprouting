@@ -62,76 +62,68 @@ class Vrp_vroom_problem : public vrprouting::Messages {
      std::vector<vroom::Vehicle> vehicles() const { return m_vehicles; }
      vrprouting::base::Base_Matrix matrix() const { return m_matrix; }
 
-     /**
-      * @name vroom time window wrapper
-      * @{
-      */
+     /** @name vroom time window wrapper */
+     /** @{ */
      vroom::TimeWindow get_vroom_time_window(const Vroom_time_window_t&) const;
      vroom::TimeWindow get_vroom_time_window(Duration, Duration) const;
      std::vector<vroom::TimeWindow> get_vroom_time_windows(const std::vector<Vroom_time_window_t>&) const;
+     /** @} */
 
-     ///@}
 
-
-     /**
-      * @name vroom amounts wrapper
-      * @{
-      */
+     /** @name vroom amounts wrapper */
+     /** @{ */
      vroom::Amount get_vroom_amounts(const std::vector<Amount> &) const;
-     ///@}
+     /** @} */
 
 
      /**
       * @name vroom jobs wrapper
       */
-     ///@{
+     /** @{ */
+     /** @brief Gets the vroom jobs.  */
      vroom::Job get_vroom_job(const Vroom_job_t&, const std::vector<Vroom_time_window_t>&) const;
      void problem_add_job(const Vroom_job_t&, const std::vector<Vroom_time_window_t>&);
-     ///@}
+     /** @} */
 
 
-     /**
-      * @name vroom shipments wrapper
-      */
-     ///@{
+     /** @name vroom shipments wrapper */
+     /** @{ */
+     /** @brief Gets the vroom shipments.  */
      std::pair<vroom::Job, vroom::Job> get_vroom_shipment(
              const Vroom_shipment_t&,
              const std::vector<Vroom_time_window_t>&,
              const std::vector<Vroom_time_window_t>&) const;
+
      void problem_add_shipment(
              const Vroom_shipment_t&,
              const std::vector<Vroom_time_window_t>&,
              const std::vector<Vroom_time_window_t>&);
-     ///@}
+     /** @} */
 
 
-     /**
-      * @name vroom breaks wrapper
-      */
-     ///@{
-     vroom::Break
-         get_vroom_break(
-                 const Vroom_break_t&,
-                 const std::vector<Vroom_time_window_t>&) const;
-     std::vector<vroom::Break>
-         get_vroom_breaks(
-                 const std::vector<Vroom_break_t>&,
-                 const std::vector<Vroom_time_window_t>&) const;
+     /** @name vroom breaks wrapper */
+     /** @{ */
+     vroom::Break get_vroom_break(
+             const Vroom_break_t&,
+             const std::vector<Vroom_time_window_t>&) const;
+
+     std::vector<vroom::Break> get_vroom_breaks(
+             const std::vector<Vroom_break_t>&,
+             const std::vector<Vroom_time_window_t>&) const;
 
 
-     /**
-      * @name vroom vehicles wrapper
-      */
-     ///@{
+     /** @name vroom vehicles wrapper */
+     /** @{ */
      vroom::Vehicle get_vroom_vehicle(
              const Vroom_vehicle_t&,
              const std::vector<Vroom_break_t>&,
              const std::vector<Vroom_time_window_t>&) const;
+
      void problem_add_vehicle(
              const Vroom_vehicle_t&,
              const std::vector<Vroom_break_t>&,
              const std::vector<Vroom_time_window_t>&);
-     ///@}
+     /** @} */
 
      void get_amount(vroom::Amount, Amount**);
      StepType get_job_step_type(vroom::JOB_TYPE);
