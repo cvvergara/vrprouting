@@ -53,7 +53,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 namespace {
 
 using Vehicle_t = vrprouting::Vehicle_t;
-using Orders_t = vrprouting::Orders_t;
+using PickDeliveryOrders_t = vrprouting::Orders_t;
 
 /** @brief Executes an optimization with the input data
  *
@@ -68,7 +68,7 @@ using Orders_t = vrprouting::Orders_t;
  */
 std::vector<Short_vehicle>
 one_processing(
-  const std::vector<Orders_t> &shipments,
+  const std::vector<PickDeliveryOrders_t> &shipments,
   const std::vector<Vehicle_t> &vehicles,
   const std::vector<Short_vehicle> &new_stops,
   const vrprouting::problem::Matrix &time_matrix,
@@ -121,7 +121,7 @@ one_processing(
  */
 Identifiers<TTimestamp>
 processing_times_by_shipment(
-    const std::vector<vrprouting::Orders_t> &shipments
+    const std::vector<PickDeliveryOrders_t> &shipments
     ) {
   Identifiers<TTimestamp> processing_times;
   for (const auto &o : shipments) {
@@ -135,7 +135,7 @@ processing_times_by_shipment(
 
 /** @brief: extract the times where the vehicle opens or closes
  *
- *  @param[in] vehicles  vehicles for processing
+ *  @param[in] vehicles vehicles for processing
  *
  *  @returns processing times
  */
@@ -193,7 +193,7 @@ update_stops(std::vector<Short_vehicle>& the_stops,  // NOLINT [runtime/referenc
 
 /** @brief Executes an optimization by subdivision of data
  *
- *  @param[in] shipments  pickup and dropoff shipments
+ *  @param[in] shipments pickup and dropoff shipments
  *  @param[in] vehicles vehicles involved with in those shipments
  *  @param[in] time_matrix The unique time matrix
  *  @param[in] max_cycles number of cycles to perform during the optimization phase
@@ -205,7 +205,7 @@ update_stops(std::vector<Short_vehicle>& the_stops,  // NOLINT [runtime/referenc
  */
 std::vector<Short_vehicle>
 subdivide_processing(
-  const std::vector<Orders_t> &shipments,
+  const std::vector<PickDeliveryOrders_t> &shipments,
   const std::vector<Vehicle_t> &vehicles,
   const vrprouting::problem::Matrix &time_matrix,
   int max_cycles,
@@ -257,14 +257,13 @@ subdivide_processing(
           || (prev_shipments_in_stops == shipments_in_stops)) continue;
       log << "\nOptimizing at time: " << t;
 
+      std::vector<PickDeliveryOrders_t> shipments_to_process;
+      std::vector<PickDeliveryOrders_t> inactive_shipments;
       prev_shipments_in_stops = shipments_in_stops;
 
-      std::vector<Orders_t> shipments_to_process;
-      std::vector<Orders_t> inactive_shipments;
-
       std::partition_copy(shipments.begin(), shipments.end(),
-          std::back_inserter(shipments_to_process), std::back_inserter(inactive_shipments),
-       [&](const Orders_t& s){return shipments_in_stops.has(s.id);});
+        std::back_inserter(shipments_to_process), std::back_inserter(inactive_shipments),
+            [&](const PickDeliveryOrders_t& s){return shipments_in_stops.has(s.id);});
 
       pgassert(shipments_to_process.size() > 0);
       pgassert(shipments_in_stops.size() == shipments_to_process.size());
@@ -370,7 +369,7 @@ do_optimize(
     char **notice_msg,
     char **err_msg) {
   using Vehicle_t = vrprouting::Vehicle_t;
-  using Orders_t = vrprouting::Orders_t;
+  using PickDeliveryOrders_t = vrprouting::Orders_t;
   using vrprouting::msg;
   using vrprouting::alloc;
   using vrprouting::pgget::pickdeliver::get_matrix;
@@ -434,9 +433,7 @@ do_optimize(
     hint = nullptr;
 
     Identifiers<Id> node_ids;
-#if 0
     Identifiers<Id> shipments_in_stops;
-#endif
 
     /*
      * Remove vehicles not going to be optimized and sort remaining vehicles
@@ -449,17 +446,12 @@ do_optimize(
         [](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id < rhs.id;});
 
     vehicles.erase(
-        std::unique(
-          vehicles.begin(), vehicles.end(),
-          [&](const Vehicle_t& lhs, const Vehicle_t& rhs)
-          {return lhs.id == rhs.id;}),
-        vehicles.end());
+      std::unique(vehicles.begin(), vehicles.end(),
+          [&](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id == rhs.id;}), vehicles.end());
 
     vehicles.erase(
-        std::remove_if(
-          vehicles.begin(), vehicles.end(),
-          [&](const Vehicle_t& v){return v.end_close_t < execution_date;}),
-        vehicles.end());
+      std::remove_if(vehicles.begin(), vehicles.end(),
+          [&](const Vehicle_t& v){return v.end_close_t < execution_date;}), vehicles.end());
 
 
     /*
@@ -469,7 +461,6 @@ do_optimize(
      * 2. Remove duplicates
      * 2. Remove shipments not on the stops
      */
-    Identifiers<Id> shipments_in_stops;
     for (const auto &v : vehicles) {
       node_ids += v.start_node_id;
       node_ids += v.end_node_id;
@@ -480,22 +471,15 @@ do_optimize(
 
 
     std::sort(shipments.begin(), shipments.end(),
-        [](const Orders_t& lhs, const Orders_t& rhs){return lhs.id < rhs.id;});
+        [](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id < rhs.id;});
 
     shipments.erase(
-        std::unique(
-          shipments.begin(), shipments.end(),
-          [&](const Orders_t& lhs, const Orders_t& rhs)
-          {return lhs.id == rhs.id;}),
-        shipments.end());
-
-
+      std::unique(shipments.begin(), shipments.end(),
+        [&](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id == rhs.id;}), shipments.end());
 
     shipments.erase(
-        std::remove_if(
-          shipments.begin(), shipments.end(),
-          [&](const Orders_t& s){return !shipments_in_stops.has(s.id);}),
-        shipments.end());
+        std::remove_if(shipments.begin(), shipments.end(),
+        [&](const PickDeliveryOrders_t& s){return !shipments_in_stops.has(s.id);}), shipments.end());
 
 
     /*
@@ -505,13 +489,13 @@ do_optimize(
       for (const auto &o : shipments) {
         shipments_in_stops -= o.id;
       }
-      std::ostringstream log1;
       err << "Missing shipments for processing ";
-      log1 << "Shipments missing: " << shipments_in_stops << log.str();
-      *log_msg = msg(log1.str());
+      log << "Shipments missing: " << shipments_in_stops << log.str();
+      *log_msg = msg(log.str());
       *err_msg = msg(err.str());
       return;
     }
+
     /*
      * Finish getting the node ids involved on the process
      */
@@ -552,13 +536,15 @@ do_optimize(
      */
     auto solution = subdivide?
       subdivide_processing(
-          shipments, vehicles,
+          shipments,
+          vehicles,
           time_matrix,
           max_cycles, execution_date,
           subdivide_by_vehicle,
           log) :
       one_processing(
-          shipments, vehicles, {},
+          shipments,
+          vehicles, {},
           time_matrix,
           max_cycles, execution_date);
 
