@@ -28,7 +28,7 @@ FROM vrp_optimizeRaw(
     check_triangle_inequality => true,
     subdivision_kind => 1
 ) GROUP BY vehicle_id;
-SELECT 165
+SELECT 160
 SELECT id, s_tw_open, v.stops, t.stops
 FROM vehicles v
 LEFT JOIN tmp_vehicles t

@@ -28,7 +28,7 @@ FROM vrp_optimizeRaw(
     check_triangle_inequality => true,
     subdivision_kind => 1
 ) GROUP BY vehicle_id;
-SELECT 134
+SELECT 130
 SELECT id, s_tw_open, v.stops, t.stops
 FROM vehicles v
 LEFT JOIN tmp_vehicles t
@@ -183,9 +183,5 @@ ORDER BY s_tw_open, id;
  750 | 2019-12-13 16:10:00 | {}                                                                                        | {}
 (144 rows)
 
-);
-ERROR:  syntax error at or near ")"
-LINE 1: );
-        ^
 ROLLBACK;
 ROLLBACK
