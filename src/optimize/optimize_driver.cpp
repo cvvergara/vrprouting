@@ -57,8 +57,8 @@ using PickDeliveryOrders_t = vrprouting::Orders_t;
 
 /** @brief Executes an optimization with the input data
  *
- *  @param[in] shipments  shipments to be processed
- *  @param[in] vehicles  vehicles involved with in those shipments
+ *  @param[in] shipments shipments to be processed
+ *  @param[in] vehicles vehicles involved with in those shipments
  *  @param[in] new_stops stops that override the original stops.
  *  @param[in] time_matrix The unique time matrix
  *  @param[in] max_cycles number of cycles to perform during the optimization phase
@@ -162,15 +162,17 @@ processing_times_by_vehicle(
  */
 std::vector<Short_vehicle>
 get_initial_stops(
-    const std::vector<Vehicle_t> &vehicles
-    ) {
-  std::vector<Short_vehicle> the_stops;
-  for (const auto &v : vehicles) {
-    the_stops.push_back({v.id, v.stops});
-  }
-  std::sort(the_stops.begin(), the_stops.end(), []
-      (const Short_vehicle &lhs, const Short_vehicle &rhs) {return lhs.id < rhs.id;});
-  return the_stops;
+        const std::vector<Vehicle_t> &vehicles
+        ) {
+    std::vector<Short_vehicle> the_stops;
+    for (const auto &v : vehicles) {
+        the_stops.push_back({v.id, v.stops});
+    }
+#if 0
+    std::sort(the_stops.begin(), the_stops.end(), []
+            (const Short_vehicle &lhs, const Short_vehicle &rhs) {return lhs.id < rhs.id;});
+#endif
+    return the_stops;
 }
 
 /** @brief Update the vehicle stops to the new values
@@ -191,6 +193,7 @@ update_stops(std::vector<Short_vehicle>& the_stops,  // NOLINT [runtime/referenc
   }
 }
 
+
 /** @brief Executes an optimization by subdivision of data
  *
  *  @param[in] shipments pickup and dropoff shipments
@@ -205,77 +208,90 @@ update_stops(std::vector<Short_vehicle>& the_stops,  // NOLINT [runtime/referenc
  */
 std::vector<Short_vehicle>
 subdivide_processing(
-  const std::vector<PickDeliveryOrders_t> &shipments,
-  const std::vector<Vehicle_t> &vehicles,
-  const vrprouting::problem::Matrix &time_matrix,
-  int max_cycles,
-  int64_t execution_date,
-  bool subdivide_by_vehicle,
+  [[maybe_unused]]const std::vector<PickDeliveryOrders_t> &shipments,
+  [[maybe_unused]]const std::vector<Vehicle_t> &vehicles,
+  [[maybe_unused]]const vrprouting::problem::Matrix &time_matrix,
+  [[maybe_unused]]int max_cycles,
+  [[maybe_unused]]int64_t execution_date,
+  [[maybe_unused]]bool subdivide_by_vehicle,
   std::ostringstream &log) {
   try {
     auto the_stops = get_initial_stops(vehicles);
+    log << "the_stops size " << the_stops.size();
 
     auto processing_times = subdivide_by_vehicle?
       processing_times_by_vehicle(vehicles)
       : processing_times_by_shipment(shipments);
 
+    log << "processing_times " << processing_times.size() << "\n";
+
     Identifiers<Id> prev_shipments_in_stops;
     for (const auto &t : processing_times) {
-      CHECK_FOR_INTERRUPTS();
-      std::vector<Vehicle_t> vehicles_to_process;
-      std::vector<Vehicle_t> inactive_vehicles;
+        CHECK_FOR_INTERRUPTS();
+        std::vector<Vehicle_t> vehicles_to_process;
+        std::vector<Vehicle_t> inactive_vehicles;
 
-      /*
-       * Get active vehicles at time t
-       */
-      std::partition_copy(
-            vehicles.begin(), vehicles.end(),
-            std::back_inserter(vehicles_to_process), std::back_inserter(inactive_vehicles),
-            [&](const Vehicle_t& v)
-            {return v.start_open_t <= t && t <= v.end_close_t;});
+        /*
+         * Get active vehicles at time t
+         * v.open <= t <= v.close
+         */
+        std::partition_copy(
+                vehicles.begin(), vehicles.end(),
+                std::back_inserter(vehicles_to_process), std::back_inserter(inactive_vehicles),
+                [&](const Vehicle_t& v)
+                {return v.start_open_t <= t && t <= v.end_close_t;});
 
 
-      /* Get shipments in stops of active vehicles */
-      Identifiers<Id> shipments_in_stops;
-      for (const auto &vp : vehicles_to_process) {
-        auto v_id = vp.id;
-        auto v_to_modify = std::find_if(
-            the_stops.begin(), the_stops.end(), [&]
-            (const Short_vehicle& v) -> bool {return v.id == v_id;});
+        log << "time " << t << "\t";
+        log << "vehicles_to_process " << vehicles_to_process.size() << "\t";
+        log << "inactive_vehicles " << inactive_vehicles.size() << "\t";
 
-        for (const auto &s : v_to_modify->stops) {
-          shipments_in_stops += s;
+        /* Get shipments in stops of active vehicles */
+        Identifiers<Id> shipments_in_stops;
+        for (const auto &vp : vehicles_to_process) {
+            auto v_id = vp.id;
+            auto v_to_modify = std::find_if(
+                    the_stops.begin(), the_stops.end(), [&]
+                    (const Short_vehicle& v) -> bool {return v.id == v_id;});
+
+            for (const auto &s : v_to_modify->stops) {
+                shipments_in_stops += s;
+            }
         }
-      }
+        log << "shipments_in_stops " << shipments_in_stops.size() << "\n";
 
-      /*
-       * Nothing to do:
-       * - no shipments to process
-       * - last optimization had exavtly the same shipments
-       */
-      if ((shipments_in_stops.size() == 0)
-          || (prev_shipments_in_stops == shipments_in_stops)) continue;
-      log << "\nOptimizing at time: " << t;
+        /*
+         * Nothing to do:
+         * - no shipments to process
+         * - last optimization had exactly the same shipments
+         */
+        if (shipments_in_stops.empty() || (prev_shipments_in_stops == shipments_in_stops)) continue;
+        log << "\nOptimizing at time: " << t;
 
-      std::vector<PickDeliveryOrders_t> shipments_to_process;
-      std::vector<PickDeliveryOrders_t> inactive_shipments;
-      prev_shipments_in_stops = shipments_in_stops;
+        prev_shipments_in_stops = shipments_in_stops;
+        std::vector<PickDeliveryOrders_t> shipments_to_process;
+        std::vector<PickDeliveryOrders_t> inactive_shipments;
 
-      std::partition_copy(shipments.begin(), shipments.end(),
-        std::back_inserter(shipments_to_process), std::back_inserter(inactive_shipments),
-            [&](const PickDeliveryOrders_t& s){return shipments_in_stops.has(s.id);});
+        std::partition_copy(shipments.begin(), shipments.end(),
+                std::back_inserter(shipments_to_process), std::back_inserter(inactive_shipments),
+                [&](const PickDeliveryOrders_t& s){return shipments_in_stops.has(s.id);});
 
-      pgassert(shipments_to_process.size() > 0);
-      pgassert(shipments_in_stops.size() == shipments_to_process.size());
+        pgassert(shipments_to_process.size() > 0);
+        pgassert(shipments_in_stops.size() == shipments_to_process.size());
 
-      auto new_stops = one_processing(
-          shipments_to_process, vehicles_to_process, the_stops,
-          time_matrix,
-          max_cycles, execution_date);
+        auto new_stops = one_processing(
+                shipments_to_process, vehicles_to_process, the_stops,
+                time_matrix,
+                max_cycles, execution_date);
 
-      update_stops(the_stops, new_stops);
+        log << "\nthe_stops\t";
+        for (const auto &s : the_stops) log << s << "\t";
+        log << "\new_stops\t";
+        for (const auto &s : new_stops) log << s << "\t";
+        update_stops(the_stops, new_stops);
+        log << "\nthe_stops\t";
+        for (const auto &s : the_stops) log << s << "\t";
     }
-
     return the_stops;
   } catch(...) {
     throw;
@@ -345,22 +361,22 @@ subdivide_processing(
 
 void
 do_optimize(
-    char* shipments_sql,
-    char* vehicles_sql,
-    char* matrix_sql,
-    char* multipliers_sql,
+    [[maybe_unused]]char* shipments_sql,
+    [[maybe_unused]]char* vehicles_sql,
+    [[maybe_unused]]char* matrix_sql,
+    [[maybe_unused]]char* multipliers_sql,
 
-    double factor,
-    int max_cycles,
-    int64_t execution_date,
+    [[maybe_unused]]double factor,
+    [[maybe_unused]]int max_cycles,
+    [[maybe_unused]]int64_t execution_date,
 
-    bool check_triangle_inequality,
-    bool subdivide,
-    bool subdivide_by_vehicle,
+    [[maybe_unused]]bool check_triangle_inequality,
+    [[maybe_unused]]bool subdivide,
+    [[maybe_unused]]bool subdivide_by_vehicle,
 
-    bool use_timestamps,
-    bool is_euclidean,
-    bool with_stops,
+    [[maybe_unused]]bool use_timestamps,
+    [[maybe_unused]]bool is_euclidean,
+    [[maybe_unused]]bool with_stops,
 
     Short_vehicle_rt **return_tuples,
     size_t *return_count,
@@ -434,6 +450,7 @@ do_optimize(
 
     Identifiers<Id> node_ids;
     Identifiers<Id> shipments_in_stops;
+    Identifiers<Id> shipments_found;
 
     /*
      * Remove vehicles not going to be optimized and sort remaining vehicles
@@ -442,6 +459,7 @@ do_optimize(
      *   - data comes from query that could possibly give a duplicate
      * 3. remove vehicles that closes(end) before the execution time
      */
+    log << "Total vehicles found " << vehicles.size() << "\n";
     std::sort(vehicles.begin(), vehicles.end(),
         [](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id < rhs.id;});
 
@@ -454,13 +472,6 @@ do_optimize(
           [&](const Vehicle_t& v){return v.end_close_t < execution_date;}), vehicles.end());
 
 
-    /*
-     * Remove shipments not involved in optimization
-     * 1. get the shipments on the stops of the vehicles
-     *   - getting the node_ids in the same cycle
-     * 2. Remove duplicates
-     * 2. Remove shipments not on the stops
-     */
     for (const auto &v : vehicles) {
       node_ids += v.start_node_id;
       node_ids += v.end_node_id;
@@ -468,8 +479,18 @@ do_optimize(
         shipments_in_stops += v.stops[j];
       }
     }
+    log << "Total vehicles to use " << vehicles.size() << "\n";
+    log << "Total different node_ids " << node_ids.size() << "\n";
+    log << "Total shipments in stops " << shipments_in_stops.size() << "\n";
 
-
+    /*
+     * Remove shipments not involved in optimization
+     * 1. get the shipments on the stops of the vehicles
+     *   - getting the node_ids in the same cycle
+     * 2. Remove duplicates
+     * 2. Remove shipments not on the stops
+     */
+    log << "Total orders found " << shipments.size() << "\n";
     std::sort(shipments.begin(), shipments.end(),
         [](const PickDeliveryOrders_t& lhs, const PickDeliveryOrders_t& rhs){return lhs.id < rhs.id;});
 
@@ -481,28 +502,31 @@ do_optimize(
         std::remove_if(shipments.begin(), shipments.end(),
         [&](const PickDeliveryOrders_t& s){return !shipments_in_stops.has(s.id);}), shipments.end());
 
+    log << "Total orders to use " << shipments.size() << "\n";
 
-    /*
-     * Verify shipments complete data
-     */
-    if (shipments_in_stops.size() != shipments.size()) {
-      for (const auto &o : shipments) {
-        shipments_in_stops -= o.id;
-      }
-      err << "Missing shipments for processing ";
-      log << "Shipments missing: " << shipments_in_stops << log.str();
-      *log_msg = msg(log.str());
-      *err_msg = msg(err.str());
-      return;
-    }
 
     /*
      * Finish getting the node ids involved on the process
      */
     for (const auto &o : shipments) {
-      node_ids += o.pick_node_id;
-      node_ids += o.deliver_node_id;
+        shipments_found += o.id;
+        node_ids += o.pick_node_id;
+        node_ids += o.deliver_node_id;
     }
+
+    /*
+     * Verify shipments complete data
+     */
+    if (!(shipments_in_stops - shipments_found).empty()) {
+        err << "Missing shipments for processing";
+        log << "Shipments missing: " << (shipments_in_stops - shipments_found) << log.str();
+        *log_msg = msg(log.str());
+        *err_msg = msg(err.str());
+        return;
+    }
+
+    log << "Total different node_ids including shipments" << node_ids.size() << "\n";
+
 
     /*
      * Dealing with time matrix:
@@ -517,10 +541,10 @@ do_optimize(
 
     if (check_triangle_inequality && !time_matrix.obeys_triangle_inequality()) {
       log << "\nFixing Matrix that does not obey triangle inequality "
-        << time_matrix.fix_triangle_inequality() << " cycles used";
+        << time_matrix.fix_triangle_inequality() << " cycles used \n";
 
       if (!time_matrix.obeys_triangle_inequality()) {
-        log << "\nMatrix Still does not obey triangle inequality ";
+        log << "\nMatrix Still does not obey triangle inequality \n";
       }
     }
 
@@ -531,17 +555,14 @@ do_optimize(
       return;
     }
 
+    subdivide = true;
+    subdivide_by_vehicle = true;
     /*
      * get the solution
      */
     auto solution = subdivide?
-      subdivide_processing(
-          shipments,
-          vehicles,
-          time_matrix,
-          max_cycles, execution_date,
-          subdivide_by_vehicle,
-          log) :
+      subdivide_processing( shipments, vehicles, time_matrix, max_cycles, execution_date, subdivide_by_vehicle, log)
+      :
       one_processing(
           shipments,
           vehicles, {},
@@ -562,9 +583,9 @@ do_optimize(
           ++seq;
         }
       }
-      (*return_count) = shipments.size() * 2;
     }
 
+    (*return_count) = shipments.size() * 2;
     pgassert(*err_msg == nullptr);
     *log_msg = log.str().empty()?
       nullptr :

@@ -27,6 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_CPP_COMMON_PICKDELIVER_TYPES_HPP_
 
 #include <vector>
+#include <limits>
 #include "c_types/typedefs.h"
 
 namespace vrprouting {
@@ -150,6 +151,73 @@ class Vehicle_t {
      TInterval  end_service_t; /** End service time */
      Coordinate end_x;
      Coordinate end_y;
+
+#if 0
+     Vehicle_t() = default;
+     Vehicle_t(const Vehicle_t &rhs) :
+         id(rhs.id),
+         capacity(rhs.capacity),
+         speed(rhs.speed),
+         cant_v(rhs.cant_v),
+         stops(rhs.stops),
+         start_node_id(rhs.start_node_id),
+         start_open_t(rhs.start_open_t),
+         start_close_t(rhs.start_close_t),
+         start_service_t(rhs.start_service_t),
+         start_x(rhs.start_x),
+         start_y(rhs.start_y),
+         end_node_id(rhs.end_node_id),
+         end_open_t(rhs.end_open_t),
+         end_close_t(rhs.end_close_t),
+         end_service_t(rhs.end_service_t),
+         end_x(rhs.end_x),
+         end_y(rhs.end_y) {
+     }
+#endif
+     bool operator==(const Vehicle_t &rhs) {
+         return
+             id == rhs.id &&
+             capacity == rhs.capacity &&
+             speed == rhs.speed &&
+             cant_v == rhs.cant_v &&
+             stops == rhs.stops &&
+             start_node_id == rhs.start_node_id &&
+             start_open_t == rhs.start_open_t &&
+             start_close_t == rhs.start_close_t &&
+             start_service_t == rhs.start_service_t &&
+             start_x == rhs.start_x &&
+             start_y == rhs.start_y &&
+             end_node_id == rhs.end_node_id &&
+             end_open_t == rhs.end_open_t &&
+             end_close_t == rhs.end_close_t &&
+             end_service_t == rhs.end_service_t &&
+             end_x == rhs.end_x &&
+             end_y == rhs.end_y;
+     }
+
+     Vehicle_t phoney(const Vehicle_t &v){
+         return Vehicle_t ({
+            -1,
+            (std::numeric_limits<PAmount>::max)(),
+            v.speed,
+            1,
+            std::vector<Id>(),
+            0,
+
+            v.start_node_id,
+            0,
+            (std::numeric_limits<TTimestamp>::max)(),
+            0,
+            v.start_x,
+            v.start_y,
+
+            v.end_node_id,
+            0,
+            (std::numeric_limits<TTimestamp>::max)(),
+            0,
+            v.end_x,
+            v.end_y});
+    };
 };
 
 }  // namespace vrprouting

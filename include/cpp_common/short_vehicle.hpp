@@ -38,9 +38,15 @@ name | description
 id | Vehicle's identifier
 stops | Vehicle's stops
 */
-struct Short_vehicle{
-  Id id; /** Vehicle's identifier */
-  std::vector<Id> stops; /** Stops */
+class Short_vehicle{
+ public:
+     Id id; /** Vehicle's identifier */
+     std::vector<Id> stops; /** Stops */
+     friend std::ostream& operator<<(std::ostream &log, const Short_vehicle& v) {
+         log << v.id << ": ";
+         for (const auto s : v.stops) log << s << ",";
+         return log;
+     }
 };
 
 

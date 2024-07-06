@@ -282,8 +282,8 @@ Vehicle_t fetch_vehicles(
     vehicle.end_close_t = get_value<TTimestamp>(tuple, tupdesc, info[14], vehicle.start_close_t);
     vehicle.end_service_t   = get_value<TInterval>(tuple, tupdesc, info[15], 0);
 
-    vehicle.stops_size = 0;
     vehicle.stops = get_array<Id>(tuple, tupdesc, info[16]);
+    vehicle.stops_size = vehicle.stops.size();
 
     return vehicle;
 }

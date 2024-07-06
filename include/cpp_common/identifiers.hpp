@@ -109,7 +109,7 @@ class Identifiers {
      * @param [in] rhs set of identifiers to be compared
      */
     bool operator==(const Identifiers<T> &rhs) const {
-        return std::equal(m_ids.begin(), m_ids.end(), rhs.m_ids.begin());
+        return (*this - rhs).empty() && (rhs - *this).empty();
     }
 
     //! @name  set UNION
