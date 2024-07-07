@@ -375,238 +375,230 @@ do_optimize(
     using vrprouting::pgget::pickdeliver::get_vehicles;
     using vrprouting::pgget::pickdeliver::get_timeMultipliers;
 
-  char* hint = nullptr;
+    std::ostringstream log;
+    std::ostringstream notice;
+    std::ostringstream err;
 
-  std::ostringstream log;
-  std::ostringstream notice;
-  std::ostringstream err;
+    char* hint = nullptr;
+    try {
+        /*
+         * verify preconditions
+         */
+        pgassert(!(*log_msg));
+        pgassert(!(*notice_msg));
+        pgassert(!(*err_msg));
+        pgassert(*return_count == 0);
+        pgassert(!(*return_tuples));
 
-  try {
-    /*
-     * verify preconditions
-     */
-    pgassert(!(*log_msg));
-    pgassert(!(*notice_msg));
-    pgassert(!(*err_msg));
-#if 0
-    pgassert(total_orders);
-    pgassert(total_vehicles);
-    pgassert(total_cells);
-#endif
-    pgassert(*return_count == 0);
-    pgassert(!(*return_tuples));
-
-#if 0
-    *return_tuples = nullptr;
-    *return_count = 0;
-#endif
-
-    hint = orders_sql;
-    auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);
-    if (orders.size() == 0) {
-      *notice_msg = msg("Insufficient data found on orders inner query");
-      *log_msg = hint? msg(hint) : nullptr;
-      return;
-    }
-
-    hint = vehicles_sql;
-    auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps, with_stops);
-    if (vehicles.size() == 0) {
-      *notice_msg = msg("Insufficient data found on vehicles inner query");
-      *log_msg = hint? msg(hint) : nullptr;
-      return;
-    }
-
-    hint = matrix_sql;
-    auto costs = get_matrix(std::string(matrix_sql), use_timestamps);
-
-    if (costs.size() == 0) {
-      *notice_msg = msg("Insufficient data found on matrix inner query");
-      *log_msg = hint? msg(hint) : nullptr;
-      return;
-    }
-
-    hint = multipliers_sql;
-    auto multipliers = get_timeMultipliers(std::string(multipliers_sql), use_timestamps);
-    hint = nullptr;
-
-    Identifiers<Id> node_ids;
-    Identifiers<Id> orders_in_stops;
-    Identifiers<Id> orders_found;
-
-    /*
-     * Remove vehicles not going to be optimized and sort remaining vehicles
-     * 1. sort by id
-     * 2. remove duplicates
-     *   - data comes from query that could possibly give a duplicate
-     * 3. remove vehicles that closes(end) before the execution time
-     */
-    log << "Total vehicles found " << vehicles.size() << "\n";
-    std::sort(vehicles.begin(), vehicles.end(),
-        [&](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id < rhs.id;});
-
-    vehicles.erase(
-      std::unique(vehicles.begin(), vehicles.end(),
-          [&](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id == rhs.id;}), vehicles.end());
-
-    vehicles.erase(
-      std::remove_if(vehicles.begin(), vehicles.end(),
-          [&](const Vehicle_t& v){return v.end_close_t < execution_date;}), vehicles.end());
-
-
-    for (const auto &v : vehicles) {
-      node_ids += v.start_node_id;
-      node_ids += v.end_node_id;
-      for (const auto s : v.stops) {
-        orders_in_stops += s;
-      }
-    }
-    log << "Total vehicles to use " << vehicles.size() << "\n";
-    log << "Total different node_ids " << node_ids.size() << "\n";
-    log << "Total orders in stops " << orders_in_stops.size() << "\n";
-
-    /*
-     * Remove orders not involved in optimization
-     * 1. get the orders on the stops of the vehicles
-     *   - getting the node_ids in the same cycle
-     * 2. Remove duplicates
-     * 2. Remove orders not on the stops
-     */
-    log << "Total orders found " << orders.size() << "\n";
-    std::sort(orders.begin(), orders.end(),
-        [&](const Orders_t& lhs, const Orders_t& rhs){return lhs.id < rhs.id;});
-
-    orders.erase(
-      std::unique(orders.begin(), orders.end(),
-        [&](const Orders_t& lhs, const Orders_t& rhs){return lhs.id == rhs.id;}), orders.end());
-
-    orders.erase(
-        std::remove_if(orders.begin(), orders.end(),
-        [&](const Orders_t& s){return !orders_in_stops.has(s.id);}), orders.end());
-
-    log << "Total orders to use " << orders.size() << "\n";
-
-
-    /*
-     * Finish getting the node ids involved on the process
-     */
-    for (const auto &o : orders) {
-        orders_found += o.id;
-        node_ids += o.pick_node_id;
-        node_ids += o.deliver_node_id;
-    }
-
-    /*
-     * Verify orders complete data
-     */
-    if (!(orders_in_stops - orders_found).empty()) {
-        err << "Missing orders for processing";
-        log << "Shipments missing: " << (orders_in_stops - orders_found) << log.str();
-        *log_msg = msg(log.str());
-        *err_msg = msg(err.str());
-        return;
-    }
-
-    log << "Total different node_ids including orders" << node_ids.size() << "\n";
-
-
-    /*
-     * Dealing with time matrix:
-     * - Create the unique time matrix to be used for all optimizations
-     * - Verify matrix triangle inequality
-     * - Verify matrix cells preconditions
-     */
-    vrprouting::problem::Matrix time_matrix(
-        costs,
-        multipliers,
-        node_ids, static_cast<Multiplier>(factor));
-
-    if (check_triangle_inequality && !time_matrix.obeys_triangle_inequality()) {
-      log << "\nFixing Matrix that does not obey triangle inequality "
-        << time_matrix.fix_triangle_inequality() << " cycles used \n";
-
-      if (!time_matrix.obeys_triangle_inequality()) {
-        log << "\nMatrix Still does not obey triangle inequality \n";
-      }
-    }
-
-    if (!time_matrix.has_no_infinity()) {
-      err << "\nAn Infinity value was found on the Matrix";
-      *err_msg = msg(err.str());
-      *log_msg = msg(log.str());
-      return;
-    }
-
-    subdivide = true;
-    subdivide_by_vehicle = true;
-    /*
-     * get the solution
-     */
-    auto solution = subdivide?
-      subdivide_processing( orders, vehicles, time_matrix, max_cycles, execution_date, subdivide_by_vehicle, log)
-      :
-      one_processing(
-          orders,
-          vehicles, {},
-          time_matrix,
-          max_cycles, execution_date);
-
-    /*
-     * Prepare results
-     */
-    if (!solution.empty()) {
-      (*return_tuples) = alloc(orders.size() * 2, (*return_tuples));
-
-      size_t seq = 0;
-      for (const auto &row : solution) {
-        for (const auto &o_id : row.stops) {
-          (*return_tuples)[seq].vehicle_id = row.id;
-          (*return_tuples)[seq].order_id = o_id;
-          ++seq;
+        hint = orders_sql;
+        auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);
+        if (orders.size() == 0) {
+            *notice_msg = msg("Insufficient data found on 'orders' inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
         }
-      }
-    }
 
-    (*return_count) = orders.size() * 2;
-    pgassert(*err_msg == nullptr);
-    *log_msg = log.str().empty()?
-      nullptr :
-      msg(log.str());
-    *notice_msg = notice.str().empty()?
-      nullptr :
-      msg(notice.str());
-  } catch (AssertFailedException &except) {
-    if (*return_tuples) free(*return_tuples);
-    (*return_count) = 0;
-    err << except.what();
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  } catch (std::exception& except) {
-    if (*return_tuples) free(*return_tuples);
-    (*return_count) = 0;
-    err << except.what();
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  } catch (const std::string &ex) {
-    *err_msg = msg(ex.c_str());
-    *log_msg = hint? msg(hint) : msg(log.str().c_str());
-  } catch (const std::pair<std::string, std::string>& ex) {
-    (*return_count) = 0;
-    err << ex.first;
-    log << ex.second;
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  } catch (const std::pair<std::string, int64_t>& ex) {
-    (*return_count) = 0;
-    err << ex.first;
-    log << "FOOOO missing on matrix: id =  " << ex.second;
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  } catch(...) {
-    if (*return_tuples) free(*return_tuples);
-    (*return_count) = 0;
-    err << "Caught unknown exception!";
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  }
+        hint = vehicles_sql;
+        auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps, with_stops);
+        if (vehicles.size() == 0) {
+            *notice_msg = msg("Insufficient data found on 'vehicles' inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+
+        hint = matrix_sql;
+        auto costs = get_matrix(std::string(matrix_sql), use_timestamps);
+
+        if (costs.size() == 0) {
+            *notice_msg = msg("Insufficient data found on 'matrix' inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+
+        hint = multipliers_sql;
+        auto multipliers = get_timeMultipliers(std::string(multipliers_sql), use_timestamps);
+        hint = nullptr;
+
+        Identifiers<Id> node_ids;
+        Identifiers<Id> orders_in_stops;
+        Identifiers<Id> orders_found;
+
+        /*
+         * Remove vehicles not going to be optimized and sort remaining vehicles
+         * 1. sort by id
+         * 2. remove duplicates
+         *   - data comes from query that could possibly give a duplicate
+         * 3. remove vehicles that closes(end) before the execution time
+         */
+        log << "Total vehicles found " << vehicles.size() << "\n";
+        std::sort(vehicles.begin(), vehicles.end(),
+                [](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id < rhs.id;});
+
+        vehicles.erase(
+                    std::unique(
+                        vehicles.begin(), vehicles.end(),
+                        [](const Vehicle_t& lhs, const Vehicle_t& rhs)
+                        {return lhs.id == rhs.id;}), vehicles.end());
+
+        vehicles.erase(
+                    std::remove_if(
+                        vehicles.begin(), vehicles.end(),
+                        [&](const Vehicle_t& v){return v.end_close_t < execution_date;}),
+                    vehicles.end());
+
+
+        for (const auto &v : vehicles) {
+            node_ids += v.start_node_id;
+            node_ids += v.end_node_id;
+            for (const auto s : v.stops) {
+                orders_in_stops += s;
+            }
+        }
+
+        /*
+         * Remove orders not involved in optimization
+         * 1. get the orders on the stops of the vehicles
+         *   - getting the node_ids in the same cycle
+         * 2. Remove duplicates
+         * 2. Remove orders not on the stops
+         */
+        std::sort(orders.begin(), orders.end(),
+                [](const Orders_t& lhs, const Orders_t& rhs){return lhs.id < rhs.id;});
+
+        orders.erase(
+                std::unique(
+                        orders.begin(), orders.end(),
+                        [&](const Orders_t& lhs, const Orders_t& rhs){return lhs.id == rhs.id;}),
+                    orders.end());
+
+
+
+        orders.erase(
+                    std::remove_if(
+                        orders.begin(), orders.end(),
+                        [&](const Orders_t& s){return !orders_in_stops.has(s.id);}),
+                    orders.end());
+
+
+
+        /*
+         * Finish getting the node ids involved on the process
+         */
+        for (const auto &o : orders) {
+            orders_found += o.id;
+            node_ids += o.pick_node_id;
+            node_ids += o.deliver_node_id;
+        }
+
+        /*
+         * Verify orders complete data
+         */
+        if (!(orders_in_stops - orders_found).empty()) {
+            err << "Missing orders for processing";
+            log << "Shipments missing: " << (orders_in_stops - orders_found) << log.str();
+            *log_msg = msg(log.str());
+            *err_msg = msg(err.str());
+            return;
+        }
+
+        
+
+        /*
+         * Dealing with time matrix:
+         * - Create the unique time matrix to be used for all optimizations
+         * - Verify matrix triangle inequality
+         * - Verify matrix cells preconditions
+         */
+        vrprouting::problem::Matrix time_matrix(
+                costs,
+                multipliers,
+                node_ids, static_cast<Multiplier>(factor));
+
+        if (check_triangle_inequality && !time_matrix.obeys_triangle_inequality()) {
+            log << "\nFixing Matrix that does not obey triangle inequality "
+                << time_matrix.fix_triangle_inequality() << " cycles used";
+
+            if (!time_matrix.obeys_triangle_inequality()) {
+                log << "\nMatrix Still does not obey triangle inequality ";
+            }
+        }
+
+        if (!time_matrix.has_no_infinity()) {
+            err << "\nAn Infinity value was found on the Matrix";
+            *err_msg = msg(err.str());
+            *log_msg = msg(log.str());
+            return;
+        }
+
+        /*
+         * get the solution
+         */
+        auto solution = subdivide?
+            subdivide_processing( orders, vehicles, time_matrix, max_cycles, execution_date, subdivide_by_vehicle, log)
+            :
+            one_processing(
+                    orders,
+                    vehicles, {},
+                    time_matrix,
+                    max_cycles, execution_date);
+
+        /*
+         * Prepare results
+         */
+        if (!solution.empty()) {
+            (*return_tuples) = alloc(orders.size() * 2, (*return_tuples));
+
+            size_t seq = 0;
+            for (const auto &row : solution) {
+                for (const auto &o_id : row.stops) {
+                    (*return_tuples)[seq].vehicle_id = row.id;
+                    (*return_tuples)[seq].order_id = o_id;
+                    ++seq;
+                }
+            }
+            (*return_count) = orders.size() * 2;
+        }
+
+
+        pgassert(*err_msg == nullptr);
+        *log_msg = log.str().empty()?
+            nullptr :
+            msg(log.str());
+        *notice_msg = notice.str().empty()?
+            nullptr :
+            msg(notice.str());
+    } catch (AssertFailedException &except) {
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << except.what();
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch (std::exception& except) {
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << except.what();
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch (const std::string &ex) {
+        *err_msg = msg(ex.c_str());
+        *log_msg = hint? msg(hint) : msg(log.str().c_str());
+    } catch (const std::pair<std::string, std::string>& ex) {
+        (*return_count) = 0;
+        err << ex.first;
+        log << ex.second;
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch (const std::pair<std::string, int64_t>& ex) {
+        (*return_count) = 0;
+        err << ex.first;
+        log << "FOOOO missing on matrix: id =  " << ex.second;
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch(...) {
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << "Caught unknown exception!";
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
     }
+        }
