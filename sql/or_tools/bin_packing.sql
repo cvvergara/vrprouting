@@ -91,7 +91,7 @@ Column              Type              Description
 =================== ================= =================================================
 **bin_number**       ``ANY-INTEGER``       Integer to uniquely identify a bin
 
-**item_id**          ``ANY-INTEGER``       Integer to uniquely identify an item in the 
+**item_id**          ``ANY-INTEGER``       Integer to uniquely identify an item in the
                                            bin
 =================== ================= =================================================
 result end
@@ -123,7 +123,7 @@ AS $$
     from ortools.linear_solver import pywraplp
   except Exception as err:
     plpy.error(err)
-  
+
   global max_rows
   if inner_query == None:
     raise Exception('Inner Query Cannot be NULL')
@@ -131,7 +131,7 @@ AS $$
     raise Exception('Capacity Cannot be NULL')
   if max_rows == None:
     max_rows = 100000
-  
+
   # Program Execution Starts here
 
   try:
@@ -154,7 +154,7 @@ AS $$
     pass
   else:
     raise Exception("Returned columns of different type. Expected Integer")
-  
+
   data = {}
   weights = []
   data_ids = []
@@ -162,21 +162,21 @@ AS $$
   for i in range(num_of_rows):
     weights.append(inner_query_result[i]["weight"])
     data_ids.append(inner_query_result[i]["id"])
-      
+
 
   data['weights'] = weights
   data['items'] = list(range(len(weights)))
   data['bins'] = data['items']
   data['bin_capacity'] = bin_capacity
-  
+
   try:
-    solver = pywraplp.Solver.CreateSolver('SCIP')  
+    solver = pywraplp.Solver.CreateSolver('SCIP')
   except:
     plpy.error("Unable to Initialize solver")
-  
+
   if solver is None:
     plpy.error('SCIP solver unavailable.')
-    
+
 
   x = {}
   for i in data['items']:
@@ -191,7 +191,7 @@ AS $$
     solver.Add(sum(x[i, j] for j in data['bins']) == 1)
 
   for j in data['bins']:
-    solver.Add(sum(x[(i, j)] * data['weights'][i] 
+    solver.Add(sum(x[(i, j)] * data['weights'][i]
     for i in data['items']) <= y[j] * data['bin_capacity'])
 
   solver.Minimize(solver.Sum([y[j] for j in data['bins']]))

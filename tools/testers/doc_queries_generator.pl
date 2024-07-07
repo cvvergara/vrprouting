@@ -73,6 +73,7 @@ sub Usage {
     " --postgis version     - postgis version (default: found)\n" .
     " --pgrouting version   - pgrouting version (default: found)\n" .
     " -psql /path/to/psql   - optional path to psql\n" .
+    " -py venv              - python environment\n" .
     " -v                    - verbose messages for small debuging\n" .
     " -dbg                  - use when CMAKE_BUILD_TYPE = DEBUG\n" .
     " -debug                - verbose messages for debuging(enter twice for more)\n" .
@@ -92,6 +93,7 @@ my @testpath = ("docqueries/");
 my @test_directory = ();
 my $clean;
 my $ignore;
+my $venv = '';
 
 
 while (my $a = shift @ARGV) {
@@ -119,8 +121,10 @@ while (my $a = shift @ARGV) {
         die "'$psql' is not executable!\n" unless -x $psql;
     } elsif ($a eq '--help') {
         Usage();
+    } elsif ($a eq '-venv') {
+        $venv = shift @ARGV || Usage();
     } elsif ($a eq '-ignorenotice') {
-        $ignore = 1;;
+        $ignore = 1;
     } elsif ($a =~ /^-debug1$/i) {
         $DEBUG1 = 1;
     } elsif ($a =~ /^-debug$/i) {
@@ -315,6 +319,8 @@ sub process_single_test{
     # Process the test file
     print PSQL "BEGIN;\n";
     print PSQL "SET client_min_messages TO $level;\n";
+    # this function is on sample data
+    print PSQL "SELECT activate_python_venv('$venv');";
     print PSQL @d;
     print PSQL "\nROLLBACK;";
 
