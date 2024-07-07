@@ -127,7 +127,6 @@ end_open_t | End open time
 end_close_t | End close time
 end_service_t | End service time
 stops | Vehicle's stops
-stops_size | Stops size
 */
 class Vehicle_t {
  public:
@@ -136,7 +135,6 @@ class Vehicle_t {
      Speed speed;
      PAmount cant_v;   /** Number of vehicles with same description **/
      std::vector<Id> stops; /** Stops */
-     size_t stops_size; /** Stops size */
 
      Id start_node_id; /** Start node's identifier */
      TTimestamp start_open_t; /** Start open time */
@@ -152,28 +150,6 @@ class Vehicle_t {
      Coordinate end_x;
      Coordinate end_y;
 
-#if 0
-     Vehicle_t() = default;
-     Vehicle_t(const Vehicle_t &rhs) :
-         id(rhs.id),
-         capacity(rhs.capacity),
-         speed(rhs.speed),
-         cant_v(rhs.cant_v),
-         stops(rhs.stops),
-         start_node_id(rhs.start_node_id),
-         start_open_t(rhs.start_open_t),
-         start_close_t(rhs.start_close_t),
-         start_service_t(rhs.start_service_t),
-         start_x(rhs.start_x),
-         start_y(rhs.start_y),
-         end_node_id(rhs.end_node_id),
-         end_open_t(rhs.end_open_t),
-         end_close_t(rhs.end_close_t),
-         end_service_t(rhs.end_service_t),
-         end_x(rhs.end_x),
-         end_y(rhs.end_y) {
-     }
-#endif
      bool operator==(const Vehicle_t &rhs) {
          return
              id == rhs.id &&
@@ -202,7 +178,6 @@ class Vehicle_t {
             v.speed,
             1,
             std::vector<Id>(),
-            0,
 
             v.start_node_id,
             0,
