@@ -233,7 +233,7 @@ subdivide_processing(
 
 
             /* Get active orders of active vehicles */
-            Identifiers<Id> orders_in_stops;
+            Identifiers<Id> orders_in_active_vehicles;
             for (const auto &v : active_vehicles) {
                 /*
                  * On previous cycles the stops have changed
@@ -245,7 +245,7 @@ subdivide_processing(
                         (const Short_vehicle& sv) -> bool {return sv.id == v.id;});
 
                 for (const auto &s : v_to_modify->stops) {
-                    orders_in_stops += s;
+                    orders_in_active_vehicles += s;
                 }
             }
 
@@ -254,18 +254,20 @@ subdivide_processing(
              * - no orders to process
              * - last optimization had exactly the same orders
              */
-            if (orders_in_stops.empty() || (prev_orders_in_stops == orders_in_stops)) continue;
+            if (orders_in_active_vehicles.empty() 
+                    || (prev_orders_in_stops == orders_in_active_vehicles)) continue;
             log << "\nOptimizing at time: " << t;
 
-            prev_orders_in_stops = orders_in_stops;
+            prev_orders_in_stops = orders_in_active_vehicles;
             std::vector<Orders_t> active_orders;
             std::vector<Orders_t> inactive_orders;
 
             std::partition_copy(orders.begin(), orders.end(),
                     std::back_inserter(active_orders), std::back_inserter(inactive_orders),
-                    [&](const Orders_t& s){return orders_in_stops.has(s.id);});
+                    [&](const Orders_t& o)
+                    {return orders_in_active_vehicles.has(o.id);});
 
-            pgassert(active_orders.size() == orders_in_stops.size());
+            pgassert(active_orders.size() == orders_in_active_vehicles.size());
             pgassert(active_orders.size() > 0);
 
             auto new_stops = one_processing(
@@ -466,9 +468,10 @@ do_optimize(
                 [](const Orders_t& lhs, const Orders_t& rhs){return lhs.id < rhs.id;});
 
         orders.erase(
-                std::unique(
+                    std::unique(
                         orders.begin(), orders.end(),
-                        [&](const Orders_t& lhs, const Orders_t& rhs){return lhs.id == rhs.id;}),
+                        [&](const Orders_t& lhs, const Orders_t& rhs)
+                        {return lhs.id == rhs.id;}),
                     orders.end());
 
 
@@ -537,8 +540,7 @@ do_optimize(
             subdivide_processing( orders, vehicles, time_matrix, max_cycles, execution_date, subdivide_by_vehicle, log)
             :
             one_processing(
-                    orders,
-                    vehicles, {},
+                    orders, vehicles, {},
                     time_matrix,
                     max_cycles, execution_date);
 
@@ -601,4 +603,4 @@ do_optimize(
         *err_msg = msg(err.str().c_str());
         *log_msg = msg(log.str().c_str());
     }
-        }
+}
