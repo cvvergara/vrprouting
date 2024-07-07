@@ -50,7 +50,7 @@ namespace problem {
 class PickDeliver {
  public:
     /** @brief General Constructor */
-#if 1
+#if 0
     PickDeliver(
         Orders_t* p_orders, size_t p_orders_size,
         Vehicle_t* p_vehicles, size_t p_vehicles_size,
@@ -91,7 +91,7 @@ class PickDeliver {
             m_orders.set_compatibles();
             m_trucks.set_compatibles(m_orders);
         }
-#if 1
+#if 0
     PickDeliver(
             Orders_t* p_orders, size_t p_orders_size,
             Vehicle_t* p_vehicles, size_t p_vehicles_size,
