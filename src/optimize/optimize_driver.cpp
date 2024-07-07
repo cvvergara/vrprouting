@@ -258,33 +258,26 @@ subdivide_processing(
             log << "\nOptimizing at time: " << t;
 
             prev_orders_in_stops = orders_in_stops;
-            std::vector<Orders_t> orders_to_process;
+            std::vector<Orders_t> active_orders;
             std::vector<Orders_t> inactive_orders;
 
             std::partition_copy(orders.begin(), orders.end(),
-                    std::back_inserter(orders_to_process), std::back_inserter(inactive_orders),
+                    std::back_inserter(active_orders), std::back_inserter(inactive_orders),
                     [&](const Orders_t& s){return orders_in_stops.has(s.id);});
 
-            pgassert(orders_to_process.size() > 0);
-            pgassert(orders_in_stops.size() == orders_to_process.size());
+            pgassert(active_orders.size() == orders_in_stops.size());
+            pgassert(active_orders.size() > 0);
 
             auto new_stops = one_processing(
-                    orders_to_process, active_vehicles, the_stops,
-                    time_matrix,
-                    max_cycles, execution_date);
+                    active_orders, active_vehicles, the_stops, time_matrix, max_cycles, execution_date);
 
-            log << "\nthe_stops\t";
-            for (const auto &s : the_stops) log << s << "\t";
-            log << "\new_stops\t";
-            for (const auto &s : new_stops) log << s << "\t";
             update_stops(the_stops, new_stops);
-            log << "\nthe_stops\t";
-            for (const auto &s : the_stops) log << s << "\t";
         }
+
         return the_stops;
     } catch(...) {
-    throw;
-  }
+        throw;
+    }
 }
 
 
@@ -328,18 +321,18 @@ subdivide_processing(
  digraph G {
  node[fontsize=11, nodesep=0.75,ranksep=0.75];
 
- start  [shape=Mdiamon;
+ start  [shape=Mdiamond];
  n1  [label="Verify preconditions",shape=rect];
  n3  [label="Verify matrix cells preconditions",shape=rect];
- n4  [label="Construct problem",shape=cds,color=blu;
- n5  [label="get initial solutions",shape=cds,color=blu;
- n6  [label="solve (optimize)",shape=cds,color=blu;
+ n4  [label="Construct problem",shape=cds,color=blue];
+ n5  [label="get initial solutions",shape=cds,color=blue];
+ n6  [label="solve (optimize)",shape=cds,color=blue];
  n7  [label="Prepare results",shape=rect];
- end  [shape=Mdiamon;
- error [shape=Mdiamond,color=re
+ end  [shape=Mdiamond];
+ error [shape=Mdiamond,color=red]
  start -> n1 -> n3 -> n4 -> n5 -> n6 -> n7 -> end;
- n1 -> error [ label="Caller error",color=re;
- n3 -> error [ label="User error",color=re;
+ n1 -> error [ label="Caller error",color=red];
+ n3 -> error [ label="User error",color=red];
 
  }
  @enddot
@@ -373,14 +366,14 @@ do_optimize(
         char **log_msg,
         char **notice_msg,
         char **err_msg) {
-  using Vehicle_t = vrprouting::Vehicle_t;
-  using Orders_t = vrprouting::Orders_t;
-  using vrprouting::msg;
-  using vrprouting::alloc;
-  using vrprouting::pgget::pickdeliver::get_matrix;
-  using vrprouting::pgget::pickdeliver::get_orders;
-  using vrprouting::pgget::pickdeliver::get_vehicles;
-  using vrprouting::pgget::pickdeliver::get_timeMultipliers;
+    using Vehicle_t = vrprouting::Vehicle_t;
+    using Orders_t = vrprouting::Orders_t;
+    using vrprouting::msg;
+    using vrprouting::alloc;
+    using vrprouting::pgget::pickdeliver::get_matrix;
+    using vrprouting::pgget::pickdeliver::get_orders;
+    using vrprouting::pgget::pickdeliver::get_vehicles;
+    using vrprouting::pgget::pickdeliver::get_timeMultipliers;
 
   char* hint = nullptr;
 
