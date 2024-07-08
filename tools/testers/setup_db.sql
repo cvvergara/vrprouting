@@ -30,5 +30,6 @@ BEGIN;
     \i vroomdata.sql
     \i ortoolsdata.sql
     \i functions.sql
+    \i solomon_100_rc101.data.sql
 
 END;

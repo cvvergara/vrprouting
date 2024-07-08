@@ -262,14 +262,14 @@ sub run_test {
 
     if ($DOCUMENTATION) {
         for my $test_file_name (@{$t->{documentation}}) {
-            process_single_test($test_file_name, $dir, \%res);
+            process_single_test($test_file_name, $dir, $t->{activate}, \%res);
             my $cmd = q(perl -pi -e 's/[ \t]+$//');
             $cmd .= " $dir/$test_file_name.result";
             mysystem( $cmd );
         }
     } else {
         for my $test_file_name (@{$t->{tests}}) {
-            process_single_test($test_file_name, $dir, \%res)
+            process_single_test($test_file_name, $dir, $t->{activate}, \%res)
         }
     }
 
@@ -279,6 +279,7 @@ sub run_test {
 sub process_single_test{
     my $test_file_name = shift;
     my $dir = shift;
+    my $activate = shift;
     my $res = shift;
 
     my $test_file = "$dir/$test_file_name.test.sql";
@@ -322,7 +323,9 @@ sub process_single_test{
     print PSQL "BEGIN;\n";
     print PSQL "SET client_min_messages TO $level;\n";
     # this function is on sample data
-    print PSQL "SELECT activate_python_venv('$venv');";
+    if ($activate) {
+        print PSQL "CALL activate_python_venv('$venv');" if $venv;
+    }
     print PSQL @d;
     print PSQL "\nROLLBACK;";
 

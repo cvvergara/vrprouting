@@ -13,8 +13,8 @@ DROP TABLE IF EXISTS public.orders_1;
 DROP TABLE IF EXISTS public.edges_matrix;
 
 -- activate python
-CREATE OR REPLACE FUNCTION activate_python_venv(venv text)
-  RETURNS void AS
+CREATE OR REPLACE PROCEDURE activate_python_venv(venv text)
+LANGUAGE plpython3u AS
 $BODY$
     import os
     import sys
@@ -25,8 +25,7 @@ $BODY$
         activate_this = os.path.join(venv, 'bin', 'activate_this.py')
 
     exec(open(activate_this).read(), dict(__file__=activate_this))
-$BODY$
-LANGUAGE plpython3u VOLATILE;
+$BODY$;
 
 --EDGE TABLE CREATE start
 CREATE TABLE public.edge_table (
