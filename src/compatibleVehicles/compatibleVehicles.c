@@ -96,9 +96,15 @@ process(
     vrp_global_report(log_msg, notice_msg, err_msg);
 
     /* freeing memory before return */
-    if (log_msg) {pfree(log_msg); log_msg = NULL;}
-    if (notice_msg) {pfree(notice_msg); notice_msg = NULL;}
-    if (err_msg) {pfree(err_msg); err_msg = NULL;}
+    if (log_msg) {
+        pfree(log_msg); log_msg = NULL;
+    }
+    if (notice_msg) {
+        pfree(notice_msg); notice_msg = NULL;
+    }
+    if (err_msg) {
+        pfree(err_msg); err_msg = NULL;
+    }
     vrp_SPI_finish();
 }
 

@@ -137,19 +137,19 @@ void vrp_do_vroom(
                 *notice_msg = msg("Jobs SQL and/or Shipments SQL query are NULL");
                 return;
             }
-            *notice_msg = msg( "Insufficient data found on Jobs SQL and/or Shipments SQL query.");
+            *notice_msg = msg("Insufficient data found on Jobs SQL and/or Shipments SQL query.");
             auto s1 = shipments_sql? std::string(shipments_sql) : "";
             auto s2 = jobs_sql? std::string(jobs_sql) : "";
             s1 = s1 + " " + s2;
             *log_msg = msg(s1);
         } else if (fn_used == 1) {
             *notice_msg = jobs_sql?
-                msg( "Insufficient data found on Jobs SQL query.")
+                msg("Insufficient data found on Jobs SQL query.")
                 : msg("Jobs SQL query not found");
             *log_msg = jobs_sql? msg(std::string(jobs_sql)) : nullptr;
         } else if (fn_used == 2) {
             *notice_msg = shipments_sql?
-                msg( "Insufficient data found on Shipments SQL query.")
+                msg("Insufficient data found on Shipments SQL query.")
                 : msg("Jobs SQL query not found");
             *log_msg = shipments_sql? msg(std::string(shipments_sql)) : nullptr;
         }

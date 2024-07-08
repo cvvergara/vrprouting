@@ -254,7 +254,7 @@ subdivide_processing(
              * - no orders to process
              * - last optimization had exactly the same orders
              */
-            if (orders_in_active_vehicles.empty() 
+            if (orders_in_active_vehicles.empty()
                     || (prev_orders_in_stops == orders_in_active_vehicles)) continue;
             log << "\nOptimizing at time: " << t;
 
@@ -504,7 +504,7 @@ do_optimize(
             return;
         }
 
-        
+
 
         /*
          * Dealing with time matrix:
@@ -537,12 +537,9 @@ do_optimize(
          * get the solution
          */
         auto solution = subdivide?
-            subdivide_processing( orders, vehicles, time_matrix, max_cycles, execution_date, subdivide_by_vehicle, log)
+            subdivide_processing(orders, vehicles, time_matrix, max_cycles, execution_date, subdivide_by_vehicle, log)
             :
-            one_processing(
-                    orders, vehicles, {},
-                    time_matrix,
-                    max_cycles, execution_date);
+            one_processing(orders, vehicles, {}, time_matrix, max_cycles, execution_date);
 
         /*
          * Prepare results
