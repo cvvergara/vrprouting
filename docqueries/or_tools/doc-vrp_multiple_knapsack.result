@@ -2,8 +2,6 @@ BEGIN;
 BEGIN
 SET client_min_messages TO NOTICE;
 SET
-SELECT activate_python_venv('/home/vicky/pgrouting/vrprouting/env-vrp');
- activate_python_venv
 ----------------------
 
 (1 row)

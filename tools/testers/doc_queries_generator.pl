@@ -163,6 +163,8 @@ my %stats = (z_pass=>0, z_fail=>0, z_crash=>0);
 my $TMP = "/tmp/pgr-test-runner-$$";
 my $TMP2 = "/tmp/pgr-test-runner-$$-2";
 my $TMP3 = "/tmp/pgr-test-runner-$$-3";
+my $nopyA = "/tmp/pgr-test-runner-$$-4";
+my $nopyE = "/tmp/pgr-test-runner-$$-5";
 
 if (! $psql) {
     $psql = findPsql() || die "ERROR: can not find psql, specify it on the command line.\n";
@@ -291,7 +293,7 @@ sub process_single_test{
 
 
     if ($DOCUMENTATION) {
-        open(PSQL, "|$psql $connopts --set='VERBOSITY terse' -e $DBNAME > $result_file 2>\&1 ") || do {
+        open(PSQL, "|$psql $connopts --set='VERBOSITY terse' -e $DBNAME > $TMP 2>\&1 ") || do {
             $res->{"$test_file"} = "FAILED: could not open connection to db : $!";
             $stats{z_fail}++;
             return;
@@ -328,6 +330,8 @@ sub process_single_test{
     close(PSQL);
 
     if ($DOCUMENTATION) {
+        # removes local information about the python virtual environment
+        mysystem("grep -v activate_python_venv '$TMP'  > $result_file");
         print "\trun time: " . tv_interval($t0, [gettimeofday]) . "\n";
         return;
     }
@@ -338,8 +342,10 @@ sub process_single_test{
         return;
     }
 
+
     my $actual_results = $TMP2;
     my $expected_results = $TMP3;
+
     if ($ignore) {
         # ignoring NOTICE
         mysystem("grep -v NOTICE         '$TMP' | grep -v '^CONTEXT:' | grep -v '^PL/pgSQL function' | grep -v '^COPY' > $actual_results");
@@ -353,9 +359,11 @@ sub process_single_test{
         mysystem("grep -v '^COPY' '$result_file' | grep -v 'psql:tools' > $expected_results");
     }
 
+    mysystem("grep -v activate_python_venv '$actual_results'  > $nopyA");
+    mysystem("grep -v activate_python_venv '$expected_results' > $nopyE");
 
     # Use diff -w to ignore white space differences like \r vs \r\n
-    my $diff = `diff -w '$expected_results' '$actual_results' `;
+    my $diff = `diff -w '$nopyE' '$nopyA' `;
 
     #removing leading blanks and trailing blanks
     $diff =~ s/^\s*|\s*$//g;

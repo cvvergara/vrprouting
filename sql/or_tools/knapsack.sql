@@ -94,7 +94,7 @@ Returns set of
 =================== ================= =================================================
 Column              Type              Description
 =================== ================= =================================================
-**item_id**         ``ANY-INTEGER``   Integer to uniquely identify an item in the 
+**item_id**         ``ANY-INTEGER``   Integer to uniquely identify an item in the
                                       knapsack
 =================== ================= =================================================
 result end
@@ -128,10 +128,10 @@ CREATE OR REPLACE FUNCTION vrp_knapsack(
 RETURNS TABLE(item_id INTEGER)
 AS $$
   try:
-    from ortools.algorithms import pywrapknapsack_solver
+    from ortools.algorithms.python import knapsack_solver
   except Exception as err:
     plpy.error(err)
-  
+
   global max_rows
   if inner_query == None:
     raise Exception('Inner Query Cannot be NULL')
@@ -139,13 +139,14 @@ AS $$
     raise Exception('Capacity Cannot be NULL')
   if max_rows == None:
     max_rows = 100000
+
   try:
-    solver = pywrapknapsack_solver.KnapsackSolver(
-    pywrapknapsack_solver.KnapsackSolver.
+    solver = knapsack_solver.KnapsackSolver(
+    knapsack_solver.SolverType.
     KNAPSACK_MULTIDIMENSION_BRANCH_AND_BOUND_SOLVER, 'KnapsackExample')
   except:
     plpy.error('Unable to Initialize Knapsack Solver')
-  
+
   capacities = []
   capacities.append(capacity)
 
@@ -158,14 +159,14 @@ AS $$
     coltypes = inner_query_result.coltypes()
   except plpy.SPIError as error_msg:
     plpy.error("Error Processing Inner Query. The given query is not a valid SQL command")
-  
+
   if len(colnames) != 3:
     plpy.error("Expected 3 columns, Got ", len(colnames))
   if ('weight' in colnames) and ('cost' in colnames) and ('id' in colnames):
     # got correct column names
     pass
   else:
-    plpy.error("Expected columns weight and cost, Got ", colnames) 
+    plpy.error("Expected columns weight and cost, Got ", colnames)
   if all(item in [20, 21, 23] for item in coltypes):
     # got correct column types
     pass
@@ -181,16 +182,16 @@ AS $$
     values.append(inner_query_result[i]["cost"])
     weight1.append(inner_query_result[i]["weight"])
   weights.append(weight1)
-  
+
   try:
-    solver.Init(values, weights, capacities)
+    solver.init(values, weights, capacities)
   except Exception as error_msg:
     plpy.error(error_msg)
-  computed_value = solver.Solve()
-  
+  computed_value = solver.solve()
+
   # prints results
   for i in range(len(values)):
-    if solver.BestSolutionContains(i):
+    if solver.best_solution_contains(i):
       yield (ids[i])
 
   # end of the program
