@@ -35,7 +35,7 @@ BEGIN
     'NULL',
     'NULL'
     ]::TEXT[];
-    RETURN query SELECT * FROM no_crash_test('pgr_vrpOneDepot', params, subs);
+    RETURN query SELECT * FROM no_crash_test('vrp_OneDepot', params, subs);
 END
 $BODY$
 LANGUAGE plpgsql VOLATILE;
