@@ -1,35 +1,46 @@
 name: Build for Ubuntu
 
-on:
-  push:
-    branches-ignore:
-      - 'translations_*'
-    tags: []
-  pull_request:
-    paths-ignore:
-      - '**.po'
+# manually triggered workflow
+# - 5 * 2 * 2 = 20 jobs are triggered
+# - So many jobs take too much time
+# When this file changes
 
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/ubuntu.yml'
+
+    branches-ignore:
+      - 'gh-pages'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   build:
-    name: Build
+    name: Ubuntu psql
     runs-on: ${{ matrix.os }}
 
     strategy:
         fail-fast: false
         matrix:
-          psql: [12, 13, 14, 15]
+          psql: [12,13,14,15,16]
           postgis: [3]
           release: [Debug, Release]
-          os: [ubuntu-latest]
+          os: [ubuntu-latest, ubuntu-20.04]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: get postgres version
         run: |
           sudo service postgresql start
-          pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d \()')
+          pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
           echo "PGVER=${pgver}" >> $GITHUB_ENV
           PGP=5433
           if [ "${{ matrix.psql }}" == "${pgver}" ]; then PGP=5432; fi
@@ -56,6 +67,8 @@ jobs:
             postgresql-${{ matrix.psql }}-pgrouting \
             postgresql-server-dev-${{ matrix.psql }} \
             postgresql-plpython3-${{ matrix.psql }}
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Install Google OR-Tools dependencies
         run: |
@@ -88,7 +101,7 @@ jobs:
           cd ~/vroom-${{ env.VROOMVER }}/src
           USE_ROUTING=false make shared
 
-      - name: Configure
+      - name: Configure for gcc
         run: |
           export PATH=/usr/lib/postgresql/${{ matrix.psql }}/bin:$PATH
           mkdir build
@@ -108,10 +121,15 @@ jobs:
           cd tools/testers
           tar -xf matrix_new_values.tar.gz
 
-      - name: pgTap test
+      - name: Test
         run: |
           sudo service postgresql start
-          sudo -u postgres createdb -p ${PGPORT}  ___vrp___test___
-          cd tools/testers
-          sudo -u postgres psql -p "${PGPORT}" -U postgres -d ___vrp___test___ -X -q -v ON_ERROR_STOP=1 --pset pager=off -f setup_db.sql
-          sudo -u postgres pg_prove --failures --quiet --recurse --ext .sql -p "${PGPORT}" -d ___vrp___test___ -U postgres ../../pgtap/
+          export PG_RUNNER_USER=`whoami`
+          sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS ___pgr___test___;"
+          sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS \"${PG_RUNNER_USER}\";"
+          sudo -u postgres psql -p ${PGPORT} -c "DROP ROLE IF EXISTS \"${PG_RUNNER_USER}\";"
+          sudo -u postgres psql -p ${PGPORT} -c "CREATE ROLE \"${PG_RUNNER_USER}\" WITH LOGIN SUPERUSER;"
+          sudo -u postgres psql -p ${PGPORT} -c "CREATE DATABASE \"${PG_RUNNER_USER}\";"
+          psql -c "CREATE DATABASE ___pgr___test___;"
+          bash ./tools/testers/pg_prove_tests.sh ${PG_RUNNER_USER} ${PGPORT}  Release
+          psql -c "DROP DATABASE IF EXISTS ___pgr___test___;"
