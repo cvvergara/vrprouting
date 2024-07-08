@@ -336,7 +336,9 @@ _vrp_pickdeliverraw(PG_FUNCTION_ARGS) {
 
     SRF_RETURN_NEXT(funcctx, result);
   } else {
-    if (result_tuples) {pfree(result_tuples); result_tuples = NULL;}
+    if (result_tuples) {
+        pfree(result_tuples); result_tuples = NULL;
+    }
     funcctx->user_fctx = NULL;
     SRF_RETURN_DONE(funcctx);
   }
