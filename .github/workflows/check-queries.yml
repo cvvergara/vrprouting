@@ -1,4 +1,12 @@
 name: Check queries
+
+
+# This action runs:
+# - When this file changes
+# - When changes on code (src, include, sql)
+# - When changes on data or testing scripts (tools/testers)
+# - When the way the build changes (CMakeLists.txt)
+#
 # using
 # - the installed version on actions
 # - the latest postgis version
@@ -8,6 +16,27 @@ on:
   push:
     paths:
       - '.github/workflows/check-queries.yml'
+      - 'src/**'
+      - 'include/**'
+      - 'sql/**'
+      - 'docqueries/**'
+      - 'tools/testers/**'
+      - 'CMakeLists.txt'
+
+    branches-ignore:
+      - 'gh-pages'
+
+    tags: []
+
+  pull_request:
+    paths:
+      - '.github/workflows/check-queries.yml'
+      - 'src/**'
+      - 'include/**'
+      - 'sql/**'
+      - 'docqueries/**'
+      - 'tools/testers/**'
+      - 'CMakeLists.txt'
 
     branches-ignore:
       - 'gh-pages'
@@ -26,6 +55,9 @@ jobs:
 
     strategy:
         fail-fast: false
+        matrix:
+          release: [Debug,Release]
+          os: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v4
@@ -45,6 +77,11 @@ jobs:
           curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
           sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ \
             $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+
+      - name: Install python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
       - name: Install dependencies
         run: |
@@ -91,7 +128,7 @@ jobs:
           cd ~/vroom-${{ env.VROOMVER }}/src
           USE_ROUTING=false make shared
 
-      - name: Configure for gcc
+      - name: Configure
         run: |
           export PATH=/usr/lib/postgresql/${PGVER}/bin:$PATH
           mkdir build
@@ -121,12 +158,12 @@ jobs:
 
       - name: Test documentation queries are up to date
         run: |
-          sudo -u postgres createdb -p ${PGPORT}  ___vrp___test___
-
+          export PG_RUNNER_USER=`whoami`
+          sudo -u postgres createdb -p ${PGPORT} -U ${PG_RUNNER_USER} ___vrp___test___
           TESTDIRS="version"
           for d in ${TESTDIRS}
           do
-            ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}" -documentation -alg "${d}"
+            ./tools/testers/doc_queries_generator.pl -pgver "${PGVER}" -pguser ${PG_RUNNER_USER} -documentation -alg "docqueries/${d}"
           done
 
-          ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}"
+          ./tools/testers/doc_queries_generator.pl -pgver "${PGVER}"

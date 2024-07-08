@@ -24,7 +24,6 @@ jobs:
     strategy:
         fail-fast: false
         matrix:
-          postgis: [3]
           release: [Debug,Release]
           os: [ubuntu-latest]
 
@@ -37,6 +36,7 @@ jobs:
           pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
           echo "PGVER=${pgver}" >> $GITHUB_ENV
           echo "PGPORT=5432" >> $GITHUB_ENV
+          echo "PGIS=3" >> $GITHUB_ENV
           echo "VROOMVER=1.12.0" >> $GITHUB_ENV
 
       - name: Add PostgreSQL APT repository
@@ -60,8 +60,8 @@ jobs:
             libtap-parser-sourcehandler-pgtap-perl \
             postgresql-${PGVER} \
             postgresql-${PGVER}-pgtap \
-            postgresql-${PGVER}-postgis-${{ matrix.postgis }} \
-            postgresql-${PGVER}-postgis-${{ matrix.postgis }}-scripts \
+            postgresql-${PGVER}-postgis-${PGIS} \
+            postgresql-${PGVER}-postgis-${PGIS}-scripts \
             postgresql-${PGVER}-pgrouting \
             postgresql-server-dev-${PGVER} \
             postgresql-plpython3-${PGVER}
@@ -97,7 +97,7 @@ jobs:
           cd ~/vroom-${{ env.VROOMVER }}/src
           USE_ROUTING=false make shared
 
-      - name: Configure for clang
+      - name: Configure
         run: |
           export PATH=/usr/lib/postgresql/${PGVER}/bin:$PATH
           mkdir build
