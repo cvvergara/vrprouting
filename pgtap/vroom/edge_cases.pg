@@ -417,7 +417,7 @@ BEGIN
   SELECT throws_ok(
     'jobs_invalid_tw_problem',
     'XX000',
-    $$Invalid time window found: 'tw_close' is less than 'tw_open'$$,
+    $$Invalid time window found: 'tw_close' < 'tw_open'$$,
     'Problem with jobs having invalid time windows'
   );
 
@@ -462,7 +462,7 @@ BEGIN
   SELECT throws_ok(
     'shipments_invalid_tw_problem',
     'XX000',
-    $$Invalid time window found: 'tw_close' is less than 'tw_open'$$,
+    $$Invalid time window found: 'tw_close' < 'tw_open'$$,
     'Problem with shipments having invalid time windows'
   );
 
@@ -507,7 +507,7 @@ BEGIN
   SELECT throws_ok(
     'breaks_invalid_tw_problem',
     'XX000',
-    $$Invalid time window found: 'tw_close' is less than 'tw_open'$$,
+    $$Invalid time window found: 'tw_close' < 'tw_open'$$,
     'Problem with breaks having invalid time windows'
   );
 
