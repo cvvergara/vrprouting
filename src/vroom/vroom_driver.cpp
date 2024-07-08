@@ -123,13 +123,27 @@ void vrp_do_vroom(
     pgassert(!(*return_tuples));
     pgassert(!(*return_count));
 
+    if (!matrix_sql) {
+        *notice_msg = msg("No matrix inner query Found");
+        return;
+    }
+    if (!vehicles_sql) {
+        *notice_msg = msg("No Vehicles inner query Found");
+        return;
+    }
+
+    if ((fn_used == 0 || fn_used == 1) && (!jobs_sql && !shipments_sql)) {
+        *notice_msg = msg("No Jobs and/or Shipments inner query Found");
+        return;
+    };
+
     hint = vehicles_sql;
     auto vehicles = vehicles_sql? get_vehicles(std::string(vehicles_sql), use_timestamps)
         : std::vector<vrprouting::Vroom_vehicle_t>();
 
     if (vehicles.size() == 0) {
         *notice_msg = msg("Insufficient data found on vehicles inner query");
-        *log_msg = msg(matrix_sql);
+        *log_msg = msg(vehicles_sql);
         return;
     }
 
@@ -158,21 +172,22 @@ void vrp_do_vroom(
         : std::vector<vrprouting::Vroom_time_window_t>();
 
     hint = matrix_sql;
-    auto costs = get_matrix(std::string(matrix_sql), use_timestamps);
+    auto costs = matrix_sql? get_matrix(std::string(matrix_sql), use_timestamps)
+        : std::vector<vrprouting::Vroom_matrix_t>();
 
     if (costs.size() == 0) {
-        *notice_msg = msg("Insufficient data found on inner query");
+        *notice_msg = msg("Insufficient data found on 'costs' inner query");
         *log_msg = msg(matrix_sql);
         return;
     }
 
     if ((fn_used == 0 || fn_used == 1) && jobs.empty()) {
-            *notice_msg = msg("Insufficient data found on inner query");
-            *log_msg = msg(jobs_sql);
+            *notice_msg = msg("Insufficient data found on jobs inner query");
+            *log_msg = jobs_sql? msg(jobs_sql) : nullptr;
             return;
     } else if ((fn_used == 0 || fn_used == 2) && shipments.empty()) {
-            *notice_msg = msg("Insufficient data found on inner query");
-            *log_msg = msg("shipments_sql");
+            *notice_msg = msg("Insufficient data found on shipments inner query");
+            *log_msg = shipments_sql? msg(shipments_sql) : nullptr;
             return;
     }
 
