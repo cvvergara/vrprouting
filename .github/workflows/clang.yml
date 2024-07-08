@@ -59,7 +59,7 @@ jobs:
             postgresql-${PGVER}-postgis-${{ matrix.postgis }}-scripts \
             postgresql-${PGVER}-pgrouting \
             postgresql-server-dev-${PGVER} \
-            postgresql-plpython3-${{ matrix.psql }}
+            postgresql-plpython3-${PGVER}
 
       - name: Install Google OR-Tools dependencies
         run: |
