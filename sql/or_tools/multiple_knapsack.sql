@@ -162,7 +162,6 @@ AS $$
     num_of_rows = inner_query_result.nrows()
     colnames = inner_query_result.colnames()
     coltypes = inner_query_result.coltypes()
-    plpy.notice('Reading the inner_query.')
   except plpy.SPIError as error_msg:
     plpy.error("Error Processing Inner Query. The given query is not a valid SQL command")
 
