@@ -119,7 +119,7 @@ jobs:
           cd tools/testers
           tar -xf matrix_new_values.tar.gz
 
-      - name: Test
+      - name: pgTap test
         run: |
           sudo service postgresql start
           export PG_RUNNER_USER=`whoami`
