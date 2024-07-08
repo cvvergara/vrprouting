@@ -13,7 +13,7 @@ PGDATABASE="___vrp___test___"
 while [[ $# -gt 0 ]]; do
   case $1 in
     -U)
-      PGUSER="-U $2"
+      PGUSER=(-U "$2")
       shift
       shift
       ;;
@@ -27,11 +27,11 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     -p)
-      PGPORT="-p $2"
+      PGPORT=(-p "$2")
       shift
       shift
       ;;
-    -*|--*)
+    -*)
       echo "Unknown option $1"
       exit 1
       ;;
@@ -44,25 +44,23 @@ done
 
 set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
 
-echo "PGUSER=${PGUSER}"
-echo "PGPORT=${PGPORT}"
-echo "PGDATABASE=${PGDATABASE}"
-echo "CLEANDB=${CLEANDB}"
+echo PGUSER= "${PGUSER[@]}"
+echo PGPORT= "${PGPORT[@]}"
+echo PGDATABASE= "${PGDATABASE}"
+echo CLEANDB= "${CLEANDB}"
 
-if [ -n "$CLEANDB" ]; then
+if [ -n "${CLEANDB}" ]; then
     echo "Recreating database ${PGDATABASE}"
-    dropdb --if-exists $PGPORT "${PGDATABASE}"
-    createdb $PGPORT "${PGDATABASE}"
+    dropdb --if-exists "${PGPORT[@]}" "${PGUSER[@]}" "${PGDATABASE}"
+    createdb "${PGPORT[@]}" "${PGUSER[@]}" "${PGDATABASE}"
 fi
 
 cd ./tools/testers/
-echo "psql $PGPORT $PGUSER -d $PGDATABASE -X -q -v ON_ERROR_STOP=1 --pset pager=off -f setup_db.sql"
-psql $PGPORT ${PGUSER} -d "$PGDATABASE" -X -q -v ON_ERROR_STOP=1 --pset pager=off -f setup_db.sql
+psql "${PGPORT[@]}" "${PGUSER[@]}" -d "${PGDATABASE}" -X -q -v ON_ERROR_STOP=1 --pset pager=off -f setup_db.sql
 
-echo "pg_prove --failures --quiet --recurse $PGPORT -d $PGDATABASE  $PGUSER  ../../pgtap/"
-pg_prove --failures --quiet --recurse $PGPORT -d $PGDATABASE  $PGUSER  ../../pgtap/
+pg_prove --failures --quiet --recurse "${PGPORT[@]}" "${PGUSER[@]}" -d "${PGDATABASE}" ../../pgtap/
 
 # database wont be removed unless script does not fails
 if [ -n "$CLEANDB" ]; then
-    dropdb --if-exists $PGPORT "${PGDATABASE}"
+    dropdb --if-exists "${PGPORT[@]}" "${PGUSER[@]}" "${PGDATABASE}"
 fi
