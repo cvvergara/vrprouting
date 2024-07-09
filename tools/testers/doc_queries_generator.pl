@@ -333,8 +333,14 @@ sub process_single_test{
     close(PSQL);
 
     if ($DOCUMENTATION) {
-        # removes local information about the python virtual environment
-        mysystem("grep -v activate_python_venv '$TMP'  > $result_file");
+        if ($activate) {
+            # removes local information about the python virtual environment
+            mysystem("grep -v activate_python_venv '$TMP'  > $TMP2");
+            mysystem("grep -v CALL '$TMP2'  > $result_file");
+        } else {
+            mysystem("cp $TMP  $result_file");
+        }
+
         print "\trun time: " . tv_interval($t0, [gettimeofday]) . "\n";
         return;
     }
@@ -362,11 +368,13 @@ sub process_single_test{
         mysystem("grep -v '^COPY' '$result_file' | grep -v 'psql:tools' > $expected_results");
     }
 
-    mysystem("grep -v activate_python_venv '$actual_results'  > $nopyA");
-    mysystem("grep -v activate_python_venv '$expected_results' > $nopyE");
+    if ($activate) {
+        mysystem("grep -v activate_python_venv '$actual_results' | grep -v 'CALL' > $nopyA");
+        mysystem("cp $nopyA $actual_results");
+    }
 
     # Use diff -w to ignore white space differences like \r vs \r\n
-    my $diff = `diff -w '$nopyE' '$nopyA' `;
+    my $diff = `diff -w '$expected_results' '$actual_results' `;
 
     #removing leading blanks and trailing blanks
     $diff =~ s/^\s*|\s*$//g;

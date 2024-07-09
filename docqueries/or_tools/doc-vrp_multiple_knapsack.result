@@ -2,7 +2,6 @@ BEGIN;
 BEGIN
 SET client_min_messages TO NOTICE;
 SET
-CALL
 DROP TABLE IF EXISTS multiple_knapsack_query CASCADE;
 NOTICE:  table "multiple_knapsack_query" does not exist, skipping
 DROP TABLE
@@ -53,7 +52,6 @@ FROM multiple_knapsack_query;
 
 SELECT *
 FROM vrp_multiple_knapsack('SELECT id, weight, cost FROM multiple_knapsack_query', ARRAY[100,100,100,100,100]);
-NOTICE:  Reading the inner_query.
  knapsack_number | item_id
 -----------------+---------
                1 |       2
