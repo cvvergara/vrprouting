@@ -168,16 +168,11 @@ jobs:
       - name: Test documentation queries are up to date
         run: |
           sudo service postgresql start
-          export PG_RUNNER_USER=`whoami`
-          sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS \"${PG_RUNNER_USER}\";"
-          sudo -u postgres psql -p ${PGPORT} -c "DROP ROLE IF EXISTS \"${PG_RUNNER_USER}\";"
-          sudo -u postgres psql -p ${PGPORT} -c "CREATE ROLE \"${PG_RUNNER_USER}\" WITH LOGIN SUPERUSER;"
-          sudo -u postgres psql -p ${PGPORT} -c "CREATE DATABASE \"${PG_RUNNER_USER}\";"
           psql -c "CREATE DATABASE ___vrp___test___;"
           TESTDIRS="version"
           for d in ${TESTDIRS}
           do
-            ./tools/testers/doc_queries_generator.pl -pgver "${PGVER}" -pguser ${PG_RUNNER_USER} -documentation -alg "docqueries/${d}"
+            ./tools/testers/doc_queries_generator.pl -pgver "${PGVER}" -pguser "${PG_RUNNER_USER}" -documentation -alg "docqueries/${d}"
           done
 
           ./tools/testers/doc_queries_generator.pl -pgver "${PGVER}"
