@@ -175,4 +175,4 @@ jobs:
             ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}" -doc -alg "${d}"
           done
 
-          ./tools/testers/doc_queries_generator.pl -pgver "${PGVER}"
+          ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}"
