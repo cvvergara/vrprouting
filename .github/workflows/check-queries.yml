@@ -172,7 +172,7 @@ jobs:
           TESTDIRS="version"
           for d in ${TESTDIRS}
           do
-            ./tools/testers/doc_queries_generator.pl -pgver "${PGVER}" -pguser "${PG_RUNNER_USER}" -documentation -alg "docqueries/${d}"
+            ./tools/testers/doc_queries_generator.pl -pgver "${PGVER}" -doc -alg "docqueries/${d}"
           done
 
           ./tools/testers/doc_queries_generator.pl -pgver "${PGVER}"
