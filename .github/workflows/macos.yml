@@ -27,7 +27,7 @@ jobs:
 
       - name: install dependencies
         run: |
-          brew gcc
+          brew install gcc
           brew install postgis boost pgrouting asio glpk gcc
 
       - name: set environment
