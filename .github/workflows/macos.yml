@@ -77,6 +77,7 @@ jobs:
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
           cd "vroom-${{ env.VROOMVER }}/src"
+          perl -pi -e 's/CXX ?=/CXX =/' makefile
           perl -pi -e 's/-Wextra -Wpedantic -Wall//' makefile
           USE_ROUTING=false make shared
 
