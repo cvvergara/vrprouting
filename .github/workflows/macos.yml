@@ -27,11 +27,14 @@ jobs:
 
       - name: install dependencies
         run: |
-          brew install gcc
-          brew install postgis boost pgrouting asio glpk gcc
+          brew install postgis boost pgrouting asio glpk
 
       - name: set environment
+        if: runner.os == 'macOs'
+        shell: bash
         run: |
+          echo "CC=gcc-14" >> $GITHUB_ENV;
+          echo "CXX=g++-14" >> $GITHUB_ENV;
           echo "VROOMVER=1.12.0" >> $GITHUB_ENV
 
       - name: Cache pgtap
@@ -78,7 +81,6 @@ jobs:
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
           cd "vroom-${{ env.VROOMVER }}/src"
-          perl -pi -e 's/CXX ?=/CXX =/' makefile
           perl -pi -e 's/-Wextra -Wpedantic -Wall//' makefile
           USE_ROUTING=false make shared
 
