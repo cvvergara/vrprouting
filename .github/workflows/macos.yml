@@ -77,11 +77,8 @@ jobs:
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
           cd "vroom-${{ env.VROOMVER }}/src"
-          ls
-          grep 'CXXFLAGS =' makefile
           perl -pi -e 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
-          grep 'CXXFLAGS =' makefile
-          make
+          USE_ROUTING=false make shared
 
           echo 'here 1'
 
