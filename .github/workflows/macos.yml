@@ -33,6 +33,28 @@ jobs:
         run: |
           echo "VROOMVER=1.12.0" >> $GITHUB_ENV
 
+      - name: Cache pgtap
+        id: cache-pgtap
+        uses: actions/cache@v4
+        with:
+          path: ./pgTapExtension/
+          key: ${{ runner.os }}-pgtap-${{ hashFiles('**/packages*.txt') }}
+
+      - name: Get pgtap repo
+        if: steps.cache-pgtap.outputs.cache-hit != 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: theory/pgtap
+          path: ./pgTapExtension/
+
+      - name: Install pgTAP
+        if: steps.cache-pgtap.outputs.cache-hit != 'true'
+        run: |
+          cd ./pgTapExtension/
+          make -j 4
+          sudo make install
+          cpan TAP::Parser::SourceHandler::pgTAP
+
       - name: Cache VROOM
         id: cache-vroom
         uses: actions/cache@v4
@@ -55,7 +77,10 @@ jobs:
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
           cd "vroom-${{ env.VROOMVER }}/src"
+          ls
+          grep 'CXXFLAGS =' makefile
           sed -i 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
+          grep 'CXXFLAGS =' makefile
           make
 
           echo 'here 1'
@@ -79,46 +104,18 @@ jobs:
           cd ..
           echo "VROOM_INSTALL_PATH=$(pwd)" >> $GITHUB_ENV
 
-      - name: Configure
+      - name: Configure vrpRouting
         run: |
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release -DWITH_DOC=OFF -DVROOM_INSTALL_PATH=${VROOM_INSTALL_PATH} ..
 
-      - name: Build
+      - name: Build vrpRouting
         run: |
           cd build
           make -j 4
           sudo make install
 
-      - name: Cache pgtap
-        id: cache-pgtap
-        uses: actions/cache@v4
-        with:
-          path: ./pgTapExtension/
-          key: ${{ runner.os }}-pgtap-${{ hashFiles('**/packages*.txt') }}
-
-      - name: Get pgtap repo
-        if: steps.cache-pgtap.outputs.cache-hit != 'true'
-        uses: actions/checkout@v4
-        with:
-          repository: theory/pgtap
-          path: ./pgTapExtension/
-
-      - name: Install pgTAP
-        if: steps.cache-pgtap.outputs.cache-hit != 'true'
-        run: |
-          cd ./pgTapExtension/
-          make -j
-          sudo make install
-          cpan TAP::Parser::SourceHandler::pgTAP
-
-      - name: Install pgTAP
-        if: steps.cache-pgtap.outputs.cache-hit == 'true'
-        run: |
-          cd ./pgTapExtension/
-          sudo make install
-          cpan TAP::Parser::SourceHandler::pgTAP
 
       - name: Unpack data
         run: |
