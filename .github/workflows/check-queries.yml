@@ -162,6 +162,7 @@ jobs:
         run: |
           sudo service postgresql start
           psql -c "CREATE DATABASE ____sigs_routing____;"
+          psql -c "SHOW timezone;"
           tools/scripts/get_signatures.sh -p ${PGPORT}
           git diff --exit-code --quiet sql/sigs/*.sig
 
@@ -173,6 +174,12 @@ jobs:
           for d in ${TESTDIRS}
           do
             ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}" -doc -alg "${d}"
+          done
+
+          TESTDIRS="vroom"
+          for d in ${TESTDIRS}
+          do
+            ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}" -alg "${d}"
           done
 
           ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}"
