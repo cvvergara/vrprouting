@@ -49,12 +49,12 @@ jobs:
           path: "vroom-${{ env.VROOMVER }}"
           repository: VROOM-Project/vroom
           ref: "v${{ env.VROOMVER }}"
+          submodules: true
 
       - name: Build VROOM
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
           cd "vroom-${{ env.VROOMVER }}/src"
-          git submodule update --init
           cd src/
           sed -i 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
           make
