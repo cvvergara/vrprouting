@@ -44,16 +44,16 @@ jobs:
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
           wget https://github.com/VROOM-Project/vroom/archive/refs/tags/v1.12.0.tar.gz
-          tar -zvxf v1.12.0.tar.gz
+          tar -zxf v1.12.0.tar.gz
           cd vroom-1.12.0/src
 
           echo 'here 1'
 
           # Source: https://github.com/VROOM-Project/vroom/issues/378
-          ln -s /usr/local/opt/openssl/include/openssl /usr/local/include
+          sudo ln -s /usr/local/opt/openssl/include/openssl /usr/local/include
           echo 'here 2'
-          ln -s /usr/local/opt/openssl/lib/libssl.dylib /usr/local/lib/
-          ln -s /usr/local/opt/openssl/lib/libcrypto.dylib /usr/local/lib/
+          sudo ln -s /usr/local/opt/openssl/lib/libssl.dylib /usr/local/lib/
+          sudo ln -s /usr/local/opt/openssl/lib/libcrypto.dylib /usr/local/lib/
           echo 'here3'
 
           # Create object file with position independent code using -fPIC flag
