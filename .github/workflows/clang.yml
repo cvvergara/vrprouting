@@ -56,6 +56,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             clang \
+            libssl-dev libasio-dev libglpk-dev \
             libboost-graph-dev \
             libtap-parser-sourcehandler-pgtap-perl \
             postgresql-${PGVER} \
@@ -69,10 +70,6 @@ jobs:
       - name: Install Google OR-Tools dependencies
         run: |
           sudo pip install --root=/  ortools
-
-      - name: Install VROOM dependencies
-        run: |
-          sudo apt-get install libssl-dev libasio-dev libglpk-dev
 
       - name: Cache VROOM
         id: cache-vroom

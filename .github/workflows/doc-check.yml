@@ -108,22 +108,48 @@ jobs:
             libboost-graph-dev \
             postgresql-${PGVER} \
             postgresql-server-dev-${PGVER} \
+            libssl-dev libasio-dev libglpk-dev \
             graphviz \
             doxygen
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip list
 
+      - name: Cache VROOM
+        id: cache-vroom
+        uses: actions/cache@v4
+        env:
+          cache-name: vroom
+        with:
+          path: |
+            ~/vroom-${{ env.VROOMVER }}
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ env.VROOMVER }}
+
+      - name: Build VROOM
+        if: steps.cache-vroom.outputs.cache-hit != 'true'
+        run: |
+          git clone --depth 1 --branch v${{ env.VROOMVER }} https://github.com/VROOM-Project/vroom ~/vroom-${{ env.VROOMVER }}
+
+          # init the required submodules
+          cd ~/vroom-${{ env.VROOMVER }}/
+          git submodule update --init
+
+          # Using "shared" target for creating Position Independent Code, disabling use of routing
+          cd ~/vroom-${{ env.VROOMVER }}/src
+          USE_ROUTING=false make shared
 
       - name: Configure
-        if: env.PROCESS == 'true'
         run: |
           export PATH=/usr/lib/postgresql/${PGVER}/bin:$PATH
           mkdir build
           cd build
-          cmake -DLINKCHECK=ON -DWITH_DOC=ON \
-                -DBUILD_DOXY=ON \
-                -DPOSTGRESQL_VERSION=${PGVER} -DCMAKE_BUILD_TYPE=Release ..
+          PGBIN="/usr/lib/postgresql/${PGVER}/bin"
+          PGINC="/usr/include/postgresql/${PGVER}/server"
+          cmake \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} \
+            -DVROOM_INSTALL_PATH=$HOME/vroom-${{ env.VROOMVER }} \
+            -DLINKCHECK=ON -DWITH_DOC=ON -DBUILD_DOXY=ON ..
 
       - name: Check Documentation
         if: env.PROCESS == 'true'
