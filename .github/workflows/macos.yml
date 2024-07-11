@@ -27,14 +27,14 @@ jobs:
 
       - name: install dependencies
         run: |
-          brew install postgis boost pgrouting asio glpk
+          brew install postgis boost pgrouting asio glpk gcc@12
 
       - name: set environment
         if: runner.os == 'macOs'
         shell: bash
         run: |
-          echo "CC=gcc-14" >> $GITHUB_ENV;
-          echo "CXX=g++-14" >> $GITHUB_ENV;
+          echo "CC=gcc-12" >> $GITHUB_ENV;
+          echo "CXX=g++-12" >> $GITHUB_ENV;
           echo "VROOMVER=1.12.0" >> $GITHUB_ENV
 
       - name: Cache pgtap
