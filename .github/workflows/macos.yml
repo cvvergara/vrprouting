@@ -27,8 +27,11 @@ jobs:
 
       - name: install dependencies
         run: |
-          brew install postgis boost pgrouting openssl asio glpk vroom@1.12.0
+          brew install postgis boost pgrouting openssl asio glpk
 
+      - name: set environment
+        run: |
+          echo "VROOMVER=1.12.0" >> $GITHUB_ENV
 
       - name: Cache VROOM
         id: cache-vroom
@@ -43,28 +46,31 @@ jobs:
       - name: Build VROOM
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
-          wget https://github.com/VROOM-Project/vroom/archive/refs/tags/v1.12.0.tar.gz
-          tar -zxf v1.12.0.tar.gz
-          cd vroom-1.12.0/src
+          git clone --depth 1 --branch "${{ env.VROOMVER }}" https://github.com/VROOM-Project/vroom "./vroom-${{ env.VROOMVER }}"
+          cd ${{ env.VROOMVER }}.0/src
+          git submodule update --init
+          cd src/
+          sed -i 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
+          make
 
           echo 'here 1'
 
           # Source: https://github.com/VROOM-Project/vroom/issues/378
-          sudo ln -s /usr/local/opt/openssl/include/openssl /usr/local/include
-          sudo mkdir /usr/local/lib
-          echo 'here 2'
-          sudo ln -s /usr/local/opt/openssl/lib/libssl.dylib /usr/local/lib/
-          sudo ln -s /usr/local/opt/openssl/lib/libcrypto.dylib /usr/local/lib/
-          echo 'here3'
+          #sudo ln -s /usr/local/opt/openssl/include/openssl /usr/local/include
+          #sudo mkdir /usr/local/lib
+          #echo 'here 2'
+          #sudo ln -s /usr/local/opt/openssl/lib/libssl.dylib /usr/local/lib/
+          #sudo ln -s /usr/local/opt/openssl/lib/libcrypto.dylib /usr/local/lib/
+          #echo 'here3'
 
           # Create object file with position independent code using -fPIC flag
-          sed -i '' -e 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
-          echo 'here4'
-          sed -i '' -e 's/\/usr\/include\/glpk.h/\/usr\/local\/opt\/glpk\/include\/glpk.h/' makefile
-          echo 'here5'
+          #sed -i '' -e 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
+          #echo 'here4'
+          #sed -i '' -e 's/\/usr\/include\/glpk.h/\/usr\/local\/opt\/glpk\/include\/glpk.h/' makefile
+          #echo 'here5'
 
-          make
-          echo 'here6'
+          #make
+          #echo 'here6'
           cd ..
           echo "VROOM_INSTALL_PATH=$(pwd)" >> $GITHUB_ENV
 
