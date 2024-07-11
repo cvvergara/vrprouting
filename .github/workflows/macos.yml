@@ -55,7 +55,6 @@ jobs:
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
           cd "vroom-${{ env.VROOMVER }}/src"
-          cd src/
           sed -i 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
           make
 
