@@ -2,6 +2,19 @@ name: Build for macOS
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/macos.yml'
+
+    branches-ignore:
+      - 'gh-pages'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 # TODO: Fix the macOS build for compiling and building VROOM with vrprouting.
 jobs:
@@ -10,18 +23,25 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: install deps
+      - name: install dependencies
         run: |
-          brew install postgis boost pgrouting
+          brew install postgis boost pgrouting openssl asio glpk
 
-      - name: Install VROOM dependencies
-        run: |
-          brew install openssl asio glpk
 
-      - name: Build VROOM v1.12.0
+      - name: Cache VROOM
+        id: cache-vroom
+        uses: actions/cache@v4
+        env:
+          cache-name: vroom
+        with:
+          path: |
+            ~/vroom-${{ env.VROOMVER }}
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ env.VROOMVER }}
+
+      - name: Build VROOM
+        if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
           wget https://github.com/VROOM-Project/vroom/archive/refs/tags/v1.12.0.tar.gz
           tar -zvxf v1.12.0.tar.gz
@@ -49,19 +69,19 @@ jobs:
       - name: Build
         run: |
           cd build
-          make -j
+          make -j 4
           sudo make install
 
       - name: Cache pgtap
         id: cache-pgtap
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ./pgTapExtension/
           key: ${{ runner.os }}-pgtap-${{ hashFiles('**/packages*.txt') }}
 
       - name: Get pgtap repo
         if: steps.cache-pgtap.outputs.cache-hit != 'true'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           repository: theory/pgtap
           path: ./pgTapExtension/
@@ -86,7 +106,18 @@ jobs:
           cd tools/testers
           tar -xf matrix_new_values.tar.gz
 
-      - name: Test
+      - name: Create superuser
+        run: |
+          export PATH=/usr/local/Cellar/perl/$(perl -e 'print substr($^V, 1)')/bin:$PATH
+          pg_ctl -D /usr/local/var/postgres start          
+          export PG_RUNNER_USER=`whoami`
+          sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS \"${PG_RUNNER_USER}\";"
+          sudo -u postgres psql -p ${PGPORT} -c "DROP ROLE IF EXISTS \"${PG_RUNNER_USER}\";"
+          sudo -u postgres psql -p ${PGPORT} -c "CREATE ROLE \"${PG_RUNNER_USER}\" WITH LOGIN SUPERUSER;"
+          sudo -u postgres psql -p ${PGPORT} -c "CREATE DATABASE \"${PG_RUNNER_USER}\";"
+          echo "PG_RUNNER_USER=${PG_RUNNER_USER}" >> $GITHUB_ENV
+
+      - name: Test documentation queries are up to date
         run: |
           export PATH=/usr/local/Cellar/perl/$(perl -e 'print substr($^V, 1)')/bin:$PATH
           pg_ctl -D /usr/local/var/postgres start
