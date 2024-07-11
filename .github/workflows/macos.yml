@@ -51,7 +51,7 @@ jobs:
 
           # Source: https://github.com/VROOM-Project/vroom/issues/378
           sudo ln -s /usr/local/opt/openssl/include/openssl /usr/local/include
-          sudo ls /usr/local
+          sudo mkdir /usr/local/lib
           echo 'here 2'
           sudo ln -s /usr/local/opt/openssl/lib/libssl.dylib /usr/local/lib/
           sudo ln -s /usr/local/opt/openssl/lib/libcrypto.dylib /usr/local/lib/
