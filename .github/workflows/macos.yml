@@ -27,7 +27,7 @@ jobs:
 
       - name: install dependencies
         run: |
-          brew install postgis boost pgrouting asio glpk
+          brew install postgis boost pgrouting asio glpk gcc
 
       - name: set environment
         run: |
@@ -80,8 +80,6 @@ jobs:
           perl -pi -e 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
           USE_ROUTING=false make shared
 
-          echo 'here 1'
-
           # Source: https://github.com/VROOM-Project/vroom/issues/378
           #sudo ln -s /usr/local/opt/openssl/include/openssl /usr/local/include
           #sudo mkdir /usr/local/lib
@@ -101,15 +99,11 @@ jobs:
           cd ..
           echo "VROOM_INSTALL_PATH=$(pwd)" >> $GITHUB_ENV
 
-      - name: Configure vrpRouting
+      - name: Build & install vrpRouting
         run: |
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release -DWITH_DOC=OFF -DVROOM_INSTALL_PATH=${VROOM_INSTALL_PATH} ..
-
-      - name: Build vrpRouting
-        run: |
-          cd build
           make -j 4
           sudo make install
 

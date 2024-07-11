@@ -100,11 +100,12 @@ jobs:
         run: |
           cd ~/vroom-${{ env.VROOMVER }}/src
           perl -pi -e 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
+          perl -pi -e 's/-Wextra -Wpedantic -Wall//' makefile
 
           # Using "shared" target for creating Position Independent Code, disabling use of routing
           USE_ROUTING=false make shared
 
-      - name: Configure for gcc
+      - name: Build and Install vrprouting
         run: |
           export PATH=/usr/lib/postgresql/${{ matrix.psql }}/bin:$PATH
           mkdir build
@@ -112,10 +113,6 @@ jobs:
           PGBIN="/usr/lib/postgresql/${{ matrix.psql }}/bin"
           PGINC="/usr/include/postgresql/${{ matrix.psql }}/server"
           cmake -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} -DCMAKE_BUILD_TYPE=${{ matrix.release }} -DWITH_DOC=OFF -DVROOM_INSTALL_PATH=$HOME/vroom-${{ env.VROOMVER }} ..
-
-      - name: Build
-        run: |
-          cd build
           make -j 4
           sudo make install
 
