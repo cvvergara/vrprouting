@@ -170,16 +170,10 @@ jobs:
         run: |
           sudo service postgresql start
           psql -c "CREATE DATABASE ___vrp___test___;"
-          TESTDIRS="version"
+          TESTDIRS="version vroom"
           for d in ${TESTDIRS}
           do
             ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}" -doc -alg "${d}"
-          done
-
-          TESTDIRS="vroom"
-          for d in ${TESTDIRS}
-          do
-            ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}" -alg "${d}"
           done
 
           ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}"
