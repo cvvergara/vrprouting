@@ -27,7 +27,7 @@ jobs:
 
       - name: install dependencies
         run: |
-          brew install postgis boost pgrouting openssl asio glpk
+          brew install postgis boost pgrouting openssl asio glpk vroom@1.12.0
 
 
       - name: Cache VROOM
