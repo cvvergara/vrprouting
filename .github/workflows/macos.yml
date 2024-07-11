@@ -81,7 +81,7 @@ jobs:
 
       - name: Get pgtap repo
         if: steps.cache-pgtap.outputs.cache-hit != 'true'
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         with:
           repository: theory/pgtap
           path: ./pgTapExtension/
@@ -109,7 +109,7 @@ jobs:
       - name: Create superuser
         run: |
           export PATH=/usr/local/Cellar/perl/$(perl -e 'print substr($^V, 1)')/bin:$PATH
-          pg_ctl -D /usr/local/var/postgres start          
+          pg_ctl -D /usr/local/var/postgres start
           export PG_RUNNER_USER=`whoami`
           sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS \"${PG_RUNNER_USER}\";"
           sudo -u postgres psql -p ${PGPORT} -c "DROP ROLE IF EXISTS \"${PG_RUNNER_USER}\";"
