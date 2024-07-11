@@ -47,16 +47,23 @@ jobs:
           tar -zvxf v1.12.0.tar.gz
           cd vroom-1.12.0/src
 
+          echo 'here 1'
+
           # Source: https://github.com/VROOM-Project/vroom/issues/378
           ln -s /usr/local/opt/openssl/include/openssl /usr/local/include
+          echo 'here 2'
           ln -s /usr/local/opt/openssl/lib/libssl.dylib /usr/local/lib/
           ln -s /usr/local/opt/openssl/lib/libcrypto.dylib /usr/local/lib/
+          echo 'here3'
 
           # Create object file with position independent code using -fPIC flag
           sed -i '' -e 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
+          echo 'here4'
           sed -i '' -e 's/\/usr\/include\/glpk.h/\/usr\/local\/opt\/glpk\/include\/glpk.h/' makefile
+          echo 'here5'
 
           make
+          echo 'here6'
           cd ..
           echo "VROOM_INSTALL_PATH=$(pwd)" >> $GITHUB_ENV
 
