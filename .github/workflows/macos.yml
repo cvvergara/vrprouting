@@ -43,10 +43,18 @@ jobs:
             ~/vroom-${{ env.VROOMVER }}
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ env.VROOMVER }}
 
+      - name: Checkout VROOM
+        if: steps.cache-vroom.outputs.cache-hit != 'true'
+        uses: actions/checkout@v4
+        with:
+          path: vroom-${{ env.VROOMVER }}
+          repository: VROOM-Project/vroom
+          ref: "v${{ env.VROOMVER }}"
+
       - name: Build VROOM
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
-          git clone --depth 1 --branch "${{ env.VROOMVER }}" https://github.com/VROOM-Project/vroom "./vroom-${{ env.VROOMVER }}"
+          git clone --depth 1 --branch "v${{ env.VROOMVER }}" https://github.com/VROOM-Project/vroom "./vroom-v${{ env.VROOMVER }}"
           cd ${{ env.VROOMVER }}.0/src
           git submodule update --init
           cd src/
