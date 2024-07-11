@@ -79,7 +79,7 @@ jobs:
             $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 
       - name: Install python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
@@ -175,5 +175,6 @@ jobs:
           do
             ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}" -doc -alg "${d}"
           done
+          git diff
 
           ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}"
