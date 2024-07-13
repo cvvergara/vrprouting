@@ -3,6 +3,13 @@ name: Build for macOS
 on:
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 # TODO: Fix the macOS build for compiling and building VROOM with vrprouting.
 jobs:
   build:
@@ -10,58 +17,78 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: install deps
+      - name: install dependencies
         run: |
-          brew install postgis boost pgrouting
+          brew install postgis boost pgrouting asio glpk rapidjson
+          echo "here1"
+          ls /usr/local/opt/*
+          echo "here2"
+          ls /usr/local
 
-      - name: Install VROOM dependencies
+      - name: set environment
+        if: runner.os == 'macOs'
+        shell: bash
         run: |
-          brew install openssl asio glpk
+          echo "CC=gcc-12" >> $GITHUB_ENV;
+          echo "CXX=g++-12" >> $GITHUB_ENV;
+          echo "VROOMVER=1.12.0" >> $GITHUB_ENV
 
-      - name: Build VROOM v1.12.0
+      - name: Cache VROOM
+        id: cache-vroom
+        uses: actions/cache@v4
+        env:
+          cache-name: vroom
+        with:
+          path: "vroom-${{ env.VROOMVER }}"
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ env.VROOMVER }}
+
+      - name: Checkout VROOM
+        if: steps.cache-vroom.outputs.cache-hit != 'true'
+        uses: actions/checkout@v4
+        with:
+          path: "vroom-${{ env.VROOMVER }}"
+          repository: VROOM-Project/vroom
+          ref: "v${{ env.VROOMVER }}"
+          submodules: true
+
+      - name: Install VROOM
+        if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
-          wget https://github.com/VROOM-Project/vroom/archive/refs/tags/v1.12.0.tar.gz
-          tar -zvxf v1.12.0.tar.gz
-          cd vroom-1.12.0/src
+          cd "vroom-${{ env.VROOMVER }}/src"
+          perl -pi -e 's/-Wextra -Wpedantic -Wall//' makefile
+          sed -i '' -e 's/\/usr\/include\/glpk.h/\/usr\/local\/opt\/glpk\/include\/glpk.h/' makefile
+          USE_ROUTING=false make shared
 
           # Source: https://github.com/VROOM-Project/vroom/issues/378
-          ln -s /usr/local/opt/openssl/include/openssl /usr/local/include
-          ln -s /usr/local/opt/openssl/lib/libssl.dylib /usr/local/lib/
-          ln -s /usr/local/opt/openssl/lib/libcrypto.dylib /usr/local/lib/
+          #sudo ln -s /usr/local/opt/openssl/include/openssl /usr/local/include
+          #sudo mkdir /usr/local/lib
+          #echo 'here 2'
+          #sudo ln -s /usr/local/opt/openssl/lib/libssl.dylib /usr/local/lib/
+          #sudo ln -s /usr/local/opt/openssl/lib/libcrypto.dylib /usr/local/lib/
+          #echo 'here3'
 
           # Create object file with position independent code using -fPIC flag
-          sed -i '' -e 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
-          sed -i '' -e 's/\/usr\/include\/glpk.h/\/usr\/local\/opt\/glpk\/include\/glpk.h/' makefile
+          #sed -i '' -e 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
+          #echo 'here4'
+          #echo 'here5'
 
-          make
+          #make
+          #echo 'here6'
           cd ..
           echo "VROOM_INSTALL_PATH=$(pwd)" >> $GITHUB_ENV
 
-      - name: Configure
-        run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Release -DWITH_DOC=OFF -DVROOM_INSTALL_PATH=${VROOM_INSTALL_PATH} ..
-
-      - name: Build
-        run: |
-          cd build
-          make -j
-          sudo make install
-
       - name: Cache pgtap
         id: cache-pgtap
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ./pgTapExtension/
           key: ${{ runner.os }}-pgtap-${{ hashFiles('**/packages*.txt') }}
 
-      - name: Get pgtap repo
+      - name: Checkout pgtap
         if: steps.cache-pgtap.outputs.cache-hit != 'true'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: theory/pgtap
           path: ./pgTapExtension/
@@ -70,23 +97,43 @@ jobs:
         if: steps.cache-pgtap.outputs.cache-hit != 'true'
         run: |
           cd ./pgTapExtension/
-          make -j
+          make -j 4
           sudo make install
           cpan TAP::Parser::SourceHandler::pgTAP
 
-      - name: Install pgTAP
-        if: steps.cache-pgtap.outputs.cache-hit == 'true'
+      - name: Build vrpRouting
         run: |
-          cd ./pgTapExtension/
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release -DWITH_DOC=OFF -DVROOM_INSTALL_PATH=${VROOM_INSTALL_PATH} ..
+          make -j 4
+
+      - name: Install vrpRouting
+        if: false
+        run: |
           sudo make install
-          cpan TAP::Parser::SourceHandler::pgTAP
+
 
       - name: Unpack data
+        if: false
         run: |
           cd tools/testers
           tar -xf matrix_new_values.tar.gz
 
-      - name: Test
+      - name: Create superuser
+        if: false
+        run: |
+          export PATH=/usr/local/Cellar/perl/$(perl -e 'print substr($^V, 1)')/bin:$PATH
+          pg_ctl -D /usr/local/var/postgres start
+          export PG_RUNNER_USER=`whoami`
+          sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS \"${PG_RUNNER_USER}\";"
+          sudo -u postgres psql -p ${PGPORT} -c "DROP ROLE IF EXISTS \"${PG_RUNNER_USER}\";"
+          sudo -u postgres psql -p ${PGPORT} -c "CREATE ROLE \"${PG_RUNNER_USER}\" WITH LOGIN SUPERUSER;"
+          sudo -u postgres psql -p ${PGPORT} -c "CREATE DATABASE \"${PG_RUNNER_USER}\";"
+          echo "PG_RUNNER_USER=${PG_RUNNER_USER}" >> $GITHUB_ENV
+
+      - name: Test documentation queries are up to date
+        if: false
         run: |
           export PATH=/usr/local/Cellar/perl/$(perl -e 'print substr($^V, 1)')/bin:$PATH
           pg_ctl -D /usr/local/var/postgres start
