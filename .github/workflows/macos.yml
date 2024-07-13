@@ -27,7 +27,7 @@ jobs:
 
       - name: install dependencies
         run: |
-          brew install postgis boost pgrouting asio glpk gcc@12
+          brew install postgis boost pgrouting asio glpk
 
       - name: set environment
         if: runner.os == 'macOs'
