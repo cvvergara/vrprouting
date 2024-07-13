@@ -187,11 +187,11 @@ do_pickDeliver(
         for (const auto &v : vehicles) {
             node_ids += v.start_node_id;
             node_ids += v.end_node_id;
-            for (size_t j = 0; j < v.stops_size; ++j) {
-                if (!order_ids.has(v.stops[j])) {
+            for (const auto &s : v.stops) {
+                if (!order_ids.has(s)) {
                     if (!missing) err << "Order in 'stops' information missing";
                     missing = true;
-                    err << "Missing information of order " << v.stops[j] << "\n";
+                    err << "Missing information of order " << s << "\n";
                 }
             }
             if (missing) {
