@@ -61,6 +61,7 @@ jobs:
         run: |
           cd "vroom-${{ env.VROOMVER }}/src"
           perl -pi -e 's/-Wextra -Wpedantic -Wall//' makefile
+          sed -i '' -e 's/\/usr\/include\/glpk.h/\/usr\/local\/opt\/glpk\/include\/glpk.h/' makefile
           USE_ROUTING=false make shared
 
           # Source: https://github.com/VROOM-Project/vroom/issues/378
@@ -74,7 +75,6 @@ jobs:
           # Create object file with position independent code using -fPIC flag
           #sed -i '' -e 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
           #echo 'here4'
-          #sed -i '' -e 's/\/usr\/include\/glpk.h/\/usr\/local\/opt\/glpk\/include\/glpk.h/' makefile
           #echo 'here5'
 
           #make
