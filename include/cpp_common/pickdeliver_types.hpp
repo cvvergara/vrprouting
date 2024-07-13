@@ -126,7 +126,6 @@ end_open_t | End open time
 end_close_t | End close time
 end_service_t | End service time
 stops | Vehicle's stops
-stops_size | Stops size
 */
 class Vehicle_t {
  public:
@@ -135,7 +134,6 @@ class Vehicle_t {
      Speed speed;
      PAmount cant_v;   /** Number of vehicles with same description **/
      std::vector<Id> stops; /** Stops */
-     size_t stops_size; /** Stops size */
 
      Id start_node_id; /** Start node's identifier */
      TTimestamp start_open_t; /** Start open time */
