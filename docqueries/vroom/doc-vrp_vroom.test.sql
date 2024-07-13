@@ -1,4 +1,6 @@
 /* -- q0 */
+SET TIMEZONE TO 'UTC';
+
 ALTER TABLE vroom.jobs ALTER COLUMN service TYPE INTERVAL USING make_interval(secs => service);
 ALTER TABLE vroom.shipments ALTER COLUMN p_service TYPE INTERVAL USING make_interval(secs => p_service);
 ALTER TABLE vroom.shipments ALTER COLUMN d_service TYPE INTERVAL USING make_interval(secs => d_service);
