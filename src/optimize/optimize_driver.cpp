@@ -31,42 +31,46 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "drivers/optimize_driver.h"
 
 #include <set>
-#include <vector>
-#include <algorithm>
-#include <utility>
+#include <sstream>
 #include <string>
-
-#include "c_types/return_types.h"
-
-#include "cpp_common/alloc.hpp"
-#include "cpp_common/interruption.hpp"
-#include "cpp_common/assert.hpp"
-#include "cpp_common/messages.hpp"
-#include "cpp_common/pgdata_getters.hpp"
+#include <vector>
+#include <utility>
+#include <algorithm>
 
 #include "problem/pickDeliver.hpp"
+#include "c_types/return_types.h"
 #include "problem/matrix.hpp"
+
+#include "cpp_common/assert.hpp"
+#include "cpp_common/messages.hpp"
 #include "initialsol/tabu.hpp"
 #include "optimizers/tabu.hpp"
+#include "cpp_common/alloc.hpp"
+#include "cpp_common/interruption.hpp"
+
+#include "cpp_common/pgdata_getters.hpp"
 
 namespace {
 
+using Vehicle_t = vrprouting::Vehicle_t;
+using Orders_t = vrprouting::Orders_t;
+
 /** @brief Executes an optimization with the input data
  *
- *  @param[in] orders  orders to be processed
- *  @param[in] vehicles  vehicles involved with in those orders
+ *  @param[in] orders orders to be processed
+ *  @param[in] vehicles vehicles involved with in those orders
  *  @param[in] new_stops stops that override the original stops.
  *  @param[in] time_matrix The unique time matrix
  *  @param[in] max_cycles number of cycles to perform during the optimization phase
- *  @param[in] execution_date Value used for not moving shipments that are before this date
+ *  @param[in] execution_date Value used for not moving orders that are before this date
  *
  *  @returns (vehicle id, stops vector) pair which hold the the new stops structure
  */
 
 std::vector<Short_vehicle>
 one_processing(
-        const std::vector<vrprouting::Orders_t> &orders,
-        const std::vector<vrprouting::Vehicle_t> &vehicles,
+        const std::vector<Orders_t> &orders,
+        const std::vector<Vehicle_t> &vehicles,
         const std::vector<Short_vehicle> &new_stops,
         const vrprouting::problem::Matrix &time_matrix,
         int max_cycles,
@@ -118,7 +122,7 @@ one_processing(
  *  @returns the set of times where orders open or close
  */
 Identifiers<TTimestamp>
-processing_times_by_shipment(const std::vector<vrprouting::Orders_t> &orders) {
+processing_times_by_shipment(const std::vector<Orders_t> &orders) {
     Identifiers<TTimestamp> processing_times;
     for (const auto &o : orders) {
         processing_times += o.pick_open_t;
@@ -135,7 +139,7 @@ processing_times_by_shipment(const std::vector<vrprouting::Orders_t> &orders) {
  *  @returns the set of times where vehicles are open or close
  */
 Identifiers<TTimestamp>
-processing_times_by_vehicle(const std::vector<vrprouting::Vehicle_t> &vehicles) {
+processing_times_by_vehicle(const std::vector<Vehicle_t> &vehicles) {
     Identifiers<TTimestamp> processing_times;
     for (const auto &v : vehicles) {
         processing_times += v.start_open_t;
@@ -153,13 +157,11 @@ processing_times_by_vehicle(const std::vector<vrprouting::Vehicle_t> &vehicles) 
  *  @returns vector of (vehicle id, stops vector) pairs ascending order of vehicles
  */
 std::vector<Short_vehicle>
-get_initial_stops(const std::vector<vrprouting::Vehicle_t> &vehicles) {
+get_initial_stops(const std::vector<Vehicle_t> &vehicles) {
     std::vector<Short_vehicle> the_stops;
     for (const auto &v : vehicles) {
         the_stops.push_back({v.id, v.stops});
     }
-    std::sort(the_stops.begin(), the_stops.end(), []
-            (const Short_vehicle &lhs, const Short_vehicle &rhs) {return lhs.id < rhs.id;});
     return the_stops;
 }
 
@@ -189,17 +191,17 @@ update_stops(
  *  @param[in] orders  orders to be processed
  *  @param[in] vehicles  vehicles involved with in those orders
  *  @param[in] time_matrix The unique time matrix
- *  @param [in] max_cycles         number of cycles to perform during the optimization phase
- *  @param [in] execution_date     Value used for not moving shipments that are before this date
- *  @param [in] subdivide_by_vehicle When true: incremental optimization based on vehicles. otherwise by orders
- *  @param [in,out] log            log of function
+ *  @param[in] max_cycles number of cycles to perform during the optimization phase
+ *  @param[in] execution_date Value used for not moving orders that are before this date
+ *  @param[in] subdivide_by_vehicle When true: incremental optimization based on vehicles. otherwise by orders
+ *  @param[in,out] log log of function
  *
  *  @returns vector<Short_vehicle> stops which hold the the new stops structure
  */
 std::vector<Short_vehicle>
 subdivide_processing(
-        const std::vector<vrprouting::Orders_t> &orders,
-        const std::vector<vrprouting::Vehicle_t> &vehicles,
+        const std::vector<Orders_t> &orders,
+        const std::vector<Vehicle_t> &vehicles,
         const vrprouting::problem::Matrix &time_matrix,
         int max_cycles,
         int64_t execution_date,
@@ -212,7 +214,7 @@ subdivide_processing(
             processing_times_by_vehicle(vehicles)
             : processing_times_by_shipment(orders);
 
-        Identifiers<Id> prev_shipments_in_stops;
+        Identifiers<Id> prev_orders_in_stops;
         /*
          * process active vehicles and orders at time \b t
          */
@@ -220,12 +222,13 @@ subdivide_processing(
             CHECK_FOR_INTERRUPTS();
             /*
              * Get active vehicles at time t
+             * v.open <= t <= v.close
              */
-            std::vector<vrprouting::Vehicle_t> active_vehicles;
-            std::vector<vrprouting::Vehicle_t> inactive_vehicles;
+            std::vector<Vehicle_t> active_vehicles;
+            std::vector<Vehicle_t> inactive_vehicles;
             std::partition_copy(vehicles.begin(), vehicles.end(),
                     std::back_inserter(active_vehicles), std::back_inserter(inactive_vehicles),
-                    [&](const vrprouting::Vehicle_t& v)
+                    [&](const Vehicle_t& v)
                     {return v.start_open_t <= t && t <= v.end_close_t;});
 
 
@@ -237,30 +240,31 @@ subdivide_processing(
                  * So instead of getting the stops from the vehicles
                  * get the stops from the the history of stops
                  */
-                auto stop_it = std::find_if(
+                auto v_to_modify = std::find_if(
                         the_stops.begin(), the_stops.end(), [&]
                         (const Short_vehicle& sv) -> bool {return sv.id == v.id;});
 
-                std::set<Id> stops(stop_it->stops.begin(), stop_it->stops.end());
-                orders_in_active_vehicles += stops;
+                for (const auto &s : v_to_modify->stops) {
+                    orders_in_active_vehicles += s;
+                }
             }
 
             /*
              * Nothing to do:
-             * - no shipments to process
-             * - last optimization had exavtly the same shipments
+             * - no orders to process
+             * - last optimization had exactly the same orders
              */
-            if ((orders_in_active_vehicles.size() == 0)
-                    || (prev_shipments_in_stops == orders_in_active_vehicles)) continue;
+            if (orders_in_active_vehicles.empty()
+                    || (prev_orders_in_stops == orders_in_active_vehicles)) continue;
             log << "\nOptimizing at time: " << t;
 
-            prev_shipments_in_stops = orders_in_active_vehicles;
-            std::vector<vrprouting::Orders_t> active_orders;
-            std::vector<vrprouting::Orders_t> inactive_orders;
+            prev_orders_in_stops = orders_in_active_vehicles;
+            std::vector<Orders_t> active_orders;
+            std::vector<Orders_t> inactive_orders;
 
             std::partition_copy(orders.begin(), orders.end(),
                     std::back_inserter(active_orders), std::back_inserter(inactive_orders),
-                    [&](const vrprouting::Orders_t& o)
+                    [&](const Orders_t& o)
                     {return orders_in_active_vehicles.has(o.id);});
 
             pgassert(active_orders.size() == orders_in_active_vehicles.size());
@@ -289,7 +293,7 @@ subdivide_processing(
  *  @param[in] multipliers_sql  SQL query for the multipliers
  *  @param[in] factor           A global multiplier for the (time) matrix cells
  *  @param[in] max_cycles       number of cycles to perform during the optimization phase
- *  @param[in] execution_date   Value used for not moving shipments that are before this date
+ *  @param[in] execution_date   Value used for not moving orders that are before this date
  *  @param[in] check_triangle_inequality When true tirangle inequality will be checked
  *  @param[in] subdivide        @todo
  *  @param[in] subdivide_by_vehicle @todo
@@ -303,11 +307,11 @@ subdivide_processing(
  *  @param[out] err_msg special message pointer to be returned as ERROR
  *
  * @pre The messages: log_msg, notice_msg, err_msg must be empty (=nullptr)
- * @pre The C arrays: shipments_arr, vehicles_arr, matrix_cells_arr must not be empty
+ * @pre The C arrays: orders_arr, vehicles_arr, matrix_cells_arr must not be empty
  * @pre The C array: return_tuples must be empty
  * @pre Only matrix cells (i, i) can be missing and are considered as 0 (time units)
  *
- * @post The C arrays:  shipments_arr, vehicles_arr, matrix_cells_arr Do not change
+ * @post The C arrays:  orders_arr, vehicles_arr, matrix_cells_arr Do not change
  * @post The C array: return_tuples contains the result for the problem given
  * @post The return_tuples array size is return_count
  * @post err_msg is empty if no throw from the process is catched
@@ -364,6 +368,8 @@ do_optimize(
         char **log_msg,
         char **notice_msg,
         char **err_msg) {
+    using Vehicle_t = vrprouting::Vehicle_t;
+    using Orders_t = vrprouting::Orders_t;
     using vrprouting::msg;
     using vrprouting::alloc;
     using vrprouting::pgget::pickdeliver::get_matrix;
@@ -389,7 +395,7 @@ do_optimize(
         hint = orders_sql;
         auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);
         if (orders.size() == 0) {
-            *notice_msg = msg("Insufficient data found on inner query");
+            *notice_msg = msg("Insufficient data found on 'orders' inner query");
             *log_msg = hint? msg(hint) : nullptr;
             return;
         }
@@ -397,7 +403,7 @@ do_optimize(
         hint = vehicles_sql;
         auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps, with_stops);
         if (vehicles.size() == 0) {
-            *notice_msg = msg("Insufficient data found on inner query");
+            *notice_msg = msg("Insufficient data found on 'vehicles' inner query");
             *log_msg = hint? msg(hint) : nullptr;
             return;
         }
@@ -406,7 +412,7 @@ do_optimize(
         auto costs = get_matrix(std::string(matrix_sql), use_timestamps);
 
         if (costs.size() == 0) {
-            *notice_msg = msg("Insufficient data found on inner query");
+            *notice_msg = msg("Insufficient data found on 'matrix' inner query");
             *log_msg = hint? msg(hint) : nullptr;
             return;
         }
@@ -416,6 +422,8 @@ do_optimize(
         hint = nullptr;
 
         Identifiers<Id> node_ids;
+        Identifiers<Id> orders_in_stops;
+        Identifiers<Id> orders_found;
 
         /*
          * Remove vehicles not going to be optimized and sort remaining vehicles
@@ -424,47 +432,45 @@ do_optimize(
          *   - data comes from query that could possibly give a duplicate
          * 3. remove vehicles that closes(end) before the execution time
          */
+        log << "Total vehicles found " << vehicles.size() << "\n";
         std::sort(vehicles.begin(), vehicles.end(),
-                [](const vrprouting::Vehicle_t& lhs, const vrprouting::Vehicle_t& rhs){return lhs.id < rhs.id;});
+                [](const Vehicle_t& lhs, const Vehicle_t& rhs){return lhs.id < rhs.id;});
 
         vehicles.erase(
                     std::unique(
                         vehicles.begin(), vehicles.end(),
-                        [&](const vrprouting::Vehicle_t& lhs, const vrprouting::Vehicle_t& rhs)
-                        {return lhs.id == rhs.id;}),
-                    vehicles.end());
+                        [](const Vehicle_t& lhs, const Vehicle_t& rhs)
+                        {return lhs.id == rhs.id;}), vehicles.end());
 
         vehicles.erase(
                     std::remove_if(
                         vehicles.begin(), vehicles.end(),
-                        [&](const vrprouting::Vehicle_t& v){return v.end_close_t < execution_date;}),
+                        [&](const Vehicle_t& v){return v.end_close_t < execution_date;}),
                     vehicles.end());
 
 
-        /*
-         * Remove shipments not involved in optimization
-         * 1. get the shipments on the stops of the vehicles
-         *   - getting the node_ids in the same cycle
-         * 2. Remove duplicates
-         * 2. Remove shipments not on the stops
-         */
-        Identifiers<Id> shipments_in_stops;
         for (const auto &v : vehicles) {
             node_ids += v.start_node_id;
             node_ids += v.end_node_id;
-            for (size_t j = 0; j < v.stops_size; ++j) {
-                shipments_in_stops += v.stops[j];
+            for (const auto s : v.stops) {
+                orders_in_stops += s;
             }
         }
 
-
+        /*
+         * Remove orders not involved in optimization
+         * 1. get the orders on the stops of the vehicles
+         *   - getting the node_ids in the same cycle
+         * 2. Remove duplicates
+         * 2. Remove orders not on the stops
+         */
         std::sort(orders.begin(), orders.end(),
-                [](const vrprouting::Orders_t& lhs, const vrprouting::Orders_t& rhs){return lhs.id < rhs.id;});
+                [](const Orders_t& lhs, const Orders_t& rhs){return lhs.id < rhs.id;});
 
         orders.erase(
                     std::unique(
                         orders.begin(), orders.end(),
-                        [&](const vrprouting::Orders_t& lhs, const vrprouting::Orders_t& rhs)
+                        [&](const Orders_t& lhs, const Orders_t& rhs)
                         {return lhs.id == rhs.id;}),
                     orders.end());
 
@@ -473,31 +479,32 @@ do_optimize(
         orders.erase(
                     std::remove_if(
                         orders.begin(), orders.end(),
-                        [&](const vrprouting::Orders_t& s){return !shipments_in_stops.has(s.id);}),
+                        [&](const Orders_t& s){return !orders_in_stops.has(s.id);}),
                     orders.end());
 
 
-        /*
-         * Verify shipments complete data
-         */
-        if (shipments_in_stops.size() != orders.size()) {
-            for (const auto &o : orders) {
-                shipments_in_stops -= o.id;
-            }
-            std::ostringstream log1;
-            err << "Missing shipments for processing ";
-            log1 << "Shipments missing: " << shipments_in_stops << log.str();
-            *log_msg = msg(log1.str());
-            *err_msg = msg(err.str());
-            return;
-        }
+
         /*
          * Finish getting the node ids involved on the process
          */
         for (const auto &o : orders) {
+            orders_found += o.id;
             node_ids += o.pick_node_id;
             node_ids += o.deliver_node_id;
         }
+
+        /*
+         * Verify orders complete data
+         */
+        if (!(orders_in_stops - orders_found).empty()) {
+            err << "Missing orders for processing";
+            log << "Shipments missing: " << (orders_in_stops - orders_found) << log.str();
+            *log_msg = msg(log.str());
+            *err_msg = msg(err.str());
+            return;
+        }
+
+
 
         /*
          * Dealing with time matrix:
@@ -530,16 +537,9 @@ do_optimize(
          * get the solution
          */
         auto solution = subdivide?
-            subdivide_processing(
-                    orders, vehicles,
-                    time_matrix,
-                    max_cycles, execution_date,
-                    subdivide_by_vehicle,
-                    log) :
-            one_processing(
-                    orders, vehicles, {},
-                    time_matrix,
-                    max_cycles, execution_date);
+            subdivide_processing(orders, vehicles, time_matrix, max_cycles, execution_date, subdivide_by_vehicle, log)
+            :
+            one_processing(orders, vehicles, {}, time_matrix, max_cycles, execution_date);
 
         /*
          * Prepare results
