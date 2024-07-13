@@ -29,11 +29,9 @@ jobs:
         run: |
           brew install postgis boost pgrouting asio glpk rapidjson
           echo "here1"
-          ls /usr/local/opt/
+          ls /usr/local/opt/*
           echo "here2"
           ls /usr/local
-          echo "here3"
-          ls /usr/include
 
       - name: set environment
         if: runner.os == 'macOs'
