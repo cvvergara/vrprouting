@@ -403,7 +403,6 @@ void Fleet::build_fleet(
             vehicles[0].speed,
             1,
             std::vector<Id>(),
-            0,
 
             /*
              * Start values
@@ -480,7 +479,6 @@ Fleet::build_fleet(
             vehicles[0].speed,
             1,
             std::vector<Id>(),
-            0,
 
             /*
              * Start values
