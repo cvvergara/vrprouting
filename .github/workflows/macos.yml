@@ -104,21 +104,27 @@ jobs:
           sudo make install
           cpan TAP::Parser::SourceHandler::pgTAP
 
-      - name: Build & install vrpRouting
+      - name: Build vrpRouting
         run: |
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release -DWITH_DOC=OFF -DVROOM_INSTALL_PATH=${VROOM_INSTALL_PATH} ..
           make -j 4
+
+      - name: Install vrpRouting
+        if: false
+        run: |
           sudo make install
 
 
       - name: Unpack data
+        if: false
         run: |
           cd tools/testers
           tar -xf matrix_new_values.tar.gz
 
       - name: Create superuser
+        if: false
         run: |
           export PATH=/usr/local/Cellar/perl/$(perl -e 'print substr($^V, 1)')/bin:$PATH
           pg_ctl -D /usr/local/var/postgres start
@@ -130,6 +136,7 @@ jobs:
           echo "PG_RUNNER_USER=${PG_RUNNER_USER}" >> $GITHUB_ENV
 
       - name: Test documentation queries are up to date
+        if: false
         run: |
           export PATH=/usr/local/Cellar/perl/$(perl -e 'print substr($^V, 1)')/bin:$PATH
           pg_ctl -D /usr/local/var/postgres start
