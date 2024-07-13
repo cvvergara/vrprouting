@@ -123,58 +123,78 @@ void vrp_do_vroom(
     pgassert(!(*return_tuples));
     pgassert(!(*return_count));
 
-    hint = vehicles_sql;
-    auto vehicles = vehicles_sql? get_vehicles(std::string(vehicles_sql), use_timestamps)
-        : std::vector<vrprouting::Vroom_vehicle_t>();
-
-    if (vehicles.size() == 0) {
-        *notice_msg = msg("Insufficient data found on vehicles inner query");
-        *log_msg = msg(matrix_sql);
-        return;
-    }
-
-    hint = breaks_sql;
-    auto breaks = breaks_sql? get_breaks(std::string(breaks_sql), use_timestamps)
-        : std::vector<vrprouting::Vroom_break_t>();
-
-    hint = breaks_tws_sql;
-    auto breaks_tw = breaks_tws_sql? get_timewindows(std::string(breaks_tws_sql), use_timestamps, false)
-        : std::vector<vrprouting::Vroom_time_window_t>();
-
     hint = jobs_sql;
     auto jobs  = jobs_sql? get_jobs(std::string(jobs_sql), use_timestamps)
         : std::vector<vrprouting::Vroom_job_t>();
-
-    hint = jobs_tws_sql;
-    auto jobs_tw  = jobs_tws_sql? get_timewindows(std::string(jobs_tws_sql), use_timestamps, false)
-        : std::vector<vrprouting::Vroom_time_window_t>();
 
     hint = shipments_sql;
     auto shipments  = shipments_sql? get_shipments(std::string(shipments_sql), use_timestamps)
         : std::vector<vrprouting::Vroom_shipment_t>();
 
+    if (jobs.empty() && shipments.empty()) {
+        if (fn_used == 0) {
+            if (!shipments_sql || !jobs_sql) {
+                *notice_msg = msg("Jobs SQL and/or Shipments SQL query are NULL");
+                return;
+            }
+            *notice_msg = msg("Insufficient data found on Jobs SQL and/or Shipments SQL query.");
+            auto s1 = shipments_sql? std::string(shipments_sql) : "";
+            auto s2 = jobs_sql? std::string(jobs_sql) : "";
+            s1 = s1 + " " + s2;
+            *log_msg = msg(s1);
+        } else if (fn_used == 1) {
+            *notice_msg = jobs_sql?
+                msg("Insufficient data found on Jobs SQL query.")
+                : msg("Jobs SQL query not found");
+            *log_msg = jobs_sql? msg(std::string(jobs_sql)) : nullptr;
+        } else if (fn_used == 2) {
+            *notice_msg = shipments_sql?
+                msg("Insufficient data found on Shipments SQL query.")
+                : msg("Jobs SQL query not found");
+            *log_msg = shipments_sql? msg(std::string(shipments_sql)) : nullptr;
+        }
+        return;
+    }
+
+    hint = jobs_tws_sql;
+    auto jobs_tw  = jobs_tws_sql? get_timewindows(std::string(jobs_tws_sql), use_timestamps, false)
+        : std::vector<vrprouting::Vroom_time_window_t>();
+
     hint = shipments_tws_sql;
     auto shipments_tw  = shipments_tws_sql? get_timewindows(std::string(shipments_tws_sql), use_timestamps, true)
         : std::vector<vrprouting::Vroom_time_window_t>();
 
-    hint = matrix_sql;
-    auto costs = get_matrix(std::string(matrix_sql), use_timestamps);
+    hint = vehicles_sql;
+    auto vehicles = vehicles_sql? get_vehicles(std::string(vehicles_sql), use_timestamps)
+        : std::vector<vrprouting::Vroom_vehicle_t>();
 
-    if (costs.size() == 0) {
-        *notice_msg = msg("Insufficient data found on inner query");
-        *log_msg = msg(matrix_sql);
+    if (vehicles.size() == 0) {
+        *notice_msg = vehicles_sql?
+            msg("Insufficient data found on Vehicles SQL query.")
+                : msg("Vehicles SQL query not found");
+            *log_msg = vehicles_sql? msg(std::string(vehicles_sql)) : nullptr;
         return;
     }
 
-    if ((fn_used == 0 || fn_used == 1) && jobs.empty()) {
-            *notice_msg = msg("Insufficient data found on inner query");
-            *log_msg = msg(jobs_sql);
-            return;
-    } else if ((fn_used == 0 || fn_used == 2) && shipments.empty()) {
-            *notice_msg = msg("Insufficient data found on inner query");
-            *log_msg = msg("shipments_sql");
-            return;
+    hint = breaks_sql;
+    auto breaks = breaks_sql? get_breaks(std::string(breaks_sql), use_timestamps)
+     : std::vector<vrprouting::Vroom_break_t>();
+
+    hint = breaks_tws_sql;
+    auto breaks_tw = breaks_tws_sql? get_timewindows(std::string(breaks_tws_sql), use_timestamps, false)
+        : std::vector<vrprouting::Vroom_time_window_t>();
+
+    hint = matrix_sql;
+    auto costs = matrix_sql? get_matrix(std::string(matrix_sql), use_timestamps)
+        : std::vector<vrprouting::Vroom_matrix_t>();
+
+    if (costs.size() == 0) {
+        *notice_msg = matrix_sql?  msg("Insufficient data found on Matrix SQL query.")
+                : msg("Matrix SQL query not found");
+        *log_msg = matrix_sql? msg(std::string(matrix_sql)) : nullptr;
+        return;
     }
+
 
     auto start_time = std::chrono::high_resolution_clock::now();
 
