@@ -25,15 +25,6 @@ DIR=$(git rev-parse --show-toplevel)
 
 pushd "${DIR}" > /dev/null || exit 1
 
-mkdir -p build
-pushd build > /dev/null || exit 1
-cmake -DWITH_DOC=ON -DCMAKE_BUILD_TYPE=Release -DLOCALE=ON -DVROOM_INSTALL_PATH="$1" ..
-
-make locale
-popd > /dev/null || exit 1
-
-echo "Processing the locale"
-
 # List all the files that needs to be committed in build/doc/locale_changes.txt
 awk '/^Update|^Create/{print $2}' build/doc/locale_changes.txt > build/doc/locale_changes_po.txt # .po files
 cp build/doc/locale_changes_po.txt build/doc/locale_changes_po_pot.txt
