@@ -1,38 +1,46 @@
 name: Build for Ubuntu
 
-on:
-  push:
-    branches-ignore:
-      - 'translations_*'
-    tags: []
-  pull_request:
-    paths-ignore:
-      - '**.po'
+# manually triggered workflow
+# - 5 * 2 * 2 = 20 jobs are triggered
+# - So many jobs take too much time
+# When this file changes
 
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/ubuntu.yml'
+
+    branches-ignore:
+      - 'gh-pages'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   build:
-    name: Build
+    name: Ubuntu psql
     runs-on: ${{ matrix.os }}
 
     strategy:
         fail-fast: false
         matrix:
-          psql: [12, 13, 14]
-          postgis: [2.5,3]
+          psql: [12,13,14,15]
+          postgis: [3]
           release: [Debug, Release]
-          os: [ubuntu-latest]
-          exclude:
-            - postgis: 2.5
-              psql: 14
+          os: [ubuntu-latest, ubuntu-24.04, ubuntu-22.04]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: get postgres version
         run: |
           sudo service postgresql start
-          pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d \()')
+          pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
           echo "PGVER=${pgver}" >> $GITHUB_ENV
           PGP=5433
           if [ "${{ matrix.psql }}" == "${pgver}" ]; then PGP=5432; fi
@@ -60,7 +68,7 @@ jobs:
             postgresql-server-dev-${{ matrix.psql }} \
             postgresql-plpython3-${{ matrix.psql }}
 
-      - name: Install Google OR-Tools dependencies 
+      - name: Install Google OR-Tools dependencies
         run: |
           sudo pip install --root=/  ortools
 
@@ -70,7 +78,7 @@ jobs:
 
       - name: Cache VROOM
         id: cache-vroom
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         env:
           cache-name: vroom
         with:
@@ -78,29 +86,33 @@ jobs:
             ~/vroom-${{ env.VROOMVER }}
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ env.VROOMVER }}
 
+      - name: Checkout VROOM
+        if: steps.cache-vroom.outputs.cache-hit != 'true'
+        uses: actions/checkout@v4
+        with:
+          path: "vroom-${{ env.VROOMVER }}"
+          repository: VROOM-Project/vroom
+          ref: "v${{ env.VROOMVER }}"
+          submodules: true
+
       - name: Build VROOM
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
-          git clone --depth 1 --branch v${{ env.VROOMVER }} https://github.com/VROOM-Project/vroom ~/vroom-${{ env.VROOMVER }}
-
-          # init the required submodules
-          cd ~/vroom-${{ env.VROOMVER }}/
-          git submodule update --init
+          cd ~/vroom-${{ env.VROOMVER }}/src
+          perl -pi -e 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
+          perl -pi -e 's/-Wextra -Wpedantic -Wall//' makefile
 
           # Using "shared" target for creating Position Independent Code, disabling use of routing
-          cd ~/vroom-${{ env.VROOMVER }}/src
           USE_ROUTING=false make shared
 
-      - name: Configure
+      - name: Build and Install vrprouting
         run: |
           export PATH=/usr/lib/postgresql/${{ matrix.psql }}/bin:$PATH
           mkdir build
           cd build
-          cmake -DPOSTGRESQL_VERSION=${{ matrix.psql }} -DCMAKE_BUILD_TYPE=${{ matrix.release }} -DWITH_DOC=OFF -DVROOM_INSTALL_PATH=$HOME/vroom-${{ env.VROOMVER }} ..
-
-      - name: Build
-        run: |
-          cd build
+          PGBIN="/usr/lib/postgresql/${{ matrix.psql }}/bin"
+          PGINC="/usr/include/postgresql/${{ matrix.psql }}/server"
+          cmake -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} -DCMAKE_BUILD_TYPE=${{ matrix.release }} -DWITH_DOC=OFF -DVROOM_INSTALL_PATH=$HOME/vroom-${{ env.VROOMVER }} ..
           make -j 4
           sudo make install
 
@@ -112,7 +124,12 @@ jobs:
       - name: pgTap test
         run: |
           sudo service postgresql start
-          sudo -u postgres createdb -p ${PGPORT}  ___vrp___test___
-          cd tools/testers
-          sudo -u postgres psql -p "${PGPORT}" -U postgres -d ___vrp___test___ -X -q -v ON_ERROR_STOP=1 --pset pager=off -f setup_db.sql
-          sudo -u postgres pg_prove --failures --quiet --recurse --ext .sql -p "${PGPORT}" -d ___vrp___test___ -U postgres ../../pgtap/
+          export PG_RUNNER_USER=`whoami`
+          sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS ___vrp___test___;"
+          sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS \"${PG_RUNNER_USER}\";"
+          sudo -u postgres psql -p ${PGPORT} -c "DROP ROLE IF EXISTS \"${PG_RUNNER_USER}\";"
+          sudo -u postgres psql -p ${PGPORT} -c "CREATE ROLE \"${PG_RUNNER_USER}\" WITH LOGIN SUPERUSER;"
+          sudo -u postgres psql -p ${PGPORT} -c "CREATE DATABASE \"${PG_RUNNER_USER}\";"
+          psql -c "CREATE DATABASE ___vrp___test___;"
+          bash ./tools/testers/pg_prove_tests.sh -U ${PG_RUNNER_USER} -p ${PGPORT} -d ___vrp___test___
+          psql -c "DROP DATABASE IF EXISTS ___vrp___test___;"
