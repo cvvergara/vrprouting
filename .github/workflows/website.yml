@@ -115,7 +115,7 @@ jobs:
 
 
       - name: Update Users Documentation on develop
-        if: ${{ github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'}}
+        if: ${{ github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/CI-testing'}}
         run: |
           git checkout origin/gh-pages
           git checkout -b gh-pages
