@@ -120,6 +120,7 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release -DWITH_DOC=ON -DLOCALE=ON -DVROOM_INSTALL_PATH=$HOME/vroom-${{ env.VROOMVER }} ..
           make locale
+          cd ..
           bash .github/scripts/update_locale.sh
 
           # Add the files, commit and push
