@@ -6,16 +6,11 @@
 DIR=$(git rev-parse --show-toplevel)
 
 pushd "${DIR}" > /dev/null || exit
-code="0"
+code=0
 
 for f in $(git ls-files | grep '\.sh')
 do
-  if [ "${f}" = "tools/scripts/code_checker.sh" ] ; then
-    result=$(shellcheck --exclude=SC2086 "${f}")
-  else
-    result=$(shellcheck "${f}")
-  fi
-
+  result=$(shellcheck "${f}")
 
   if [[ $result ]]; then
     echo "$result"
@@ -23,5 +18,5 @@ do
     code=1
   fi
 done
-popd || exit 1
+popd > /dev/null || exit 1
 exit $code
