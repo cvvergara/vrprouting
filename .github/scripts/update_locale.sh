@@ -27,7 +27,7 @@ pushd "${DIR}" > /dev/null || exit 1
 
 mkdir -p build
 pushd build > /dev/null || exit 1
-cmake -DWITH_DOC=ON -DCMAKE_BUILD_TYPE=Release -DLOCALE=ON ..
+cmake -DWITH_DOC=ON -DCMAKE_BUILD_TYPE=Release -DLOCALE=ON -DVROOM_INSTALL_PATH="$1" ..
 
 make locale
 popd > /dev/null || exit 1
