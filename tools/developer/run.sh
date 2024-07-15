@@ -13,7 +13,14 @@ pushd "${DIR}" > /dev/null || exit 1
 # adjust to your needs
 
 VERSION=$(grep -Po '(?<=project\(VRPROUTING VERSION )[^;]+' CMakeLists.txt)
-echo "pgRouting VERSION ${VERSION}"
+echo "vrpRouting VERSION ${VERSION}"
+
+# VROOM
+#VROOMVER="1.14"
+#VROOMVER="1.13"
+VROOMVER="1.12"
+#VROOMVER="1.11"
+VENV="/home/vicky/pgrouting/vrprouting/env-vrp"
 
 # set up your postgres version, port and compiler (if more than one)
 PGVERSION="15"
@@ -26,18 +33,28 @@ GCC=""
 QUERIES_DIRS=$(ls docqueries -1)
 TAP_DIRS=$(ls pgtap -1)
 
-QUERIES_DIRS=QUERIES_DIRS=$(ls docqueries -1)
-TAP_DIRS=$(ls pgtap -1)
+QUERIES_DIRS="
+"
+
+TAP_DIRS="
+"
 
 function install_vroom {
     cd "${DIR}"
-    rm -rf "./vroom-${VROOMVER}"
-    git clone --depth 1 --branch "${VROOMVER}" https://github.com/VROOM-Project/vroom "./vroom-${VROOMVER}"
-    pushd "./vroom-${VROOMVER}"
+    rm -rf ./vroom-v${VROOMVER}.0
+    git clone --depth 1 --branch "v${VROOMVER}.0" https://github.com/VROOM-Project/vroom "./vroom-v${VROOMVER}.0"
+    pushd "./vroom-v${VROOMVER}.0"
     git submodule update --init
     cd src/
     sed -i 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
     make
+    popd
+}
+
+function install_data {
+    cd "${DIR}"
+    pushd tools/testers
+    tar -xf matrix_new_values.tar.gz
     popd
 }
 
@@ -65,9 +82,15 @@ function set_cmake {
     #cmake  -DWITH_DOC=ON -DBUILD_DOXY=ON ..
 
     #CXX=clang++ CC=clang cmake -DPOSTGRESQL_BIN=${PGBIN} -DCMAKE_BUILD_TYPE=Debug -DVROOM_INSTALL_PATH="${DIR}/vroom-${VROOMVER}" ..
-    CXX=clang++ CC=clang cmake "-DPostgreSQL_INCLUDE_DIR=${PGINC}" -DCMAKE_BUILD_TYPE=Debug  -DVROOM_INSTALL_PATH="${DIR}/vroom-${VROOMVER}" ..
+    #CXX=clang++ CC=clang cmake "-DPOSTGRESQL_BIN=${PGBIN}" "-DPostgreSQL_INCLUDE_DIR=${PGINC}" \
+        #-DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Release \
+        #-DWITH_DOC=ON -DBUILD_DOXY=ON -DVROOM_INSTALL_PATH="${DIR}/vroom-${VROOMVER}" ..
+    cmake "-DPOSTGRESQL_BIN=${PGBIN}" "-DPostgreSQL_INCLUDE_DIR=${PGINC}" \
+        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Release \
+        -DWITH_DOC=ON -DBUILD_DOXY=ON \
+        -DVROOM_INSTALL_PATH="${DIR}/vroom-v${VROOMVER}.0" ..
 
-    #cmake "-DPostgreSQL_INCLUDE_DIR=${PGINC}" -DCMAKE_BUILD_TYPE=Debug -DWITH_DOC=ON -DVROOM_INSTALL_PATH="${DIR}/vroom-${VROOMVER}" ..
+    #cmake "-DPostgreSQL_INCLUDE_DIR=${PGINC}" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DPOSTGRESQL_BIN=${PGBIN} -DCMAKE_BUILD_TYPE=Debug -DWITH_DOC=ON -DVROOM_INSTALL_PATH="${DIR}/vroom-${VROOMVER}" ..
 }
 
 function tap_test {
@@ -75,16 +98,7 @@ function tap_test {
     echo pgTap test all
     echo --------------------------------------------
 
-    PGDATABASE="___vrp___pgtaptest___"
-    dropdb --if-exists -p $PGPORT "$PGDATABASE"
-    createdb  -p $PGPORT "$PGDATABASE"
-    echo "testing on port $PGPORT"
-
-    pushd ./tools/testers/
-    psql -p "$PGPORT" -U vicky -d  "$PGDATABASE" -X  -v ON_ERROR_STOP=1 --pset pager=off -f setup_db.sql
-    popd
-    pg_prove -U vicky --failures --quiet --recurse -p "$PGPORT" -d "$PGDATABASE"  pgtap/
-    #dropdb  -p $PGPORT "$PGDATABASE"
+    bash tools/testers/pg_prove_tests.sh -U vicky -p 5432 -c
 }
 
 function action_tests {
@@ -115,21 +129,28 @@ function set_compiler {
 function build_doc {
     pushd build > /dev/null || exit 1
     #rm -rf doc/*
-    make doc
+    #make doc
     #make linkcheck
-    #rm -rf doxygen/*
-    #make doxy
+    rm -rf doxygen/*
+    make doxy
     popd > /dev/null || exit 1
 }
 
 function build {
     pushd build > /dev/null || exit 1
     set_cmake
-    make -j 16
+    make #-j 16
     #make VERBOSE=1
     sudo make install
     popd > /dev/null || exit 1
 
+}
+
+function check {
+    pushd build > /dev/null || exit 1
+    cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .
+    cppcheck --project=compile_commands.json -q
+    popd > /dev/null || exit 1
 }
 
 function test_compile {
@@ -145,9 +166,9 @@ function test_compile {
     echo --------------------------------------------
     for d in ${QUERIES_DIRS}
     do
-        #tools/testers/doc_queries_generator.pl  -alg "${d}" -documentation  -pgport "${PGPORT}"
-        #tools/testers/doc_queries_generator.pl  -alg "${d}" -debug1  -pgport "${PGPORT}"
-        tools/testers/doc_queries_generator.pl  -alg "${d}" -pgport "${PGPORT}"
+        #tools/testers/doc_queries_generator.pl  -alg "${d}" -doc  -pgport "${PGPORT}" -venv "${VENV}"
+        #tools/testers/doc_queries_generator.pl  -alg "${d}" -debug1  -pgport "${PGPORT}" -venv "${VENV}"
+        tools/testers/doc_queries_generator.pl  -alg "${d}" -pgport "${PGPORT}" -venv "${VENV}"
     done
 
 
@@ -156,13 +177,14 @@ function test_compile {
     echo --------------------------------------------
     for d in ${TAP_DIRS}
     do
-        bash taptest.sh  "${d}" "-p ${PGPORT}"
+        bash taptest.sh  "pgtap/${d}" "-p ${PGPORT}"
     done
 
-    exit 0
     tap_test
+    exit 0
+    tools/testers/doc_queries_generator.pl -pgport "${PGPORT}" -venv "${VENV}"
     build_doc
-    tools/testers/doc_queries_generator.pl -pgport $PGPORT
+    tap_test
 
     action_tests
 }
