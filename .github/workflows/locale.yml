@@ -70,8 +70,8 @@ jobs:
           sudo apt-get install -y \
             libboost-graph-dev \
             postgresql-${PGVER} \
-            postgresql-${PGVER}-postgis-${{{ matrix.postgis }}} \
-            postgresql-${PGVER}-postgis-${{{ matrix.postgis }}}-scripts \
+            postgresql-${PGVER}-postgis-${{ matrix.postgis }} \
+            postgresql-${PGVER}-postgis-${{ matrix.postgis }}-scripts \
             postgresql-server-dev-${PGVER} \
             postgresql-plpython3-${PGVER}
           # vroom dependencies
