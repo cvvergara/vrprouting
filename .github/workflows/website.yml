@@ -2,19 +2,6 @@ name: Update Website
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/website.yml'
-      - 'doc/**'
-      - 'locale/**'
-      - 'CMakeLists.txt'
-    branches:
-      - main
-      - develop
-      - CI-testing
-
-permissions:
-  contents: read
 
 jobs:
   release:
@@ -74,7 +61,7 @@ jobs:
           sudo apt-get install libssl-dev libasio-dev libglpk-dev
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip list
+          pip install sphinx-intl
 
       - name: Cache VROOM
         id: cache-vroom
@@ -99,12 +86,19 @@ jobs:
           cd ~/vroom-${{ env.VROOMVER }}/src
           USE_ROUTING=false make shared
 
-      - name: Configure and build documentation
+      - name: Configure
         run: |
           export PATH=/usr/lib/postgresql/${PGVER}/bin:$PATH
           mkdir build
           cd build
-          cmake -DPOSTGRESQL_VERSION=${PGVER} -DDOC_USE_BOOTSTRAP=ON -DWITH_DOC=ON -DBUILD_DOXY=ON -DCMAKE_BUILD_TYPE=Release -DVROOM_INSTALL_PATH=$HOME/vroom-${{ env.VROOMVER }} ..
+          cmake -DPOSTGRESQL_VERSION=${PGVER} -DDOC_USE_BOOTSTRAP=ON -DWITH_DOC=ON -DBUILD_DOXY=ON -DCMAKE_BUILD_TYPE=Release -DLOCALE=ON -DES=ON -DVROOM_INSTALL_PATH=$HOME/vroom-${{ env.VROOMVER }} ..
+
+      - name: Build
+        run: |
+          cd build
+          if [[ "${{ env.BRANCH }}" == "develop" ]]; then
+            make locale
+          fi
           make doc
           make doxy
 
@@ -113,28 +107,48 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-
-      - name: Update Users Documentation on develop
-        if: ${{ github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/CI-testing'}}
+      - name: Update locale
+        if: github.ref == 'refs/heads/develop'
         run: |
+          # List all the files that needs to be committed in build/doc/locale_changes.txt
+          awk '/^Update|^Create/{print $2}' build/doc/locale_changes.txt > tmp && mv tmp build/doc/locale_changes.txt        # .po files
+          cat build/doc/locale_changes.txt | perl -pe 's/(.*)en\/LC_MESSAGES(.*)/$1pot$2t/' >> build/doc/locale_changes.txt  # .pot files
+          cat build/doc/locale_changes.txt
+          # Remove obsolete entries #~ from .po files
+          tools/transifex/remove_obsolete_entries.sh
+          # Add the files, commit and push
+          for line in `cat build/doc/locale_changes.txt`; do git add "$line"; done
+          git diff --staged --quiet || git commit -m "Update locale: commit ${{ env.GIT_HASH }}"
+          git fetch origin
+          git reset --hard  # Remove the unstaged changes before rebasing
+          git rebase origin/develop
+          git push origin develop
+
+      - name: Update Users Documentation
+        run: |
+          if [[ "${{ env.BRANCH }}" == "main" ]]; then
+            FOLDER_NAME="main"
+          elif [[ "${{ env.BRANCH }}" == "develop" ]]; then
+            FOLDER_NAME="dev"
+          fi
           git checkout origin/gh-pages
           git checkout -b gh-pages
-          DIRECTORY="${PROJECT_VERSION%.*}"
-          rm -rf ${DIRECTORY}
-          cp -r build/doc/html ${DIRECTORY}
-          git add ${DIRECTORY}
-          git diff-index --quiet HEAD || git commit -m "Update users documentation for ${PROJECT_VERSION} for develop branch: commit ${{ env.GIT_HASH }}"
+          rm -rf ${FOLDER_NAME}
+          cp -r build/doc/html ${FOLDER_NAME}
+          git add ${FOLDER_NAME}
+          git diff-index --quiet HEAD || git commit -m "Update users documentation for ${PROJECT_VERSION} (${{ env.BRANCH }}): commit ${{ env.GIT_HASH }}"
           git fetch origin
           git rebase origin/gh-pages
           git push origin gh-pages
           git checkout @{-2}
 
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Update Developers Documentation
-        if: ${{ github.ref == 'refs/heads/main' }}
         run: |
+          if [[ "${{ env.BRANCH }}" == "main" ]]; then
+            FOLDER_NAME="main"
+          elif [[ "${{ env.BRANCH }}" == "develop" ]]; then
+            FOLDER_NAME="dev"
+          fi
           git checkout gh-pages
           rm -rf doxy/${FOLDER_NAME}
           cp -r build/doxygen/html doxy/${FOLDER_NAME}
