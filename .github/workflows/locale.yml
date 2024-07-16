@@ -118,7 +118,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE={{ matrix.release }} -DWITH_DOC=ON -DLOCALE=ON -DVROOM_INSTALL_PATH={{ env.VROOMPATH }} ..
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }} -DWITH_DOC=ON -DLOCALE=ON -DVROOM_INSTALL_PATH=${env.VROOMPATH} ..
           make locale
           cd ..
           bash .github/scripts/update_locale.sh
