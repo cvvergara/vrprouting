@@ -55,6 +55,11 @@ jobs:
           sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ \
             $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 
+      - name: Install python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -68,14 +73,11 @@ jobs:
             postgresql-${{ matrix.psql }}-pgrouting \
             postgresql-server-dev-${{ matrix.psql }} \
             postgresql-plpython3-${{ matrix.psql }}
+          sudo apt-get install libssl-dev libasio-dev libglpk-dev
 
       - name: Install Google OR-Tools dependencies
         run: |
           sudo pip install --root=/  ortools
-
-      - name: Install VROOM dependencies
-        run: |
-          sudo apt-get install libssl-dev libasio-dev libglpk-dev
 
       - name: Cache VROOM
         id: cache-vroom

@@ -107,7 +107,7 @@ jobs:
         run: |
           cd ~/vroom-${{ matrix.vroom }}/src
           USE_ROUTING=false make shared
-          echo "VROOMPATH="~/vroom-${{ matrix.vroom }} >> $GITHUB_ENV
+          echo "VROOMPATH=~/vroom-${{ matrix.vroom }}" >> $GITHUB_ENV
 
       - name: Initialize mandatory git config
         run: |
