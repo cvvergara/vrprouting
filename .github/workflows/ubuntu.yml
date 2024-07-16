@@ -33,7 +33,7 @@ jobs:
           postgis: [3]
           release: [Debug, Release]
           os: [ubuntu-latest, ubuntu-24.04, ubuntu-22.04]
-          vroom: echo [1.12.0]
+          vroom: [1.12.0]
 
     steps:
       - uses: actions/checkout@v4
