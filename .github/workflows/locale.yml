@@ -30,7 +30,7 @@ jobs:
           postgis: [3]
           release: [Release]
           os: [ubuntu-latest]
-          vroom: echo [1.12.0]
+          vroom: [1.12.0]
 
     steps:
       - name: Checkout repository
