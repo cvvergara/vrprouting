@@ -108,24 +108,26 @@ jobs:
           cd vroom-${{ env.vroom }}/src
           USE_ROUTING=false make shared
 
+      - name: Configure
+        run: |
+          VROOM=$(pwd)/vroom-${{ env.vroom }}
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
+              -DWITH_DOC=ON -DLOCALE=ON \
+              -DVROOM_INSTALL_PATH=${VROOM} ..
+
       - name: Initialize mandatory git config
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Configure
-        run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
-              -DWITH_DOC=ON -DLOCALE=ON \
-              -DVROOM_INSTALL_PATH=${GIT_WORKSPACE}/vroom-${{ env.vroom }} ..
-
-      - name: Update locale
+      - name: Build
         run: |
           cd build
           make locale
-          cd ..
+
+      - name: Update locale
           bash .github/scripts/update_locale.sh
 
           # Add the files, commit and push
