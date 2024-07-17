@@ -100,6 +100,7 @@ jobs:
 
       - name: Configure
         run: |
+          VROOM=$(pwd)/vroom-${{ env.vroom }}
           mkdir build
           cd build
           CXX=clang++ CC=clang cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }}  \
