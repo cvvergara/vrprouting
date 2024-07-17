@@ -1,15 +1,14 @@
 name: Check queries
 
-
 # This action runs:
 # - When this file changes
 # - When changes on code (src, include, sql)
 # - When changes on data or testing scripts (tools/testers)
 # - When the way the build changes (CMakeLists.txt)
+# - On request
 #
 # using
-# - the installed version on actions
-# - the latest postgis version
+# - the postgres installed version
 
 on:
   workflow_dispatch:

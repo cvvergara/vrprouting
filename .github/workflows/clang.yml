@@ -1,10 +1,26 @@
 name: Build for Ubuntu with clang
 
+# This action runs:
+# - When this file changes
+# - When changes on code (src, include, sql)
+# - When changes on data or testing scripts (tools/testers)
+# - When the way the build changes (CMakeLists.txt)
+# - On request
+#
+# using
+# - the postgres installed version
+
 on:
   workflow_dispatch:
   push:
     paths:
       - '.github/workflows/clang.yml'
+      - 'src/**'
+      - 'include/**'
+      - 'sql/**'
+      - 'docqueries/**'
+      - 'tools/testers/**'
+      - 'CMakeLists.txt'
 
     branches-ignore:
       - 'gh-pages'
