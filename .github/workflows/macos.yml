@@ -48,8 +48,6 @@ jobs:
       - name: set environment
         shell: bash
         run: |
-          echo "CC ${CC}"
-          echo "CXX ${CXX}"
           echo "CC=gcc-12" >> $GITHUB_ENV;
           echo "CXX=g++-12" >> $GITHUB_ENV;
 
@@ -118,16 +116,17 @@ jobs:
           sudo make install
           cpan TAP::Parser::SourceHandler::pgTAP
 
-      - name: Build vrpRouting
+      - name: Configure
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release -DWITH_DOC=OFF -DVROOM_INSTALL_PATH=${VROOM_INSTALL_PATH} ..
-          make -j 4
+          CXX=clang++ CC=clang cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }}  \
+              -DVROOM_INSTALL_PATH=${VROOM} ..
 
-      - name: Install vrpRouting
-        if: false
+      - name: Build
         run: |
+          cd build
+          make -j 4
           sudo make install
 
 
