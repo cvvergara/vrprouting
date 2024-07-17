@@ -45,9 +45,10 @@ jobs:
           echo "here2"
           ls /usr/local
 
-      - name: set environment
+      - name: Set environment
         shell: bash
         run: |
+          # Building vroom fails with clang
           echo "CC=gcc-12" >> $GITHUB_ENV;
           echo "CXX=g++-12" >> $GITHUB_ENV;
 
@@ -107,10 +108,10 @@ jobs:
               -DVROOM_INSTALL_PATH=${VROOM} ..
 
       - name: Build
-        if: false
         run: |
           cd build
           make -j 4
+          sudo make
           sudo make install
 
       - name: Unpack data
