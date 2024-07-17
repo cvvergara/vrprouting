@@ -90,7 +90,8 @@ jobs:
         env:
           cache-name: vroom
         with:
-          path: vroom-${{ matrix.vroom }}
+          path: |
+            ~/vroom-${{ matrix.vroom }}
           key: ${{ matrix.os }}-${{ env.cache-name }}-${{ matrix.vroom }}
 
       - name: Checkout VROOM
@@ -105,7 +106,6 @@ jobs:
       - name: Build VROOM
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
-          ls
           ls ..
           cd ~/vroom-${{ matrix.vroom }}
           cd src
