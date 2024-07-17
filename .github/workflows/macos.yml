@@ -15,19 +15,19 @@ permissions:
 
 env:
     postgis: 3
-    os: macos-latest
     vroom: 1.12.0
 
 # TODO: Fix the macOS build for compiling and building VROOM with vrprouting.
 jobs:
   build:
     name: Build
-    runs-on: ${{ env.os }}
+    runs-on: ${{ matrix.os }}
 
     strategy:
         fail-fast: false
         matrix:
           release: [Debug, Release]
+          os: [macos-latest]
 
     steps:
       - uses: actions/checkout@v4
@@ -59,7 +59,7 @@ jobs:
           cache-name: vroom
         with:
           path: vroom-${{ env.vroom }}
-          key: ${{ env.os }}-${{ env.cache-name }}-${{ env.vroom }}
+          key: ${{ matrix.os }}-${{ env.cache-name }}-${{ env.vroom }}
 
       - name: Checkout VROOM
         if: steps.cache-vroom.outputs.cache-hit != 'true'
@@ -99,7 +99,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./pgTapExtension/
-          key: ${{ env.os }}-pgtap-${{ hashFiles('**/packages*.txt') }}
+          key: ${{ matrix.os }}-pgtap-${{ hashFiles('**/packages*.txt') }}
 
       - name: Checkout pgtap
         if: steps.cache-pgtap.outputs.cache-hit != 'true'
