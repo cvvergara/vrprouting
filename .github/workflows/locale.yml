@@ -90,15 +90,14 @@ jobs:
         env:
           cache-name: vroom
         with:
-          path: |
-            ~/vroom-${{ matrix.vroom }}
+          path: vroom-${{ matrix.vroom }}
           key: ${{ matrix.os }}-${{ env.cache-name }}-${{ matrix.vroom }}
 
       - name: Checkout VROOM
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         uses: actions/checkout@v4
         with:
-          path: ~/vroom-${{ matrix.vroom }}
+          path: vroom-${{ matrix.vroom }}
           repository: VROOM-Project/vroom
           ref: "v${{ matrix.vroom }}"
           submodules: true
@@ -107,6 +106,7 @@ jobs:
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
           ls ..
+          ls
           cd vroom-${{ matrix.vroom }}
           cd src
           USE_ROUTING=false make shared
