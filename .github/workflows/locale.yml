@@ -105,7 +105,9 @@ jobs:
       - name: Build VROOM
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
-          cd ~/vroom-${{ matrix.vroom }}/src
+          ls
+          cd ~/vroom-${{ matrix.vroom }}
+          cd src
           USE_ROUTING=false make shared
           echo "VROOMPATH=~/vroom-${{ matrix.vroom }}" >> $GITHUB_ENV
 
