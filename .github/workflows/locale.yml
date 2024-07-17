@@ -117,7 +117,8 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ env.release }} -DWITH_DOC=ON -DLOCALE=ON \
+          cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
+              -DWITH_DOC=ON -DLOCALE=ON \
               -DVROOM_INSTALL_PATH=${GIT_WORKSPACE}/vroom-${{ env.vroom }} ..
 
       - name: Update locale
