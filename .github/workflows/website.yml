@@ -89,17 +89,16 @@ jobs:
               -DWITH_DOC=ON -DDOC_USE_BOOTSTRAP=ON - -DBUILD_DOXY=ON \
               -DVROOM_INSTALL_PATH=${VROOM} ..
 
-      - name: Initialize mandatory git config
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
       - name: Build
         run: |
           cd build
           make doc
           make doxy
 
+      - name: Initialize mandatory git config
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Update Users Documentation
         env:
