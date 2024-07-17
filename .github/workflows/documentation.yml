@@ -85,6 +85,7 @@ jobs:
           if git diff --name-only HEAD^ HEAD | grep -q "^locale/${{ matrix.language }}" ; then  echo "PROCESS=true" >> $GITHUB_ENV; echo "CHK_LINK=true" >> $GITHUB_ENV; exit 0; fi
 
       - name: Get postgres version
+        if: env.PROCESS == 'true'
         run: |
           sudo service postgresql start
           pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
