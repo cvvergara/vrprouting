@@ -97,7 +97,7 @@ jobs:
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         uses: actions/checkout@v4
         with:
-          path: "~/vroom-${{ matrix.vroom }}"
+          path: ~/vroom-${{ matrix.vroom }}
           repository: VROOM-Project/vroom
           ref: "v${{ matrix.vroom }}"
           submodules: true
@@ -109,7 +109,7 @@ jobs:
           cd ~/vroom-${{ matrix.vroom }}
           cd src
           USE_ROUTING=false make shared
-          echo "VROOMPATH=~/vroom-${{ matrix.vroom }}" >> $GITHUB_ENV
+          echo "VROOMPATH=${HOME}/vroom-${{ matrix.vroom }}" >> $GITHUB_ENV
 
       - name: Initialize mandatory git config
         run: |
