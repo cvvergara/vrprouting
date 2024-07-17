@@ -48,6 +48,8 @@ jobs:
       - name: set environment
         shell: bash
         run: |
+          echo "CC ${CC}"
+          echo "CXX ${CXX}"
           echo "CC=gcc-12" >> $GITHUB_ENV;
           echo "CXX=g++-12" >> $GITHUB_ENV;
 
