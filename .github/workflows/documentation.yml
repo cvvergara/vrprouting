@@ -69,7 +69,7 @@ jobs:
         id: check_files
         run: |
           # allways processing english, no matter what the change was
-          if [[ "${{ matrix.language }}" == "en" ]]; then echo "PROCESS=true" >> $GITHUB_ENV; exit 0; fi
+          if [[ "${{ matrix.language }}" == "en" ]]; then echo "PROCESS=true" >> $GITHUB_ENV; echo "CHK_LINK=true" >> $GITHUB_ENV; exit 0; fi
 
           if [[ "${{ matrix.language }}" == "zh_Hans" && "${{ github.repository_owner }}" != "pgRouting" ]]; then echo "PROCESS=false" >> $GITHUB_ENV; exit 0; fi
 
