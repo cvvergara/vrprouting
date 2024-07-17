@@ -133,11 +133,9 @@ jobs:
       - name: Configure
         run: |
           export PATH=/usr/lib/postgresql/${PGVER}/bin:$PATH
-          ls
           VROOM=$(pwd)/vroom-${{ env.vroom }}
           mkdir build
           cd build
-          echo "${VROOM}"
           cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
               -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} \
               -DVROOM_INSTALL_PATH=${VROOM} ..
