@@ -1,10 +1,23 @@
 name: Build for Ubuntu
 
+# This action runs:
+# - When this file changes
+# - When changes on code (src, include, sql)
+# - When changes on data or testing scripts (tools/testers)
+# - When the way the build changes (CMakeLists.txt)
+# - On request
+
 on:
   workflow_dispatch:
   push:
     paths:
       - '.github/workflows/ubuntu.yml'
+      - 'src/**'
+      - 'include/**'
+      - 'sql/**'
+      - 'pgtap/**'
+      - 'tools/testers/**'
+      - 'CMakeLists.txt'
 
     branches-ignore:
       - 'gh-pages'
