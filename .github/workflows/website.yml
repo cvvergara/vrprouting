@@ -106,7 +106,7 @@ jobs:
         run: |
           if [[ "${{ env.BRANCH }}" == "main" ]]; then
             FOLDER_NAME="main"
-          elif [[ "${{ env.BRANCH }}" == "develop" ]]; then
+          elif [[ "${{ env.BRANCH }}" == "CI-testing" ]]; then
             FOLDER_NAME="dev"
           fi
           git checkout origin/gh-pages
@@ -126,7 +126,7 @@ jobs:
         run: |
           if [[ "${{ env.BRANCH }}" == "main" ]]; then
             FOLDER_NAME="main"
-          elif [[ "${{ env.BRANCH }}" == "develop" ]]; then
+          elif [[ "${{ env.BRANCH }}" == "CI-testing" ]]; then
             FOLDER_NAME="dev"
           fi
           git checkout gh-pages
