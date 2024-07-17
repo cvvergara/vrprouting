@@ -44,18 +44,18 @@ concurrency:
 permissions:
   contents: read
 
+env:
+    postgis: 3
+    release: Release
+    os: ubuntu-latest
+    vroom: 1.12.0
+
 jobs:
   check-documentation:
     name: documentation
-    runs-on: ${{ matrix.os }}
+    runs-on:  ubuntu-latest
     strategy:
         fail-fast: false
-        matrix:
-          language: [en]
-          postgis: [3]
-          release: [Release]
-          os: [ubuntu-latest]
-          vroom: [1.12.0]
 
     steps:
       - uses: actions/checkout@v4
@@ -128,31 +128,30 @@ jobs:
         env:
           cache-name: vroom
         with:
-          path: vroom-${{ matrix.vroom }}
-          key: ${{ matrix.os }}-${{ env.cache-name }}-${{ matrix.vroom }}
+          path: vroom-${{ env.vroom }}
+          key: ${{ env.os }}-${{ env.cache-name }}-${{ env.vroom }}
 
       - name: Checkout VROOM
         if: env.PROCESS == 'true' && steps.cache-vroom.outputs.cache-hit != 'true'
         uses: actions/checkout@v4
         with:
-          path: vroom-${{ matrix.vroom }}
+          path: vroom-${{ env.vroom }}
           repository: VROOM-Project/vroom
-          ref: "v${{ matrix.vroom }}"
+          ref: "v${{ env.vroom }}"
           submodules: true
 
       - name: Build VROOM
         if: env.PROCESS == 'true' &&  steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
-          cd vroom-${{ matrix.vroom }}/src
+          cd vroom-${{ env.vroom }}/src
           USE_ROUTING=false make shared
-          echo "VROOMPATH=${GIT_WORKSPACE}/vroom-${{ matrix.vroom }}" >> $GITHUB_ENV
 
       - name: Configure
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }} -DWITH_DOC=ON -DLINKCHECK=ON -DBUILD_DOXY=ON \
-             -DVROOM_INSTALL_PATH=${{ env.VROOMPATH }} ..
+          cmake -DCMAKE_BUILD_TYPE=${{ env.release }} -DWITH_DOC=ON -DLINKCHECK=ON -DBUILD_DOXY=ON \
+              -DVROOM_INSTALL_PATH=${GIT_WORKSPACE}/vroom-${{ env.vroom }} ..
 
       - name: Check Documentation
         if: env.PROCESS == 'true'
