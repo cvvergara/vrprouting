@@ -31,7 +31,7 @@ env:
 jobs:
   update-locale:
     name: Update Locale
-    runs-on: ${{ env.os }}
+    runs-on: ubuntu-latest
     strategy:
         fail-fast: false
 
