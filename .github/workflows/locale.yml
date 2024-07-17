@@ -105,12 +105,9 @@ jobs:
       - name: Build VROOM
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
-          ls ..
-          ls
-          cd vroom-${{ matrix.vroom }}
-          cd src
+          cd vroom-${{ matrix.vroom }}/src
           USE_ROUTING=false make shared
-          echo "VROOMPATH=${HOME}/vroom-${{ matrix.vroom }}" >> $GITHUB_ENV
+          echo "VROOMPATH=${GIT_WORKSPACE}/vroom-${{ matrix.vroom }}" >> $GITHUB_ENV
 
       - name: Initialize mandatory git config
         run: |
@@ -121,7 +118,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }} -DWITH_DOC=ON -DLOCALE=ON -DVROOM_INSTALL_PATH=${env.VROOMPATH} ..
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }} -DWITH_DOC=ON -DLOCALE=ON -DVROOM_INSTALL_PATH=${{ env.VROOMPATH }} ..
           make locale
           cd ..
           bash .github/scripts/update_locale.sh
