@@ -107,7 +107,6 @@ jobs:
         run: |
           cd vroom-${{ env.vroom }}/src
           USE_ROUTING=false make shared
-          echo "VROOMPATH=${GIT_WORKSPACE}/vroom-${{ env.vroom }}" >> $GITHUB_ENV
 
       - name: Initialize mandatory git config
         run: |
@@ -119,7 +118,7 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ env.release }} -DWITH_DOC=ON -DLOCALE=ON \
-              -DVROOM_INSTALL_PATH=${{ env.VROOMPATH }} ..
+              -DVROOM_INSTALL_PATH=${GIT_WORKSPACE}/vroom-${{ env.vroom }} ..
 
       - name: Update locale
         run: |
@@ -129,6 +128,6 @@ jobs:
           bash .github/scripts/update_locale.sh
 
           # Add the files, commit and push
-          git diff --staged --quiet || git commit -m "Update locale: commit ${{ env.GIT_HASH }}"
+          git diff --staged --quiet || git commit -m "Update locale: commit for hash ${{ env.GIT_HASH }}"
           git restore .  # Remove the unstaged changes before rebasing
           git push
