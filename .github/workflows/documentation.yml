@@ -147,6 +147,7 @@ jobs:
           USE_ROUTING=false make shared
 
       - name: Configure
+        if: env.PROCESS == 'true'
         run: |
           mkdir build
           cd build
