@@ -10,6 +10,10 @@ on:
   push:
     paths:
       - '.github/workflows/locale.yml'
+      - 'doc/**'
+
+    branches-ignore:
+      - 'gh-pages'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -22,8 +26,6 @@ jobs:
   update-locale:
     name: Update Locale
     runs-on: ${{ matrix.os }}
-    if: ${{ (github.repository_owner == 'pgRouting' && github.ref != 'refs/heads/main') || github.repository_owner != 'pgRouting' }}
-
     strategy:
         fail-fast: false
         matrix:
@@ -33,8 +35,7 @@ jobs:
           vroom: [1.12.0]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -66,12 +67,10 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          # vrp dependencies
+          # vrpRouting dependencies
           sudo apt-get install -y \
             libboost-graph-dev \
             postgresql-${PGVER} \
-            postgresql-${PGVER}-postgis-${{ matrix.postgis }} \
-            postgresql-${PGVER}-postgis-${{ matrix.postgis }}-scripts \
             postgresql-server-dev-${PGVER} \
             postgresql-plpython3-${PGVER}
           # vroom dependencies
@@ -114,11 +113,16 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Update locale
+      - name: Configure
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }} -DWITH_DOC=ON -DLOCALE=ON -DVROOM_INSTALL_PATH=${{ env.VROOMPATH }} ..
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }} -DWITH_DOC=ON -DLOCALE=ON \
+              -DVROOM_INSTALL_PATH=${{ env.VROOMPATH }} ..
+
+      - name: Update locale
+        run: |
+          cd build
           make locale
           cd ..
           bash .github/scripts/update_locale.sh
