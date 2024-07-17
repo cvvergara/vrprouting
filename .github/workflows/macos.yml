@@ -22,7 +22,7 @@ env:
 jobs:
   build:
     name: Build
-    runs-on: macos-latest
+    runs-on: ${{ env.os }}
 
     strategy:
         fail-fast: false
@@ -46,7 +46,6 @@ jobs:
           ls /usr/local
 
       - name: set environment
-        if: false && runner.os == 'macos'
         shell: bash
         run: |
           echo "CC=gcc-12" >> $GITHUB_ENV;
@@ -100,7 +99,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./pgTapExtension/
-          key: ${{ runner.os }}-pgtap-${{ hashFiles('**/packages*.txt') }}
+          key: ${{ env.os }}-pgtap-${{ hashFiles('**/packages*.txt') }}
 
       - name: Checkout pgtap
         if: steps.cache-pgtap.outputs.cache-hit != 'true'

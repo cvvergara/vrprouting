@@ -31,7 +31,6 @@ permissions:
 
 env:
     postgis: 3
-    os: ubuntu-latest
     vroom: 1.12.0
 
 jobs:
@@ -100,7 +99,7 @@ jobs:
           cache-name: vroom
         with:
           path: vroom-${{ env.vroom }}
-          key: ${{ env.os }}-${{ env.cache-name }}-${{ env.vroom }}
+          key: ${{ matrix.os }}-${{ env.cache-name }}-${{ env.vroom }}
 
       - name: Checkout VROOM
         if: steps.cache-vroom.outputs.cache-hit != 'true'
