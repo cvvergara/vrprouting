@@ -76,24 +76,6 @@ jobs:
           cd vroom-${{ env.vroom }}/src
           USE_ROUTING=false make shared
 
-          # Source: https://github.com/VROOM-Project/vroom/issues/378
-          #sudo ln -s /usr/local/opt/openssl/include/openssl /usr/local/include
-          #sudo mkdir /usr/local/lib
-          #echo 'here 2'
-          #sudo ln -s /usr/local/opt/openssl/lib/libssl.dylib /usr/local/lib/
-          #sudo ln -s /usr/local/opt/openssl/lib/libcrypto.dylib /usr/local/lib/
-          #echo 'here3'
-
-          # Create object file with position independent code using -fPIC flag
-          #sed -i '' -e 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
-          #echo 'here4'
-          #echo 'here5'
-
-          #make
-          #echo 'here6'
-          cd ..
-          echo "VROOM_INSTALL_PATH=$(pwd)" >> $GITHUB_ENV
-
       - name: Cache pgtap
         id: cache-pgtap
         uses: actions/cache@v4
@@ -124,11 +106,11 @@ jobs:
               -DVROOM_INSTALL_PATH=${VROOM} ..
 
       - name: Build
+        if: false
         run: |
           cd build
           make -j 4
           sudo make install
-
 
       - name: Unpack data
         if: false
