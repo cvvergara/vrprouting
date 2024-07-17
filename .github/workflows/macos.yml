@@ -15,7 +15,7 @@ permissions:
 
 env:
     postgis: 3
-    os: ubuntu-latest
+    os: macos-latest
     vroom: 1.12.0
 
 # TODO: Fix the macOS build for compiling and building VROOM with vrprouting.
