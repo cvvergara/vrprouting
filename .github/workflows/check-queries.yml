@@ -135,6 +135,7 @@ jobs:
           export PATH=/usr/lib/postgresql/${PGVER}/bin:$PATH
           mkdir build
           cd build
+          ls ${GIT_WORKSPACE}
           cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
               -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} \
               -DVROOM_INSTALL_PATH=${GIT_WORKSPACE}/vroom-${{ env.vroom }} ..
