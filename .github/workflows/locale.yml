@@ -108,6 +108,11 @@ jobs:
           cd vroom-${{ env.vroom }}/src
           USE_ROUTING=false make shared
 
+      - name: Initialize mandatory git config
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
       - name: Configure
         run: |
           VROOM=$(pwd)/vroom-${{ env.vroom }}
@@ -121,11 +126,6 @@ jobs:
         run: |
           cd build
           make locale
-
-      - name: Initialize mandatory git config
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Update locale
           bash .github/scripts/update_locale.sh
