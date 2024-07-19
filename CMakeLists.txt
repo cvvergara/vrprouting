@@ -17,13 +17,14 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 #---------------------------------------------
 #---------------------------------------------
 
-project(VRPROUTING VERSION 0.4.0
+project(VRPROUTING VERSION 0.4.1
   LANGUAGES C CXX )
-set(PROJECT_VERSION_DEV "-dev")
+set(PROJECT_VERSION_DEV "")
 string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
 
 set(MINORS 0.4 0.3 0.2 0.1)
 set(OLD_SIGNATURES
+    0.4.0
     0.3.0
     0.2.0
     0.1.0
@@ -53,11 +54,13 @@ include(pgr/Configure)
 set(DOXYGEN_MINIMUM_VERSION "1.7")
 set(SPHINX_MINIMUM_VERSION "1.8")
 set(POSTGRESQL_MINIMUM_VERSION "12.0")
+set(BOOST_MINIMUM_VERSION "1.65.0")
 set(VROOM_MINIMUM_VERSION "1.12.0")
 
 message(STATUS "DOXYGEN_MINIMUM_VERSION=${DOXYGEN_MINIMUM_VERSION}")
 message(STATUS "SPHINX_MINIMUM_VERSION=${SPHINX_MINIMUM_VERSION}")
 message(STATUS "POSTGRESQL_MINIMUM_VERSION=${POSTGRESQL_MINIMUM_VERSION}")
+message(STATUS "BOOST_MINIMUM_VERSION=${BOOST_MINIMUM_VERSION}")
 message(STATUS "VROOM_MINIMUM_VERSION=${VROOM_MINIMUM_VERSION}")
 
 # cmake 3.2 adds unwanted flags
@@ -77,8 +80,23 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 
 #---------------------------------------------
+#---------------------------------------------
+# Boost
+#---------------------------------------------
+#---------------------------------------------
+find_package(Boost ${BOOST_MINIMUM_VERSION} REQUIRED)
+if (NOT Boost_VERSION_MACRO)
+  set(Boost_VERSION_MACRO ${Boost_VERSION})
+endif()
+add_definitions(-DBoost_VERSION_MACRO=${Boost_VERSION_MACRO})
+add_definitions(-DBOOST_ALLOW_DEPRECATED_HEADERS)
+include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+
+
+#---------------------------------------------
 # Windows compiler flags
 #---------------------------------------------
+
 
 if(WIN32 AND NOT MSVC)
   set(OS_BUILD  $ENV{OS_BUILD})
@@ -86,9 +104,13 @@ if(WIN32 AND NOT MSVC)
     set(OS_BUILD "64")
   endif()
   set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}:/c/ming${OS_BUILD}/projects/pgx${OS_BUILD}/pg92)
+  if (NOT BOOST_ROOT)
+    set(BOOST_ROOT c:/ming${OS_BUILD}/msys/local)
+  endif()
 
   if (PROJECT_DEBUG)
     message(STATUS "OS_BUILD=${OS_BUILD}")
+    message(STATUS "BOOST_ROOT=${BOOST_ROOT}")
     message(STATUS "CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}")
   endif()
 endif(WIN32 AND NOT MSVC)
