@@ -78,7 +78,6 @@ jobs:
           sudo apt-get install -y \
             clang \
             libtap-parser-sourcehandler-pgtap-perl \
-            libboost-graph-dev \
             postgresql-${PGVER} \
             postgresql-${PGVER}-pgtap \
             postgresql-${PGVER}-postgis-${{ env.postgis }} \

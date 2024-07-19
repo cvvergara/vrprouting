@@ -39,11 +39,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew install postgis boost pgrouting asio glpk rapidjson
-          echo "here1"
-          ls /usr/local/opt/*
-          echo "here2"
-          ls /usr/local
+          brew install postgis pgrouting asio glpk rapidjson
 
       - name: Set environment
         shell: bash

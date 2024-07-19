@@ -55,7 +55,6 @@ jobs:
           sudo apt-get update
           # vrpRouting dependencies
           sudo apt-get install -y \
-            libboost-graph-dev \
             postgresql-${PGVER} \
             postgresql-server-dev-${PGVER}
           # vroom dependencies
@@ -94,7 +93,7 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
-              -DWITH_DOC=ON -DDOC_USE_BOOTSTRAP=ON - -DBUILD_DOXY=ON \
+              -DWITH_DOC=ON -DDOC_USE_BOOTSTRAP=ON -DBUILD_DOXY=ON \
               -DVROOM_INSTALL_PATH=${VROOM} ..
 
       - name: Build
