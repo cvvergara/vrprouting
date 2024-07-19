@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vrpRouting v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-28 10:43+0000\n"
+"POT-Creation-Date: 2024-07-19 16:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.9.1\n"
+"Generated-By: Babel 2.15.0\n"
 
 #: ../../build/doc/concepts.rst:12
 msgid ""
@@ -171,21 +171,988 @@ msgstr ""
 msgid "A pickup is done before the delivery."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:81
+#: ../../build/doc/concepts.rst:78
+msgid "Inner queries"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:82 ../../build/doc/concepts.rst:101
+#: ../../build/doc/concepts.rst:123 ../../build/doc/concepts.rst:151
+#: ../../build/doc/concepts.rst:181 ../../build/doc/concepts.rst:211
+#: ../../build/doc/concepts.rst:263 ../../build/doc/concepts.rst:310
+#: ../../build/doc/concepts.rst:364 ../../build/doc/concepts.rst:421
+#: ../../build/doc/concepts.rst:468 ../../build/doc/concepts.rst:492
+#: ../../build/doc/concepts.rst:544
+msgid "A ``SELECT`` statement that returns the following columns:"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:89 ../../build/doc/concepts.rst:108
+#: ../../build/doc/concepts.rst:133 ../../build/doc/concepts.rst:161
+#: ../../build/doc/concepts.rst:191 ../../build/doc/concepts.rst:220
+#: ../../build/doc/concepts.rst:274 ../../build/doc/concepts.rst:319
+#: ../../build/doc/concepts.rst:373 ../../build/doc/concepts.rst:432
+#: ../../build/doc/concepts.rst:475 ../../build/doc/concepts.rst:501
+#: ../../build/doc/concepts.rst:551
+msgid "Column"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:89 ../../build/doc/concepts.rst:108
+#: ../../build/doc/concepts.rst:133 ../../build/doc/concepts.rst:161
+#: ../../build/doc/concepts.rst:191 ../../build/doc/concepts.rst:220
+#: ../../build/doc/concepts.rst:274 ../../build/doc/concepts.rst:319
+#: ../../build/doc/concepts.rst:373 ../../build/doc/concepts.rst:432
+#: ../../build/doc/concepts.rst:475 ../../build/doc/concepts.rst:501
+#: ../../build/doc/concepts.rst:551
+msgid "Type"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:89 ../../build/doc/concepts.rst:108
+#: ../../build/doc/concepts.rst:133 ../../build/doc/concepts.rst:161
+#: ../../build/doc/concepts.rst:191 ../../build/doc/concepts.rst:220
+#: ../../build/doc/concepts.rst:274 ../../build/doc/concepts.rst:319
+#: ../../build/doc/concepts.rst:373 ../../build/doc/concepts.rst:432
+#: ../../build/doc/concepts.rst:475 ../../build/doc/concepts.rst:501
+#: ../../build/doc/concepts.rst:551
+msgid "Description"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:91
+msgid "**start_vid**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:91 ../../build/doc/concepts.rst:135
+#: ../../build/doc/concepts.rst:137 ../../build/doc/concepts.rst:141
+#: ../../build/doc/concepts.rst:163 ../../build/doc/concepts.rst:164
+#: ../../build/doc/concepts.rst:167 ../../build/doc/concepts.rst:168
+#: ../../build/doc/concepts.rst:169 ../../build/doc/concepts.rst:172
+#: ../../build/doc/concepts.rst:173 ../../build/doc/concepts.rst:174
+#: ../../build/doc/concepts.rst:193 ../../build/doc/concepts.rst:196
+#: ../../build/doc/concepts.rst:200 ../../build/doc/concepts.rst:276
+#: ../../build/doc/concepts.rst:279 ../../build/doc/concepts.rst:287
+#: ../../build/doc/concepts.rst:321 ../../build/doc/concepts.rst:434
+#: ../../build/doc/concepts.rst:437 ../../build/doc/concepts.rst:445
+msgid "|ANY-INTEGER|"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:91
+msgid "Identifier of a node."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:92
+msgid "**end_vid**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:92 ../../build/doc/concepts.rst:93
+#: ../../build/doc/concepts.rst:136 ../../build/doc/concepts.rst:138
+#: ../../build/doc/concepts.rst:139 ../../build/doc/concepts.rst:140
+#: ../../build/doc/concepts.rst:142 ../../build/doc/concepts.rst:143
+#: ../../build/doc/concepts.rst:144 ../../build/doc/concepts.rst:165
+#: ../../build/doc/concepts.rst:166 ../../build/doc/concepts.rst:170
+#: ../../build/doc/concepts.rst:171 ../../build/doc/concepts.rst:194
+#: ../../build/doc/concepts.rst:195 ../../build/doc/concepts.rst:197
+#: ../../build/doc/concepts.rst:198 ../../build/doc/concepts.rst:199
+#: ../../build/doc/concepts.rst:201 ../../build/doc/concepts.rst:202
+#: ../../build/doc/concepts.rst:203 ../../build/doc/concepts.rst:277
+#: ../../build/doc/concepts.rst:278 ../../build/doc/concepts.rst:280
+#: ../../build/doc/concepts.rst:283 ../../build/doc/concepts.rst:286
+#: ../../build/doc/concepts.rst:288 ../../build/doc/concepts.rst:291
+#: ../../build/doc/concepts.rst:294 ../../build/doc/concepts.rst:322
+#: ../../build/doc/concepts.rst:323 ../../build/doc/concepts.rst:324
+#: ../../build/doc/concepts.rst:325 ../../build/doc/concepts.rst:326
+#: ../../build/doc/concepts.rst:329 ../../build/doc/concepts.rst:332
+#: ../../build/doc/concepts.rst:333 ../../build/doc/concepts.rst:336
+#: ../../build/doc/concepts.rst:339 ../../build/doc/concepts.rst:340
+#: ../../build/doc/concepts.rst:343 ../../build/doc/concepts.rst:435
+#: ../../build/doc/concepts.rst:436 ../../build/doc/concepts.rst:438
+#: ../../build/doc/concepts.rst:441 ../../build/doc/concepts.rst:444
+#: ../../build/doc/concepts.rst:446 ../../build/doc/concepts.rst:449
+#: ../../build/doc/concepts.rst:452
+msgid "|ANY-NUMERICAL|"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:92
+msgid "Identifier of a node"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:93
+msgid "**agg_cost**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:93
+msgid "Time to travel from ``start_vid`` to ``end_vid``"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:108 ../../build/doc/concepts.rst:133
+#: ../../build/doc/concepts.rst:161 ../../build/doc/concepts.rst:191
+#: ../../build/doc/concepts.rst:220 ../../build/doc/concepts.rst:274
+#: ../../build/doc/concepts.rst:319 ../../build/doc/concepts.rst:373
+#: ../../build/doc/concepts.rst:432 ../../build/doc/concepts.rst:475
+#: ../../build/doc/concepts.rst:501
+msgid "Default"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:110 ../../build/doc/concepts.rst:377
+msgid "**start_id**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:110 ../../build/doc/concepts.rst:112
+#: ../../build/doc/concepts.rst:222 ../../build/doc/concepts.rst:224
+#: ../../build/doc/concepts.rst:230 ../../build/doc/concepts.rst:375
+#: ../../build/doc/concepts.rst:377 ../../build/doc/concepts.rst:379
+#: ../../build/doc/concepts.rst:477 ../../build/doc/concepts.rst:480
+#: ../../build/doc/concepts.rst:503 ../../build/doc/concepts.rst:505
+#: ../../build/doc/concepts.rst:553
+msgid "``ANY-INTEGER``"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:110
+msgid "Identifier of the start node."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:112 ../../build/doc/concepts.rst:379
+msgid "**end_id**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:112
+msgid "Identifier of the end node."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:114
+msgid "**duration**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:114 ../../build/doc/concepts.rst:226
+#: ../../build/doc/concepts.rst:228 ../../build/doc/concepts.rst:232
+#: ../../build/doc/concepts.rst:234 ../../build/doc/concepts.rst:482
+#: ../../build/doc/concepts.rst:507 ../../build/doc/concepts.rst:509
+msgid "|interval|"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:114
+msgid "Time to travel from ``start_id`` to ``end_id``"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:116
+msgid "**cost**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:116 ../../build/doc/concepts.rst:246
+#: ../../build/doc/concepts.rst:400 ../../build/doc/concepts.rst:528
+msgid "``INTEGER``"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:116
+msgid "*duration*"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:116
+msgid "Cost to travel from ``start_id`` to ``end_id``"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:135 ../../build/doc/concepts.rst:163
+#: ../../build/doc/concepts.rst:193 ../../build/doc/concepts.rst:222
+#: ../../build/doc/concepts.rst:276 ../../build/doc/concepts.rst:321
+#: ../../build/doc/concepts.rst:375 ../../build/doc/concepts.rst:434
+#: ../../build/doc/concepts.rst:477 ../../build/doc/concepts.rst:503
+#: ../../build/doc/concepts.rst:553
+msgid "**id**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:135 ../../build/doc/concepts.rst:163
+#: ../../build/doc/concepts.rst:193
+msgid "Identifier of the pick-delivery order pair."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:136 ../../build/doc/concepts.rst:164
+#: ../../build/doc/concepts.rst:194 ../../build/doc/concepts.rst:236
+msgid "**amount**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:136 ../../build/doc/concepts.rst:164
+#: ../../build/doc/concepts.rst:194
+msgid "Number of units in the order"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:137 ../../build/doc/concepts.rst:196
+msgid "**p_id**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:137 ../../build/doc/concepts.rst:196
+msgid "The identifier of the pickup node."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:138 ../../build/doc/concepts.rst:167
+#: ../../build/doc/concepts.rst:197
+msgid "**p_tw_open**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:138 ../../build/doc/concepts.rst:167
+#: ../../build/doc/concepts.rst:197
+msgid "The time, relative to 0, when the pickup location opens."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:139 ../../build/doc/concepts.rst:168
+#: ../../build/doc/concepts.rst:198
+msgid "**p_tw_close**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:139 ../../build/doc/concepts.rst:168
+#: ../../build/doc/concepts.rst:198
+msgid "The time, relative to 0, when the pickup location closes."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:140 ../../build/doc/concepts.rst:169
+#: ../../build/doc/concepts.rst:199 ../../build/doc/concepts.rst:228
+msgid "**p_service**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:140 ../../build/doc/concepts.rst:144
+#: ../../build/doc/concepts.rst:169 ../../build/doc/concepts.rst:174
+#: ../../build/doc/concepts.rst:199 ../../build/doc/concepts.rst:203
+#: ../../build/doc/concepts.rst:246 ../../build/doc/concepts.rst:528
+#: ../../build/doc/concepts.rst:686 ../../build/doc/concepts.rst:688
+msgid "0"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:140 ../../build/doc/concepts.rst:169
+#: ../../build/doc/concepts.rst:199
+msgid "The duration of the loading at the pickup location."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:141 ../../build/doc/concepts.rst:200
+msgid "**d_id**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:141 ../../build/doc/concepts.rst:200
+msgid "The identifier of the delivery node."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:142 ../../build/doc/concepts.rst:172
+#: ../../build/doc/concepts.rst:201
+msgid "**d_tw_open**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:142 ../../build/doc/concepts.rst:172
+#: ../../build/doc/concepts.rst:201
+msgid "The time, relative to 0, when the delivery location opens."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:143 ../../build/doc/concepts.rst:173
+#: ../../build/doc/concepts.rst:202
+msgid "**d_tw_close**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:143 ../../build/doc/concepts.rst:173
+#: ../../build/doc/concepts.rst:202
+msgid "The time, relative to 0, when the delivery location closes."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:144 ../../build/doc/concepts.rst:174
+#: ../../build/doc/concepts.rst:203 ../../build/doc/concepts.rst:234
+msgid "**d_service**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:144 ../../build/doc/concepts.rst:203
+msgid "The duration of the unloading at the delivery location."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:165
+msgid "**p_x**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:165
+msgid ":math:`x` value of the pick up location"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:166
+msgid "**p_y**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:166
+msgid ":math:`y` value of the pick up location"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:170
+msgid "**d_x**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:170
+msgid ":math:`x` value of the delivery location"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:171
+msgid "**d_y**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:171
+msgid ":math:`y` value of the delivery location"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:174
+msgid "The duration of the loading at the delivery location."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:195
+msgid "**requested_t**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:195
+msgid "TODO define if it is going to be used"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:222
+msgid "Positive unique identifier of the shipment."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:224
+msgid "**p_location_id**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:224
+msgid "Positive identifier of the pickup location."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:226
+msgid "**p_setup**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:226 ../../build/doc/concepts.rst:228
+#: ../../build/doc/concepts.rst:232 ../../build/doc/concepts.rst:234
+#: ../../build/doc/concepts.rst:482 ../../build/doc/concepts.rst:507
+#: ../../build/doc/concepts.rst:509
+msgid "|interval0|"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:226
+msgid "Pickup setup duration."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:228
+msgid "Pickup service duration."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:230
+msgid "**d_location_id**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:230
+msgid "Positive identifier of the delivery location."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:232
+msgid "**d_setup**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:232
+msgid "Delivery setup duration."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:234
+msgid "Delivery service duration."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:236 ../../build/doc/concepts.rst:381
+#: ../../build/doc/concepts.rst:511 ../../build/doc/concepts.rst:518
+msgid "``ARRAY[ANY-INTEGER]``"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:236 ../../build/doc/concepts.rst:243
+#: ../../build/doc/concepts.rst:381 ../../build/doc/concepts.rst:388
+#: ../../build/doc/concepts.rst:511 ../../build/doc/concepts.rst:518
+#: ../../build/doc/concepts.rst:525
+msgid "Empty Array"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:236 ../../build/doc/concepts.rst:381
+msgid ""
+"Array of non-negative integers describing multidimensional quantities "
+"such as number of items, weight, volume etc."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:240
+msgid "All shipments must have the same value of :code:`array_length(amount, 1)`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:243 ../../build/doc/concepts.rst:388
+#: ../../build/doc/concepts.rst:525
+msgid "**skills**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:243 ../../build/doc/concepts.rst:388
+#: ../../build/doc/concepts.rst:525
+msgid "``ARRAY[INTEGER]``"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:243 ../../build/doc/concepts.rst:388
+#: ../../build/doc/concepts.rst:525
+msgid "Array of non-negative integers defining mandatory skills."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:246 ../../build/doc/concepts.rst:528
+msgid "**priority**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:246
+msgid "Priority level of the shipment."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:248 ../../build/doc/concepts.rst:530
+msgid "Ranges from ``[0, 100]``"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:250
+msgid "**p_data**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:250 ../../build/doc/concepts.rst:252
+#: ../../build/doc/concepts.rst:404 ../../build/doc/concepts.rst:484
+#: ../../build/doc/concepts.rst:532
+msgid "``JSONB``"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:250 ../../build/doc/concepts.rst:252
+#: ../../build/doc/concepts.rst:404 ../../build/doc/concepts.rst:484
+#: ../../build/doc/concepts.rst:532
+msgid "'{}'::JSONB"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:250
+msgid "Any metadata information of the pickup shipment."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:252
+msgid "**d_data**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:252
+msgid "Any metadata information of the delivery shipment."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:255 ../../build/doc/concepts.rst:535
+msgid "Where:"
+msgstr ""
+
+#: ../../build/doc/concepts.rst
+msgid "ANY-INTEGER"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:257 ../../build/doc/concepts.rst:537
+msgid "SMALLINT, INTEGER, BIGINT"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:276 ../../build/doc/concepts.rst:321
+#: ../../build/doc/concepts.rst:434
+msgid "Identifier of the vehicle"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:277 ../../build/doc/concepts.rst:322
+#: ../../build/doc/concepts.rst:381 ../../build/doc/concepts.rst:435
+msgid "**capacity**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:277 ../../build/doc/concepts.rst:322
+#: ../../build/doc/concepts.rst:435
+msgid "Capacity of the vehicle"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:278 ../../build/doc/concepts.rst:323
+msgid "**speed**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:278 ../../build/doc/concepts.rst:323
+msgid "`1`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:278 ../../build/doc/concepts.rst:323
+msgid "Average speed of the vehicle."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:279 ../../build/doc/concepts.rst:437
+msgid "**s_id**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:279 ../../build/doc/concepts.rst:437
+msgid ""
+"The node identifier of the starting location, must match a node "
+"identifier in the matrix table."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:280 ../../build/doc/concepts.rst:326
+#: ../../build/doc/concepts.rst:438
+msgid "**s_tw_open**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:280 ../../build/doc/concepts.rst:286
+#: ../../build/doc/concepts.rst:326 ../../build/doc/concepts.rst:332
+#: ../../build/doc/concepts.rst:438 ../../build/doc/concepts.rst:444
+msgid "`0`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:280 ../../build/doc/concepts.rst:326
+#: ../../build/doc/concepts.rst:438
+msgid ""
+"The time, relative to 0, when the starting location opens. When "
+"`s_tw_open` column exist  then `s_tw_close` column is expected Default "
+"value when (`s_tw_open`, s_tw_close) columns do not exist"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:283 ../../build/doc/concepts.rst:329
+#: ../../build/doc/concepts.rst:441
+msgid "**s_tw_close**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:283 ../../build/doc/concepts.rst:329
+#: ../../build/doc/concepts.rst:441
+msgid "`INFINITY`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:283 ../../build/doc/concepts.rst:329
+#: ../../build/doc/concepts.rst:441
+msgid ""
+"The time, relative to 0, when the starting location closes. When "
+"`s_tw_close` column exist  then `e_tw_open` column is expected Default "
+"value when `(s_tw_open, s_tw_close)` columns do not exist"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:286 ../../build/doc/concepts.rst:332
+#: ../../build/doc/concepts.rst:444
+msgid "**s_service**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:286 ../../build/doc/concepts.rst:332
+#: ../../build/doc/concepts.rst:444
+msgid "The duration of the loading at the starting location."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:287 ../../build/doc/concepts.rst:445
+msgid "**e_id**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:287 ../../build/doc/concepts.rst:445
+msgid "`s_id`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:287 ../../build/doc/concepts.rst:445
+msgid ""
+"The node identifier of the ending location, must match a node identifier "
+"in the matrix table."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:288 ../../build/doc/concepts.rst:333
+#: ../../build/doc/concepts.rst:446
+msgid "**e_tw_open**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:288 ../../build/doc/concepts.rst:333
+#: ../../build/doc/concepts.rst:446
+msgid "`s_tw_open`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:288 ../../build/doc/concepts.rst:333
+#: ../../build/doc/concepts.rst:446
+msgid ""
+"The time, relative to 0, when the ending location opens. When `e_tw_open`"
+" column exist  then `e__tw_close` column is expected Default value when "
+"(`e_tw_open`, e_tw_close) columns do not exist"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:291 ../../build/doc/concepts.rst:336
+#: ../../build/doc/concepts.rst:449
+msgid "**e_tw_close**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:291 ../../build/doc/concepts.rst:336
+#: ../../build/doc/concepts.rst:449
+msgid "`s_tw_close`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:291 ../../build/doc/concepts.rst:336
+#: ../../build/doc/concepts.rst:449
+msgid ""
+"The time, relative to 0, when the ending location closes. When "
+"`e_tw_close` column exist  then `e_tw_open` column is expected Default "
+"value when `(e_tw_open`, e_tw_close)` columns do not exist"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:294 ../../build/doc/concepts.rst:339
+#: ../../build/doc/concepts.rst:452
+msgid "**e_service**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:294 ../../build/doc/concepts.rst:339
+#: ../../build/doc/concepts.rst:452
+msgid "`s_service`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:294 ../../build/doc/concepts.rst:452
+msgid "The duration of the unloading at the ending location."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:297 ../../build/doc/concepts.rst:455
+msgid ""
+"Throws: * When column `id` is missing * When column `capacity` is missing"
+" * When column `s_id` is missing * When column `s_tw_open` exists but not"
+" `s_tw_close` * When column `s_tw_close`exists but not `s_tw_open` * When"
+" column `e_tw_open` exists but not `e_tw_close` * When column "
+"`e_tw_close`exists but not `e_tw_open`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:324
+msgid "**s_x**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:324
+msgid ":math:`x` value of the coordinate of the starting location."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:325
+msgid "**s_y**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:325
+msgid ":math:`y` value of the coordinate of the starting location."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:339
+msgid "The duration of the loading at the ending location."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:340
+msgid "**e_x**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:340
+msgid "`s_x`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:340
+msgid ""
+":math:`x` value of the coordinate of the ending location. Default value "
+"when `(e_x, e_y)` columns do not exist Default value when `e_y` column "
+"does not exist"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:343
+msgid "**e_y**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:343
+msgid "`s_y`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:343
+msgid ""
+":math:`y` value of the coordinate of the ending location. When `e_y` "
+"column exist  then `e_x` column is expected Default value when `(e_x, "
+"e_y)` columns do not exist"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:348
+msgid ""
+"Throws: * When column `id` is missing * When column `capacity` is missing"
+" * When column `s_x` is missing * When column `s_y` is missing * When "
+"column `s_tw_open` exists but not `s_tw_close` * When column "
+"`s_tw_close`exists but not `s_tw_open` * When column `e_y` exists but not"
+" `e_x` * When column `e_x` exists but not `e_y` * When column `e_tw_open`"
+" exists but not `e_tw_close` * When column `e_tw_close`exists but not "
+"`e_tw_open`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:375 ../../build/doc/concepts.rst:480
+msgid "Positive unique identifier of the vehicle."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:377
+msgid "Positive identifier of the vehicle start location."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:379
+msgid "Positive identifier of the vehicle end location."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:385
+msgid "All vehicles must have the same value of :code:`array_length(capacity, 1)`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:391 ../../build/doc/concepts.rst:563
+msgid "**tw_open**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:391 ../../build/doc/concepts.rst:393
+#: ../../build/doc/concepts.rst:563 ../../build/doc/concepts.rst:565
+msgid "|timestamp|"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:391
+msgid "|tw_open_default|"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:391 ../../build/doc/concepts.rst:563
+msgid "Time window opening time."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:393 ../../build/doc/concepts.rst:565
+msgid "**tw_close**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:393
+msgid "|tw_close_default|"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:393 ../../build/doc/concepts.rst:565
+msgid "Time window closing time."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:395
+msgid "**speed_factor**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:395
+msgid "``ANY-NUMERICAL``"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:395
+msgid ":math:`1.0`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:395
+msgid "Vehicle travel time multiplier."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:397
+msgid ""
+"Max value of speed factor for a vehicle shall not be greater than 5 times"
+" the speed factor of any other vehicle."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:400
+msgid "**max_tasks**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:400
+msgid ":math:`2147483647`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:400
+msgid "Maximum number of tasks in a route for the vehicle."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:402
+msgid "A job, pickup, or delivery is counted as a single task."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:404 ../../build/doc/concepts.rst:484
+#: ../../build/doc/concepts.rst:532
+msgid "**data**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:404
+msgid "Any metadata information of the vehicle."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:407 ../../build/doc/concepts.rst:568
+msgid "**Note**:"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:409
+msgid "At least one of the ``start_id`` or ``end_id`` shall be present."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:410
+msgid ""
+"If ``end_id`` is omitted, the resulting route will stop at the last "
+"visited task, whose choice is determined by the optimization process."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:411
+msgid ""
+"If ``start_id`` is omitted, the resulting route will start at the first "
+"visited task, whose choice is determined by the optimization process."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:412
+msgid ""
+"To request a round trip, specify both ``start_id`` and ``end_id`` as the "
+"same index."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:413
+msgid ""
+"A vehicle is only allowed to serve a set of tasks if the resulting load "
+"at each route step is lower than the matching value in capacity for each "
+"metric. When using multiple components for amounts, it is recommended to "
+"put the most important/limiting metrics first."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:414
+msgid ""
+"It is assumed that all delivery-related amounts for jobs are loaded at "
+"vehicle start, while all pickup-related amounts for jobs are brought back"
+" at vehicle end."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:415
+msgid ":code:`tw_open ≤ tw_close`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:436
+msgid "**stops**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:436
+msgid "`[]`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:436
+msgid "Array of shipments identifiers indicating an initial solution"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:477
+msgid "Positive unique identifier of the break. (unique for the same vehicle)."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:480
+msgid "**vehicle_id**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:482 ../../build/doc/concepts.rst:509
+msgid "**service**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:482
+msgid "The break duration."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:484
+msgid "Any metadata information of the break."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:503
+msgid "Positive unique identifier of the job."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:505
+msgid "**location_id**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:505
+msgid "Positive identifier of the job location."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:507
+msgid "**setup**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:507
+msgid "Job setup duration."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:509
+msgid "Job service duration."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:511
+msgid "**delivery**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:511
+msgid ""
+"Array of non-negative integers describing multidimensional quantities for"
+" delivery such as number of items, weight, volume etc."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:515
+msgid "All jobs must have the same value of :code:`array_length(delivery, 1)`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:518
+msgid "**pickup**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:518
+msgid ""
+"Array of non-negative integers describing multidimensional quantities for"
+" pickup such as number of items, weight, volume etc."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:522
+msgid "All jobs must have the same value of :code:`array_length(pickup, 1)`"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:528
+msgid "Priority level of the job"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:532
+msgid "Any metadata information of the job."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:553
+msgid "Positive unique identifier of the job, pickup/delivery shipment, or break."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:556
+msgid "**kind**"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:556
+msgid "``CHAR``"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:556
+msgid ""
+"**Only required for shipments time windows**. Value in ['p', 'd'] "
+"indicating whether the time window is for:"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:560
+msgid "Pickup shipment, or"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:561
+msgid "Delivery shipment."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:570
+msgid "All timings are in **seconds** when represented as an ``INTEGER``."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:571
+msgid "Every row must satisfy the condition: :code:`tw_open ≤ tw_close`."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:572
+msgid "It is up to users to decide how to describe time windows:"
+msgstr ""
+
+#: ../../build/doc/concepts.rst:574
+msgid ""
+"**Relative values**, e.g. [0, 14400] for a 4 hours time window starting "
+"at the beginning of the planning horizon. In that case all times reported"
+" in output with the arrival column are relative to the start of the "
+"planning horizon."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:575
+msgid ""
+"**Absolute values**, \"real\" timestamps. In that case all times reported"
+" in output with the arrival column can be interpreted as timestamps."
+msgstr ""
+
+#: ../../build/doc/concepts.rst:583
 msgid "Getting Started"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:83
+#: ../../build/doc/concepts.rst:585
 msgid ""
 "This is a simple guide to walk you through the steps of getting started "
 "with vrpRouting. In this guide we will cover:"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:93
+#: ../../build/doc/concepts.rst:595
 msgid "Create a routing Database"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:95
+#: ../../build/doc/concepts.rst:597
 msgid ""
 "The first thing we need to do is create a database and load pgrouting in "
 "the database. Typically you will create a database for each project. Once"
@@ -194,78 +1161,78 @@ msgid ""
 "later if you want to to say a production server."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:101
+#: ../../build/doc/concepts.rst:603
 msgid "For Postgresql 9.2 and later versions"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:111
+#: ../../build/doc/concepts.rst:613
 msgid "Handling Parameters"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:113
+#: ../../build/doc/concepts.rst:615
 msgid ""
 "To define a problem, several considerations have to be done, to get "
 "consistent results. This section gives an insight of how parameters are "
 "to be considered."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:116
+#: ../../build/doc/concepts.rst:618
 msgid "`Capacity and Demand Units Handling`_"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:117
+#: ../../build/doc/concepts.rst:619
 msgid "`Locations`_"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:118
+#: ../../build/doc/concepts.rst:620
 msgid "`Time Handling`_"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:119
+#: ../../build/doc/concepts.rst:621
 msgid "`Factor Handling`_"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:123
+#: ../../build/doc/concepts.rst:625
 msgid "Capacity and Demand Units Handling"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:125
+#: ../../build/doc/concepts.rst:627
 msgid "The `capacity` of a vehicle, can be measured in:"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:127
+#: ../../build/doc/concepts.rst:629
 msgid "Volume units like :math:`m^3`."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:128
+#: ../../build/doc/concepts.rst:630
 msgid "Area units like :math:`m^2` (when no stacking is allowed)."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:129
+#: ../../build/doc/concepts.rst:631
 msgid "Weight units like :math:`kg`."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:130
+#: ../../build/doc/concepts.rst:632
 msgid "Number of boxes that fit in the vehicle."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:131
+#: ../../build/doc/concepts.rst:633
 msgid "Number of seats in the vehicle"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:133
+#: ../../build/doc/concepts.rst:635
 msgid ""
 "The `demand` request of the pickup-deliver orders must use the same units"
 " as the units used in the vehicle's `capacity`."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:135
+#: ../../build/doc/concepts.rst:637
 msgid ""
 "To handle problems like:  10 (equal dimension) boxes of apples and 5 kg "
 "of feathers that are to be transported (not packed in boxes)."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:137
+#: ../../build/doc/concepts.rst:639
 msgid ""
 "If the vehicle's `capacity` is measured by `boxes`, a conversion of `kg "
 "of feathers` to `equivalent number of boxes` is needed. If the vehicle's "
@@ -273,231 +1240,227 @@ msgid ""
 "`equivalent number of kg` is needed."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:140
+#: ../../build/doc/concepts.rst:642
 msgid "Showing how the 2 possible conversions can be done"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:142
+#: ../../build/doc/concepts.rst:644
 msgid ""
 "Let: - :math:`f_boxes`: number of boxes that would be used for `1` kg of "
 "feathers. - :math:`a_weight`: weight of `1` box of apples."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:147
+#: ../../build/doc/concepts.rst:649
 msgid "Capacity Units"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:147
+#: ../../build/doc/concepts.rst:649
 msgid "apples"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:147
+#: ../../build/doc/concepts.rst:649
 msgid "feathers"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:149
+#: ../../build/doc/concepts.rst:651
 msgid "boxes"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:149
+#: ../../build/doc/concepts.rst:651
 msgid "10"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:149
+#: ../../build/doc/concepts.rst:651
 msgid ":math:`5 * f\\_boxes`"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:150
+#: ../../build/doc/concepts.rst:652
 msgid "kg"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:150
+#: ../../build/doc/concepts.rst:652
 msgid ":math:`10 * a\\_weight`"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:150
+#: ../../build/doc/concepts.rst:652
 msgid "5"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:156
+#: ../../build/doc/concepts.rst:658
 msgid "Locations"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:158
+#: ../../build/doc/concepts.rst:660
 msgid "When using the Euclidean signatures:"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:160
+#: ../../build/doc/concepts.rst:662
 msgid "The vehicles have :math:`(x, y)` pairs for start and ending locations."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:161
+#: ../../build/doc/concepts.rst:663
 msgid "The orders Have :math:`(x, y)` pairs for pickup and delivery locations."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:163
+#: ../../build/doc/concepts.rst:665
 msgid "When using a matrix:"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:165
+#: ../../build/doc/concepts.rst:667
 msgid "The vehicles have identifiers for the start and ending locations."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:166
+#: ../../build/doc/concepts.rst:668
 msgid "The orders have identifiers for the pickup and delivery locations."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:167
+#: ../../build/doc/concepts.rst:669
 msgid "All the identifiers are indices to the given matrix."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:171
+#: ../../build/doc/concepts.rst:673
 msgid "Time Handling"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:173
+#: ../../build/doc/concepts.rst:675
 msgid "The times are relative to 0"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:175
+#: ../../build/doc/concepts.rst:677
 msgid ""
 "Suppose that a vehicle's driver starts the shift at 9:00 am and ends the "
 "shift at 4:30 pm and the service time duration is 10 minutes with 30 "
 "seconds."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:178
+#: ../../build/doc/concepts.rst:680
 msgid "All time units have to be converted"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:181
+#: ../../build/doc/concepts.rst:683
 msgid "Meaning of 0"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:181
+#: ../../build/doc/concepts.rst:683
 msgid "time units"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:181 ../../build/doc/concepts.rst:184
-#: ../../build/doc/concepts.rst:186
+#: ../../build/doc/concepts.rst:683 ../../build/doc/concepts.rst:686
+#: ../../build/doc/concepts.rst:688
 msgid "9:00 am"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:181
+#: ../../build/doc/concepts.rst:683
 msgid "4:30 pm"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:181
+#: ../../build/doc/concepts.rst:683
 msgid "10 min 30 secs"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:183 ../../build/doc/concepts.rst:185
+#: ../../build/doc/concepts.rst:685 ../../build/doc/concepts.rst:687
 msgid "0:00 am"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:183 ../../build/doc/concepts.rst:184
+#: ../../build/doc/concepts.rst:685 ../../build/doc/concepts.rst:686
 msgid "hours"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:183
+#: ../../build/doc/concepts.rst:685
 msgid "9"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:183
+#: ../../build/doc/concepts.rst:685
 msgid "16.5"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:183 ../../build/doc/concepts.rst:184
+#: ../../build/doc/concepts.rst:685 ../../build/doc/concepts.rst:686
 msgid ":math:`10.5 / 60  = 0.175`"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:184 ../../build/doc/concepts.rst:186
-msgid "0"
-msgstr ""
-
-#: ../../build/doc/concepts.rst:184
+#: ../../build/doc/concepts.rst:686
 msgid "7.5"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:185 ../../build/doc/concepts.rst:186
+#: ../../build/doc/concepts.rst:687 ../../build/doc/concepts.rst:688
 msgid "minutes"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:185
+#: ../../build/doc/concepts.rst:687
 msgid ":math:`9*60 = 54`"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:185
+#: ../../build/doc/concepts.rst:687
 msgid ":math:`16.5*60 = 990`"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:185 ../../build/doc/concepts.rst:186
+#: ../../build/doc/concepts.rst:687 ../../build/doc/concepts.rst:688
 msgid "10.5"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:186
+#: ../../build/doc/concepts.rst:688
 msgid ":math:`7.5*60 = 540`"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:193
+#: ../../build/doc/concepts.rst:695
 msgid "Factor Handling"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:197 ../../build/doc/concepts.rst:203
-#: ../../build/doc/concepts.rst:210 ../../build/doc/concepts.rst:216
-#: ../../build/doc/concepts.rst:222
+#: ../../build/doc/concepts.rst:699 ../../build/doc/concepts.rst:705
+#: ../../build/doc/concepts.rst:712 ../../build/doc/concepts.rst:718
+#: ../../build/doc/concepts.rst:724
 msgid "TBD"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:201
+#: ../../build/doc/concepts.rst:703
 msgid "Group of Functions"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:208
+#: ../../build/doc/concepts.rst:710
 msgid "Inner Queries"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:214
+#: ../../build/doc/concepts.rst:716
 msgid "Return columns & values"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:220
+#: ../../build/doc/concepts.rst:722
 msgid "Performance"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:225
+#: ../../build/doc/concepts.rst:727
 msgid "How to contribute"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:228
+#: ../../build/doc/concepts.rst:730
 msgid "Wiki"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:229
+#: ../../build/doc/concepts.rst:731
 msgid ""
 "Edit an existing  `vrpRouting Wiki "
 "<https://github.com/pgRouting/vrprouting/wiki>`_ page."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:233
+#: ../../build/doc/concepts.rst:735
 msgid "Adding Functionaity to vrpRouting"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:234
+#: ../../build/doc/concepts.rst:736
 msgid ""
 "Consult the `developer's documentation "
 "<https://vrp.pgrouting.org/doxy/main/index.html>`_"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:238
+#: ../../build/doc/concepts.rst:740
 msgid "Indices and tables"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:239
+#: ../../build/doc/concepts.rst:741
 msgid ":ref:`genindex`"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:240
+#: ../../build/doc/concepts.rst:742
 msgid ":ref:`search`"
 msgstr ""
 
