@@ -3,6 +3,15 @@ name: Update Website
 on:
   workflow_dispatch:
 
+env:
+    postgis: 3
+    release: Release
+    os: ubuntu-latest
+    vroom: 1.12.0
+
+permissions:
+  contents: read
+
 jobs:
   update-website:
     name: Update Website
@@ -48,8 +57,7 @@ jobs:
           sudo apt-get install -y \
             libboost-graph-dev \
             postgresql-${PGVER} \
-            postgresql-server-dev-${PGVER} \
-            postgresql-plpython3-${PGVER}
+            postgresql-server-dev-${PGVER}
           # vroom dependencies
           sudo apt-get install libssl-dev libasio-dev libglpk-dev
           # documentation dependencies
