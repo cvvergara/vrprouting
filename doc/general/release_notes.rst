@@ -22,6 +22,12 @@ To see the full list of changes check the list of `Git commits <https://github.c
 .. contents:: Contents
      :local:
 
+
+v0.4.1 Release Notes
+-------------------------------------------------------------------------------
+
+No Changes Yet
+
 v0.4.0 Release Notes
 *******************************************************************************
 
@@ -88,6 +94,15 @@ v0.2.0 Release Notes
   - vrp_vroomPlain
   - vrp_vroomJobsPlain
   - vrp_vroomShipmentsPlain
+
+- VRP
+
+  - vrp_compatibleVehicles
+  - vrp_optimize
+  - vrp_pickDeliverAdd
+  - vrp_pickDeliver
+  - vrp_simulation
+  - vrp_viewRoute
 
 v0.1.0 Release Notes
 *******************************************************************************
