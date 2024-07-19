@@ -10,12 +10,13 @@ env:
     vroom: 1.12.0
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   update-website:
     name: Update Website
     runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'pgRouting' }}
     strategy:
         fail-fast: false
 
@@ -113,7 +114,7 @@ jobs:
         run: |
           if [[ "${{ env.BRANCH }}" == "main" ]]; then
             FOLDER_NAME="main"
-          elif [[ "${{ env.BRANCH }}" == "CI-testing" ]]; then
+          elif [[ "${{ env.BRANCH }}" == "develop" ]]; then
             FOLDER_NAME="dev"
           fi
           git checkout origin/gh-pages
@@ -133,7 +134,7 @@ jobs:
         run: |
           if [[ "${{ env.BRANCH }}" == "main" ]]; then
             FOLDER_NAME="main"
-          elif [[ "${{ env.BRANCH }}" == "CI-testing" ]]; then
+          elif [[ "${{ env.BRANCH }}" == "develop" ]]; then
             FOLDER_NAME="dev"
           fi
           git checkout gh-pages
