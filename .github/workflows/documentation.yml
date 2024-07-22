@@ -29,7 +29,7 @@ on:
 
   pull_request:
     paths:
-      - '.github/workflows/doc-check.yml'
+      - '.github/workflows/documentation.yml'
       - 'doc/**'
       - 'locale/**'
       - 'CMakeLists.txt'
