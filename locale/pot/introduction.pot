@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.3.0-dev\n"
+"Project-Id-Version: vrpRouting v0.4.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-28 10:43+0000\n"
+"POT-Creation-Date: 2024-07-22 13:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -81,7 +81,7 @@ msgid "This Release Contributors"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:57
-#: ../../build/doc/introduction.rst:84
+#: ../../build/doc/introduction.rst:92
 msgid "Individuals (in alphabetical order)"
 msgstr ""
 
@@ -94,79 +94,95 @@ msgid "Adding new experimental VROOM category functions: vrp_vroom, vrp_vroomJob
 msgstr ""
 
 #: ../../build/doc/introduction.rst:63
-msgid "Virginia Vergara"
+msgid "Manas Sivakumar"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:65
+msgid "Adding Google Or tools functionality to vrprouting"
+msgstr ""
+
+#: ../../build/doc/introduction.rst:67
+msgid "Joseph Percival"
+msgstr ""
+
+#: ../../build/doc/introduction.rst:69
+msgid "Optimized and added several VRP functions, including: tabu, pickDeliver, pickDeliver_driver, and many others."
+msgstr ""
+
+#: ../../build/doc/introduction.rst:71
+msgid "Virginia Vergara"
+msgstr ""
+
+#: ../../build/doc/introduction.rst:73
 msgid "Porting the code from pgRouting"
 msgstr ""
 
-#: ../../build/doc/introduction.rst:68
+#: ../../build/doc/introduction.rst:76
 msgid "And all the people that give us a little of their time making comments, finding issues, making pull requests etc."
 msgstr ""
 
-#: ../../build/doc/introduction.rst:72
-#: ../../build/doc/introduction.rst:95
+#: ../../build/doc/introduction.rst:80
+#: ../../build/doc/introduction.rst:105
 msgid "Corporate Sponsors (in alphabetical order)"
 msgstr ""
 
-#: ../../build/doc/introduction.rst:74
-#: ../../build/doc/introduction.rst:97
+#: ../../build/doc/introduction.rst:82
+#: ../../build/doc/introduction.rst:107
 msgid "These are corporate entities that have contributed developer time, hosting, or direct monetary funding to the vrpRouting project:"
 msgstr ""
 
-#: ../../build/doc/introduction.rst:76
+#: ../../build/doc/introduction.rst:84
 msgid "`Georepublic <https://georepublic.info/en/>`__"
 msgstr ""
 
-#: ../../build/doc/introduction.rst:77
+#: ../../build/doc/introduction.rst:85
 msgid "`Leopark <https://www.leopark.mx/>`__"
 msgstr ""
 
-#: ../../build/doc/introduction.rst:78
+#: ../../build/doc/introduction.rst:86
 msgid "`Paragon Corporation <https://www.paragoncorporation.com/>`__"
 msgstr ""
 
-#: ../../build/doc/introduction.rst:81
+#: ../../build/doc/introduction.rst:89
 msgid "Contributors Past & Present:"
 msgstr ""
 
-#: ../../build/doc/introduction.rst:90
-msgid "`Ashish Kumar <ashishkr23438@gmail.com>`__ `Daniel Kastl <daniel@georepublic.de>`__ `Vicky Vergara <vicky@georepublic.de>`__"
-msgstr ""
-
-#: ../../build/doc/introduction.rst:100
-msgid "Georepublic"
-msgstr ""
-
-#: ../../build/doc/introduction.rst:101
-msgid "Leopark"
-msgstr ""
-
-#: ../../build/doc/introduction.rst:102
-msgid "Paragon Corporation"
-msgstr ""
-
-#: ../../build/doc/introduction.rst:106
-msgid "More Information"
-msgstr ""
-
-#: ../../build/doc/introduction.rst:108
-msgid "The latest software, documentation and news items are available at the vrpRouting web site https://vrp.pgrouting.org."
-msgstr ""
-
-#: ../../build/doc/introduction.rst:109
-msgid "PostgreSQL database server at the PostgreSQL main site https://www.postgresql.org."
+#: ../../build/doc/introduction.rst:98
+msgid "`Ashish Kumar <ashishkr23438@gmail.com>`__ `Daniel Kastl <daniel@georepublic.de>`__ `Joseph Percival <ipercival@gmail.com>`__ `Vicky Vergara <vicky@georepublic.de>`__ `Manas Sivakumar <manas23601@gmail.com>`__"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:110
-msgid "PostGIS extension at the PostGIS project web site https://postgis.net."
+msgid "Georepublic"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:111
-msgid "pgRouting extension at the pgRouting project web site https://pgRouting.org."
+msgid "Leopark"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:112
+msgid "Paragon Corporation"
+msgstr ""
+
+#: ../../build/doc/introduction.rst:116
+msgid "More Information"
+msgstr ""
+
+#: ../../build/doc/introduction.rst:118
+msgid "The latest software, documentation and news items are available at the vrpRouting web site https://vrp.pgrouting.org."
+msgstr ""
+
+#: ../../build/doc/introduction.rst:119
+msgid "PostgreSQL database server at the PostgreSQL main site https://www.postgresql.org."
+msgstr ""
+
+#: ../../build/doc/introduction.rst:120
+msgid "PostGIS extension at the PostGIS project web site https://postgis.net."
+msgstr ""
+
+#: ../../build/doc/introduction.rst:121
+msgid "pgRouting extension at the pgRouting project web site https://pgRouting.org."
+msgstr ""
+
+#: ../../build/doc/introduction.rst:122
 msgid "Boost C++ source libraries at https://www.boost.org."
 msgstr ""
