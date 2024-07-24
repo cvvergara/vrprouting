@@ -1,7 +1,7 @@
 /*PGR-GNU*****************************************************************
-File: Short_vehiclei_rt.h
+File: matrix_cell_t.h
 
-Copyright (c) 2015 Celia Virginia Vergara Castillo
+Copyright (c) 2017 Celia Virginia Vergara Castillo
 Mail: vicky_vergara@hotmail.com
 
 ------
@@ -21,26 +21,27 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
-/** @file */
+/*! @file */
 
-#ifndef INCLUDE_C_TYPES_SHORT_VEHICLE_RT_H_
-#define INCLUDE_C_TYPES_SHORT_VEHICLE_RT_H_
+#ifndef INCLUDE_C_TYPES_MATRIX_CELL_T_H_
+#define INCLUDE_C_TYPES_MATRIX_CELL_T_H_
 #pragma once
 
 #include "c_types/typedefs.h"
 
-/** @brief short_vehicle
+/** @brief traveling costs
 
-@note C/C++/postgreSQL connecting structure for input
-name | description
-:----- | :-------
-id | Vehicle's identifier
-stops | Vehicle's stops
-*/
-struct Short_vehicle_rt{
-  Id  vehicle_id; /** Vehicle's identifier */
-  Id  order_id;   /** Stop */
+  @note C/C++/postgreSQL connecting structure for input
+  name | description
+  :----- | :-------
+  from_vid | Departure node's identifier
+  to_vid | Arrival node's identifier
+  cost | Travel cost from departure to arrival
+  */
+struct Matrix_cell_t {
+  Id from_vid; /** @b departure node's identifier */
+  Id to_vid;   /** @b arrival node's identifier */
+  TInterval cost;      /** Travel Interval from departure to arrival */
 };
 
-
-#endif  // INCLUDE_C_TYPES_SHORT_VEHICLE_RT_H_
+#endif  // INCLUDE_C_TYPES_MATRIX_CELL_T_H_

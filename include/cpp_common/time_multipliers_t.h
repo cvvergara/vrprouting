@@ -1,7 +1,7 @@
 /*PGR-GNU*****************************************************************
-File: Short_vehiclei_rt.h
+File: time_multipliers_t.h
 
-Copyright (c) 2015 Celia Virginia Vergara Castillo
+Copyright (c) 2020 Celia Virginia Vergara Castillo
 Mail: vicky_vergara@hotmail.com
 
 ------
@@ -23,24 +23,31 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 /** @file */
 
-#ifndef INCLUDE_C_TYPES_SHORT_VEHICLE_RT_H_
-#define INCLUDE_C_TYPES_SHORT_VEHICLE_RT_H_
+#ifndef INCLUDE_C_TYPES_TIME_MULTIPLIERS_T_H_
+#define INCLUDE_C_TYPES_TIME_MULTIPLIERS_T_H_
 #pragma once
+
 
 #include "c_types/typedefs.h"
 
-/** @brief short_vehicle
+/** @brief Time Dependant Multipliers
 
 @note C/C++/postgreSQL connecting structure for input
 name | description
 :----- | :-------
-id | Vehicle's identifier
-stops | Vehicle's stops
+start_time | with respect to 0
+multiplier | takes effect starting from the @b start_time
+
+@note
+- Evrything between 0 and the smallest @b start_time found will have 1 as multiplier
+- Evrything between after the largest start time will have the multiplier of the largest start_time
+
 */
-struct Short_vehicle_rt{
-  Id  vehicle_id; /** Vehicle's identifier */
-  Id  order_id;   /** Stop */
+struct Time_multipliers_t {
+    /** Time of day where the multiplier starts to be valid */
+    TTimestamp start_time;
+    /** multiplier at hour */
+    Multiplier multiplier;
 };
 
-
-#endif  // INCLUDE_C_TYPES_SHORT_VEHICLE_RT_H_
+#endif  // INCLUDE_C_TYPES_TIME_MULTIPLIERS_T_H_

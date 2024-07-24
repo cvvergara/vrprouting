@@ -1,8 +1,12 @@
 /*PGR-GNU*****************************************************************
-File: Short_vehiclei_rt.h
+File: vroom_matrix_t.h
 
-Copyright (c) 2015 Celia Virginia Vergara Castillo
-Mail: vicky_vergara@hotmail.com
+Copyright (c) 2021 pgRouting developers
+Mail: project@pgrouting.org
+
+Function's developer:
+Copyright (c) 2021 Ashish Kumar
+Mail: ashishkr23438@gmail.com
 
 ------
 
@@ -21,26 +25,30 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
-/** @file */
+/*! @file */
 
-#ifndef INCLUDE_C_TYPES_SHORT_VEHICLE_RT_H_
-#define INCLUDE_C_TYPES_SHORT_VEHICLE_RT_H_
+#ifndef INCLUDE_C_TYPES_VROOM_VROOM_MATRIX_T_H_
+#define INCLUDE_C_TYPES_VROOM_VROOM_MATRIX_T_H_
 #pragma once
 
 #include "c_types/typedefs.h"
 
-/** @brief short_vehicle
+/** @brief Matrix's attributes
 
 @note C/C++/postgreSQL connecting structure for input
 name | description
 :----- | :-------
-id | Vehicle's identifier
-stops | Vehicle's stops
+start_id | Start node identifier
+end_id | End node identifier
+duration | Duration to travel from start to end
+cost | Cost to travel from start to end
 */
-struct Short_vehicle_rt{
-  Id  vehicle_id; /** Vehicle's identifier */
-  Id  order_id;   /** Stop */
+struct Vroom_matrix_t {
+  MatrixIndex start_id;  /** Start node identifier */
+  MatrixIndex end_id;    /** End node identifier */
+
+  Duration duration;     /** Duration to travel from start to end */
+  TravelCost cost;       /** Cost to travel from start to end */
 };
 
-
-#endif  // INCLUDE_C_TYPES_SHORT_VEHICLE_RT_H_
+#endif  // INCLUDE_C_TYPES_VROOM_VROOM_MATRIX_T_H_

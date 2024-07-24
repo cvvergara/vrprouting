@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: Short_vehiclei_rt.h
+File: Short_vehicle.h
 
 Copyright (c) 2015 Celia Virginia Vergara Castillo
 Mail: vicky_vergara@hotmail.com
@@ -23,10 +23,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 /** @file */
 
-#ifndef INCLUDE_C_TYPES_SHORT_VEHICLE_RT_H_
-#define INCLUDE_C_TYPES_SHORT_VEHICLE_RT_H_
+#ifndef INCLUDE_C_TYPES_SHORT_VEHICLE_H_
+#define INCLUDE_C_TYPES_SHORT_VEHICLE_H_
 #pragma once
 
+#include <vector>
 #include "c_types/typedefs.h"
 
 /** @brief short_vehicle
@@ -37,10 +38,10 @@ name | description
 id | Vehicle's identifier
 stops | Vehicle's stops
 */
-struct Short_vehicle_rt{
-  Id  vehicle_id; /** Vehicle's identifier */
-  Id  order_id;   /** Stop */
+struct Short_vehicle{
+  Id id; /** Vehicle's identifier */
+  std::vector<Id> stops; /** Stops */
 };
 
 
-#endif  // INCLUDE_C_TYPES_SHORT_VEHICLE_RT_H_
+#endif  // INCLUDE_C_TYPES_SHORT_VEHICLE_H_
