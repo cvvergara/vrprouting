@@ -56,7 +56,7 @@ There are two mailing lists for vrpRouting hosted on OSGeo mailing list server
 which are of pgRouting:
 
 * User mailing list: https://lists.osgeo.org/mailman/listinfo/pgrouting-users
-* Developer mailing list: https://lists.osgeo.org/mailman/listinfo/pgrouting-dev
+* Developer mailing list: https://discourse.osgeo.org/c/pgrouting/pgrouting-dev
 
 For general questions and topics about how to use vrpRouting, please write to the user mailing list.
 
@@ -87,7 +87,3 @@ contributed to the development of vrpRouting:
    * - Paragon Corporation
      - United States
      - https://www.paragoncorporation.com
-   * - Leopark
-     - Mexico
-     - https://www.leopark.mx
-

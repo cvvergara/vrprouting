@@ -15,30 +15,86 @@
   (`v0 <https://vrp.pgrouting.org/v0/en/release_notes.html>`__)
 
 Release Notes
--------------------------------------------------------------------------------
+===============================================================================
 
-To see the full list of changes check the list of `Git commits <https://github.com/pgRouting/vrprouting/commits>`_ on Github.
+To see the full list of changes check the list of `Git commits
+<https://github.com/pgRouting/vrprouting/commits>`_ on Github.
 
-.. contents:: Contents
-     :local:
+.. contents:: Mayors
+   :local:
+   :depth: 1
 
-v0.4.0 Release Notes
+vrpRouting 0
 *******************************************************************************
 
-To see all issues & pull requests closed by this release see the `Git closed milestone for 0.4.0 <https://github.com/pgRouting/vrprouting/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.4.0%22>`_ on Github.
+.. contents:: Minors 0.x
+   :local:
+   :depth: 1
+
+vrpRouting 0.4
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. contents:: Contents
+   :local:
+   :depth: 1
+
+vrpRouting 0.4.1 Release Notes
+-------------------------------------------------------------------------------
+
+To see all issues & pull requests closed by this release see the
+`Git closed milestone for 0.4.1 <https://github.com/pgRouting/vrprouting/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.4.1%22>`_
+on Github.
+
+
+.. rubric:: Modification on experimental functions
+
+* OR Tools
+
+  * vrp_bin_packing
+  * vrp_knapsack
+  * vrp_multiple_knapsack
+
+    .. include:: vrp_bin_packing.rst
+       :start-after: Version 0.4.1
+       :end-before: Version
+
+* vrp_oneDepot
+
+  .. include:: vrp_oneDepot.rst
+     :start-after: Version 0.4.1
+     :end-before: Version
+
+.. rubric:: Removal of Boost on the build
+
+* vrp_full_version
+* vrp_version
+
+  .. include:: vrp_full_version.rst
+     :start-after: Version 0.4.1
+     :end-before: Version
+
+vrpRouting 0.4.0 Release Notes
+-------------------------------------------------------------------------------
+
+To see all issues & pull requests closed by this release see the
+`Git closed milestone for 0.4.0 <https://github.com/pgRouting/vrprouting/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.4.0%22>`_
+on Github.
 
 .. rubric:: Added support for VROOM 1.12.0 (`#34 <https://github.com/pgRouting/vrprouting/issues/34>`_)
 
 - No visible changes on user side with respect to signatures.
-- Adjusted to VROOM v1.12.0 due to internal breaking changes: 
+- Adjusted to VROOM v1.12.0 due to internal breaking changes:
 
   - Made changes according to new vroom::Input signature.
   - CI changes to compile without routing support, with Position Independent Code.
+  - Removed support for VROOM 1.11.0
 
-v0.3.0 Release Notes
-*******************************************************************************
+vrpRouting 0.3
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-To see all issues & pull requests closed by this release see the `Git closed milestone for 0.3.0 <https://github.com/pgRouting/vrprouting/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.3.0%22>`_ on Github.
+To see all issues & pull requests closed by this release see the
+`Git closed milestone for 0.3.0 <https://github.com/pgRouting/vrprouting/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.3.0%22>`_
+on Github.
 
 .. rubric:: Modification of experimental functions
 
@@ -75,8 +131,8 @@ To see all issues & pull requests closed by this release see the `Git closed mil
   - Added data jsonb field in jobs, shipments, vehicles, breaks as well as in the result columns.
   - Added departure field and location_id field in the result columns.
 
-v0.2.0 Release Notes
-*******************************************************************************
+vrpRouting 0.2
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. rubric:: New experimental functions
 
@@ -89,8 +145,17 @@ v0.2.0 Release Notes
   - vrp_vroomJobsPlain
   - vrp_vroomShipmentsPlain
 
-v0.1.0 Release Notes
-*******************************************************************************
+- VRP
+
+  - vrp_compatibleVehicles
+  - vrp_optimize
+  - vrp_pickDeliverAdd
+  - vrp_pickDeliver
+  - vrp_simulation
+  - vrp_viewRoute
+
+vrpRouting 0.1
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. rubric:: Extraction tasks
 
