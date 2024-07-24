@@ -23,8 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 /** @file */
 
-#ifndef INCLUDE_C_TYPES_SHORT_VEHICLE_H_
-#define INCLUDE_C_TYPES_SHORT_VEHICLE_H_
+#ifndef INCLUDE_CPP_COMMON_SHORT_VEHICLE_H_
+#define INCLUDE_CPP_COMMON_SHORT_VEHICLE_H_
 #pragma once
 
 #include <vector>
@@ -44,4 +44,4 @@ struct Short_vehicle{
 };
 
 
-#endif  // INCLUDE_C_TYPES_SHORT_VEHICLE_H_
+#endif  // INCLUDE_CPP_COMMON_SHORT_VEHICLE_H_

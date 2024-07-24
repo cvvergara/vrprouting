@@ -27,15 +27,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 /*! @file */
 
-#ifndef INCLUDE_C_TYPES_VROOM_VROOM_SHIPMENT_T_H_
-#define INCLUDE_C_TYPES_VROOM_VROOM_SHIPMENT_T_H_
+#ifndef INCLUDE_CPP_COMMON_VROOM_SHIPMENT_T_HPP_
+#define INCLUDE_CPP_COMMON_VROOM_SHIPMENT_T_HPP_
 #pragma once
 
 #include "c_types/typedefs.h"
 
-/** @brief Vehicles's attributes
+namespace vrprouting {
 
-@note C/C++/postgreSQL connecting structure for input
+
+
+
+/** @brief Vroom's shipment's attributes
+
+@note C/C++/postgreSQL connecting classure for input
 name | description
 :----- | :-------
 id | Shipment identifier
@@ -53,29 +58,30 @@ priority | Priority level of shipment
 p_data | Metadata information of pickup shipment
 d_data | Metadata information of delivery shipment
 */
-struct Vroom_shipment_t {
-  Idx id; /** Shipment identifier */
+class Vroom_shipment_t {
+ public:
+     Idx id; /** Shipment identifier */
 
-  /** pickup shipment */
-  MatrixIndex p_location_id; /** Pickup location index in matrix */
-  Duration p_setup; /** Pickup setup time */
-  Duration p_service; /** Pickup service time */
+     /** pickup shipment */
+     MatrixIndex p_location_id; /** Pickup location index in matrix */
+     Duration p_setup; /** Pickup setup time */
+     Duration p_service; /** Pickup service time */
 
-  /** delivery shipment */
-  MatrixIndex d_location_id; /** Delivery location index in matrix */
-  Duration d_setup; /** Delivery setup time */
-  Duration d_service; /** Delivery service time */
+     /** delivery shipment */
+     MatrixIndex d_location_id; /** Delivery location index in matrix */
+     Duration d_setup; /** Delivery setup time */
+     Duration d_service; /** Delivery service time */
 
-  Amount *amount; /** Quantities for shipment */
-  size_t amount_size; /** Number of quantities */
+     std::vector<Amount> amount; /** Quantities for shipment */
 
-  Skill *skills; /** Mandatory skills */
-  size_t skills_size; /** Number of skills */
+     std::unordered_set<Skill> skills; /** Mandatory skills */
 
-  Priority priority; /** Priority level of shipment */
+     Priority priority; /** Priority level of shipment */
 
-  char *p_data; /** Metadata information of pickup shipment */
-  char *d_data; /** Metadata information of delivery shipment */
+     std::string p_data; /** Metadata information of pickup shipment */
+     std::string d_data; /** Metadata information of delivery shipment */
 };
 
-#endif  // INCLUDE_C_TYPES_VROOM_VROOM_SHIPMENT_T_H_
+}  // namespace
+
+#endif  // INCLUDE_CPP_COMMON_VROOM_SHIPMENT_T_HPP_

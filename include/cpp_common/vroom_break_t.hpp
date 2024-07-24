@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: vroom_time_window_t.h
+File: vroom_break_t.h
 
 Copyright (c) 2021 pgRouting developers
 Mail: project@pgrouting.org
@@ -27,27 +27,32 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 /*! @file */
 
-#ifndef INCLUDE_C_TYPES_VROOM_VROOM_TIME_WINDOW_T_H_
-#define INCLUDE_C_TYPES_VROOM_VROOM_TIME_WINDOW_T_H_
+#ifndef INCLUDE_CPP_COMMON_VROOM_BREAK_T_HPP_
+#define INCLUDE_CPP_COMMON_VROOM_BREAK_T_HPP_
 #pragma once
 
 #include "c_types/typedefs.h"
 
-/** @brief Time window's attributes
+namespace vrprouting {
 
-@note C/C++/postgreSQL connecting structure for input
+/** @brief Vehicle's break attributes
+
+@note C/C++/postgreSQL connecting classure for input
 name | description
 :----- | :-------
-id | Identifier of the job/shipment/break
-kind | Whether the shipment is a pickup ('p') or a delivery ('d')
-tw_open | Time window opening time
-tw_close | Time window closing time
+id | Identifier of break
+vehicle_id | Identifier of vehicle
+service | Duration of break
+data | Metadata information of break
 */
-struct Vroom_time_window_t {
-  Idx id;
-  char kind;
-  Duration tw_open;
-  Duration tw_close;
+class Vroom_break_t {
+ public:
+     Idx id; /** Identifier of break */
+     Idx vehicle_id;  /** Identifier of vehicle */
+     Duration service; /** Duration of break */
+     std::string data; /** Metadata information of break */
 };
 
-#endif  // INCLUDE_C_TYPES_VROOM_VROOM_TIME_WINDOW_T_H_
+}  // namespace
+
+#endif  // INCLUDE_CPP_COMMON_VROOM_BREAK_T_HPP_
