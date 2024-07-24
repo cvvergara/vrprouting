@@ -2,20 +2,19 @@
    ****************************************************************************
     vrpRouting Manual
     Copyright(c) vrpRouting Contributors
-
     This documentation is licensed under a Creative Commons Attribution-Share
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
    ****************************************************************************
 
-|
 
+|
 
 * `Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 <https://vrp.pgrouting.org/v0>`__
 * Supported Versions
   `Latest <https://vrp.pgrouting.org/latest/en/vrp_oneDepot.html>`__
   (`v0 <https://vrp.pgrouting.org/v0/en/vrp_oneDepot.html>`__)
 
-vrp_bin_packing - Experimental
+vrp_multiple_knapsack - Experimental
 ===============================================================================
 
 .. include:: experimental.rst
@@ -23,6 +22,10 @@ vrp_bin_packing - Experimental
    :end-before: end-warn-expr
 
 .. rubric:: Availability
+
+Version 0.4.1
+
+* Support for or-tools v9.10.4067
 
 Version 0.4.0
 
@@ -35,55 +38,96 @@ Version 0.4.0
 Description
 -------------------------------------------------------------------------------
 
-The bin packing problem is an optimization problem, in which 
-items of different sizes must be packed into a finite number of bins or containers, 
-each of a fixed given capacity, in a way that minimizes the number of bins used. 
-The problem has many applications, such as filling up containers, loading trucks with weight capacity constraints, 
-creating file backups in media and technology mapping in FPGA semiconductor chip design.
-
+The multiple knapsack problem is a problem in combinatorial optimization:
+it is a more general verison of the classic knapsack problem where instead of a
+single knapsack, you will be given multiple knapsacks and your goal is maximise the total
+value of packed items in all knapsacks.
 
 Signatures
 -------------------------------------------------------------------------------
-   
-.. include:: ../../sql/or_tools/bin_packing.sql
+
+.. admonition:: \ \
+   :class: signatures
+
+   | vrp_multiple_knapsack(`Weight Costs SQL`_, capacities, [,``max_rows``])
+   | RETURNS SET OF (knapsack, id)
+   | OR EMPTY SET
+
+.. include:: ../../sql/or_tools/multiple_knapsack.sql
    :start-after: signature start
    :end-before: signature end
 
 Parameters
 -------------------------------------------------------------------------------
 
-.. include:: ../../sql/or_tools/bin_packing.sql
-   :start-after: parameters start
-   :end-before: parameters end
+.. list-table::
+   :width: 81
+   :widths: 14 14 44
+   :header-rows: 1
+
+   * - Column
+     - Type
+     - Description
+   * - `Weight Costs SQL`_
+     - ``TEXT``
+     - `Weight Costs SQL`_ as described below
+   * - capacities
+     - ``ARRAY[`` **ANY-INTEGER** ``]``
+     - An array describing the capacity of each knapsack.
 
 Optional Parameters
 ...............................................................................
 
-.. include:: ../../sql/or_tools/bin_packing.sql
-   :start-after: optional parameters start
-   :end-before: optional parameters end
+.. list-table::
+   :width: 81
+   :widths: auto
+   :header-rows: 1
+
+   * - Column
+     - Type
+     - Default
+     - Description
+   * - ``max_rows``
+     - **ANY-INTEGER**
+     - :math:`100000`
+     - Maximum items(rows) to fetch from bin_packing_data table.
 
 Inner Queries
 -------------------------------------------------------------------------------
 
-Weights SQL
+Weight Costs SQL
 ...............................................................................
 
-.. include:: ../../sql/or_tools/bin_packing.sql
-   :start-after: Weights start
-   :end-before: Weights end
+.. include:: or_tools-category.rst
+   :start-after: weight_costs_start
+   :end-before: weight_costs_end
 
 Result Columns
 -------------------------------------------------------------------------------
 
-.. include:: ../../sql/or_tools/bin_packing.sql
+.. list-table::
+   :width: 81
+   :widths: auto
+   :header-rows: 1
+
+   * - Column
+     - Type
+     - Description
+   * - ``knapsak``
+     - ``INTEGER``
+     - Indentifier of the knapsack.
+   * - ``id``
+     - ``INTEGER``
+     - Indentifier of an item in the ``knapsack``.
+
+.. include:: ../../sql/or_tools/multiple_knapsack.sql
    :start-after: result start
    :end-before: result end
 
 Example
 -------------------------------------------------------------------------------
 
-.. literalinclude:: doc-vrp_bin_packing.queries
+.. literalinclude:: doc-vrp_multiple_knapsack.queries
    :start-after: -- example_start
    :end-before: -- example_end
 
