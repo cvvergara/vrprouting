@@ -42,5 +42,4 @@ struct Short_vehicle_rt{
   Id  order_id;   /** Stop */
 };
 
-
 #endif  // INCLUDE_C_TYPES_SHORT_VEHICLE_RT_H_

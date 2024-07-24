@@ -34,7 +34,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <vector>
 #include <utility>
 
-#include "c_types/return_types.h"
+#include "c_types/compatibleVehicles_rt.h"
 
 #include "cpp_common/messages.hpp"
 #include "problem/vehicle_node.hpp"

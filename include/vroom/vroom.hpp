@@ -36,7 +36,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <utility>
 #include <vector>
 
-#include "c_types/return_types.h"
+#include "c_types/vroom_rt.h"
 #include "cpp_common/vroom_types.hpp"
 #include "cpp_common/base_matrix.hpp"
 #include "cpp_common/messages.hpp"
