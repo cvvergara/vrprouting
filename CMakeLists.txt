@@ -17,13 +17,14 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 #---------------------------------------------
 #---------------------------------------------
 
-project(VRPROUTING VERSION 0.4.0
+project(VRPROUTING VERSION 0.4.1
   LANGUAGES C CXX )
-set(PROJECT_VERSION_DEV "-dev")
+set(PROJECT_VERSION_DEV "")
 string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
 
 set(MINORS 0.4 0.3 0.2 0.1)
 set(OLD_SIGNATURES
+    0.4.0
     0.3.0
     0.2.0
     0.1.0
@@ -53,13 +54,11 @@ include(pgr/Configure)
 set(DOXYGEN_MINIMUM_VERSION "1.7")
 set(SPHINX_MINIMUM_VERSION "1.8")
 set(POSTGRESQL_MINIMUM_VERSION "12.0")
-set(BOOST_MINIMUM_VERSION "1.65.0")
 set(VROOM_MINIMUM_VERSION "1.12.0")
 
 message(STATUS "DOXYGEN_MINIMUM_VERSION=${DOXYGEN_MINIMUM_VERSION}")
 message(STATUS "SPHINX_MINIMUM_VERSION=${SPHINX_MINIMUM_VERSION}")
 message(STATUS "POSTGRESQL_MINIMUM_VERSION=${POSTGRESQL_MINIMUM_VERSION}")
-message(STATUS "BOOST_MINIMUM_VERSION=${BOOST_MINIMUM_VERSION}")
 message(STATUS "VROOM_MINIMUM_VERSION=${VROOM_MINIMUM_VERSION}")
 
 # cmake 3.2 adds unwanted flags
@@ -78,19 +77,6 @@ endif()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 
-#---------------------------------------------
-#---------------------------------------------
-# Boost
-#---------------------------------------------
-#---------------------------------------------
-find_package(Boost ${BOOST_MINIMUM_VERSION} REQUIRED)
-if (NOT Boost_VERSION_MACRO)
-  set(Boost_VERSION_MACRO ${Boost_VERSION})
-endif()
-add_definitions(-DBoost_VERSION_MACRO=${Boost_VERSION_MACRO})
-add_definitions(-DBOOST_ALLOW_DEPRECATED_HEADERS)
-include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
-
 
 #---------------------------------------------
 # Windows compiler flags
@@ -103,13 +89,9 @@ if(WIN32 AND NOT MSVC)
     set(OS_BUILD "64")
   endif()
   set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}:/c/ming${OS_BUILD}/projects/pgx${OS_BUILD}/pg92)
-  if (NOT BOOST_ROOT)
-    set(BOOST_ROOT c:/ming${OS_BUILD}/msys/local)
-  endif()
 
   if (PROJECT_DEBUG)
     message(STATUS "OS_BUILD=${OS_BUILD}")
-    message(STATUS "BOOST_ROOT=${BOOST_ROOT}")
     message(STATUS "CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}")
   endif()
 endif(WIN32 AND NOT MSVC)
@@ -133,7 +115,7 @@ find_package(Perl REQUIRED)
 # PostgreSQL
 #---------------------------------------------
 #---------------------------------------------
-set(PostgreSQL_ADDITIONAL_VERSIONS "12" "13" "14" "15" "16")
+set(PostgreSQL_ADDITIONAL_VERSIONS "12" "13" "14")
 find_package(PostgreSQL ${POSTGRESQL_MINIMUM_VERSION} REQUIRED)
 if(POSTGRESQL_BIN)
   # Checking POSTGRESQL_PG_CONFIG
@@ -160,16 +142,16 @@ find_program(POSTGRESQL_EXECUTABLE NAMES postgres
   NO_DEFAULT_PATH
   )
 
-# for XbetaY XalphaY XrcY -> X.Y
-string(REGEX REPLACE "([0-9]+)[beta|alpha|rc|devel].*" "\\1.0" POSTGRESQL_VERSION_STRING "${PostgreSQL_VERSION_STRING}")
-message(STATUS "POSTGRESQL_VERSION_STRING=${POSTGRESQL_VERSION_STRING}")
 
-STRING(REGEX MATCH "([0-9]+)\.([0-9]+)" POSTGRESQL_VERSION "${POSTGRESQL_VERSION_STRING}")
-message(STATUS "POSTGRESQL_VERSION=${POSTGRESQL_VERSION}")
+
+# for XbetaY XalphaY XrcY -> X.Y
+string(REGEX REPLACE "^([0-9]+)[beta|alpha|rc|devel].*" "\\1.0" PostgreSQL_VERSION_STRING ${PostgreSQL_VERSION_STRING})
 
 #for X.Y.Z -> XY  Y<10
-string(REGEX REPLACE "^([0-9]+)\\.([0-9]+).*" "\\1\\2" PGSQL_VERSION "${POSTGRESQL_VERSION}")
-message(STATUS "PGSQL_VERSION=${PGSQL_VERSION}")
+string(REGEX REPLACE "^([0-9]+)\\.([0-9]+).*" "\\1" PostgreSQL_VERSION_MAYOR ${PostgreSQL_VERSION_STRING})
+string(REGEX REPLACE "^([0-9]+)\\.([0-9]+).*" "\\2" PostgreSQL_VERSION_MINOR ${PostgreSQL_VERSION_STRING})
+math(EXPR PostgreSQL_VERSION_NUM "${PostgreSQL_VERSION_MAYOR} * 10000 + ${PostgreSQL_VERSION_MINOR}")
+
 
 #-------
 include_directories(SYSTEM ${PostgreSQL_INCLUDE_DIRS})
@@ -192,7 +174,6 @@ add_definitions(-DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}")
 add_definitions(-DPROJECT_LIB_NAME="${PROJECT_NAME_LOWER}-${PROJECT_VERSION}")
 add_definitions(-DPROJECT_GIT_HASH="${PROJECT_GIT_HASH}")
 string(TIMESTAMP COMPILATION_DATE "\"%Y/%m/%d\"")
-add_definitions(-DBOOST_VERSION="${Boost_MAJOR_VERSION}.${Boost_MINOR_VERSION}.${Boost_SUBMINOR_VERSION}")
 add_definitions(-DCOMPILATION_DATE=${COMPILATION_DATE})
 add_definitions(-DCOMPILER_VERSION="${CMAKE_CXX_COMPILER_ID}-${CMAKE_CXX_COMPILER_VERSION}")
 add_definitions(-DPostgreSQL_VERSION_STRING="${PostgreSQL_VERSION_STRING}")
@@ -315,7 +296,7 @@ endif()
 
 message(STATUS "VROOM_INSTALL_PATH ${VROOM_INSTALL_PATH}")
 
-include_directories(SYSTEM ${VROOM_INSTALL_PATH}/src)
+include_directories(${VROOM_INSTALL_PATH}/src)
 link_libraries(${VROOM_INSTALL_PATH}/lib/libvroom.a)
 link_libraries(glpk)
 

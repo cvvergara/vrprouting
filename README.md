@@ -47,10 +47,10 @@ Building requirements
 * Perl
 * C and C++ compilers with C++17 standard support
 * Postgresql >= TBD
-* The Boost Graph Library (BGL) >= 1.65
 * CMake >= 3.12
 * Sphinx > 4.0.0
 * VROOM >= 1.12.0
+* ortools == 9.10.4067
 
 User's requirements
 --------------------
