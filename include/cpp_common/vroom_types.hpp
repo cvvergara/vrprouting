@@ -31,7 +31,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_CPP_COMMON_VROOM_TYPES_H_
 #pragma once
 
-#include "c_types/typedefs.h"
 #include "cpp_common/vroom_break_t.hpp"
 #include "cpp_common/vroom_job_t.hpp"
 #include "cpp_common/vroom_matrix_t.hpp"

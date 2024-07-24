@@ -29,19 +29,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "c_types/typedefs.h"
 
+namespace vrprouting {
+
 /** @brief traveling costs
 
-  @note C/C++/postgreSQL connecting structure for input
+  @note C/C++/postgreSQL connecting classure for input
   name | description
   :----- | :-------
   from_vid | Departure node's identifier
   to_vid | Arrival node's identifier
-  cost | Travel cost from departure to arrival
+  cost | Travel cost from departure to destination
   */
-struct Matrix_cell_t {
-  Id from_vid; /** @b departure node's identifier */
-  Id to_vid;   /** @b arrival node's identifier */
-  TInterval cost;      /** Travel Interval from departure to arrival */
+class Matrix_cell_t {
+ public:
+     Id from_vid; /** @b departure node's identifier */
+     Id to_vid;   /** @b arrival node's identifier */
+     TInterval cost;      /** Travel Interval from departure to destination */
 };
+
+}  // namespace vrprouting
 
 #endif  // INCLUDE_CPP_COMMON_MATRIX_CELL_T_HPP_

@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: pickDeliveryOrders_t.h
+File: Orders_t.h
 
 Copyright (c) 2015 Celia Virginia Vergara Castillo
 Mail: vicky_vergara@hotmail.com
@@ -23,15 +23,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 /*! @file */
 
-#ifndef INCLUDE_CPP_COMMON_PICKDELIVERYORDERS_T_HPP_
-#define INCLUDE_CPP_COMMON_PICKDELIVERYORDERS_T_HPP_
-#pragma once
+#ifndef INCLUDE_CPP_COMMON_ORDERS_T_HPP_
+#define INCLUDE_CPP_COMMON_ORDERS_T_HPP_
 
 #include "c_types/typedefs.h"
 
+namespace vrprouting {
+
 /** @brief order's attributes
 
-@note C/C++/postgreSQL connecting structure for input
+@note C/C++/postgreSQL connecting classure for input
 name | description
 :----- | :-------
 id | Order's identifier
@@ -45,33 +46,28 @@ deliver_open_t | Deliver open time
 deliver_close_t | Deliver close time
 deliver_service_t | Deliver service duration
 */
+class Orders_t{
+ public:
+     Id      id;     /** Order's identifier */
+     PAmount  demand; /** Number of demand */
 
+     Coordinate pick_x; /** Pick x coordinate: used in stand alone program for benchmarks */
+     Coordinate pick_y; /** Pick y coordinate: used in stand alone program for benchmarks */
+     Id  pick_node_id;  /** Pickup node identifier */
 
-/**************************************************************************
- * pickDelivery types
- * ***********************************************************************/
-/*
- * its with either (foo_x, foo_y) pairs (for euclidean or with foo_node_id (for matrix)
- */
-struct PickDeliveryOrders_t{
-  Id      id;     /** Order's identifier */
-  PAmount  demand; /** Number of demand */
+     TTimestamp pick_open_t;     /** Pickup open time*/
+     TTimestamp pick_close_t;    /** Pickup close time*/
+     TInterval  pick_service_t;  /** Pickup service duration */
 
-  Coordinate pick_x; /** Pick x coordinate: used in stand alone program for benchmarks */
-  Coordinate pick_y; /** Pick y coordinate: used in stand alone program for benchmarks */
-  Id  pick_node_id;  /** Pickup node identifier */
+     Coordinate deliver_x;  /** Deliver x coordinate: used in stand alone program for benchmarks */
+     Coordinate deliver_y;  /** Deliver y coordinate: used in stand alone program for benchmarks */
+     Id deliver_node_id;    /** Deliver node identifier */
 
-  TTimestamp pick_open_t;     /** Pickup open time*/
-  TTimestamp pick_close_t;    /** Pickup close time*/
-  TInterval  pick_service_t;  /** Pickup service duration */
-
-  Coordinate deliver_x;  /** Deliver x coordinate: used in stand alone program for benchmarks */
-  Coordinate deliver_y;  /** Deliver y coordinate: used in stand alone program for benchmarks */
-  Id deliver_node_id;    /** Deliver node identifier */
-
-  TTimestamp deliver_open_t;   /** Deliver open time */
-  TTimestamp deliver_close_t;  /** Deliver close time */
-  TInterval deliver_service_t; /** Deliver service duration */
+     TTimestamp deliver_open_t;   /** Deliver open time */
+     TTimestamp deliver_close_t;  /** Deliver close time */
+     TInterval deliver_service_t; /** Deliver service duration */
 };
 
-#endif  // INCLUDE_CPP_COMMON_PICKDELIVERYORDERS_T_HPP_
+}  // namespace vrprouting
+
+#endif  // INCLUDE_CPP_COMMON_ORDERS_T_HPP_
