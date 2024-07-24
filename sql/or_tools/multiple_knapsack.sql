@@ -103,31 +103,6 @@ result end
 - ANY-INTEGER: [SMALLINT, INTEGER, BIGINT]
 */
 
-DROP FUNCTION IF EXISTS vrp_multiple_knapsack CASCADE;
--- DROP TABLE IF EXISTS multiple_knapsack_data CASCADE;
-
--- CREATE TABLE multiple_knapsack_data(
---   id INTEGER,
---   weight INTEGER,
---   cost INTEGER);
-
--- INSERT INTO multiple_knapsack_data (id, weight,  cost)
--- VALUES
--- (1, 48, 10),
--- (2, 30, 30),
--- (3, 42, 25),
--- (4, 36, 50),
--- (5, 36, 35),
--- (6, 48, 30),
--- (7, 42, 15),
--- (8, 42, 40),
--- (9, 36, 30),
--- (10, 24, 35),
--- (11, 30, 45),
--- (12, 30, 10),
--- (13, 42, 20),
--- (14, 36, 30),
--- (15, 36, 25);
 
 
 CREATE OR REPLACE FUNCTION vrp_multiple_knapsack(
@@ -135,7 +110,7 @@ CREATE OR REPLACE FUNCTION vrp_multiple_knapsack(
   capacities INTEGER[], -- ARRAY of Knapsack Capacities
   max_rows INTEGER = 100000 -- Maximum number of rows to be fetched. Default value is 100000.
 )
-RETURNS TABLE(knapsack_number INTEGER, item_id INTEGER)
+RETURNS TABLE(knapsack INTEGER, id INTEGER)
 AS $$
   try:
     from ortools.linear_solver import pywraplp

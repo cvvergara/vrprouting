@@ -26,106 +26,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
-/*
-signature start
-
-.. code-block:: none
-
-    vrp_knapsack(
-      Weights_Costs SQL, capacity ANY-INTEGER, [, max_rows])
-
-    RETURNS SET OF
-    (item_id)
-
-signature end
-
-parameters start
-
-============================== ================ =========================================================
-Parameter                      Type             Description
-============================== ================ =========================================================
-**Weights_Costs SQL**          ``TEXT``         `Weights_Costs SQL`_ query describing the weights and
-                                                cost of each item
-**Capacity**                   ``ANY-INTEGER``  Maximum Capacity of the knapsack.
-============================== ================ =========================================================
-
-parameters end
-
-optional parameters start
-
-===================== =============== ================================== =================================================
-Parameter             Type            Default                            Description
-===================== =============== ================================== =================================================
-**max_rows**          ``ANY-INTEGER`` :math:`100000`                     Maximum items(rows) to fetch from knapsack_data
-                                                                         table
-===================== =============== ================================== =================================================
-
-optional parameters end
-
-.. Weights_Costs start
-
-A ``SELECT`` statement that returns the following columns:
-
-::
-
-    id, weight, cost
-
-
-====================  =========================  =========== ================================================
-Column                Type                       Default     Description
-====================  =========================  =========== ================================================
-**id**                ``ANY-INTEGER``                        unique identifier of the item.
-
-**weight**            ``ANY-INTEGER``                        weight of the item.
-
-**cost**              ``ANY-INTEGER``                        cost of the item.
-====================  =========================  =========== ================================================
-
-.. Weights_Costs end
-
-result start
-
-Returns set of
-
-.. code-block:: none
-
-    (item_id)
-
-=================== ================= =================================================
-Column              Type              Description
-=================== ================= =================================================
-**item_id**         ``ANY-INTEGER``   Integer to uniquely identify an item in the
-                                      knapsack
-=================== ================= =================================================
-result end
-
-**Note**:
-
-- ANY-INTEGER: [SMALLINT, INTEGER, BIGINT]
-*/
-
-DROP FUNCTION IF EXISTS vrp_knapsack CASCADE;
--- DROP TABLE IF EXISTS knapsack_data;
-
--- CREATE TABLE knapsack_data(
---   id INTEGER,
---   weight INTEGER,
---   cost INTEGER);
-
--- INSERT INTO knapsack_data (id, weight,  cost)
--- VALUES
--- (1, 12, 4),
--- (2, 2, 2),
--- (3, 1, 1),
--- (4, 4, 10),
--- (5, 1, 2);
-
+-- v0.4
 CREATE OR REPLACE FUNCTION vrp_knapsack(
   inner_query TEXT, -- weights_cost SQL
   capacity INTEGER, -- Knapsack Capacity
   max_rows INTEGER = 100000 -- Maximum number of rows to be fetched. Default is 100000.
 )
-RETURNS TABLE(item_id INTEGER)
+RETURNS TABLE(id INTEGER)
 AS $$
   try:
     from ortools.algorithms.python import knapsack_solver
@@ -139,7 +46,6 @@ AS $$
     raise Exception('Capacity Cannot be NULL')
   if max_rows == None:
     max_rows = 100000
-
   try:
     solver = knapsack_solver.KnapsackSolver(
     knapsack_solver.SolverType.
@@ -197,10 +103,6 @@ AS $$
   # end of the program
 
 $$ LANGUAGE plpython3u VOLATILE;
-
--- SELECT * FROM vrp_knapsack('SELECT id, weight, cost FROM knapsack_data' , 15);
-
--- COMMENTS
 
 COMMENT ON FUNCTION vrp_knapsack(TEXT, INTEGER, INTEGER)
 IS 'vrp_knapsack

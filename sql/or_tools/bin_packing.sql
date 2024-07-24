@@ -24,100 +24,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
-/*
-signature start
 
-.. code-block:: none
-
-    vrp_bin_packing(
-      Weights SQL, bin_capacity ANY-INTEGER, [, max_rows])
-
-    RETURNS SET OF
-    (bin_number, item_id)
-
-signature end
-
-parameters start
-
-============================== ================ ============================================================
-Parameter                      Type             Description
-============================== ================ ============================================================
-**Weights SQL**                ``TEXT``         `Weights SQL`_ query describing the weight of each item
-**Bin_Capacity**               ``ANY-INTEGER``  Maximum Capacity of the bin.
-============================== ================ ============================================================
-
-parameters end
-
-optional parameters start
-
-===================== =============== ================================ ==================================================
-Parameter             Type            Default                          Description
-===================== =============== ================================ ==================================================
-**max_rows**          ``ANY-INTEGER`` :math:`100000`                   Maximum items(rows) to fetch from bin_packing_data
-                                                                       table
-===================== =============== ================================ ==================================================
-
-optional parameters end
-
-.. Weights start
-
-A ``SELECT`` statement that returns the following columns:
-
-::
-
-    id, weight
-
-
-====================  =========================  =========== ================================================
-Column                Type                       Default     Description
-====================  =========================  =========== ================================================
-**id**                ``ANY-INTEGER``                        unique identifier of the item.
-
-**weight**            ``ANY-INTEGER``                        weight of the item.
-====================  =========================  =========== ================================================
-
-.. Weights end
-
-result start
-
-Returns set of
-
-.. code-block:: none
-
-    (bin_number, item_id)
-
-=================== ================= =================================================
-Column              Type              Description
-=================== ================= =================================================
-**bin_number**       ``ANY-INTEGER``       Integer to uniquely identify a bin
-
-**item_id**          ``ANY-INTEGER``       Integer to uniquely identify an item in the
-                                           bin
-=================== ================= =================================================
-result end
-
-**Note**:
-
-- ANY-INTEGER: [SMALLINT, INTEGER, BIGINT]
-*/
-DROP FUNCTION IF EXISTS vrp_bin_packing CASCADE;
--- DROP TABLE IF EXISTS bin_packing_data CASCADE;
-
--- CREATE TABLE bin_packing_data(
---   id INTEGER,
---   weight INTEGER);
-
--- INSERT INTO bin_packing_data (id, weight)
--- VALUES
--- (1, 48), (2, 30), (3, 19), (4, 36), (5, 36), (6, 27), (7, 42), (8, 42), (9, 36), (10, 24), (11, 30);
-
-
+-- v0.4
 CREATE OR REPLACE FUNCTION vrp_bin_packing(
   inner_query TEXT, -- weights SQL
   bin_capacity INTEGER, -- Bin Capacity
   max_rows INTEGER = 100000 -- Maximum number of rows to be fetched. Default is value = 100000.
 )
-RETURNS TABLE(bin_number INTEGER, item_id INTEGER)
+RETURNS TABLE(bin INTEGER, id INTEGER)
 AS $$
   try:
     from ortools.linear_solver import pywraplp
@@ -216,10 +130,6 @@ AS $$
   # end of the program
 
 $$ LANGUAGE plpython3u VOLATILE;
-
--- SELECT * FROM vrp_bin_packing('SELECT id, weight FROM bin_packing_data', 100);
-
--- COMMENTS
 
 COMMENT ON FUNCTION vrp_bin_packing(TEXT, INTEGER, INTEGER)
 IS 'vrp_bin_packing
