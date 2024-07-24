@@ -1,26 +1,16 @@
-name: Build for Ubuntu with clang
+name: Update Locale
 
 # This action runs:
 # - When this file changes
-# - When changes on code (src, include, sql)
-# - When changes on data or testing scripts (tools/testers)
-# - When the way the build changes (CMakeLists.txt)
-# - On request
-#
-# using
-# - the postgres installed version
+# - When changes on documentation (doc)
+# - When is triggered manually
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - '.github/workflows/clang.yml'
-      - 'src/**'
-      - 'include/**'
-      - 'sql/**'
-      - 'docqueries/**'
-      - 'tools/testers/**'
-      - 'CMakeLists.txt'
+      - '.github/workflows/locale.yml'
+      - 'doc/**'
 
     branches-ignore:
       - 'gh-pages'
@@ -30,25 +20,31 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  contents: write
 
 env:
     postgis: 3
+    release: Release
     os: ubuntu-latest
     vroom: 1.12.0
 
 jobs:
-  build:
-    name: Clang compiler
+  update-locale:
+    name: Update Locale
     runs-on: ubuntu-latest
-
     strategy:
         fail-fast: false
-        matrix:
-          release: [Debug, Release]
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract branch name and commit hash
+        run: |
+          branch=${GITHUB_REF#refs/heads/}
+          git_hash=$(git rev-parse --short "$GITHUB_SHA")
+          echo "GIT_HASH=$git_hash" >> $GITHUB_ENV
 
       - name: Get postgres version
         run: |
@@ -56,8 +52,6 @@ jobs:
           pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
           echo "PGVER=${pgver}" >> $GITHUB_ENV
           echo "PGPORT=5432" >> $GITHUB_ENV
-          echo "PGBIN=/usr/lib/postgresql/${pgver}/bin" >> $GITHUB_ENV
-          echo "PGINC=/usr/include/postgresql/${pgver}/server" >> $GITHUB_ENV
 
       - name: Add PostgreSQL APT repository
         run: |
@@ -76,17 +70,14 @@ jobs:
           sudo apt-get update
           # vrpRouting dependencies
           sudo apt-get install -y \
-            clang \
-            libtap-parser-sourcehandler-pgtap-perl \
             postgresql-${PGVER} \
-            postgresql-${PGVER}-pgtap \
-            postgresql-${PGVER}-postgis-${{ env.postgis }} \
-            postgresql-${PGVER}-postgis-${{ env.postgis }}-scripts \
-            postgresql-${PGVER}-pgrouting \
             postgresql-server-dev-${PGVER} \
             postgresql-plpython3-${PGVER}
           # vroom dependencies
           sudo apt-get install libssl-dev libasio-dev libglpk-dev
+          # documentation dependencies
+          sudo apt-get install -y graphviz doxygen
+          pip install -r requirements.txt
 
       - name: Install Google OR-Tools dependencies
         run: |
@@ -118,38 +109,27 @@ jobs:
 
       - name: Configure
         run: |
-          export PATH=/usr/lib/postgresql/${PGVER}/bin:$PATH
           VROOM=$(pwd)/vroom-${{ env.vroom }}
           mkdir build
           cd build
-          CXX=clang++ CC=clang cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }}  \
-              -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} \
+          cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
+              -DWITH_DOC=ON -DLOCALE=ON \
               -DVROOM_INSTALL_PATH=${VROOM} ..
 
       - name: Build
         run: |
           cd build
-          make -j 4
-          sudo make install
+          make locale
 
-      - name: Unpack data
+      - name: Initialize mandatory git config
         run: |
-          cd tools/testers
-          tar -xf matrix_new_values.tar.gz
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Create superuser
+      - name: Update locale
         run: |
-          sudo service postgresql start
-          export PG_RUNNER_USER=`whoami`
-          sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS \"${PG_RUNNER_USER}\";"
-          sudo -u postgres psql -p ${PGPORT} -c "DROP ROLE IF EXISTS \"${PG_RUNNER_USER}\";"
-          sudo -u postgres psql -p ${PGPORT} -c "CREATE ROLE \"${PG_RUNNER_USER}\" WITH LOGIN SUPERUSER;"
-          sudo -u postgres psql -p ${PGPORT} -c "CREATE DATABASE \"${PG_RUNNER_USER}\";"
-          echo "PG_RUNNER_USER=${PG_RUNNER_USER}" >> $GITHUB_ENV
-
-      - name: pgTap test
-        run: |
-          sudo service postgresql start
-          psql -c "CREATE DATABASE ___vrp___test___;"
-          bash ./tools/testers/pg_prove_tests.sh -U ${PG_RUNNER_USER} -p ${PGPORT} -d ___vrp___test___
-
+          bash .github/scripts/update_locale.sh
+          # Add the files, commit and push
+          git diff --staged --quiet || git commit -m "Update locale: commit for hash ${{ env.GIT_HASH }}"
+          git restore .  # Remove the unstaged changes before rebasing
+          git push

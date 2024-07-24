@@ -2,6 +2,9 @@ name: Build for macOS
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/macos.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -10,30 +13,41 @@ concurrency:
 permissions:
   contents: read
 
+env:
+    postgis: 3
+    vroom: 1.12.0
+
 # TODO: Fix the macOS build for compiling and building VROOM with vrprouting.
 jobs:
   build:
     name: Build
-    runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+        fail-fast: false
+        matrix:
+          release: [Debug, Release]
+          os: [macos-latest]
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: install dependencies
-        run: |
-          brew install postgis boost pgrouting asio glpk rapidjson
-          echo "here1"
-          ls /usr/local/opt/*
-          echo "here2"
-          ls /usr/local
+      - name: Install python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
-      - name: set environment
-        if: runner.os == 'macOs'
+      - name: Install dependencies
+        run: |
+          brew install postgis pgrouting asio glpk rapidjson
+
+      - name: Set environment
         shell: bash
         run: |
+          # Building vroom fails with clang
           echo "CC=gcc-12" >> $GITHUB_ENV;
           echo "CXX=g++-12" >> $GITHUB_ENV;
-          echo "VROOMVER=1.12.0" >> $GITHUB_ENV
+
 
       - name: Cache VROOM
         id: cache-vroom
@@ -41,50 +55,30 @@ jobs:
         env:
           cache-name: vroom
         with:
-          path: "vroom-${{ env.VROOMVER }}"
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ env.VROOMVER }}
+          path: vroom-${{ env.vroom }}
+          key: ${{ matrix.os }}-${{ env.cache-name }}-${{ env.vroom }}
 
       - name: Checkout VROOM
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         uses: actions/checkout@v4
         with:
-          path: "vroom-${{ env.VROOMVER }}"
+          path: vroom-${{ env.vroom }}
           repository: VROOM-Project/vroom
-          ref: "v${{ env.VROOMVER }}"
+          ref: "v${{ env.vroom }}"
           submodules: true
 
-      - name: Install VROOM
+      - name: Build VROOM
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
-          cd "vroom-${{ env.VROOMVER }}/src"
-          perl -pi -e 's/-Wextra -Wpedantic -Wall//' makefile
-          sed -i '' -e 's/\/usr\/include\/glpk.h/\/usr\/local\/opt\/glpk\/include\/glpk.h/' makefile
+          cd vroom-${{ env.vroom }}/src
           USE_ROUTING=false make shared
-
-          # Source: https://github.com/VROOM-Project/vroom/issues/378
-          #sudo ln -s /usr/local/opt/openssl/include/openssl /usr/local/include
-          #sudo mkdir /usr/local/lib
-          #echo 'here 2'
-          #sudo ln -s /usr/local/opt/openssl/lib/libssl.dylib /usr/local/lib/
-          #sudo ln -s /usr/local/opt/openssl/lib/libcrypto.dylib /usr/local/lib/
-          #echo 'here3'
-
-          # Create object file with position independent code using -fPIC flag
-          #sed -i '' -e 's/CXXFLAGS = /CXXFLAGS = -fPIC /' makefile
-          #echo 'here4'
-          #echo 'here5'
-
-          #make
-          #echo 'here6'
-          cd ..
-          echo "VROOM_INSTALL_PATH=$(pwd)" >> $GITHUB_ENV
 
       - name: Cache pgtap
         id: cache-pgtap
         uses: actions/cache@v4
         with:
           path: ./pgTapExtension/
-          key: ${{ runner.os }}-pgtap-${{ hashFiles('**/packages*.txt') }}
+          key: ${{ matrix.os }}-pgtap-${{ hashFiles('**/packages*.txt') }}
 
       - name: Checkout pgtap
         if: steps.cache-pgtap.outputs.cache-hit != 'true'
@@ -101,18 +95,20 @@ jobs:
           sudo make install
           cpan TAP::Parser::SourceHandler::pgTAP
 
-      - name: Build vrpRouting
+      - name: Configure
         run: |
+          VROOM=$(pwd)/vroom-${{ env.vroom }}
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release -DWITH_DOC=OFF -DVROOM_INSTALL_PATH=${VROOM_INSTALL_PATH} ..
-          make -j 4
+          CXX=clang++ CC=clang cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }}  \
+              -DVROOM_INSTALL_PATH=${VROOM} ..
 
-      - name: Install vrpRouting
-        if: false
+      - name: Build
         run: |
+          cd build
+          make -j 4
+          sudo make
           sudo make install
-
 
       - name: Unpack data
         if: false
