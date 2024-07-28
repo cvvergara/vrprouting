@@ -1,6 +1,6 @@
 /*WC-GNU*****************************************************************
 
-FILE: pickDeliver.h
+FILE: pickDeliver.hpp
 
 Copyright (c) 2017 pgRouting developers
 Mail: project@pgrouting.org
@@ -25,8 +25,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 /** @file */
 
-#ifndef INCLUDE_PROBLEM_PICKDELIVER_H_
-#define INCLUDE_PROBLEM_PICKDELIVER_H_
+#ifndef INCLUDE_PROBLEM_PICKDELIVER_HPP_
+#define INCLUDE_PROBLEM_PICKDELIVER_HPP_
 #pragma once
 
 
@@ -35,13 +35,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <utility>
 
 #include "c_types/compatibleVehicles_rt.h"
-
+#include "c_types/solution_rt.h"
+#include "cpp_common/orders_t.hpp"
+#include "cpp_common/vehicle_t.hpp"
 #include "cpp_common/messages.hpp"
 #include "problem/vehicle_node.hpp"
 #include "problem/orders.hpp"
 #include "problem/fleet.hpp"
 #include "problem/matrix.hpp"
-#include "cpp_common/pickdeliver_types.hpp"
 
 namespace vrprouting {
 namespace problem {
@@ -164,4 +165,4 @@ class PickDeliver {
 }  //  namespace problem
 }  //  namespace vrprouting
 
-#endif  // INCLUDE_PROBLEM_PICKDELIVER_H_
+#endif  // INCLUDE_PROBLEM_PICKDELIVER_HPP_

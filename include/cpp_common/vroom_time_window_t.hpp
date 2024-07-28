@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: vroom_time_window_t.h
+File: vroom_time_window_t.hpp
 
 Copyright (c) 2021 pgRouting developers
 Mail: project@pgrouting.org

@@ -1,6 +1,6 @@
 /*PGR-GNU*****************************************************************
 
-FILE: orders.h
+FILE: orders.hpp
 
 Copyright (c) 2015 pgRouting developers
 Mail: project@pgrouting.org
@@ -25,17 +25,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 /*! @file */
 
-#ifndef INCLUDE_PROBLEM_ORDERS_H_
-#define INCLUDE_PROBLEM_ORDERS_H_
+#ifndef INCLUDE_PROBLEM_ORDERS_HPP_
+#define INCLUDE_PROBLEM_ORDERS_HPP_
 #pragma once
 
 #include <vector>
 #include <algorithm>
 
 #include "problem/order.hpp"
+#include "cpp_common/orders_t.hpp"
 #include "cpp_common/assert.hpp"
 #include "cpp_common/identifiers.hpp"
-#include "cpp_common/pickdeliver_types.hpp"
 #include "problem/tw_node.hpp"
 #include "problem/vehicle_node.hpp"
 #include "problem/node_types.hpp"
@@ -169,4 +169,4 @@ Orders::build_orders(Orders_t *orders, size_t size_orders, const PTR problem_ptr
 }  //  namespace problem
 }  //  namespace vrprouting
 
-#endif  // INCLUDE_PROBLEM_ORDERS_H_
+#endif  // INCLUDE_PROBLEM_ORDERS_HPP_

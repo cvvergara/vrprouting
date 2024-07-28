@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: Orders_t.h
+File: Orders_t.hpp
 
 Copyright (c) 2015 Celia Virginia Vergara Castillo
 Mail: vicky_vergara@hotmail.com

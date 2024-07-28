@@ -1,5 +1,7 @@
 /*PGR-GNU*****************************************************************
 
+FILE: interruption.hpp
+
 Copyright (c) 2015 pgRouting developers
 Mail: project@pgrouting.org
 

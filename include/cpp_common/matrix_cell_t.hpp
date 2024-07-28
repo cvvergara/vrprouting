@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: matrix_cell_t.h
+File: matrix_cell_t.hpp
 
 Copyright (c) 2017 Celia Virginia Vergara Castillo
 Mail: vicky_vergara@hotmail.com
