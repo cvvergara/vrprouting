@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: get_check_data.hpp
+FILE: get_check_data.hpp
 
 Copyright (c) 2023 Celia Virginia Vergara Castillo
 vicky at erosion.dev

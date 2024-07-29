@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: vroom_shipment_t.h
+File: vroom_shipment_t.hpp
 
 Copyright (c) 2021 pgRouting developers
 Mail: project@pgrouting.org

@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: vehicle_t.h
+File: vehicle_t.hpp
 
 Copyright (c) 2015 Celia Virginia Vergara Castillo
 Mail: vicky_vergara@hotmail.com
