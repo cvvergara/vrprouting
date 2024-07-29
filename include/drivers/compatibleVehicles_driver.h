@@ -48,15 +48,11 @@ extern "C" {
 #endif
 
 /** @brief Driver for processing a "compatible vehicles" problem */
-void do_compatibleVehicles(
+void vrp_do_compatibleVehicles(
         char*, char*, char*, char*,
+        double, bool, bool, bool,
 
-        double,
-        bool, bool, bool,
-
-        CompatibleVehicles_rt **,
-        size_t*,
-
+        CompatibleVehicles_rt **, size_t*,
         char**, char**, char**);
 
 

@@ -45,16 +45,11 @@ typedef struct Vroom_rt Vroom_rt;
 extern "C" {
 #endif
 
-  void vrp_do_vroom(
-      char*, char*, char*, char*,
-      char*, char*, char*, char*,
+void vrp_do_vroom(
+      char*, char*, char*, char*, char*, char*, char*, char*,
+      int32_t, int32_t, int32_t, int16_t, bool,
 
-      int32_t, int32_t, int32_t, int16_t,
-      bool,
-
-      Vroom_rt**,
-      size_t*,
-
+      Vroom_rt**, size_t*,
       char**, char**, char**);
 
 #ifdef __cplusplus

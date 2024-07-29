@@ -46,15 +46,12 @@ typedef struct Solution_rt Solution_rt;
 extern "C" {
 #endif
 
-  void vrp_do_pgr_pickDeliverEuclidean(
-      char*, char*,
+void vrp_do_pgr_pickDeliverEuclidean(
+        char*, char*,
+        double, int, int,
 
-      double, int, int,
-
-      Solution_rt**,
-      size_t*,
-
-      char**, char**, char**);
+        Solution_rt**, size_t*,
+        char**, char**, char**);
 
 
 #ifdef __cplusplus

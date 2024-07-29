@@ -48,18 +48,12 @@ extern "C" {
 #endif
 
     /** @brief Driver for processing a pickupDeliver problem */
-    void do_optimize(
-            char*, char*, char*, char*,
+void vrp_do_optimize(
+        char*, char*, char*, char*,
+        double, int, int64_t, bool, int, bool, bool, bool,
 
-            double, int, int64_t,
-
-            bool, bool, bool,
-            bool, bool, bool,
-
-            Short_vehicle_rt**,
-            size_t*,
-
-            char**, char**, char**);
+        Short_vehicle_rt**, size_t*,
+        char**, char**, char**);
 
 
 #ifdef __cplusplus
