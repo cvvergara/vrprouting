@@ -30,6 +30,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/info.hpp"
 #include "c_types/typedefs.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @brief  Check whether the colNumber represent any specific column or NULL (SPI_ERROR_NOATTRIBUTE). */
 bool column_found(int colNumber);
 
@@ -168,5 +172,8 @@ PAmount get_PositiveAmount(HeapTuple*, TupleDesc*, Column_info_t, PAmount);
 /** get a coordinate value */
 Coordinate spi_getCoordinate(HeapTuple*, TupleDesc*, Column_info_t, Coordinate);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // INCLUDE_CPP_COMMON_GET_CHECK_DATA_HPP_
