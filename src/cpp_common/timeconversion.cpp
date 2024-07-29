@@ -81,7 +81,7 @@ vrprouting::get_timestamp_without_timezone(TTimestamp timestamp) {
   /*
    * calling postgres functions
    */
-  j2date((int) date, &info.tm_year, &info.tm_mon, &info.tm_mday);
+  j2date(static_cast<int>(date), &info.tm_year, &info.tm_mon, &info.tm_mday);
   dt2time(time, &info.tm_hour, &info.tm_min, &info.tm_sec, &fsec);
 
   /*

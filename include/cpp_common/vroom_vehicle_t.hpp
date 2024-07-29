@@ -31,6 +31,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_CPP_COMMON_VROOM_VEHICLE_T_HPP_
 #pragma once
 
+#include <vector>
+#include <unordered_set>
+#include <string>
+
 #include "c_types/typedefs.h"
 
 namespace vrprouting {

@@ -55,6 +55,6 @@ class Vroom_time_window_t {
      Duration tw_close;
 };
 
-}  // namespace
+}  // namespace vrprouting
 
 #endif  // INCLUDE_CPP_COMMON_VROOM_TIME_WINDOW_T_HPP_

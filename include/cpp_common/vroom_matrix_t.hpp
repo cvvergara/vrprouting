@@ -54,7 +54,7 @@ class Vroom_matrix_t {
      TravelCost cost;       /** Cost to travel from start to end */
 };
 
-}  // namespace
+}  // namespace vrprouting
 
 #endif  // INCLUDE_CPP_COMMON_VROOM_MATRIX_T_HPP_
 

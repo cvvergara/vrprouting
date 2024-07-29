@@ -31,6 +31,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_CPP_COMMON_VROOM_BREAK_T_HPP_
 #pragma once
 
+#include <string>
+
 #include "c_types/typedefs.h"
 
 namespace vrprouting {
@@ -53,6 +55,6 @@ class Vroom_break_t {
      std::string data; /** Metadata information of break */
 };
 
-}  // namespace
+}  // namespace vrprouting
 
 #endif  // INCLUDE_CPP_COMMON_VROOM_BREAK_T_HPP_

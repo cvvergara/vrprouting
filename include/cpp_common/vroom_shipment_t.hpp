@@ -31,11 +31,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_CPP_COMMON_VROOM_SHIPMENT_T_HPP_
 #pragma once
 
+#include <vector>
+#include <unordered_set>
+#include <string>
+
 #include "c_types/typedefs.h"
 
 namespace vrprouting {
-
-
 
 
 /** @brief Vroom's shipment's attributes
@@ -82,6 +84,6 @@ class Vroom_shipment_t {
      std::string d_data; /** Metadata information of delivery shipment */
 };
 
-}  // namespace
+}  // namespace vrprouting
 
 #endif  // INCLUDE_CPP_COMMON_VROOM_SHIPMENT_T_HPP_

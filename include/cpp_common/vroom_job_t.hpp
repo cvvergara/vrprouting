@@ -75,6 +75,6 @@ class Vroom_job_t {
      std::string data; /** Metadata information of job */
 };
 
-}  // namespace
+}  // namespace vrprouting
 
 #endif  // INCLUDE_CPP_COMMON_VROOM_JOB_T_HPP_
