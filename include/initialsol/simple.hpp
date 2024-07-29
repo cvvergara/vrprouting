@@ -25,8 +25,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 /*! @file */
 
-#ifndef INCLUDE_INITIALSOL_SIMPLE_H_
-#define INCLUDE_INITIALSOL_SIMPLE_H_
+#ifndef INCLUDE_INITIALSOL_SIMPLE_HPP_
+#define INCLUDE_INITIALSOL_SIMPLE_HPP_
 #pragma once
 
 #include "cpp_common/identifiers.hpp"
@@ -72,4 +72,4 @@ class Initial_solution : public problem::Solution {
 }  //  namespace initialsol
 }  //  namespace vrprouting
 
-#endif  // INCLUDE_INITIALSOL_SIMPLE_H_
+#endif  // INCLUDE_INITIALSOL_SIMPLE_HPP_

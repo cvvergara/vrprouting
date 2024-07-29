@@ -27,8 +27,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 /*! @file */
 
-#ifndef INCLUDE_CPP_COMMON_PGR_ALLOC_HPP_
-#define INCLUDE_CPP_COMMON_PGR_ALLOC_HPP_
+#ifndef INCLUDE_CPP_COMMON_ALLOC_HPP_
+#define INCLUDE_CPP_COMMON_ALLOC_HPP_
 #pragma once
 
 
@@ -90,4 +90,4 @@ char* msg(const std::string &);
 
 }  // namespace vrprouting
 
-#endif  // INCLUDE_CPP_COMMON_PGR_ALLOC_HPP_
+#endif  // INCLUDE_CPP_COMMON_ALLOC_HPP_

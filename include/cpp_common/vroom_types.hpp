@@ -27,8 +27,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 /*! @file */
 
-#ifndef INCLUDE_CPP_COMMON_VROOM_TYPES_H_
-#define INCLUDE_CPP_COMMON_VROOM_TYPES_H_
+#ifndef INCLUDE_CPP_COMMON_VROOM_TYPES_HPP_
+#define INCLUDE_CPP_COMMON_VROOM_TYPES_HPP_
 #pragma once
 
 #include "cpp_common/vroom_break_t.hpp"
@@ -38,4 +38,4 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/vroom_time_window_t.hpp"
 #include "cpp_common/vroom_vehicle_t.hpp"
 
-#endif  // INCLUDE_CPP_COMMON_VROOM_TYPES_H_
+#endif  // INCLUDE_CPP_COMMON_VROOM_TYPES_HPP_

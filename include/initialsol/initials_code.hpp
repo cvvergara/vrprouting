@@ -25,8 +25,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 /*! @file */
 
-#ifndef INCLUDE_INITIALSOL_INITIALS_CODE_H_
-#define INCLUDE_INITIALSOL_INITIALS_CODE_H_
+#ifndef INCLUDE_INITIALSOL_INITIALS_CODE_HPP_
+#define INCLUDE_INITIALSOL_INITIALS_CODE_HPP_
 #pragma once
 
 namespace vrprouting {
@@ -49,4 +49,4 @@ enum Initials_code {
 }  // namespace initialsol
 }  // namespace vrprouting
 
-#endif  // INCLUDE_INITIALSOL_INITIALS_CODE_H_
+#endif  // INCLUDE_INITIALSOL_INITIALS_CODE_HPP_

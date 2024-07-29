@@ -78,4 +78,4 @@ Vroom_vehicle_t fetch_vehicles(const HeapTuple, const TupleDesc&, const std::vec
 }  // namespace pgget
 }  // namespace vrprouting
 
-#endif  // INCLUDE_C_COMMON_PGDATA_FETCHERS_H_
+#endif  // INCLUDE_CPP_COMMON_PGDATA_FETCHERS_HPP_

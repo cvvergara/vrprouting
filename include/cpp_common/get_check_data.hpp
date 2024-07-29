@@ -22,8 +22,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
-#ifndef INCLUDE_C_COMMON_GET_CHECK_DATA_HPP_
-#define INCLUDE_C_COMMON_GET_CHECK_DATA_HPP_
+#ifndef INCLUDE_CPP_COMMON_GET_CHECK_DATA_HPP_
+#define INCLUDE_CPP_COMMON_GET_CHECK_DATA_HPP_
 #pragma once
 
 
@@ -148,4 +148,4 @@ std::vector<T> get_uint_array(const HeapTuple tuple, const TupleDesc &tupdesc, c
 }  // namespace vrprouting
 
 
-#endif  // INCLUDE_C_COMMON_GET_CHECK_DATA_HPP_
+#endif  // INCLUDE_CPP_COMMON_GET_CHECK_DATA_HPP_
