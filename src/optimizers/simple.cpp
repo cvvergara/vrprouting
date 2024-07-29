@@ -241,7 +241,6 @@ Optimize::swap_worse(problem::Vehicle_pickDeliver &to, problem::Vehicle_pickDeli
                     pgassert(!(from.has_order(to_order) && to.has_order(to_order)));
                     pgassert(from.has_order(to_order) || to.has_order(to_order));
 
-                    swapped = true;
                     break;
                 }
             }
