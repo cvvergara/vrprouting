@@ -48,7 +48,6 @@ namespace vrprouting {
   start_id | Start location index in matrix
   end_id | End location index in matrix
   capacity | Vehicle's capacity array
-  capacity_size | Vehicle's capacity array size
   skills | Vehicle's skills
   skills_size | Number of vehicle's skills
   tw_open | Time window start time
@@ -64,7 +63,6 @@ class Vroom_vehicle_t {
      MatrixIndex end_id; /** End location index in matrix */
 
      std::vector<Amount> capacity; /** Vehicle's capacity array */
-     size_t capacity_size; /** Vehicle's capacity array size */
 
      std::unordered_set<Skill> skills; /** Mandatory skills */
 
