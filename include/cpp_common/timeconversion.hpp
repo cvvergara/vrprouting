@@ -22,8 +22,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
-#ifndef INCLUDE_C_COMMON_TIMECONVERSION_H_
-#define INCLUDE_C_COMMON_TIMECONVERSION_H_
+#ifndef INCLUDE_CPP_COMMON_TIMECONVERSION_HPP_
+#define INCLUDE_CPP_COMMON_TIMECONVERSION_HPP_
 #pragma once
 
 
@@ -35,4 +35,4 @@ TTimestamp get_timestamp_without_timezone(TTimestamp timestamp);
 
 }  // namespace vrprouting
 
-#endif  // INCLUDE_C_COMMON_TIMECONVERSION_H_
+#endif  // INCLUDE_CPP_COMMON_TIMECONVERSION_HPP_
