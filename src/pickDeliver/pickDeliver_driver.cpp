@@ -102,7 +102,7 @@ digraph G {
  *
  */
 void
-do_pickDeliver(
+vrp_do_pickDeliver(
         char* orders_sql,
         char* vehicles_sql,
         char* matrix_sql,
@@ -144,6 +144,18 @@ do_pickDeliver(
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
         log << "do_pickDeliver\n";
+
+        if (factor <= 0) {
+            *notice_msg = msg("Illegal value in parameter: factor");
+            *log_msg = msg("Expected value: factor > 0");
+            return;
+        }
+
+        if (max_cycles < 0) {
+            *notice_msg = msg("Illegal value in parameter: max_cycles");
+            *log_msg = msg("Expected value: max_cycles >= 0");
+            return;
+        }
 
         hint = orders_sql;
         auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);

@@ -57,18 +57,20 @@ process(
     bool with_stops = false;
     bool is_euclidean = false;
 
+#if 0
     if (factor <= 0) {
         ereport(ERROR,
                 (errcode(ERRCODE_INTERNAL_ERROR),
                  errmsg("Illegal value in parameter: factor"),
                  errhint("Value found: %f <= 0", factor)));
     }
+#endif
 
     vrp_SPI_connect();
 
 
     clock_t start_t = clock();
-    do_compatibleVehicles(
+    vrp_do_compatibleVehicles(
             pd_orders_sql,
             vehicles_sql,
             matrix_sql,

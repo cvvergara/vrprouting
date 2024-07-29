@@ -177,6 +177,7 @@ PGDLLEXPORT Datum _vrp_vroom(PG_FUNCTION_ARGS) {
     int16_t fn = PG_GETARG_INT16(10);
     bool is_plain = PG_GETARG_BOOL(11);
 
+#if 0
     // Verify that both jobs_sql and shipments_sql are not NULL
     if (args[0] == NULL && args[2] == NULL) {
       if (fn == 0) {
@@ -195,6 +196,7 @@ PGDLLEXPORT Datum _vrp_vroom(PG_FUNCTION_ARGS) {
     if (args[7] == NULL) {
       elog(ERROR, "Matrix SQL must not be NULL");
     }
+#endif
 
     process(
         args[0],

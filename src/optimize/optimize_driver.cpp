@@ -344,7 +344,7 @@ subdivide_processing(
 
 
 void
-do_optimize(
+vrp_do_optimize(
         char* orders_sql,
         char* vehicles_sql,
         char* matrix_sql,
@@ -355,8 +355,7 @@ do_optimize(
         int64_t execution_date,
 
         bool check_triangle_inequality,
-        bool subdivide,
-        bool subdivide_by_vehicle,
+        int subdivision_kind,
 
         bool use_timestamps,
         bool is_euclidean,
@@ -391,6 +390,27 @@ do_optimize(
         pgassert(!(*err_msg));
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
+
+        if (factor <= 0) {
+            *notice_msg = msg("Illegal value in parameter: factor");
+            *log_msg = msg("Expected value: factor > 0");
+            return;
+        }
+
+        if (max_cycles < 0) {
+            *notice_msg = msg("Illegal value in parameter: max_cycles");
+            *log_msg = msg("Expected value: max_cycles >= 0");
+            return;
+        }
+
+        if (subdivision_kind < 0 || subdivision_kind > 2) {
+            *notice_msg = msg("Illegal value in parameter: subdivision_kind");
+            *log_msg = msg("Expected value: 0 <= subdivision_kind < 2");
+            return;
+        }
+
+        bool subdivide = (subdivision_kind != 0);
+        bool subdivide_by_vehicle = (subdivision_kind == 1);
 
         hint = orders_sql;
         auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);

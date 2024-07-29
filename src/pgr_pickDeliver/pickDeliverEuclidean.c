@@ -53,7 +53,7 @@ process(
     char *notice_msg = NULL;
     char *err_msg = NULL;
 
-
+#if 0
     if (factor <= 0) {
         ereport(ERROR,
                 (errcode(ERRCODE_INTERNAL_ERROR),
@@ -80,7 +80,7 @@ process(
         (*result_tuples) = NULL;
         return;
     }
-
+#endif
     vrp_SPI_connect();
 
     clock_t start_t = clock();

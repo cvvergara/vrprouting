@@ -91,7 +91,7 @@ digraph G {
  *
  */
 void
-do_compatibleVehicles(
+vrp_do_compatibleVehicles(
         char* orders_sql,
         char* vehicles_sql,
         char* matrix_sql,
@@ -127,6 +127,12 @@ do_compatibleVehicles(
         pgassert(!(*err_msg));
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
+
+        if (factor <= 0) {
+            *notice_msg = msg("Illegal value in parameter: factor");
+            *log_msg = msg("Expected value: factor > 0");
+            return;
+        }
 
         hint = orders_sql;
         auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);

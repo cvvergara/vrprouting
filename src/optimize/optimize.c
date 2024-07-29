@@ -63,6 +63,7 @@ process(
     bool with_stops = false;
     bool is_euclidean = false;
 
+#if 0
     //! [Factor must be postive]
     if (factor <= 0) {
         ereport(ERROR,
@@ -87,12 +88,14 @@ process(
                  errhint("Value found: %d", max_cycles)));
     }
 
+#endif
+
     vrp_SPI_connect();
 
 
     clock_t start_t = clock();
 
-    do_optimize(
+    vrp_do_optimize(
             pd_orders_sql,
             vehicles_sql,
             matrix_sql,
@@ -103,8 +106,7 @@ process(
             execution_date,
 
             check_triangle_inequality,
-            subdivision_kind != 0,
-            subdivision_kind == 1,
+            subdivision_kind,
 
             use_timestamps,
             is_euclidean,

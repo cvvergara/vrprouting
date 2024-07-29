@@ -50,7 +50,7 @@ PREPARE initsol2 AS
 SELECT * FROM _vrp_pgr_pickDeliverEuclidean(
     $$SELECT * FROM orders_1$$,
     $$SELECT * FROM vehicles_1$$,
-    initial_sol := 7);
+    initial_sol := 8);
 
 PREPARE initsol3 AS
 SELECT * FROM _vrp_pgr_pickDeliverEuclidean(
@@ -68,12 +68,10 @@ SELECT throws_ok('initsol1',
 SELECT throws_ok('initsol2',
     'XX000',
     'Illegal value in parameter: initial_sol',
-    'Should throw: initial_sol > 6');
+    'Should throw: initial_sol > 7');
 
-SELECT throws_ok('initsol3',
-    'XX000',
-    'Illegal value in parameter: initial_sol',
-    'Should throw: initial_sol = 0');
+SELECT lives_ok('initsol3',
+    'Should live: initial_sol = 0');
 
 --------------------------------------
 -- testing wrong data on factor

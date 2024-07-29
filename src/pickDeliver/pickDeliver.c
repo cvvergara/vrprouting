@@ -74,6 +74,7 @@ process(
     execution_date = vrp_timestamp_without_timezone(execution_date);
   }
 
+#if 0
   PGR_DBG("execution_date: %ld ", execution_date);
 
   //! [Factor must be postive]
@@ -91,13 +92,14 @@ process(
          errmsg("Illegal value in parameter: max_cycles"),
          errhint("Value found: %d <= 0", max_cycles)));
   }
+#endif
 
   vrp_SPI_connect();
 
 
   clock_t start_t = clock();
 
-  do_pickDeliver(
+  vrp_do_pickDeliver(
       pd_orders_sql,
       vehicles_sql,
       matrix_sql,

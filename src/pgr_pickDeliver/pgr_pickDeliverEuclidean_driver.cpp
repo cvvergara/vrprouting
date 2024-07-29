@@ -120,201 +120,218 @@ are_shipments_ok(
 
 void
 vrp_do_pgr_pickDeliverEuclidean(
-    char* orders_sql,
-    char* vehicles_sql,
+        char* orders_sql,
+        char* vehicles_sql,
 
         double factor,
         int max_cycles,
         int initial_solution_id,
 
-    Solution_rt **return_tuples,
-    size_t *return_count,
+        Solution_rt **return_tuples,
+        size_t *return_count,
 
-    char **log_msg,
-    char **notice_msg,
-    char **err_msg) {
-  using vrprouting::msg;
-  using vrprouting::alloc;
-  using vrprouting::pgget::pickdeliver::get_orders;
-  using vrprouting::pgget::pickdeliver::get_vehicles;
+        char **log_msg,
+        char **notice_msg,
+        char **err_msg) {
+    using vrprouting::msg;
+    using vrprouting::alloc;
+    using vrprouting::pgget::pickdeliver::get_orders;
+    using vrprouting::pgget::pickdeliver::get_vehicles;
 
-  std::ostringstream log;
-  std::ostringstream notice;
-  std::ostringstream err;
+    std::ostringstream log;
+    std::ostringstream notice;
+    std::ostringstream err;
 
-  char* hint = nullptr;
+    char* hint = nullptr;
 
-  try {
-    pgassert(!(*log_msg));
-    pgassert(!(*notice_msg));
-    pgassert(!(*err_msg));
-    pgassert(*return_count == 0);
-    pgassert(!(*return_tuples));
-    log << "do_pgr_pickDeliverEuclidean\n";
-
-    bool use_timestamps = false;
-    bool is_euclidean = true;
-    bool with_stops = false;
-
-    Identifiers<Id> node_ids;
-
-    std::string err_string;
-    std::string hint_string;
-
-    hint = orders_sql;
-    auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);
-    if (orders.size() == 0) {
-      *notice_msg = msg("Insufficient data found on inner query");
-      *log_msg = hint? msg(hint) : nullptr;
-      return;
-    }
-
-    hint = vehicles_sql;
-    auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps, with_stops);
-    if (vehicles.size() == 0) {
-      *notice_msg = msg("Insufficient data found on inner query");
-      *log_msg = hint? msg(hint) : nullptr;
-      return;
-    }
-    hint = nullptr;
-
-    if (!are_shipments_ok(orders, &err_string, &hint_string)) {
-      *err_msg = msg(err_string.c_str());
-      *log_msg = msg(hint_string.c_str());
-      return;
-    }
-
-    /*
-     * transform to C++ containers
-     */
-
-    std::map<std::pair<Coordinate, Coordinate>, Id> matrix_data;
-
-    for (const auto &o : orders) {
-      pgassert(o.pick_node_id == 0);
-      pgassert(o.deliver_node_id == 0);
-      matrix_data[std::pair<Coordinate, Coordinate>(o.pick_x, o.pick_y)] = 0;
-      matrix_data[std::pair<Coordinate, Coordinate>(o.deliver_x, o.deliver_y)] = 0;
-    }
-
-    for (const auto &v : vehicles) {
-      matrix_data[std::pair<Coordinate, Coordinate>(v.start_x, v.start_y)] = 0;
-      matrix_data[std::pair<Coordinate, Coordinate>(v.end_x, v.end_y)] = 0;
-    }
-
-    Identifiers<int64_t> unique_ids;
-    /*
-     * Data does not have ids for the locations'
-     */
-    Id id(0);
-    for (auto &e : matrix_data) {
-      e.second = id++;
-    }
-
-    for (const auto &e : matrix_data) {
-      unique_ids += e.second;
-      log << e.second << "(" << e.first.first << "," << e.first.second << ")\n";
-    }
-
-    for (auto &o : orders) {
-      o.pick_node_id    = matrix_data[std::pair<Coordinate, Coordinate>(o.pick_x, o.pick_y)];
-      o.deliver_node_id = matrix_data[std::pair<Coordinate, Coordinate>(o.deliver_x, o.deliver_y)];
-    }
-
-    for (auto &v : vehicles) {
-      v.start_node_id = matrix_data[std::pair<Coordinate, Coordinate>(v.start_x, v.start_y)];
-      v.end_node_id = matrix_data[std::pair<Coordinate, Coordinate>(v.end_x, v.end_y)];
-    }
-
-    vrprouting::problem::Matrix cost_matrix(matrix_data, static_cast<Multiplier>(factor));
-
-    log << "Initialize problem\n";
-    vrprouting::problem::PickDeliver pd_problem(orders, vehicles, cost_matrix);
-
-    err << pd_problem.msg.get_error();
-    if (!err.str().empty()) {
-      log.str("");
-      log.clear();
-      log << pd_problem.msg.get_error();
-      log << pd_problem.msg.get_log();
-      *log_msg = msg(log.str().c_str());
-      *err_msg = msg(err.str().c_str());
-      return;
-    }
-    log << pd_problem.msg.get_log();
-    log << "Finish Reading data\n";
-
-#if 0
     try {
-#endif
-      auto sol = get_initial_solution(&pd_problem, initial_solution_id);
-      using Optimize = vrprouting::optimizers::simple::Optimize;
-      using Initials_code = vrprouting::initialsol::simple::Initials_code;
-      sol = Optimize(sol, static_cast<size_t>(max_cycles), (Initials_code)initial_solution_id);
+        pgassert(!(*log_msg));
+        pgassert(!(*notice_msg));
+        pgassert(!(*err_msg));
+        pgassert(*return_count == 0);
+        pgassert(!(*return_tuples));
+
+        bool use_timestamps = false;
+        bool is_euclidean = true;
+        bool with_stops = false;
+
+        Identifiers<Id> node_ids;
+
+        std::string err_string;
+        std::string hint_string;
+
+        if (factor <= 0) {
+            *err_msg = msg("Illegal value in parameter: factor");
+            *log_msg = msg("Expected value: factor > 0");
+            return;
+        }
+
+        if (max_cycles < 0) {
+            *err_msg = msg("Illegal value in parameter: max_cycles");
+            *log_msg = msg("Expected value: max_cycles >= 0");
+            return;
+        }
+
+        if (initial_solution_id < 0 || initial_solution_id > 7) {
+            *err_msg = msg("Illegal value in parameter: initial_sol");
+            *log_msg = msg("Expected value: 0 <= initial_sol <= 7");
+            return;
+        }
+
+        hint = orders_sql;
+        auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);
+        if (orders.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+
+        hint = vehicles_sql;
+        auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps, with_stops);
+        if (vehicles.size() == 0) {
+            *notice_msg = msg("Insufficient data found on inner query");
+            *log_msg = hint? msg(hint) : nullptr;
+            return;
+        }
+        hint = nullptr;
+
+        if (!are_shipments_ok(orders, &err_string, &hint_string)) {
+            *err_msg = msg(err_string.c_str());
+            *log_msg = msg(hint_string.c_str());
+            return;
+        }
+
+        /*
+         * transform to C++ containers
+         */
+
+        std::map<std::pair<Coordinate, Coordinate>, Id> matrix_data;
+
+        for (const auto &o : orders) {
+            pgassert(o.pick_node_id == 0);
+            pgassert(o.deliver_node_id == 0);
+            matrix_data[std::pair<Coordinate, Coordinate>(o.pick_x, o.pick_y)] = 0;
+            matrix_data[std::pair<Coordinate, Coordinate>(o.deliver_x, o.deliver_y)] = 0;
+        }
+
+        for (const auto &v : vehicles) {
+            matrix_data[std::pair<Coordinate, Coordinate>(v.start_x, v.start_y)] = 0;
+            matrix_data[std::pair<Coordinate, Coordinate>(v.end_x, v.end_y)] = 0;
+        }
+
+        Identifiers<int64_t> unique_ids;
+        /*
+         * Data does not have ids for the locations'
+         */
+        Id id(0);
+        for (auto &e : matrix_data) {
+            e.second = id++;
+        }
+
+        for (const auto &e : matrix_data) {
+            unique_ids += e.second;
+            log << e.second << "(" << e.first.first << "," << e.first.second << ")\n";
+        }
+
+        for (auto &o : orders) {
+            o.pick_node_id    = matrix_data[std::pair<Coordinate, Coordinate>(o.pick_x, o.pick_y)];
+            o.deliver_node_id = matrix_data[std::pair<Coordinate, Coordinate>(o.deliver_x, o.deliver_y)];
+        }
+
+        for (auto &v : vehicles) {
+            v.start_node_id = matrix_data[std::pair<Coordinate, Coordinate>(v.start_x, v.start_y)];
+            v.end_node_id = matrix_data[std::pair<Coordinate, Coordinate>(v.end_x, v.end_y)];
+        }
+
+        vrprouting::problem::Matrix cost_matrix(matrix_data, static_cast<Multiplier>(factor));
+
+        log << "Initialize problem\n";
+        vrprouting::problem::PickDeliver pd_problem(orders, vehicles, cost_matrix);
+
+        err << pd_problem.msg.get_error();
+        if (!err.str().empty()) {
+            log.str("");
+            log.clear();
+            log << pd_problem.msg.get_error();
+            log << pd_problem.msg.get_log();
+            *log_msg = msg(log.str().c_str());
+            *err_msg = msg(err.str().c_str());
+            return;
+        }
+        log << pd_problem.msg.get_log();
+        log << "Finish Reading data\n";
+
 #if 0
-    } catch (AssertFailedException &except) {
-      log << pd_problem.msg.get_log();
-      throw;
-    } catch(...) {
-      log << "Caught unknown exception!";
-      throw;
-    }
+        try {
 #endif
-    log << pd_problem.msg.get_log();
-    log << "Finish solve\n";
+            auto sol = get_initial_solution(&pd_problem, initial_solution_id);
+            using Optimize = vrprouting::optimizers::simple::Optimize;
+            using Initials_code = vrprouting::initialsol::simple::Initials_code;
+            sol = Optimize(sol, static_cast<size_t>(max_cycles), (Initials_code)initial_solution_id);
+#if 0
+        } catch (AssertFailedException &except) {
+            log << pd_problem.msg.get_log();
+            throw;
+        } catch(...) {
+            log << "Caught unknown exception!";
+            throw;
+        }
+#endif
+        log << pd_problem.msg.get_log();
+        log << "Finish solve\n";
 
-    auto solution = sol.get_postgres_result();
-    log << pd_problem.msg.get_log();
-    log << "solution size: " << solution.size() << "\n";
+        auto solution = sol.get_postgres_result();
+        log << pd_problem.msg.get_log();
+        log << "solution size: " << solution.size() << "\n";
 
 
-    if (!solution.empty()) {
-      (*return_tuples) = alloc(solution.size(), (*return_tuples));
-      int seq = 0;
-      for (const auto &row : solution) {
-        (*return_tuples)[seq] = row;
-        ++seq;
-      }
+        if (!solution.empty()) {
+            (*return_tuples) = alloc(solution.size(), (*return_tuples));
+            int seq = 0;
+            for (const auto &row : solution) {
+                (*return_tuples)[seq] = row;
+                ++seq;
+            }
+        }
+        (*return_count) = solution.size();
+
+        log << pd_problem.msg.get_log();
+
+        pgassert(*err_msg == NULL);
+        *log_msg = log.str().empty()?
+            nullptr :
+            msg(log.str().c_str());
+        *notice_msg = notice.str().empty()?
+            nullptr :
+            msg(notice.str().c_str());
+    } catch (AssertFailedException &except) {
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << except.what();
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch (std::exception& except) {
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << except.what();
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch (const std::string &ex) {
+        *err_msg = msg(ex.c_str());
+        *log_msg = hint? msg(hint) : msg(log.str().c_str());
+    } catch (const std::pair<std::string, std::string>& ex) {
+        (*return_count) = 0;
+        err << ex.first;
+        log.str("");
+        log.clear();
+        log << ex.second;
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
+    } catch(...) {
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << "Caught unknown exception!";
+        *err_msg = msg(err.str().c_str());
+        *log_msg = msg(log.str().c_str());
     }
-    (*return_count) = solution.size();
-
-    log << pd_problem.msg.get_log();
-
-    pgassert(*err_msg == NULL);
-    *log_msg = log.str().empty()?
-      nullptr :
-      msg(log.str().c_str());
-    *notice_msg = notice.str().empty()?
-      nullptr :
-      msg(notice.str().c_str());
-  } catch (AssertFailedException &except) {
-    if (*return_tuples) free(*return_tuples);
-    (*return_count) = 0;
-    err << except.what();
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  } catch (std::exception& except) {
-    if (*return_tuples) free(*return_tuples);
-    (*return_count) = 0;
-    err << except.what();
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  } catch (const std::string &ex) {
-    *err_msg = msg(ex.c_str());
-    *log_msg = hint? msg(hint) : msg(log.str().c_str());
-  } catch (const std::pair<std::string, std::string>& ex) {
-    (*return_count) = 0;
-    err << ex.first;
-    log.str("");
-    log.clear();
-    log << ex.second;
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  } catch(...) {
-    if (*return_tuples) free(*return_tuples);
-    (*return_count) = 0;
-    err << "Caught unknown exception!";
-    *err_msg = msg(err.str().c_str());
-    *log_msg = msg(log.str().c_str());
-  }
 }

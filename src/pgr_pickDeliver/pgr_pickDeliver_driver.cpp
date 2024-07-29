@@ -104,11 +104,28 @@ vrp_do_pgr_pickDeliver(
         pgassert(!(*err_msg));
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
-        log << "do_pgr_pickDeliver\n";
 
         bool use_timestamps = false;
         bool is_euclidean = false;
         bool with_stops = false;
+
+        if (factor <= 0) {
+            *err_msg = msg("Illegal value in parameter: factor");
+            *log_msg = msg("Expected value: factor > 0");
+            return;
+        }
+
+        if (max_cycles < 0) {
+            *err_msg = msg("Illegal value in parameter: max_cycles");
+            *log_msg = msg("Expected value: max_cycles >= 0");
+            return;
+        }
+
+        if (initial_solution_id <= 0 || initial_solution_id > 7) {
+            *err_msg = msg("Illegal value in parameter: initial_sol");
+            *log_msg = msg("Expected value: 0 <= initial_sol < 7");
+            return;
+        }
 
         hint = orders_sql;
         auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);
