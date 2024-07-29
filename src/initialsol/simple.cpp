@@ -94,7 +94,6 @@ Initial_solution::do_while_foo(Initials_code kind) {
     }
 
     pgassertwm(true, msg().get_log().c_str());
-    //pgassert(is_feasible());
     invariant();
 }
 

@@ -39,6 +39,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/alloc.hpp"
 #include "cpp_common/assert.hpp"
 #include "cpp_common/pgdata_getters.hpp"
+#include "cpp_common/timeconversion.hpp"
 
 #include "problem/pickDeliver.hpp"
 #include "problem/matrix.hpp"
@@ -144,6 +145,13 @@ vrp_do_pickDeliver(
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
         log << "do_pickDeliver\n";
+
+        /*
+         * Adjusting timestamp data to timezone UTC
+         */
+        if (use_timestamps) {
+            execution_date = vrprouting::get_timestamp_without_timezone(execution_date);
+        }
 
         if (factor <= 0) {
             *notice_msg = msg("Illegal value in parameter: factor");

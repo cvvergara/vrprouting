@@ -49,7 +49,7 @@ extern "C" {
 
 #include "cpp_common/undefPostgresDefine.hpp"
 
-#include "c_common/timeconversion.h"
+#include "cpp_common/timeconversion.hpp"
 #include "cpp_common/alloc.hpp"
 #include "cpp_common/info.hpp"
 
@@ -239,7 +239,7 @@ getTimeStamp(const HeapTuple tuple, const TupleDesc &tupdesc, const vrprouting::
 
     switch (info.type) {
         case 1114:
-            value = vrp_timestamp_without_timezone((TTimestamp) Int64GetDatum(binval));
+            value = vrprouting::get_timestamp_without_timezone((TTimestamp) Int64GetDatum(binval));
             break;
         default:
             throw std::string("Unexpected type value in column '") + info.name + "'. Expected 1114";

@@ -32,7 +32,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_common/debug_macro.h"
 #include "c_common/e_report.h"
 #include "c_common/time_msg.h"
-#include "c_common/timeconversion.h"
 #include "c_types/solution_rt.h"
 #include "drivers/pickDeliver_driver.h"
 
@@ -66,33 +65,6 @@ process(
 
   bool with_stops = false;
   bool is_euclidean = false;
-
-  /*
-   * Adjusting timestamp data to timezone UTC
-   */
-  if (use_timestamps) {
-    execution_date = vrp_timestamp_without_timezone(execution_date);
-  }
-
-#if 0
-  PGR_DBG("execution_date: %ld ", execution_date);
-
-  //! [Factor must be postive]
-  if (factor <= 0) {
-    ereport(ERROR,
-        (errcode(ERRCODE_INTERNAL_ERROR),
-         errmsg("Illegal value in parameter: factor"),
-         errhint("Value found: %f <= 0", factor)));
-  }
-  //! [Factor must be postive]
-
-  if (max_cycles < 0) {
-    ereport(ERROR,
-        (errcode(ERRCODE_INTERNAL_ERROR),
-         errmsg("Illegal value in parameter: max_cycles"),
-         errhint("Value found: %d <= 0", max_cycles)));
-  }
-#endif
 
   vrp_SPI_connect();
 

@@ -23,9 +23,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
-#include "c_common/timeconversion.h"
+#include "cpp_common/timeconversion.hpp"
 
 
+extern "C" {
 #include <postgres.h>
 #include <executor/spi.h>
 #include <funcapi.h>
@@ -37,6 +38,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <utils/timestamp.h>
 #include <utils/date.h>
 #include <utils/datetime.h>
+}
+
+#include "cpp_common/undefPostgresDefine.hpp"
 
 
 /**
@@ -49,7 +53,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * timezone
  */
 TTimestamp
-vrp_timestamp_without_timezone(TTimestamp timestamp) {
+vrprouting::get_timestamp_without_timezone(TTimestamp timestamp) {
   /*
    * step 1
    */

@@ -29,15 +29,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "c_types/typedefs.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace vrprouting {
 
-TTimestamp vrp_timestamp_without_timezone(TTimestamp timestamp);
+TTimestamp get_timestamp_without_timezone(TTimestamp timestamp);
 
-#ifdef __cplusplus
-}
-#endif
-
+}  // namespace vrprouting
 
 #endif  // INCLUDE_C_COMMON_TIMECONVERSION_H_
