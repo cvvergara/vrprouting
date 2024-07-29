@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: pickDeliverEuclidean_driver.h
+File: pgr_pickDeliverEuclidean_driver.h
 
 Copyright (c) 2015 pgRouting developers
 Mail: project@pgrouting.org
