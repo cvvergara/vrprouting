@@ -53,34 +53,6 @@ process(
     char *notice_msg = NULL;
     char *err_msg = NULL;
 
-#if 0
-    if (factor <= 0) {
-        ereport(ERROR,
-                (errcode(ERRCODE_INTERNAL_ERROR),
-                 errmsg("Illegal value in parameter: factor"),
-                 errhint("Value found: %f <= 0", factor)));
-        (*result_count) = 0;
-        (*result_tuples) = NULL;
-        return;
-    }
-
-    if (max_cycles < 0) {
-        ereport(ERROR,
-                (errcode(ERRCODE_INTERNAL_ERROR),
-                 errmsg("Illegal value in parameter: max_cycles"),
-                 errhint("Negative value found: max_cycles: %d ", max_cycles)));
-        (*result_count) = 0;
-        (*result_tuples) = NULL;
-        return;
-    }
-
-    if (initial_solution_id <= 0 || initial_solution_id > 6) {
-        elog(ERROR, "Illegal value in parameter: initial_sol");
-        (*result_count) = 0;
-        (*result_tuples) = NULL;
-        return;
-    }
-#endif
     vrp_SPI_connect();
 
     clock_t start_t = clock();

@@ -63,32 +63,6 @@ process(
     bool with_stops = false;
     bool is_euclidean = false;
 
-#if 0
-    //! [Factor must be postive]
-    if (factor <= 0) {
-        ereport(ERROR,
-                (errcode(ERRCODE_INTERNAL_ERROR),
-                 errmsg("Illegal value in parameter: factor"),
-                 errhint("Value found: %f <= 0", factor)));
-    }
-
-    //! [max_cycles must be postive]
-    if (max_cycles < 0) {
-        ereport(ERROR,
-                (errcode(ERRCODE_INTERNAL_ERROR),
-                 errmsg("Illegal value in parameter: max_cycles"),
-                 errhint("Value found: %d <= 0", max_cycles)));
-    }
-
-    //! [subdivision_kind can be: 0, 1, or 2]
-    if (subdivision_kind < 0 || subdivision_kind > 2) {
-        ereport(ERROR,
-                (errcode(ERRCODE_INTERNAL_ERROR),
-                 errmsg("Illegal value in parameter: subdivision_kind"),
-                 errhint("Value found: %d", max_cycles)));
-    }
-
-#endif
 
     vrp_SPI_connect();
 
