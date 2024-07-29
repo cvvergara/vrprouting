@@ -166,10 +166,6 @@ _vrp_compatiblevehicles(PG_FUNCTION_ARGS) {
         tuple = heap_form_tuple(tuple_desc, values, nulls);
         result = HeapTupleGetDatum(tuple);
 
-        tuple = heap_form_tuple(tuple_desc, values, nulls);
-        result = HeapTupleGetDatum(tuple);
-
-
         pfree(values); values = NULL;
         pfree(nulls); nulls = NULL;
 

@@ -33,9 +33,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <utility>
 #include <vector>
 
-#include "structures/vroom/input/input.h"
-#include "structures/vroom/job.h"
-#include "structures/vroom/vehicle.h"
+#include <structures/vroom/input/input.h>
+#include <structures/vroom/job.h>
+#include <structures/vroom/vehicle.h>
 #include "cpp_common/vroom_types.hpp"
 #include "cpp_common/base_matrix.hpp"
 #include "cpp_common/interruption.hpp"

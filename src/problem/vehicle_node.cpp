@@ -198,7 +198,7 @@ Vehicle_node::get_postgres_result(int vid, int64_t v_id, int stop_seq) const {
       /* order_id
        * The order_id is invalid for stops type 0 and 5
        */
-      (type() == 0 || type() == 5)? -1 : order(),
+      type() == 0 || type() == 5 ? -1 : order(),
       id(),
       type(),
       static_cast<int64_t>(cargo()),

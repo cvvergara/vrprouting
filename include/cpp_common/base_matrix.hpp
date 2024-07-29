@@ -40,7 +40,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/pickdeliver_types.hpp"
 #include "cpp_common/vroom_types.hpp"
 
-#include "structures/generic/matrix.h"
+#include <structures/generic/matrix.h>
 
 
 class Vroom_matrix_t;
