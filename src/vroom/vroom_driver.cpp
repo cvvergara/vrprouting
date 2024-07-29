@@ -123,6 +123,29 @@ void vrp_do_vroom(
     pgassert(!(*return_tuples));
     pgassert(!(*return_count));
 
+    if (!jobs_sql && !shipments_sql) {
+      if (fn_used == 0) {
+          *err_msg = msg("Both Jobs SQL and Shipments NULL must not be NULL");
+          return;
+      } else if (fn_used == 1) {
+          *err_msg = msg("Jobs SQL must not be NULL");
+          return;
+      } else if (fn_used == 2) {
+          *err_msg = msg("Shipments SQL must not be NULL");
+          return;
+      }
+    }
+
+    if (!vehicles_sql) {
+        *err_msg = msg("Vehicles SQL must not be NULL");
+        return;
+    }
+
+    if (!matrix_sql) {
+        *err_msg = msg("Matrix SQL must not be NULL");
+        return;
+    }
+
     hint = jobs_sql;
     auto jobs  = jobs_sql? get_jobs(std::string(jobs_sql), use_timestamps)
         : std::vector<vrprouting::Vroom_job_t>();
