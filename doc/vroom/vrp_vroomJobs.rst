@@ -48,19 +48,19 @@ This function can be used to get the solution to a problem involving only jobs.
 Signature
 -------------------------------------------------------------------------------
 
-.. rubric:: Summary
+.. admonition:: \ \
+   :class: signatures
 
-.. include:: ../sql/vroom/vrp_vroomJobs.sql
-   :start-after: signature start
-   :end-before: signature end
+   | vrp_vroom(
+   | `Jobs SQL`_, `Jobs Time Windows SQL`_,
+   | `Vehicles SQL`_,
+   | `Breaks SQL`_, `Breaks Time Windows SQL`_,
+   | `Time Matrix SQL`_
+   | [, exploration_level] [, timeout])  -- Experimental on v0.2
 
-Optional parameters are `named parameters` and have a default value.
-
-.. rubric:: Using defaults
-
-.. include:: ../sql/vroom/vrp_vroomJobs.sql
-   :start-after: default signature start
-   :end-before: default signature end
+   | RETURNS SET OF
+   | (seq, vehicle_seq, vehicle_id, vehicle_data, step_seq, step_type, task_id,
+   |  task_data, arrival, travel_time, service_time, waiting_time, departure, load)
 
 **Example**: This example is based on the modified VROOM Data of the :doc:`sampledata` network.
 The modification in the tables is mentioned at the end of the :doc:`sampledata`.
@@ -78,9 +78,24 @@ The modification in the tables is mentioned at the end of the :doc:`sampledata`.
 Parameters
 -------------------------------------------------------------------------------
 
-.. include:: ../sql/vroom/vrp_vroomJobs.sql
-   :start-after: parameters start
-   :end-before: parameters end
+.. vjobs_parameter_start
+
+=========================== =========== =========================================================
+Parameter                   Type        Description
+=========================== =========== =========================================================
+`Jobs SQL`_                 ``TEXT``    `Jobs SQL`_ query describing the single-location
+                                           pickup and/or delivery tasks.
+`Jobs Time Windows SQL`_    ``TEXT``    `Jobs Time Windows SQL`_ query describing valid slots
+                                           for job service start.
+`Vehicles SQL`_             ``TEXT``    `Vehicles SQL`_ query describing the available vehicles.
+`Breaks SQL`_               ``TEXT``    `Breaks SQL`_ query describing the driver breaks.
+`Breaks Time Windows SQL`_  ``TEXT``    `Breaks Time Windows SQL`_ query describing valid slots for
+                                           break start.
+`Time Matrix SQL`_          ``TEXT``    `Time Matrix SQL`_ query containing the distance or
+                                           travel times between the locations.
+=========================== =========== =========================================================
+
+.. vjobs_parameter_end
 
 Optional Parameters
 ...............................................................................
@@ -99,9 +114,40 @@ Jobs SQL
    :start-after: jobs_start
    :end-before: jobs_end
 
-.. include:: vroom-category.rst
-   :start-after: inner_queries_start
-   :end-before: inner_queries_end
+Jobs Time Windows SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: general_time_windows_start
+   :end-before: general_time_windows_end
+
+Vehicles SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: vroom_vehicles_start
+   :end-before: vroom_vehicles_end
+
+Breaks SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: breaks_start
+   :end-before: breaks_end
+
+Breaks Time Windows SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: general_time_windows_start
+   :end-before: general_time_windows_end
+
+Time Matrix SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: vroom_matrix_start
+   :end-before: vroom_matrix_end
 
 Result Columns
 -------------------------------------------------------------------------------

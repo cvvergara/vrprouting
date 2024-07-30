@@ -18,7 +18,8 @@
 vrp_vroomShipmentsPlain - Experimental
 ===============================================================================
 
-``vrp_vroomShipmentsPlain`` - Vehicle Routing Problem with VROOM, involving only shipments, with plain integer values instead of TIMESTAMP or INTERVAL.
+``vrp_vroomShipmentsPlain`` - Vehicle Routing Problem with VROOM, involving only
+shipments, with plain integer values instead of TIMESTAMP or INTERVAL.
 
 .. include:: experimental.rst
    :start-after: begin-warn-expr
@@ -48,19 +49,21 @@ This function can be used to get the solution to a problem involving only shipme
 Signature
 -------------------------------------------------------------------------------
 
-.. rubric:: Summary
 
-.. include:: ../sql/vroom/vrp_vroomShipmentsPlain.sql
-   :start-after: signature start
-   :end-before: signature end
+.. admonition:: \ \
+   :class: signatures
 
-Optional parameters are `named parameters` and have a default value.
+   | vrp_vroomShipmentsPlain(
+   | `Shipments SQL`_, `Shipments Time Windows SQL`_,
+   | `Vehicles SQL`_,
+   | `Breaks SQL`_, `Breaks Time Windows SQL`_,
+   | `Time Matrix SQL`_
+   | [, exploration_level] [, timeout])  -- Experimental on v0.2
 
-.. rubric:: Using defaults
+   | RETURNS SET OF
+   | (seq, vehicle_seq, vehicle_id, vehicle_data, step_seq, step_type, task_id,
+   |  task_data, arrival, travel_time, service_time, waiting_time, departure, load)
 
-.. include:: ../sql/vroom/vrp_vroomShipmentsPlain.sql
-   :start-after: default signature start
-   :end-before: default signature end
 
 **Example**: This example is based on the VROOM Data of the :doc:`sampledata` network:
 
@@ -77,16 +80,16 @@ Optional parameters are `named parameters` and have a default value.
 Parameters
 -------------------------------------------------------------------------------
 
-.. include:: ../sql/vroom/vrp_vroomShipments.sql
-   :start-after: parameters start
-   :end-before: parameters end
+.. include:: vrp_vroomShipments.rst
+   :start-after: vship_parameters_start
+   :end-before: vship_parameters_end
 
 Optional Parameters
 ...............................................................................
 
-.. include:: ../sql/vroom/vrp_vroomPlain.sql
-   :start-after: optional parameters start
-   :end-before: optional parameters end
+.. include:: vrp_vroomPlain.rst
+   :start-after: vroom_plain_optionals_start
+   :end-before: vroom_plain_optionals_end
 
 Inner Queries
 -------------------------------------------------------------------------------
@@ -98,9 +101,40 @@ Shipments SQL
    :start-after: shipments_start
    :end-before: shipments_end
 
-.. include:: vroom-category.rst
-   :start-after: inner_queries_start
-   :end-before: inner_queries_end
+Shipments Time Windows SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: shipments_time_windows_start
+   :end-before: shipments_time_windows_end
+
+Vehicles SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: vroom_vehicles_start
+   :end-before: vroom_vehicles_end
+
+Breaks SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: breaks_start
+   :end-before: breaks_end
+
+Breaks Time Windows SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: general_time_windows_start
+   :end-before: general_time_windows_end
+
+Time Matrix SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: vroom_matrix_start
+   :end-before: vroom_matrix_end
 
 Result Columns
 -------------------------------------------------------------------------------

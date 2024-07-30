@@ -49,19 +49,21 @@ shipments.
 Signature
 -------------------------------------------------------------------------------
 
-.. rubric:: Summary
+.. admonition:: \ \
+   :class: signatures
 
-.. include:: ../sql/vroom/vrp_vroomPlain.sql
-   :start-after: signature start
-   :end-before: signature end
+   | vrp_vroom(
+   | `Jobs SQL`_, `Jobs Time Windows SQL`_,
+   | `Shipments SQL`_, `Shipments Time Windows SQL`_,
+   | `Vehicles SQL`_,
+   | `Breaks SQL`_, `Breaks Time Windows SQL`_,
+   | `Time Matrix SQL`_
+   | [, exploration_level] [, timeout])  -- Experimental on v0.2
 
-Optional parameters are `named parameters` and have a default value.
+   | RETURNS SET OF
+   | (seq, vehicle_seq, vehicle_id, vehicle_data, step_seq, step_type, task_id,
+   |  task_data, arrival, travel_time, service_time, waiting_time, departure, load)
 
-.. rubric:: Using defaults
-
-.. include:: ../sql/vroom/vrp_vroomPlain.sql
-   :start-after: default signature start
-   :end-before: default signature end
 
 **Example**: This example is based on the VROOM Data of the :doc:`sampledata` network:
 
@@ -85,9 +87,26 @@ Parameters
 Optional Parameters
 ...............................................................................
 
-.. include:: ../sql/vroom/vrp_vroomPlain.sql
-   :start-after: optional parameters start
-   :end-before: optional parameters end
+
+.. vroom_plain_optionals_start
+
+===================== ============ ========== =================================================
+Parameter             Type         Default                       Description
+===================== ============ ========== =================================================
+**exploration_level** ``INTEGER``  :math:`5`  Exploration level to use while solving.
+
+                                              - Ranges from ``[0, 5]``
+                                              - A smaller exploration level gives faster result.
+
+**timeout**           ``INTEGER``  :math:`-1` Timeout value to stop the solving process.
+
+                                              - Gives the best possible solution within a time
+                                                limit. Note that some additional seconds may be
+                                                required to return back the data.
+                                              - Any negative timeout value is ignored.
+===================== ============ ========== =================================================
+
+.. vroom_plain_optionals_end
 
 Inner Queries
 -------------------------------------------------------------------------------
@@ -99,6 +118,13 @@ Jobs SQL
    :start-after: jobs_start
    :end-before: jobs_end
 
+Jobs Time Windows SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: general_time_windows_start
+   :end-before: general_time_windows_end
+
 Shipments SQL
 ...............................................................................
 
@@ -106,10 +132,40 @@ Shipments SQL
    :start-after: shipments_start
    :end-before: shipments_end
 
-.. include:: vroom-category.rst
-   :start-after: inner_queries_start
-   :end-before: inner_queries_end
+Shipments Time Windows SQL
+...............................................................................
 
+.. include:: concepts.rst
+   :start-after: shipments_time_windows_start
+   :end-before: shipments_time_windows_end
+
+Vehicles SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: vroom_vehicles_start
+   :end-before: vroom_vehicles_end
+
+Breaks SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: breaks_start
+   :end-before: breaks_end
+
+Breaks Time Windows SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: general_time_windows_start
+   :end-before: general_time_windows_end
+
+Time Matrix SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: vroom_matrix_start
+   :end-before: vroom_matrix_end
 Result Columns
 -------------------------------------------------------------------------------
 

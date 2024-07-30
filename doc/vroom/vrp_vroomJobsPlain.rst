@@ -48,19 +48,19 @@ This function can be used to get the solution to a problem involving only jobs.
 Signature
 -------------------------------------------------------------------------------
 
-.. rubric:: Summary
+.. admonition:: \ \
+   :class: signatures
 
-.. include:: ../sql/vroom/vrp_vroomJobsPlain.sql
-   :start-after: signature start
-   :end-before: signature end
+   | vrp_vroom(
+   | `Jobs SQL`_, `Jobs Time Windows SQL`_,
+   | `Vehicles SQL`_,
+   | `Breaks SQL`_, `Breaks Time Windows SQL`_,
+   | `Time Matrix SQL`_
+   | [, exploration_level] [, timeout])  -- Experimental on v0.2
 
-Optional parameters are `named parameters` and have a default value.
-
-.. rubric:: Using defaults
-
-.. include:: ../sql/vroom/vrp_vroomJobsPlain.sql
-   :start-after: default signature start
-   :end-before: default signature end
+   | RETURNS SET OF
+   | (seq, vehicle_seq, vehicle_id, vehicle_data, step_seq, step_type, task_id,
+   |  task_data, arrival, travel_time, service_time, waiting_time, departure, load)
 
 **Example**: This example is based on the VROOM Data of the :doc:`sampledata` network:
 
@@ -77,16 +77,16 @@ Optional parameters are `named parameters` and have a default value.
 Parameters
 -------------------------------------------------------------------------------
 
-.. include:: ../sql/vroom/vrp_vroomJobs.sql
-   :start-after: parameters start
-   :end-before: parameters end
+.. include:: vrp_vroomJobs.rst
+   :start-after: vjobs_parameter_start
+   :end-before: vjobs_parameter_end
 
 Optional Parameters
 ...............................................................................
 
-.. include:: ../sql/vroom/vrp_vroomPlain.sql
-   :start-after: optional parameters start
-   :end-before: optional parameters end
+.. include:: vrp_vroomPlain.rst
+   :start-after: vroom_plain_optionals_start
+   :end-before: vroom_plain_optionals_end
 
 Inner Queries
 -------------------------------------------------------------------------------
@@ -98,9 +98,40 @@ Jobs SQL
    :start-after: jobs_start
    :end-before: jobs_end
 
-.. include:: vroom-category.rst
-   :start-after: inner_queries_start
-   :end-before: inner_queries_end
+Jobs Time Windows SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: general_time_windows_start
+   :end-before: general_time_windows_end
+
+Vehicles SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: vroom_vehicles_start
+   :end-before: vroom_vehicles_end
+
+Breaks SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: breaks_start
+   :end-before: breaks_end
+
+Breaks Time Windows SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: general_time_windows_start
+   :end-before: general_time_windows_end
+
+Time Matrix SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: vroom_matrix_start
+   :end-before: vroom_matrix_end
 
 Result Columns
 -------------------------------------------------------------------------------
