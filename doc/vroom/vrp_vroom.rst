@@ -49,19 +49,21 @@ shipments.
 Signature
 -------------------------------------------------------------------------------
 
-.. rubric:: Summary
+.. admonition:: \ \
+   :class: signatures
 
-.. include:: ../sql/vroom/vrp_vroom.sql
-   :start-after: signature start
-   :end-before: signature end
+   | vrp_vroom(
+   | `Jobs SQL`_, `Jobs Time Windows SQL`_,
+   | `Shipments SQL`_, `Shipments Time Windows SQL`_,
+   | `Vehicles SQL`_,
+   | `Breaks SQL`_, `Breaks Time Windows SQL`_,
+   | `Time Matrix SQL`_
+   | [, exploration_level] [, timeout])  -- Experimental on v0.2
 
-Optional parameters are `named parameters` and have a default value.
+   | RETURNS SET OF
+   | (seq, vehicle_seq, vehicle_id, vehicle_data, step_seq, step_type, task_id,
+   |  task_data, arrival, travel_time, service_time, waiting_time, departure, load)
 
-.. rubric:: Using defaults
-
-.. include:: ../sql/vroom/vrp_vroom.sql
-   :start-after: default signature start
-   :end-before: default signature end
 
 **Example**: This example is based on the modified VROOM Data of the :doc:`sampledata` network.
 The modification in the tables is mentioned at the end of the :doc:`sampledata`.
@@ -70,25 +72,55 @@ The modification in the tables is mentioned at the end of the :doc:`sampledata`.
    :start-after: -- q1
    :end-before: -- q2
 
-.. |timestamp| replace:: ``TIMESTAMP``
-.. |interval| replace:: ``INTERVAL``
-.. |interval0| replace:: '00:00:00'::INTERVAL
-.. |tw_open_default| replace:: '1970-01-01 00:00:00'::TIMESTAMP
-.. |tw_close_default| replace:: '2106-02-07 06:28:15'::TIMESTAMP
 
 Parameters
 -------------------------------------------------------------------------------
 
-.. include:: ../sql/vroom/vrp_vroom.sql
-   :start-after: parameters start
-   :end-before: parameters end
+.. vroom_parameters_start
+
+============================== =========== =========================================================
+Parameter                      Type        Description
+============================== =========== =========================================================
+`Jobs SQL`_                    ``TEXT``    `Jobs SQL`_ query describing the single-location
+                                           pickup and/or delivery tasks.
+`Jobs Time Windows SQL`_       ``TEXT``    `Jobs Time Windows SQL`_ query describing valid slots
+                                           for job service start.
+`Shipments SQL`_               ``TEXT``    `Shipments SQL`_ query describing pickup and delivery
+                                           tasks that should happen within same route.
+`Shipments Time Windows SQL`_  ``TEXT``    `Shipments Time Windows SQL`_ query describing valid slots
+                                           for pickup and delivery service start.
+`Vehicles SQL`_                ``TEXT``    `Vehicles SQL`_ query describing the available vehicles.
+`Breaks SQL`_                  ``TEXT``    `Breaks SQL`_ query describing the driver breaks.
+`Breaks Time Windows SQL`_     ``TEXT``    `Breaks Time Windows SQL`_ query describing valid slots for
+                                           break start.
+`Time Matrix SQL`_             ``TEXT``    `Time Matrix SQL`_ query containing the distance or
+                                           travel times between the locations.
+============================== =========== =========================================================
+
+.. vroom_parameters_end
 
 Optional Parameters
 ...............................................................................
 
-.. include:: ../sql/vroom/vrp_vroom.sql
-   :start-after: optional parameters start
-   :end-before: optional parameters end
+.. vroom_optionals_start
+
+===================== ============ ============================= =================================================
+Parameter             Type         Default                       Description
+===================== ============ ============================= =================================================
+**exploration_level** ``INTEGER``  :math:`5`                     Exploration level to use while solving.
+
+                                                                 - Ranges from ``[0, 5]``
+                                                                 - A smaller exploration level gives faster result.
+
+**timeout**           ``INTERVAL`` '-00:00:01'::INTERVAL         Timeout value to stop the solving process.
+
+                                                                 - Gives the best possible solution within a time
+                                                                   limit. Note that some additional seconds may be
+                                                                   required to return back the data.
+                                                                 - Any negative timeout value is ignored.
+===================== ============ ============================= =================================================
+
+.. vroom_optionals_end
 
 Inner Queries
 -------------------------------------------------------------------------------
@@ -100,6 +132,13 @@ Jobs SQL
    :start-after: jobs_start
    :end-before: jobs_end
 
+Jobs Time Windows SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: general_time_windows_start
+   :end-before: general_time_windows_end
+
 Shipments SQL
 ...............................................................................
 
@@ -107,16 +146,47 @@ Shipments SQL
    :start-after: shipments_start
    :end-before: shipments_end
 
-.. include:: vroom-category.rst
-   :start-after: inner_queries_start
-   :end-before: inner_queries_end
+Shipments Time Windows SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: shipments_time_windows_start
+   :end-before: shipments_time_windows_end
+
+Vehicles SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: vroom_vehicles_start
+   :end-before: vroom_vehicles_end
+
+Breaks SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: breaks_start
+   :end-before: breaks_end
+
+Breaks Time Windows SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: general_time_windows_start
+   :end-before: general_time_windows_end
+
+Time Matrix SQL
+...............................................................................
+
+.. include:: concepts.rst
+   :start-after: vroom_matrix_start
+   :end-before: vroom_matrix_end
 
 Result Columns
 -------------------------------------------------------------------------------
 
-.. include:: vroom-category.rst
-   :start-after: result_columns_start
-   :end-before: result_columns_end
+.. include:: concepts.rst
+   :start-after: vroom_result_start
+   :end-before: vroom_result_end
 
 Additional Example
 -------------------------------------------------------------------------------
@@ -142,3 +212,9 @@ See Also
 
 * :ref:`genindex`
 * :ref:`search`
+
+.. |timestamp| replace:: ``TIMESTAMP``
+.. |interval| replace:: ``INTERVAL``
+.. |interval0| replace:: '00:00:00'::INTERVAL
+.. |tw_open_default| replace:: '1970-01-01 00:00:00'::TIMESTAMP
+.. |tw_close_default| replace:: '2106-02-07 06:28:15'::TIMESTAMP
