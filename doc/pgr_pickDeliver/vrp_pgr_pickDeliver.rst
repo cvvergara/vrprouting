@@ -82,17 +82,42 @@ Characteristics
 Signature
 -------------------------------------------------------------------------------
 
-.. include:: ../sql/pgr_pickDeliver/pgr_pickDeliver.sql
-   :start-after: signature start
-   :end-before: signature end
+.. admonition:: \ \
+   :class: signatures
+
+   | pgr_pickDeliverEuclidean(
+   | `Orders SQL`_, `Vehicles SQL`_, `Matrix SQL`_
+   | [**options**])
+   | **options:** ``[factor, max_cycles, initial_sol]``
+
+   | Returns set of |result-pickdrop|
+
 
 
 Parameters
 -------------------------------------------------------------------------------
 
-.. include:: ../sql/pgr_pickDeliver/pgr_pickDeliver.sql
-   :start-after: parameters start
-   :end-before: parameters end
+.. pd_parameters_start
+
+.. list-table::
+   :width: 81
+   :widths: auto
+   :header-rows: 1
+
+   * - Column
+     - Type
+     - Description
+   * - `Orders SQL`_
+     - ``TEXT``
+     - `Orders SQL`_ as described below.
+   * - `Vehicles SQL`_
+     - ``TEXT``
+     - `Vehicles SQL`_ as described below.
+   * - `Matrix SQL`_
+     - ``TEXT``
+     - `Matrix SQL`_ as described below.
+
+.. pd_parameters_end
 
 
 Inner Queries
@@ -114,7 +139,7 @@ Vehicles SQL
     :end-before: pgr_vehicles_end
 
 
-Time Matrix SQL
+Matrix SQL
 .........................................................................................
 
 .. include:: concepts.rst
@@ -124,9 +149,9 @@ Time Matrix SQL
 Result Columns
 -------------------------------------------------------------------------------
 
-.. include:: ../sql/pgr_pickDeliver/pgr_pickDeliver.sql
-   :start-after: result start
-   :end-before: result end
+.. include:: concepts.rst
+   :start-after: pd_result_start
+   :end-before: pd_result_end
 
 Example
 -------------------------------------------------------------------------------
