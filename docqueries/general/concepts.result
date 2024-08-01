@@ -3,10 +3,11 @@ BEGIN
 SET client_min_messages TO NOTICE;
 SET
 /* q1 */
-SELECT to_timestamp(0) as DEFAULT_TIMESTAMP, to_timestamp(4294967295) AS MAX_TIMESTAMP;
-   default_timestamp    |     max_timestamp
-------------------------+------------------------
- 1969-12-31 18:00:00-06 | 2106-02-07 00:28:15-06
+SELECT to_timestamp(0)::timestamp without time zone as DEFAULT_TIMESTAMP,
+to_timestamp(4294967295)::timestamp without time zone AS MAX_TIMESTAMP;
+  default_timestamp  |    max_timestamp
+---------------------+---------------------
+ 1969-12-31 18:00:00 | 2106-02-07 00:28:15
 (1 row)
 
 /* q2 */
