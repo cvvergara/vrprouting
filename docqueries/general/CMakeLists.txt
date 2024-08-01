@@ -1,11 +1,6 @@
 # Do not use extensions
 SET(LOCAL_FILES
-    vroom
-    vroomJobs
-    vroomShipments
-    vroomPlain
-    vroomJobsPlain
-    vroomShipmentsPlain
+    concepts
     )
 
 foreach (f ${LOCAL_FILES})
