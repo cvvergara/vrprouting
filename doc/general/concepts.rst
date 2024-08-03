@@ -83,7 +83,7 @@ Time Windows
 Inner queries
 -------------------------------------------------------------------------------
 
-Vroom Inner Queries
+Pickup-Delivery Inner Queries
 ...............................................................................
 
 Matrix SQL
@@ -93,10 +93,9 @@ Matrix SQL
 
 A ``SELECT`` statement that returns the following columns:
 
-``(start_vid, end_vid, agg_cost)``
+``start_vid, end_vid, agg_cost``
 
 .. list-table::
-   :width: 81
    :widths: auto
    :header-rows: 1
 
@@ -113,14 +112,6 @@ A ``SELECT`` statement that returns the following columns:
      - |ANY-NUMERICAL|
      - Cost to travel from ``start_vid`` to ``end_vid``
 
-============= =============== ================================================
-Column        Type            Description
-============= =============== ================================================
-**start_vid** |ANY-INTEGER|   Identifier of a node.
-**end_vid**   |ANY-NUMERICAL| Identifier of a node
-**agg_cost**  |ANY-NUMERICAL| Time to travel from ``start_vid`` to ``end_vid``
-============= =============== ================================================
-
 .. pgr_matrix_end
 
 Orders SQL
@@ -133,7 +124,7 @@ Orders SQL
 A ``SELECT`` statement that returns the following columns:
 
 | ``id, amount``
-| ``p_id, p_tw_open, p_tw_close, [p_service,]``
+| ``p_id, p_tw_open, p_tw_close, [p_service]``
 | ``d_id, d_tw_open, d_tw_close, [d_service]``
 
 .. list-table::
@@ -192,21 +183,6 @@ A ``SELECT`` statement that returns the following columns:
      - |ANY-INTEGER|
      - 0
      - The duration of the unloading at the delivery location.
-
-================  ===================  =========== ================================================
-Column            Type                 Default     Description
-================  ===================  =========== ================================================
-**id**            |ANY-INTEGER|                     Identifier of the pick-delivery order pair.
-**amount**        |ANY-NUMERICAL|                   Number of units in the order
-**p_id**          |ANY-INTEGER|                     The identifier of the pickup node.
-**p_tw_open**     |ANY-NUMERICAL|                   The time, relative to 0, when the pickup location opens.
-**p_tw_close**    |ANY-NUMERICAL|                   The time, relative to 0, when the pickup location closes.
-**p_service**     |ANY-NUMERICAL|       0           The duration of the loading at the pickup location.
-**d_id**          |ANY-INTEGER|                     The identifier of the delivery node.
-**d_tw_open**     |ANY-NUMERICAL|                   The time, relative to 0, when the delivery location opens.
-**d_tw_close**    |ANY-NUMERICAL|                   The time, relative to 0, when the delivery location closes.
-**d_service**     |ANY-NUMERICAL|       0           The duration of the unloading at the delivery location.
-================  ===================  =========== ================================================
 
 .. pgr_orders_end
 
@@ -282,23 +258,6 @@ A ``SELECT`` statement that returns the following columns:
      - 0
      - The duration of the unloading at the delivery location.
 
-================  ===================  =========== ================================================
-Column            Type                 Default     Description
-================  ===================  =========== ================================================
-**id**            |ANY-INTEGER|                     Identifier of the pick-delivery order pair.
-**amount**        |ANY-INTEGER|                     Number of units in the order
-**p_x**           |ANY-NUMERICAL|                   :math:`x` value of the pick up location
-**p_y**           |ANY-NUMERICAL|                   :math:`y` value of the pick up location
-**p_tw_open**     |ANY-INTEGER|                     The time, relative to 0, when the pickup location opens.
-**p_tw_close**    |ANY-INTEGER|                     The time, relative to 0, when the pickup location closes.
-**p_service**     |ANY-INTEGER|         0           The duration of the loading at the pickup location.
-**d_x**           |ANY-NUMERICAL|                   :math:`x` value of the delivery location
-**d_y**           |ANY-NUMERICAL|                   :math:`y` value of the delivery location
-**d_tw_open**     |ANY-INTEGER|                     The time, relative to 0, when the delivery location opens.
-**d_tw_close**    |ANY-INTEGER|                     The time, relative to 0, when the delivery location closes.
-**d_service**     |ANY-INTEGER|         0           The duration of the loading at the delivery location.
-================  ===================  =========== ================================================
-
 .. pgr_orders_e_end
 
 Vehicles SQL
@@ -345,11 +304,11 @@ A ``SELECT`` statement that returns the following columns:
    - - ``s_tw_open``
      - |ANY-INTEGER|
      - 0
-     - The time, relative to 0, when the start location opens.
+     - The time, relative to 0, when the starting location opens.
    - - ``s_tw_close``
      - |ANY-INTEGER|
      - |MAX-BIGINT|
-     - The time, relative to 0, when the start location closes.
+     - The time, relative to 0, when the starting location closes.
 
        - :math:`s\_tw\_open < s\_tw\_close <= 9223372036854775807`
    - - ``s_service``
@@ -377,40 +336,6 @@ A ``SELECT`` statement that returns the following columns:
      - ``s_service``
      - The duration of any task at the ending location
 
-==================  =================== ================ ================================================
-Column              Type                  Default           Description
-==================  =================== ================ ================================================
-**id**              |ANY-INTEGER|                         Identifier of the vehicle
-**capacity**        |ANY-NUMERICAL|                       Capacity of the vehicle
-**speed**           |ANY-NUMERICAL|      `1`              Average speed of the vehicle.
-**s_id**            |ANY-INTEGER|                         The node identifier of the starting location, must match a node identifier in the matrix table.
-**s_tw_open**       |ANY-NUMERICAL|      `0`              The time, relative to 0, when the starting location opens.
-                                                          When `s_tw_open` column exist  then `s_tw_close` column is expected
-                                                          Default value when (`s_tw_open`, s_tw_close) columns do not exist
-**s_tw_close**      |ANY-NUMERICAL|      `INFINITY`       The time, relative to 0, when the starting location closes.
-                                                          When `s_tw_close` column exist  then `e_tw_open` column is expected
-                                                          Default value when `(s_tw_open, s_tw_close)` columns do not exist
-**s_service**       |ANY-NUMERICAL|      `0`              The duration of the loading at the starting location.
-**e_id**            |ANY-INTEGER|        `s_id`           The node identifier of the ending location, must match a node identifier in the matrix table.
-**e_tw_open**       |ANY-NUMERICAL|      `s_tw_open`      The time, relative to 0, when the ending location opens.
-                                                          When `e_tw_open` column exist  then `e__tw_close` column is expected
-                                                          Default value when (`e_tw_open`, e_tw_close) columns do not exist
-**e_tw_close**      |ANY-NUMERICAL|      `s_tw_close`     The time, relative to 0, when the ending location closes.
-                                                          When `e_tw_close` column exist  then `e_tw_open` column is expected
-                                                          Default value when `(e_tw_open`, e_tw_close)` columns do not exist
-**e_service**       |ANY-NUMERICAL|      `s_service`      The duration of the unloading at the ending location.
-==================  =================== ================ ================================================
-
-Throws:
-
-* When column `id` is missing
-* When column `capacity` is missing
-* When column `s_id` is missing
-* When column `s_tw_open` exists but not `s_tw_close`
-* When column `s_tw_close`exists but not `s_tw_open`
-* When column `e_tw_open` exists but not `e_tw_close`
-* When column `e_tw_close`exists but not `e_tw_open`
-
 .. pgr_vehicles_end
 
 .. rubric:: Euclidean Vehicles
@@ -420,7 +345,7 @@ Throws:
 A ``SELECT`` statement that returns the following columns:
 
 | ``id, capacity, [speed,]``
-| ``s_x, s_y, [s_tw_open, s_tw_close, s_service,]``
+| ``s_x, s_y, [s_tw_open, s_tw_close, s_service]``
 | ``[e_x, e_y, e_tw_open, e_tw_close, e_service]``
 
 .. list-table::
@@ -454,25 +379,25 @@ A ``SELECT`` statement that returns the following columns:
    - - ``s_tw_open``
      - |ANY-INTEGER|
      - 0
-     - The time, relative to 0, when the start location opens.
+     - The time, relative to 0, when the starting location opens.
    - - ``s_tw_close``
      - |ANY-INTEGER|
      - |MAX-BIGINT|
-     - The time, relative to 0, when the start location closes.
+     - The time, relative to 0, when the starting location closes.
 
        - :math:`s\_tw\_open < s\_tw\_close <= 9223372036854775807`
    - - ``s_service``
      - |ANY-INTEGER|
      - 0
-     - Duration of any task at the starting location,
+     - Duration of any task at the ending location,
    - - ``e_x``
      - |ANY-NUMERICAL|
      -
-     - :math:`x` value of the coordinate of the starting location.
+     - :math:`x` value of the coordinate of the ending location.
    - - ``e_y``
      - |ANY-NUMERICAL|
      -
-     - :math:`y` value of the coordinate of the starting location.
+     - :math:`y` value of the coordinate of the ending location.
    - - ``e_tw_open``
      - |ANY-INTEGER|
      - ``s_tw_open``
@@ -487,48 +412,6 @@ A ``SELECT`` statement that returns the following columns:
      - |ANY-INTEGER|
      - ``s_service``
      - The duration of any task at the ending location
-
-==================  =================== ================ ================================================
-Column              Type                  Default           Description
-==================  =================== ================ ================================================
-**id**              |ANY-INTEGER|                         Identifier of the vehicle
-**capacity**        |ANY-NUMERICAL|                       Capacity of the vehicle
-**speed**           |ANY-NUMERICAL|      `1`              Average speed of the vehicle.
-**s_x**             |ANY-NUMERICAL|                       :math:`x` value of the coordinate of the starting location.
-**s_y**             |ANY-NUMERICAL|                       :math:`y` value of the coordinate of the starting location.
-**s_tw_open**       |ANY-NUMERICAL|      `0`              The time, relative to 0, when the starting location opens.
-                                                          When `s_tw_open` column exist  then `s_tw_close` column is expected
-                                                          Default value when (`s_tw_open`, s_tw_close) columns do not exist
-**s_tw_close**      |ANY-NUMERICAL|      `INFINITY`       The time, relative to 0, when the starting location closes.
-                                                          When `s_tw_close` column exist  then `e_tw_open` column is expected
-                                                          Default value when `(s_tw_open, s_tw_close)` columns do not exist
-**s_service**       |ANY-NUMERICAL|      `0`              The duration of the loading at the starting location.
-**e_tw_open**       |ANY-NUMERICAL|      `s_tw_open`      The time, relative to 0, when the ending location opens.
-                                                          When `e_tw_open` column exist  then `e__tw_close` column is expected
-                                                          Default value when (`e_tw_open`, e_tw_close) columns do not exist
-**e_tw_close**      |ANY-NUMERICAL|      `s_tw_close`     The time, relative to 0, when the ending location closes.
-                                                          When `e_tw_close` column exist  then `e_tw_open` column is expected
-                                                          Default value when `(e_tw_open`, e_tw_close)` columns do not exist
-**e_service**       |ANY-NUMERICAL|      `s_service`      The duration of the loading at the ending location.
-**e_x**             |ANY-NUMERICAL|      `s_x`            :math:`x` value of the coordinate of the ending location.
-                                                          Default value when `(e_x, e_y)` columns do not exist
-                                                          Default value when `e_y` column does not exist
-**e_y**             |ANY-NUMERICAL|      `s_y`            :math:`y` value of the coordinate of the ending location.
-                                                          When `e_y` column exist  then `e_x` column is expected
-                                                          Default value when `(e_x, e_y)` columns do not exist
-==================  =================== ================ ================================================
-
-Throws:
-* When column `id` is missing
-* When column `capacity` is missing
-* When column `s_x` is missing
-* When column `s_y` is missing
-* When column `s_tw_open` exists but not `s_tw_close`
-* When column `s_tw_close`exists but not `s_tw_open`
-* When column `e_y` exists but not `e_x`
-* When column `e_x` exists but not `e_y`
-* When column `e_tw_open` exists but not `e_tw_close`
-* When column `e_tw_close`exists but not `e_tw_open`
 
 .. pgr_vehicles_e_end
 
@@ -558,7 +441,7 @@ Jobs SQL
 A ``SELECT`` statement that returns the following columns:
 
 | ``id, location_id``
-| ``[, setup, service, delivery, pickup, skills, priority, data]``
+| ``[setup, service, delivery, pickup, skills, priority, data]``
 
 Maximum values apply from vroom
 
@@ -637,9 +520,23 @@ Shipments SQL
 A ``SELECT`` statement that returns the following columns:
 
 | ``id``
-| ``p_location_id, [p_setup, p_service, p_data,]``
-| ``d_location_id, [d_setup, d_service, d_data,]``
+| ``p_location_id, [p_setup, p_service, p_data]``
+| ``d_location_id, [d_setup, d_service, d_data]``
 | ``[amount, skills, priority]``
+
+Maximum values apply from vroom
+
+``p_setup``, ``p_service``, ``d_setup``, ``d_service``
+
+- |intervalmax|
+
+``skills``
+
+- :math:`2147483647`
+
+``priority``
+
+- :math:`100`
 
 
 .. list-table::
@@ -716,8 +613,18 @@ Vehicles SQL
 
 A ``SELECT`` statement that returns the following columns:
 
-``id, start_id, end_id``
-``[,capacity, skills, tw_open, tw_close, speed_factor, max_tasks, data]``
+| ``id, start_id, end_id``
+| ``[capacity, skills, tw_open, tw_close, speed_factor, max_tasks, data]``
+
+Maximum values apply from vroom
+
+``skills``
+
+- :math:`2147483647`
+
+``priority``
+
+- :math:`100`
 
 .. list-table::
    :width: 81
@@ -749,7 +656,7 @@ A ``SELECT`` statement that returns the following columns:
        - All vehicles must have the same value of :code:`array_length(capacity,
          1)`
    - - ``skills``
-     - ``ARRAY[INTEGER]``
+     - ``ARRAY[ANY-INTEGER]``
      - ``[]``
      - Array of non-negative integers defining mandatory skills.
    - - ``tw_open``
@@ -808,7 +715,8 @@ Vroom Matrix SQL
 
 A ``SELECT`` statement that returns the following columns:
 
-``start_id, end_id, duration [, cost]``
+| ``start_id, end_id, duration``
+| ``[ cost]``
 
 .. list-table::
    :width: 81
@@ -845,7 +753,8 @@ Breaks SQL
 
 A ``SELECT`` statement that returns the following columns:
 
-``id, vehicle_id [, service, data]``
+| ``id, vehicle_id``
+| ``[service, data]``
 
 .. list-table::
    :width: 81
@@ -885,7 +794,8 @@ Time Windows SQL
 
 A ``SELECT`` statement that returns the following columns:
 
-``(id, tw_open, tw_close,  [kind])``
+| ``id, tw_open, tw_close``
+| ``[kind]``
 
 .. list-table::
    :width: 81
@@ -920,7 +830,7 @@ A ``SELECT`` statement that returns the following columns:
 
 A ``SELECT`` statement that returns the following columns:
 
-``(id, tw_open, tw_close)``
+``id, tw_open, tw_close``
 
 .. list-table::
    :width: 81
