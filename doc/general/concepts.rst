@@ -22,7 +22,8 @@ Concepts
 General documentation
 -------------------------------------------------------------------------------
 
-Vehicle Routing Problems `VRP` are **NP-hard** optimization problem, it generalises the travelling salesman problem (TSP).
+Vehicle Routing Problems `VRP` are **NP-hard** optimization problem, it
+generalises the travelling salesman problem (TSP).
 
 - The objective of the VRP is to minimize the total route cost.
 - There are several variants of the VRP problem,
@@ -33,9 +34,13 @@ Vehicle Routing Problems `VRP` are **NP-hard** optimization problem, it generali
 Characteristics
 -------------------------------------------------------------------------------
 
-- Capacitated Vehicle Routing Problem `CVRP` where The vehicles have limited carrying capacity of the goods.
-- Vehicle Routing Problem with Time Windows `VRPTW` where the locations have time windows within which the vehicle's visits must be made.
-- Vehicle Routing Problem with Pickup and Delivery `VRPPD` where a number of goods need to be moved from certain pickup locations to other delivery locations.
+- Capacitated Vehicle Routing Problem `CVRP` where The vehicles have limited
+  carrying capacity of the goods.
+- Vehicle Routing Problem with Time Windows `VRPTW` where the locations have
+  time windows within which the vehicle's visits must be made.
+- Vehicle Routing Problem with Pickup and Delivery `VRPPD` where a number of
+  goods need to be moved from certain pickup locations to other delivery
+  locations.
 
 
 .. Rubric:: Limitations
@@ -49,7 +54,8 @@ Characteristics
 Pick & Delivery
 ...............................................................................
 
-Problem: `CVRPPDTW` Capacitated Pick and Delivery Vehicle Routing problem with Time Windows
+Problem: `CVRPPDTW` Capacitated Pick and Delivery Vehicle Routing problem with
+Time Windows
 
 - Times are relative to `0`
 - The vehicles
@@ -87,9 +93,25 @@ Matrix SQL
 
 A ``SELECT`` statement that returns the following columns:
 
-::
+``(start_vid, end_vid, agg_cost)``
 
-    start_vid, end_vid, agg_cost
+.. list-table::
+   :width: 81
+   :widths: auto
+   :header-rows: 1
+
+   - - Column
+     - Type
+     - Description
+   - - ``start_vid``
+     - |ANY-INTEGER|
+     - Identifier of a node.
+   - - ``end_vid``
+     - |ANY-INTEGER|
+     - Identifier of a node.
+   - - ``agg_cost``
+     - |ANY-NUMERICAL|
+     - Cost to travel from ``start_vid`` to ``end_vid``
 
 ============= =============== ================================================
 Column        Type            Description
@@ -110,12 +132,66 @@ Orders SQL
 
 A ``SELECT`` statement that returns the following columns:
 
-::
+| ``id, amount``
+| ``p_id, p_tw_open, p_tw_close, [p_service,]``
+| ``d_id, d_tw_open, d_tw_close, [d_service]``
 
-    id, amount
-    p_id, p_tw_open, p_tw_close, [p_service,]
-    d_id, d_tw_open, d_tw_close, [d_service]
+.. list-table::
+   :widths: auto
+   :header-rows: 1
 
+   - - Column
+     - Type
+     - Default
+     - Description
+   - - ``id``
+     - |ANY-INTEGER|
+     -
+     - Identifier of the pick-delivery order pair.
+   - - ``amount``
+     - |ANY-NUMERICAL|
+     -
+     - Number of units in the order.
+   - - ``p_id``
+     - |ANY-INTEGER|
+     -
+     - Identifier of the pickup node.
+
+       - Must match a node identifier in the `Matrix SQL`_.
+   - - ``p_tw_open``
+     - |ANY-INTEGER|
+     -
+     - The time, relative to 0, when the pickup location opens.
+   - - ``p_tw_close``
+     - |ANY-INTEGER|
+     -
+     - The time, relative to 0, when the pickup location closes.
+
+       - :math:`p\_tw\_open < p\_tw\_close < 9223372036854775807`
+   - - ``p_service``
+     - |ANY-INTEGER|
+     - 0
+     - The duration of the loading at the pickup location.
+   - - ``d_id``
+     - |ANY-INTEGER|
+     -
+     - Identifier of the delivery node.
+
+       - Must match a node identifier in the `Matrix SQL`_.
+   - - ``d_tw_open``
+     - |ANY-INTEGER|
+     -
+     - The time, relative to 0, when the delivery location opens.
+   - - ``d_tw_close``
+     - |ANY-INTEGER|
+     -
+     - The time, relative to 0, when the delivery location closes.
+
+       - :math:`d\_tw\_open < d\_tw\_close <= 9223372036854775807`
+   - - ``d_service``
+     - |ANY-INTEGER|
+     - 0
+     - The duration of the unloading at the delivery location.
 
 ================  ===================  =========== ================================================
 Column            Type                 Default     Description
@@ -140,12 +216,71 @@ Column            Type                 Default     Description
 
 A ``SELECT`` statement that returns the following columns:
 
-::
+| ``id, amount``
+| ``p_x, p_y, p_tw_open, p_tw_close, [p_service,]``
+| ``d_x, d_y, d_tw_open, d_tw_close, [d_service]``
 
-    id, amount
-    p_x, p_y, p_tw_open, p_tw_close, [p_service,]
-    d_x, d_y, d_tw_open, d_tw_close, [d_service]
 
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   - - Column
+     - Type
+     - Default
+     - Description
+   - - ``id``
+     - |ANY-INTEGER|
+     -
+     - Identifier of the pick-delivery order pair.
+   - - ``amount``
+     - |ANY-NUMERICAL|
+     -
+     - Number of units in the order.
+   - - ``p_x``
+     - |ANY-NUMERICAL|
+     -
+     - :math:`x` value of the pickup location.
+   - - ``p_y``
+     - |ANY-NUMERICAL|
+     -
+     - :math:`y` value of the pickup location.
+   - - ``p_tw_open``
+     - |ANY-INTEGER|
+     -
+     - The time, relative to 0, when the pickup location opens.
+   - - ``p_tw_close``
+     - |ANY-INTEGER|
+     -
+     - The time, relative to 0, when the pickup location closes.
+
+       - :math:`p\_tw\_open < p\_tw\_close < 9223372036854775807`
+   - - ``p_service``
+     - |ANY-INTEGER|
+     - 0
+     - The duration of the loading at the pickup location.
+   - - ``d_x``
+     - |ANY-NUMERICAL|
+     -
+     - :math:`x` value of the delivery location.
+   - - ``d_y``
+     - |ANY-NUMERICAL|
+     -
+     - :math:`y` value of the delivery location.
+   - - ``d_tw_open``
+     - |ANY-INTEGER|
+     -
+     - The time, relative to 0, when the delivery location opens.
+   - - ``d_tw_close``
+     - |ANY-INTEGER|
+     -
+     - The time, relative to 0, when the delivery location closes.
+
+       - :math:`d\_tw\_open < d\_tw\_close <= 9223372036854775807`
+   - - ``d_service``
+     - |ANY-INTEGER|
+     - 0
+     - The duration of the unloading at the delivery location.
 
 ================  ===================  =========== ================================================
 Column            Type                 Default     Description
@@ -175,13 +310,72 @@ Vehicles SQL
 
 A ``SELECT`` statement that returns the following columns:
 
-::
+| ``id, capacity, [speed,]``
+| ``s_id, [s_tw_open, s_tw_close, s_service,]``
+| ``[e_id, e_tw_open, e_tw_close, e_service]``
 
-    id, capacity, [speed,]
-    s_id, s_tw_open, s_tw_close, [s_service,]
-    [e_id, e_tw_open, e_tw_close, e_service]
+.. list-table::
+   :widths: auto
+   :header-rows: 1
 
+   - - Column
+     - Type
+     - Default
+     - Description
+   - - ``id``
+     - |ANY-INTEGER|
+     -
+     - Identifier of the vehicle
+   - - ``capacity``
+     - |ANY-INTEGER|
+     -
+     - Capacity of the vehicle.
 
+       - :math:`0 < capacity <= 4294967295`.
+   - - ``speed``
+     - |ANY-NUMERICAL|
+     - 1
+     - Speed of the vehicle.
+   - - ``s_id``
+     - |ANY-INTEGER|
+     -
+     - The node identifier of the starting location.
+
+       - Must match a node identifier in the `Matrix SQL`_.
+   - - ``s_tw_open``
+     - |ANY-INTEGER|
+     - 0
+     - The time, relative to 0, when the start location opens.
+   - - ``s_tw_close``
+     - |ANY-INTEGER|
+     - |MAX-BIGINT|
+     - The time, relative to 0, when the start location closes.
+
+       - :math:`s\_tw\_open < s\_tw\_close <= 9223372036854775807`
+   - - ``s_service``
+     - |ANY-INTEGER|
+     - 0
+     - Duration of any task at the starting location,
+   - - ``e_id``
+     - |ANY-INTEGER|
+     - ``s_id``
+     - The node identifier of the ending location.
+
+       - Must match a node identifier in the `Matrix SQL`_.
+   - - ``e_tw_open``
+     - |ANY-INTEGER|
+     - ``s_tw_open``
+     - The time, relative to 0, when the ending location opens.
+   - - ``e_tw_close``
+     - |ANY-INTEGER|
+     - ``s_tw_close``
+     - The time, relative to 0, when the ending location closes.
+
+       - :math:`e\_tw\_open < e\_tw\_close <= 9223372036854775807`
+   - - ``e_service``
+     - |ANY-INTEGER|
+     - ``s_service``
+     - The duration of any task at the ending location
 
 ==================  =================== ================ ================================================
 Column              Type                  Default           Description
@@ -208,6 +402,7 @@ Column              Type                  Default           Description
 ==================  =================== ================ ================================================
 
 Throws:
+
 * When column `id` is missing
 * When column `capacity` is missing
 * When column `s_id` is missing
@@ -224,11 +419,74 @@ Throws:
 
 A ``SELECT`` statement that returns the following columns:
 
-::
+| ``id, capacity, [speed,]``
+| ``s_x, s_y, [s_tw_open, s_tw_close, s_service,]``
+| ``[e_x, e_y, e_tw_open, e_tw_close, e_service]``
 
-    id, capacity, [speed,]
-    s_x, s_y, s_tw_open, s_tw_close, [s_service,]
-    [e_x, e_y, e_tw_open, e_tw_close, e_service]
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   - - Column
+     - Type
+     - Default
+     - Description
+   - - ``id``
+     - |ANY-INTEGER|
+     -
+     - Identifier of the vehicle.
+   - - ``capacity``
+     - |ANY-INTEGER|
+     -
+     - Capacity of the vehicle. :math:`0 < capacity <= 4294967295`.
+   - - ``speed``
+     - |ANY-NUMERICAL|
+     - 1
+     - Speed of the vehicle.
+   - - ``s_x``
+     - |ANY-NUMERICAL|
+     -
+     - :math:`x` value of the coordinate of the starting location.
+   - - ``s_y``
+     - |ANY-NUMERICAL|
+     -
+     - :math:`y` value of the coordinate of the starting location.
+   - - ``s_tw_open``
+     - |ANY-INTEGER|
+     - 0
+     - The time, relative to 0, when the start location opens.
+   - - ``s_tw_close``
+     - |ANY-INTEGER|
+     - |MAX-BIGINT|
+     - The time, relative to 0, when the start location closes.
+
+       - :math:`s\_tw\_open < s\_tw\_close <= 9223372036854775807`
+   - - ``s_service``
+     - |ANY-INTEGER|
+     - 0
+     - Duration of any task at the starting location,
+   - - ``e_x``
+     - |ANY-NUMERICAL|
+     -
+     - :math:`x` value of the coordinate of the starting location.
+   - - ``e_y``
+     - |ANY-NUMERICAL|
+     -
+     - :math:`y` value of the coordinate of the starting location.
+   - - ``e_tw_open``
+     - |ANY-INTEGER|
+     - ``s_tw_open``
+     - The time, relative to 0, when the ending location opens.
+   - - ``e_tw_close``
+     - |ANY-INTEGER|
+     - ``s_tw_close``
+     - The time, relative to 0, when the ending location closes.
+
+       - :math:`e\_tw\_open < e\_tw\_close <= 9223372036854775807`
+   - - ``e_service``
+     - |ANY-INTEGER|
+     - ``s_service``
+     - The duration of any task at the ending location
 
 ==================  =================== ================ ================================================
 Column              Type                  Default           Description
@@ -277,6 +535,21 @@ Throws:
 Vroom Inner Queries
 ...............................................................................
 
+Vroom, because of the data types used internally, some maximum values apply.
+
+For ``TIMESTAMP``:
+
+.. literalinclude:: concepts.queries
+   :start-after: q1
+   :end-before: q2
+
+For ``INTERVAL``:
+
+.. literalinclude:: concepts.queries
+   :start-after: q2
+   :end-before: q3
+
+
 Jobs SQL
 *******************************************************************************
 
@@ -284,7 +557,22 @@ Jobs SQL
 
 A ``SELECT`` statement that returns the following columns:
 
-``id, location_id [, setup, service, delivery, pickup, skills, priority, data]``
+| ``id, location_id``
+| ``[, setup, service, delivery, pickup, skills, priority, data]``
+
+Maximum values apply from vroom
+
+``setup`` and ``service``
+
+- |intervalmax|
+
+``skills``
+
+- :math:`2147483647`
+
+``priority``
+
+- :math:`100`
 
 .. list-table::
    :width: 81
@@ -304,13 +592,14 @@ A ``SELECT`` statement that returns the following columns:
      -
      - Positive unique identifier of the location of the job.
    - - ``setup``
-     - |INTERVAL|
-     - |INTERVAL0|
-     - The Job setup duration
+     - |interval|
+     - |interval0|
+     - The Job setup duration.
+
    - - ``service``
-     - |INTERVAL|
-     - |INTERVAL0|
-     - The Job service duration
+     - |interval|
+     - |interval0|
+     - The Job service duration. Max value:
    - - ``pickup``
      - ``ARRAY[ANY-INTEGER]``
      - ``[]``
@@ -326,13 +615,13 @@ A ``SELECT`` statement that returns the following columns:
 
        - All jobs must have the same value of :code:`array_length(delivery, 1)`
    - - ``skills``
-     - ``ARRAY[INTEGER]``
+     - ``ARRAY[ANY-INTEGER]``
      - ``[]``
      - Array of non-negative integers defining mandatory skills.
    - - ``priority``
      - ``INTEGER``
      - :math:`0`
-     - Value range :math:`[0, 100]`
+     - Value range: :math:`[0, 100]`
    - - ``data``
      - ``JSONB``
      - ``'{}'::JSONB``
@@ -347,12 +636,10 @@ Shipments SQL
 
 A ``SELECT`` statement that returns the following columns:
 
-``id, p_location_id, d_location_id``
-``[``
-``p_setup, p_service, p_data,``
-``d_setup, d_service, d_data,``
-``amount, skills, priority``
-``]``
+| ``id``
+| ``p_location_id, [p_setup, p_service, p_data,]``
+| ``d_location_id, [d_setup, d_service, d_data,]``
+| ``[amount, skills, priority]``
 
 
 .. list-table::
@@ -372,29 +659,29 @@ A ``SELECT`` statement that returns the following columns:
      - |ANY-INTEGER|
      -
      - Positive unique identifier of the pickup location.
-   - - ``d_location_id``
-     - |ANY-INTEGER|
-     -
-     - Positive unique identifier of the pickup location.
    - - ``p_setup``
-     - |INTERVAL|
-     - |INTERVAL0|
+     - |interval|
+     - |interval0|
      - The pickup setup duration
    - - ``p_service``
-     - |INTERVAL|
-     - |INTERVAL0|
+     - |interval|
+     - |interval0|
      - The pickup service duration
    - - ``p_data``
      - ``JSONB``
      - ``'{}'::JSONB``
      - Any metadata information of the pickup.
+   - - ``d_location_id``
+     - |ANY-INTEGER|
+     -
+     - Positive unique identifier of the pickup location.
    - - ``d_setup``
-     - |INTERVAL|
-     - |INTERVAL0|
+     - |interval|
+     - |interval0|
      - The pickup setup duration
    - - ``d_service``
-     - |INTERVAL|
-     - |INTERVAL0|
+     - |interval|
+     - |interval0|
      - The pickup service duration
    - - ``d_data``
      - ``JSONB``
@@ -410,13 +697,15 @@ A ``SELECT`` statement that returns the following columns:
          1)`
 
    - - ``skills``
-     - ``ARRAY[INTEGER]``
+     - ``ARRAY[ANY-INTEGER]``
      - ``[]``
      - Array of non-negative integers defining mandatory skills.
+
+       - :math:`values \leq 2147483647`
    - - ``priority``
      - ``INTEGER``
      - :math:`0`
-     - Value range :math:`[0, 100]`
+     - Value range: :math:`[0, 100]`
 
 .. shipments_end
 
@@ -452,7 +741,7 @@ A ``SELECT`` statement that returns the following columns:
      -
      - Positive unique identifier of the end location.
    - - ``capacity``
-     - ``ARRAY[`` |ANY-INTEGER| ``]``
+     - ``ARRAY[ANY-INTEGER]``
      - ``[]``
      - Array of non-negative integers describing multidimensional quantities
        such as number of items, weight, volume etc.
@@ -468,13 +757,13 @@ A ``SELECT`` statement that returns the following columns:
      - |tw_open_default|
      - Time window opening time.
 
-       - :code:`tw_open ≤ tw_close`
+       - :code:`tw_open \leq tw_close`
    - - ``tw_close``
      - |timestamp|
      - |tw_close_default|
      - Time window closing time.
 
-       - :code:`tw_open ≤ tw_close`
+       - :code:`tw_open \leq tw_close`
    - - ``speed_factor``
      - |ANY-NUMERICAL|
      - :math:`1.0`
@@ -539,11 +828,11 @@ A ``SELECT`` statement that returns the following columns:
      -
      - Identifier of the end node.
    - - ``duration``
-     - |INTERVAL|
+     - |interval|
      -
      - Time to travel from ``start_id`` to ``end_id``
    - - ``cost``
-     - |INTERVAL|
+     - |interval|
      - ``duration``
      - Cost of travel from ``start_id`` to ``end_id``
 
@@ -576,8 +865,8 @@ A ``SELECT`` statement that returns the following columns:
      -
      - Positive unique identifier of the vehicle.
    - - ``service``
-     - |INTERVAL|
-     - |INTERVAL0|
+     - |interval|
+     - |interval0|
      - The break duration
    - - ``data``
      - ``JSONB``
@@ -1041,8 +1330,9 @@ Consult the `developer's documentation <https://vrp.pgrouting.org/doxy/main/inde
 * :ref:`genindex`
 * :ref:`search`
 
-.. |interval| replace:: ``INTERVAL`` or ``INTEGER``
-.. |interval0| replace:: '00:00:00'::INTERVAL or :math:`0`
-.. |timestamp| replace:: ``TIMESTAMP`` or ``INTEGER``
-.. |tw_open_default| replace:: '1970-01-01 00:00:00'::TIMESTAMP or :math:`0`
-.. |tw_close_default| replace:: '2106-02-07 06:28:15'::TIMESTAMP or :math:`4294967295`
+.. |interval| replace:: :abbr:`ANY-INTERVAL(INTERVAL, SMALLINT, INTEGER, BIGINT)`
+.. |interval0| replace:: :abbr:`INTERVAL 0('make_interval(secs => 0), 0)`
+.. |intervalmax| replace:: **INTERVAL**: ``make_interval(secs => 4294967295)`` and |br| |ANY-INTEGER|: :math:`4294967295`
+.. |timestamp| replace:: :abbr:`ANY-TIMESTAMP(TIMESTAMP, SMALLINT, INTEGER, BIGINT)`
+.. |tw_open_default| replace:: :abbr:`TW-OPEN-DEFAULT(to_timestamp(0), 0)`
+.. |tw_close_default| replace:: :abbr:`TW-CLOSE-DEFAULT(to_timestamp(4294967295), 4294967295)`

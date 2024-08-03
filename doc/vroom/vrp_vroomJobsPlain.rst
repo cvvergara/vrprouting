@@ -68,12 +68,6 @@ Signature
    :start-after: -- q1
    :end-before: -- q2
 
-.. |timestamp| replace:: ``INTEGER``
-.. |interval| replace:: ``INTEGER``
-.. |interval0| replace:: :math:`0`
-.. |tw_open_default| replace:: :math:`0`
-.. |tw_close_default| replace:: :math:`4294967295`
-
 Parameters
 -------------------------------------------------------------------------------
 
@@ -164,3 +158,11 @@ See Also
 
 * :ref:`genindex`
 * :ref:`search`
+
+.. |interval| replace:: |ANY-INTEGER|
+.. |interval0| replace:: :math:`0`
+.. |intervalmax| replace:: :math:`4294967295`
+.. |timestamp| replace:: |ANY-INTEGER|
+.. |tw_open_default| replace:: :math:`0`
+.. |tw_close_default| replace:: :math:`4294967295`
+

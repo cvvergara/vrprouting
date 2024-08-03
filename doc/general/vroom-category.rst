@@ -85,25 +85,37 @@ Terminologies
 ...............................................................................
 
 - **Tasks**: Either jobs or shipments are referred to as tasks.
-- **Skills**: Every task and vehicle may have some set of skills. A task can be served by only that vehicle which has all the skills of the task.
-- **Priority**: Tasks may have some priority assigned, which is useful when all tasks cannot be performed due to constraints, so the tasks with low priority are left unassigned.
-- **Amount (for shipment), Pickup and delivery (for job)**: They denote the multidimensional quantities such as number of items, weights, volume, etc.
-- **Capacity (for vehicle)**: Every vehicle may have some capacity, denoting the multidimensional quantities. A vehicle can serve only those sets of tasks such that the total sum of the quantity does not exceed the vehicle capacity, at any point of the route.
-- **Time Window**: An interval of time during which some activity can be performed, such as working hours of the vehicle, break of the vehicle, or service start time for a task.
-- **Break**: Array of time windows, denoting valid slots for the break start of a vehicle.
-- **Setup time**: Setup times serve as a mean to describe the time it takes to get started for a task at a given location.
-  This models a duration that should not be re-applied for other tasks following at the same place.
-  So the total "action time" for a task is ``setup + service`` upon arriving at a new location or
-  ``service`` only if performing a new task at the previous vehicle location.
-- **Service time**: The additional time to be spent by a vehicle while serving a task.
-- **Travel time**: The total time the vehicle travels during its route.
-- **Waiting time**: The total time the vehicle is idle, i.e. it is neither traveling nor servicing any task. It is generally the time spent by a vehicle waiting for a task service to open.
+- **Skills**: Every task and vehicle may have some set of skills. A task can be
+  served by only that vehicle which has all the skills of the task.
+- **Priority**: Tasks may have some priority assigned, which is useful when all
+  tasks cannot be performed due to constraints, so the tasks with low priority
+  are left unassigned.
+- **Amount (for shipment), Pickup and delivery (for job)**: They denote the
+  multidimensional quantities such as number of items, weights, volume, etc.
+- **Capacity (for vehicle)**: Every vehicle may have some capacity, denoting the
+  multidimensional quantities. A vehicle can serve only those sets of tasks such
+  that the total sum of the quantity does not exceed the vehicle capacity, at
+  any point of the route.
+- **Time Window**: An interval of time during which some activity can be
+  performed, such as working hours of the vehicle, break of the vehicle, or
+  service start time for a task.
+- **Break**: Array of time windows, denoting valid slots for the break start of
+  a vehicle.
+- **Setup time**: Setup times serve as a mean to describe the time it takes to
+  get started for a task at a given location.
 
-.. |timestamp| replace:: ``TIMESTAMP`` or ``INTEGER``
-.. |interval| replace:: ``INTERVAL`` or ``INTEGER``
-.. |interval0| replace:: '00:00:00'::INTERVAL or :math:`0`
-.. |tw_open_default| replace:: '1970-01-01 00:00:00'::TIMESTAMP or :math:`0`
-.. |tw_close_default| replace:: '2106-02-07 06:28:15'::TIMESTAMP or :math:`4294967295`
+  This models a duration that should not be re-applied for other tasks following
+  at the same place.
+
+  So the total "action time" for a task is ``setup + service`` upon arriving at
+  a new location or ``service`` only if performing a new task at the previous
+  vehicle location.
+- **Service time**: The additional time to be spent by a vehicle while serving a
+  task.
+- **Travel time**: The total time the vehicle travels during its route.
+- **Waiting time**: The total time the vehicle is idle, i.e. it is neither
+  traveling nor servicing any task. It is generally the time spent by a vehicle
+  waiting for a task service to open.
 
 Inner Queries
 -------------------------------------------------------------------------------
@@ -176,3 +188,10 @@ See Also
 
 * :ref:`genindex`
 * :ref:`search`
+
+.. |interval| replace:: :abbr:`ANY-INTERVAL(INTERVAL, SMALLINT, INTEGER, BIGINT)`
+.. |interval0| replace:: :abbr:`INTERVAL 0('make_interval(secs => 0), 0)`
+.. |intervalmax| replace:: **INTERVAL**: ``make_interval(secs => 4294967295)`` and |br| |ANY-INTEGER|: :math:`4294967295`
+.. |timestamp| replace:: :abbr:`ANY-TIMESTAMP(TIMESTAMP, SMALLINT, INTEGER, BIGINT)`
+.. |tw_open_default| replace:: :abbr:`TW-OPEN-DEFAULT(to_timestamp(0), 0)`
+.. |tw_close_default| replace:: :abbr:`TW-CLOSE-DEFAULT(to_timestamp(4294967295), 4294967295)`
