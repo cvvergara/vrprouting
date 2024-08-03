@@ -79,8 +79,134 @@ Time Windows
 
 .. note To be defined
 
+Getting Started
+-------------------------------------------------------------------------------
 
-Inner queries
+This is a simple guide to walk you through the steps of getting started
+with vrpRouting. In this guide we will cover:
+
+.. contents::
+    :local:
+
+
+.. _create_database:
+
+Create a routing Database
+...............................................................................
+
+The first thing we need to do is create a database and load pgrouting in
+the database. Typically you will create a database for each project. Once
+you have a database to work in, your can load your data and build your
+application in that database. This makes it easy to move your project
+later if you want to to say a production server.
+
+For Postgresql 9.2 and later versions
+
+.. code-block:: bash
+
+	createdb mydatabase
+	psql mydatabase -c "create extension postgis"
+	psql mydatabase -c "create extension pgrouting"
+
+
+Handling Parameters
+*******************************************************************************
+
+To define a problem, several considerations have to be done, to get consistent results.
+This section gives an insight of how parameters are to be considered.
+
+- `Capacity and Demand Units Handling`_
+- `Locations`_
+- `Time Handling`_
+- `Factor Handling`_
+
+
+Capacity and Demand Units Handling
+...............................................................................
+
+The `capacity` of a vehicle, can be measured in:
+
+- Volume units like :math:`m^3`.
+- Area units like :math:`m^2` (when no stacking is allowed).
+- Weight units like :math:`kg`.
+- Number of boxes that fit in the vehicle.
+- Number of seats in the vehicle
+
+The `demand` request of the pickup-deliver orders must use the same units as the units used in the vehicle's `capacity`.
+
+To handle problems like:  10 (equal dimension) boxes of apples and 5 kg of feathers that are to be transported (not packed in boxes).
+
+If the vehicle's `capacity` is measured by `boxes`, a conversion of `kg of feathers` to `equivalent number of boxes` is needed.
+If the vehicle's `capacity` is measured by `kg`, a conversion of `box of apples` to `equivalent number of kg` is needed.
+
+Showing how the 2 possible conversions can be done
+
+Let:
+- :math:`f_boxes`: number of boxes that would be used for `1` kg of feathers.
+- :math:`a_weight`: weight of `1` box of apples.
+
+=============== ====================== ==================
+Capacity Units  apples                  feathers
+=============== ====================== ==================
+boxes            10                     :math:`5 * f\_boxes`
+kg              :math:`10 * a\_weight`       5
+=============== ====================== ==================
+
+
+
+Locations
+*******************************************************************************
+
+- When using the Euclidean signatures:
+
+  - The vehicles have :math:`(x, y)` pairs for start and ending locations.
+  - The orders Have :math:`(x, y)` pairs for pickup and delivery locations.
+
+- When using a matrix:
+
+  - The vehicles have identifiers for the start and ending locations.
+  - The orders have identifiers for the pickup and delivery locations.
+  - All the identifiers are indices to the given matrix.
+
+
+Time Handling
+...............................................................................
+
+The times are relative to 0
+
+Suppose that a vehicle's driver starts the shift at 9:00 am and ends the shift at 4:30 pm
+and the service time duration is 10 minutes with 30 seconds.
+
+All time units have to be converted
+
+============ ================= ==================== ===================== =========
+Meaning of 0   time units       9:00 am              4:30 pm               10 min 30 secs
+============ ================= ==================== ===================== =========
+0:00 am         hours            9                  16.5                   :math:`10.5 / 60  = 0.175`
+9:00 am         hours            0                  7.5                    :math:`10.5 / 60  = 0.175`
+0:00 am         minutes          :math:`9*60 = 54`  :math:`16.5*60 = 990`  10.5
+9:00 am         minutes          0                  :math:`7.5*60 = 540`   10.5
+============ ================= ==================== ===================== =========
+
+
+.. _pd_factor:
+
+Factor Handling
+*******************************************************************************
+
+.. TODO
+
+TBD
+
+
+Group of Functions
+-------------------------------------------------------------------------------
+
+TBD
+
+
+
+Inner Queries
 -------------------------------------------------------------------------------
 
 Pickup-Delivery Inner Queries
@@ -883,138 +1009,6 @@ A ``SELECT`` statement that returns the following columns:
     -  Times reported in output can be interpreted as ``TIMESTAMP``.
 
 .. time_windows_note_end
-
-Getting Started
--------------------------------------------------------------------------------
-
-This is a simple guide to walk you through the steps of getting started
-with vrpRouting. In this guide we will cover:
-
-.. contents::
-    :local:
-
-
-.. _create_database:
-
-Create a routing Database
-...............................................................................
-
-The first thing we need to do is create a database and load pgrouting in
-the database. Typically you will create a database for each project. Once
-you have a database to work in, your can load your data and build your
-application in that database. This makes it easy to move your project
-later if you want to to say a production server.
-
-For Postgresql 9.2 and later versions
-
-.. code-block:: bash
-
-	createdb mydatabase
-	psql mydatabase -c "create extension postgis"
-	psql mydatabase -c "create extension pgrouting"
-
-
-Handling Parameters
-*******************************************************************************
-
-To define a problem, several considerations have to be done, to get consistent results.
-This section gives an insight of how parameters are to be considered.
-
-- `Capacity and Demand Units Handling`_
-- `Locations`_
-- `Time Handling`_
-- `Factor Handling`_
-
-
-Capacity and Demand Units Handling
-...............................................................................
-
-The `capacity` of a vehicle, can be measured in:
-
-- Volume units like :math:`m^3`.
-- Area units like :math:`m^2` (when no stacking is allowed).
-- Weight units like :math:`kg`.
-- Number of boxes that fit in the vehicle.
-- Number of seats in the vehicle
-
-The `demand` request of the pickup-deliver orders must use the same units as the units used in the vehicle's `capacity`.
-
-To handle problems like:  10 (equal dimension) boxes of apples and 5 kg of feathers that are to be transported (not packed in boxes).
-
-If the vehicle's `capacity` is measured by `boxes`, a conversion of `kg of feathers` to `equivalent number of boxes` is needed.
-If the vehicle's `capacity` is measured by `kg`, a conversion of `box of apples` to `equivalent number of kg` is needed.
-
-Showing how the 2 possible conversions can be done
-
-Let:
-- :math:`f_boxes`: number of boxes that would be used for `1` kg of feathers.
-- :math:`a_weight`: weight of `1` box of apples.
-
-=============== ====================== ==================
-Capacity Units  apples                  feathers
-=============== ====================== ==================
-boxes            10                     :math:`5 * f\_boxes`
-kg              :math:`10 * a\_weight`       5
-=============== ====================== ==================
-
-
-
-Locations
-*******************************************************************************
-
-- When using the Euclidean signatures:
-
-  - The vehicles have :math:`(x, y)` pairs for start and ending locations.
-  - The orders Have :math:`(x, y)` pairs for pickup and delivery locations.
-
-- When using a matrix:
-
-  - The vehicles have identifiers for the start and ending locations.
-  - The orders have identifiers for the pickup and delivery locations.
-  - All the identifiers are indices to the given matrix.
-
-
-Time Handling
-...............................................................................
-
-The times are relative to 0
-
-Suppose that a vehicle's driver starts the shift at 9:00 am and ends the shift at 4:30 pm
-and the service time duration is 10 minutes with 30 seconds.
-
-All time units have to be converted
-
-============ ================= ==================== ===================== =========
-Meaning of 0   time units       9:00 am              4:30 pm               10 min 30 secs
-============ ================= ==================== ===================== =========
-0:00 am         hours            9                  16.5                   :math:`10.5 / 60  = 0.175`
-9:00 am         hours            0                  7.5                    :math:`10.5 / 60  = 0.175`
-0:00 am         minutes          :math:`9*60 = 54`  :math:`16.5*60 = 990`  10.5
-9:00 am         minutes          0                  :math:`7.5*60 = 540`   10.5
-============ ================= ==================== ===================== =========
-
-
-.. _pd_factor:
-
-Factor Handling
-*******************************************************************************
-
-.. TODO
-
-TBD
-
-
-Group of Functions
--------------------------------------------------------------------------------
-
-TBD
-
-
-
-Inner Queries
--------------------------------------------------------------------------------
-
-TBD
 
 
 Return columns & values
