@@ -275,8 +275,6 @@ BEGIN
 END;
 $BODY$
 LANGUAGE plpgsql;
-/** [vrp_simulation_code] */
-
 
 COMMENT ON PROCEDURE vrp_simulation(
   TEXT, TEXT, TEXT, TEXT,

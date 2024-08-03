@@ -54,7 +54,7 @@ BEGIN
 
   orders_sql = format(
     $$SELECT * FROM (%1$s) AS __a__ WHERE id  = %2$s LIMIT 1$$,
-    -- shipments SQL, shipment_id
+    -- orders SQL, order id
     $1, $5
   );
 
@@ -80,7 +80,7 @@ BEGIN
         %5$s::FLOAT,
         true)
       $$,
-      /* shipments, vehicles, matrix, tdm */
+      -- vehicles, matrix, tdm
       orders_sql, $2, $3, $4,
       factor);
 
