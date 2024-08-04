@@ -47,13 +47,8 @@ typedef struct Vehicle_t Vehicle_t;
 extern "C" {
 #endif
 
-/*********************************************************
-    orders_sql TEXT,
-    max_vehicles INTEGER,
-    capacity FLOAT,
-    max_cycles INTEGER,
-   ********************************************************/
-void do_pgr_pickDeliverEuclidean(
+/** @brief Driver for processing an only int pick-deliver euclidean problem */
+void vrp_do_pgr_pickDeliverEuclidean(
         PickDeliveryOrders_t *pd_orders_arr, size_t total_pd_orders,
         Vehicle_t *vehicles_arr, size_t total_vehicles,
 

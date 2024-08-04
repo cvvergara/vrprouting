@@ -36,7 +36,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 extern "C" {
 #endif
 
-void do_vrp_vroom(
+/** @brief Driver for processing a vroom problem */
+void vrp_do_vroom(
         Vroom_job_t *jobs, size_t total_jobs,
         Vroom_time_window_t *jobs_tws, size_t total_jobs_tws,
         Vroom_shipment_t *shipments, size_t total_shipments,

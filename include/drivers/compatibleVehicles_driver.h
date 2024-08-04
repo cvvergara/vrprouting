@@ -50,7 +50,7 @@ extern "C" {
 #endif
 
 /** @brief Driver for processing a "compatible vehicles" problem */
-void do_compatibleVehicles(
+void vrp_do_compatibleVehicles(
         PickDeliveryOrders_t customers_arr[], size_t total_customers,
         Vehicle_t *vehicles_arr,              size_t total_vehicles,
         Matrix_cell_t *matrix_cells_arr,      size_t total_cells,

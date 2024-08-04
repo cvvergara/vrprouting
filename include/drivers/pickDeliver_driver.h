@@ -39,7 +39,7 @@ extern "C" {
 #endif
 
 /** @brief Driver for processing a pickupDeliver problem */
-void do_pickDeliver(
+void vrp_do_pickDeliver(
         PickDeliveryOrders_t customers_arr[], size_t total_customers,
         Vehicle_t *vehicles_arr, size_t total_vehicles,
         Matrix_cell_t *matrix_cells_arr, size_t total_cells,

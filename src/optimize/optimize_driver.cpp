@@ -347,7 +347,7 @@ subdivide_processing(
 
 
 void
-do_optimize(
+vrp_do_optimize(
         PickDeliveryOrders_t *shipments_arr, size_t total_shipments,
         Vehicle_t *vehicles_arr, size_t total_vehicles,
         Matrix_cell_t *matrix_cells_arr, size_t total_cells,
