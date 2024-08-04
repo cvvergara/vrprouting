@@ -59,7 +59,6 @@ Signature
    | `Breaks SQL`_, `Breaks Time Windows SQL`_,
    | `Time Matrix SQL`_
    | [, exploration_level] [, timeout])  -- Experimental on v0.2
-
    | RETURNS SET OF
    | (seq, vehicle_seq, vehicle_id, vehicle_data, step_seq, step_type, task_id,
    |  task_data, arrival, travel_time, service_time, waiting_time, departure, load)
@@ -72,30 +71,42 @@ The modification in the tables is mentioned at the end of the :doc:`sampledata`.
    :start-after: -- q1
    :end-before: -- q2
 
-
 Parameters
 -------------------------------------------------------------------------------
 
 .. vroom_parameters_start
 
-============================== =========== =========================================================
-Parameter                      Type        Description
-============================== =========== =========================================================
-`Jobs SQL`_                    ``TEXT``    `Jobs SQL`_ query describing the single-location
-                                           pickup and/or delivery tasks.
-`Jobs Time Windows SQL`_       ``TEXT``    `Jobs Time Windows SQL`_ query describing valid slots
-                                           for job service start.
-`Shipments SQL`_               ``TEXT``    `Shipments SQL`_ query describing pickup and delivery
-                                           tasks that should happen within same route.
-`Shipments Time Windows SQL`_  ``TEXT``    `Shipments Time Windows SQL`_ query describing valid slots
-                                           for pickup and delivery service start.
-`Vehicles SQL`_                ``TEXT``    `Vehicles SQL`_ query describing the available vehicles.
-`Breaks SQL`_                  ``TEXT``    `Breaks SQL`_ query describing the driver breaks.
-`Breaks Time Windows SQL`_     ``TEXT``    `Breaks Time Windows SQL`_ query describing valid slots for
-                                           break start.
-`Time Matrix SQL`_             ``TEXT``    `Time Matrix SQL`_ query containing the distance or
-                                           travel times between the locations.
-============================== =========== =========================================================
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   - - Parameter
+     - Type
+     - Description
+   - - `Jobs SQL`_
+     - ``TEXT``
+     - Query describing the single-location pickup and/or delivery
+   - - `Jobs Time Windows SQL`_
+     - ``TEXT``
+     - Query describing valid slots for job service start.
+   - - `Shipments SQL`_
+     - ``TEXT``
+     - Query describing pickup and delivery tasks that should happen within same route.
+   - - `Shipments Time Windows SQL`_
+     - ``TEXT``
+     - Query describing valid slots for pickup and delivery service start.
+   - - `Vehicles SQL`_
+     - ``TEXT``
+     - Query describing the available vehicles.
+   - - `Breaks SQL`_
+     - ``TEXT``
+     - Query describing the driver breaks.
+   - - `Breaks Time Windows SQL`_
+     - ``TEXT``
+     - Query describing valid slots for break start.
+   - - `Time Matrix SQL`_
+     - ``TEXT``
+     - Query containing the distance or travel times between the locations.
 
 .. vroom_parameters_end
 
@@ -104,21 +115,29 @@ Optional Parameters
 
 .. vroom_optionals_start
 
-===================== ============ ============================= =================================================
-Parameter             Type         Default                       Description
-===================== ============ ============================= =================================================
-**exploration_level** ``INTEGER``  :math:`5`                     Exploration level to use while solving.
+.. list-table::
+   :widths: auto
+   :header-rows: 1
 
-                                                                 - Ranges from ``[0, 5]``
-                                                                 - A smaller exploration level gives faster result.
+   - - Parameter
+     - Type
+     - Default
+     - Description
+   - - ``exploration_level``
+     - ``INTEGER``
+     - :math:`5`
+     - Exploration level to use while solving.
 
-**timeout**           ``INTERVAL`` '-00:00:01'::INTERVAL         Timeout value to stop the solving process.
+       - Ranges from ``[0, 5]``
+       - A smaller exploration level gives faster result.
+   - - ``timeout``
+     - ``INTERVAL``
+     - '-00:00:01'::INTERVAL
+     - Timeout value to stop the solving process.
 
-                                                                 - Gives the best possible solution within a time
-                                                                   limit. Note that some additional seconds may be
-                                                                   required to return back the data.
-                                                                 - Any negative timeout value is ignored.
-===================== ============ ============================= =================================================
+       - Gives the best possible solution within a time limit. Note that some
+         additional seconds may be required to return back the data.
+       - Any negative timeout value is ignored.
 
 .. vroom_optionals_end
 

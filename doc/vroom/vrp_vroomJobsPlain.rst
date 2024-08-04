@@ -18,7 +18,8 @@
 vrp_vroomJobsPlain - Experimental
 ===============================================================================
 
-``vrp_vroomJobsPlain`` - Vehicle Routing Problem with VROOM, involving only jobs, with plain integer values instead of TIMESTAMP or INTERVAL.
+``vrp_vroomJobsPlain`` - Vehicle Routing Problem with VROOM, involving only
+jobs, with plain integer values instead of TIMESTAMP or INTERVAL.
 
 .. include:: experimental.rst
    :start-after: begin-warn-expr
@@ -57,7 +58,6 @@ Signature
    | `Breaks SQL`_, `Breaks Time Windows SQL`_,
    | `Time Matrix SQL`_
    | [, exploration_level] [, timeout])  -- Experimental on v0.2
-
    | RETURNS SET OF
    | (seq, vehicle_seq, vehicle_id, vehicle_data, step_seq, step_type, task_id,
    |  task_data, arrival, travel_time, service_time, waiting_time, departure, load)

@@ -57,7 +57,6 @@ Signature
    | `Breaks SQL`_, `Breaks Time Windows SQL`_,
    | `Time Matrix SQL`_
    | [, exploration_level] [, timeout])  -- Experimental on v0.2
-
    | RETURNS SET OF
    | (seq, vehicle_seq, vehicle_id, vehicle_data, step_seq, step_type, task_id,
    |  task_data, arrival, travel_time, service_time, waiting_time, departure, load)
@@ -74,20 +73,31 @@ Parameters
 
 .. vship_parameters_start
 
-============================== =========== =========================================================
-Parameter                      Type        Description
-============================== =========== =========================================================
-**Shipments SQL**              ``TEXT``    `Shipments SQL`_ query describing pickup and delivery
-                                           tasks that should happen within same route.
-**Shipments Time Windows SQL** ``TEXT``    `Shipments Time Windows SQL`_ query describing valid slots
-                                           for pickup and delivery service start.
-**Vehicles SQL**               ``TEXT``    `Vehicles SQL`_ query describing the available vehicles.
-**Breaks SQL**                 ``TEXT``    `Breaks SQL`_ query describing the driver breaks.
-**Breaks Time Windows SQL**    ``TEXT``    `Breaks Time Windows SQL`_ query describing valid slots for
-                                           break start.
-**Time Matrix SQL**            ``TEXT``    `Time Matrix SQL`_ query containing the distance or
-                                           travel times between the locations.
-============================== =========== =========================================================
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   - - Parameter
+     - Type
+     - Description
+   - - `Shipments SQL`_
+     - ``TEXT``
+     - Query describing pickup and delivery tasks that should happen within same route.
+   - - `Shipments Time Windows SQL`_
+     - ``TEXT``
+     - Query describing valid slots for pickup and delivery service start.
+   - - `Vehicles SQL`_
+     - ``TEXT``
+     - Query describing the available vehicles.
+   - - `Breaks SQL`_
+     - ``TEXT``
+     - Query describing the driver breaks.
+   - - `Breaks Time Windows SQL`_
+     - ``TEXT``
+     - Query describing valid slots for break start.
+   - - `Time Matrix SQL`_
+     - ``TEXT``
+     - Query containing the distance or travel times between the locations.
 
 .. vship_parameters_end
 

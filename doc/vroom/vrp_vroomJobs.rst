@@ -57,7 +57,6 @@ Signature
    | `Breaks SQL`_, `Breaks Time Windows SQL`_,
    | `Time Matrix SQL`_
    | [, exploration_level] [, timeout])  -- Experimental on v0.2
-
    | RETURNS SET OF
    | (seq, vehicle_seq, vehicle_id, vehicle_data, step_seq, step_type, task_id,
    |  task_data, arrival, travel_time, service_time, waiting_time, departure, load)
@@ -74,20 +73,31 @@ Parameters
 
 .. vjobs_parameter_start
 
-=========================== =========== =========================================================
-Parameter                   Type        Description
-=========================== =========== =========================================================
-`Jobs SQL`_                 ``TEXT``    `Jobs SQL`_ query describing the single-location
-                                           pickup and/or delivery tasks.
-`Jobs Time Windows SQL`_    ``TEXT``    `Jobs Time Windows SQL`_ query describing valid slots
-                                           for job service start.
-`Vehicles SQL`_             ``TEXT``    `Vehicles SQL`_ query describing the available vehicles.
-`Breaks SQL`_               ``TEXT``    `Breaks SQL`_ query describing the driver breaks.
-`Breaks Time Windows SQL`_  ``TEXT``    `Breaks Time Windows SQL`_ query describing valid slots for
-                                           break start.
-`Time Matrix SQL`_          ``TEXT``    `Time Matrix SQL`_ query containing the distance or
-                                           travel times between the locations.
-=========================== =========== =========================================================
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   - - Parameter
+     - Type
+     - Description
+   - - `Jobs SQL`_
+     - ``TEXT``
+     - Query describing the single-location pickup and/or delivery
+   - - `Jobs Time Windows SQL`_
+     - ``TEXT``
+     - Query describing valid slots for job service start.
+   - - `Vehicles SQL`_
+     - ``TEXT``
+     - Query describing the available vehicles.
+   - - `Breaks SQL`_
+     - ``TEXT``
+     - Query describing the driver breaks.
+   - - `Breaks Time Windows SQL`_
+     - ``TEXT``
+     - Query describing valid slots for break start.
+   - - `Time Matrix SQL`_
+     - ``TEXT``
+     - Query containing the distance or travel times between the locations.
 
 .. vjobs_parameter_end
 
