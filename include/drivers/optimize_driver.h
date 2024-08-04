@@ -38,25 +38,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 extern "C" {
 #endif
 
-    /** @brief Driver for processing a pickupDeliver problem */
-    void do_optimize(
-            PickDeliveryOrders_t customers_arr[], size_t,
-            Vehicle_t *vehicles_arr, size_t,
-            Matrix_cell_t *, size_t,
-            Time_multipliers_t *, size_t,
+/** @brief Driver for processing a pickupDeliver problem */
+void do_optimize(
+        PickDeliveryOrders_t customers_arr[], size_t,
+        Vehicle_t *vehicles_arr, size_t,
+        Matrix_cell_t *, size_t,
+        Time_multipliers_t *, size_t,
 
-            double,
-            int,
-            int64_t,
+        double,
+        int,
+        int64_t,
 
-            bool, bool, bool,
+        bool, bool, bool,
 
-            Short_vehicle_rt**,
-            size_t*,
+        Short_vehicle_rt**,
+        size_t*,
 
-            char**,
-            char**,
-            char**);
+        char**,
+        char**,
+        char**);
 
 
 #ifdef __cplusplus

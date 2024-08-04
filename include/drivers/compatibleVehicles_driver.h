@@ -49,21 +49,21 @@ typedef struct CompatibleVehicles_rt CompatibleVehicles_rt;
 extern "C" {
 #endif
 
-    /** @brief Driver for processing a "compatible vehicles" problem */
-  void do_compatibleVehicles(
-      PickDeliveryOrders_t customers_arr[], size_t total_customers,
-      Vehicle_t *vehicles_arr,              size_t total_vehicles,
-      Matrix_cell_t *matrix_cells_arr,      size_t total_cells,
-      Time_multipliers_t *multipliers_arr,               size_t total_multipliers,
+/** @brief Driver for processing a "compatible vehicles" problem */
+void do_compatibleVehicles(
+        PickDeliveryOrders_t customers_arr[], size_t total_customers,
+        Vehicle_t *vehicles_arr,              size_t total_vehicles,
+        Matrix_cell_t *matrix_cells_arr,      size_t total_cells,
+        Time_multipliers_t *multipliers_arr,               size_t total_multipliers,
 
-      double factor,
+        double factor,
 
-      CompatibleVehicles_rt **return_tuples,
-      size_t *return_count,
+        CompatibleVehicles_rt **return_tuples,
+        size_t *return_count,
 
-      char **log_msg,
-      char **notice_msg,
-      char **err_msg);
+        char **log_msg,
+        char **notice_msg,
+        char **err_msg);
 
 
 #ifdef __cplusplus

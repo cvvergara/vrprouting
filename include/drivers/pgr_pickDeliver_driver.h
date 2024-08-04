@@ -49,27 +49,27 @@ typedef struct Solution_rt Solution_rt;
 extern "C" {
 #endif
 
-  /*********************************************************
+/*********************************************************
     orders_sql TEXT,
     max_vehicles INTEGER,
     capacity FLOAT,
     max_cycles INTEGER,
    ********************************************************/
-  void do_pgr_pickDeliver(
-      PickDeliveryOrders_t *pd_orders_arr, size_t total_pd_orders,
-      Vehicle_t *vehicles_arr, size_t total_vehicles,
-      Matrix_cell_t *matrix_cells_arr, size_t total_cells,
+void do_pgr_pickDeliver(
+        PickDeliveryOrders_t *pd_orders_arr, size_t total_pd_orders,
+        Vehicle_t *vehicles_arr, size_t total_vehicles,
+        Matrix_cell_t *matrix_cells_arr, size_t total_cells,
 
-      double factor,
-      int max_cycles,
-      int initial_solution_id,
+        double factor,
+        int max_cycles,
+        int initial_solution_id,
 
-      Solution_rt **return_tuples,
-      size_t *return_count,
+        Solution_rt **return_tuples,
+        size_t *return_count,
 
-      char **log_msg,
-      char **notice_msg,
-      char **err_msg);
+        char **log_msg,
+        char **notice_msg,
+        char **err_msg);
 
 
 #ifdef __cplusplus

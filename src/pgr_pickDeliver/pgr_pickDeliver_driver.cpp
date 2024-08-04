@@ -202,7 +202,7 @@ do_pgr_pickDeliver(
 #if 0
         try {
 #endif
-        using Initials_code = vrprouting::initialsol::simple::Initials_code;
+            using Initials_code = vrprouting::initialsol::simple::Initials_code;
             auto sol = get_initial_solution(&pd_problem, initial_solution_id);
             using Optimize = vrprouting::optimizers::simple::Optimize;
             sol = Optimize(sol, static_cast<size_t>(max_cycles), (Initials_code)initial_solution_id);
