@@ -331,7 +331,6 @@ rst_epilog="""
 .. |ANY-INTEGER| replace:: :abbr:`ANY-INTEGER(SMALLINT, INTEGER, BIGINT)`
 .. |ANY-NUMERICAL| replace:: :abbr:`ANY-NUMERICAL(SMALLINT, INTEGER, BIGINT, REAL, FLOAT)`
 .. |MAX-BIGINT| replace:: :abbr:`MAX-BIGINT(9223372036854775807)`
-.. |result-pickdrop| replace:: ``(seq, vehicle_number, vehicle_id, stop, order_id, stop_type, cargo, travel_time, arrival_time, wait_time, service_time, departure_time)``
 .. |br| raw:: html
 
    </p><li><p>

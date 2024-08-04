@@ -69,7 +69,8 @@ Time Windows
   - Have pick up and delivery locations.
   - Have opening and closing times for the pickup and delivery locations.
   - Have pickup and delivery duration service times.
-  - have a demand request for moving goods from the pickup location to the delivery location.
+  - have a demand request for moving goods from the pickup location to the
+    delivery location.
 
 - Time based calculations:
 
@@ -87,9 +88,6 @@ with vrpRouting. In this guide we will cover:
 
 .. contents::
     :local:
-
-
-.. _create_database:
 
 Create a routing Database
 ...............................................................................
@@ -132,12 +130,16 @@ The `capacity` of a vehicle, can be measured in:
 - Number of boxes that fit in the vehicle.
 - Number of seats in the vehicle
 
-The `demand` request of the pickup-deliver orders must use the same units as the units used in the vehicle's `capacity`.
+The `demand` request of the pickup-deliver orders must use the same units as the
+units used in the vehicle's `capacity`.
 
-To handle problems like:  10 (equal dimension) boxes of apples and 5 kg of feathers that are to be transported (not packed in boxes).
+To handle problems like:  10 (equal dimension) boxes of apples and 5 kg of
+feathers that are to be transported (not packed in boxes).
 
-If the vehicle's `capacity` is measured by `boxes`, a conversion of `kg of feathers` to `equivalent number of boxes` is needed.
-If the vehicle's `capacity` is measured by `kg`, a conversion of `box of apples` to `equivalent number of kg` is needed.
+If the vehicle's `capacity` is measured by `boxes`, a conversion of `kg of
+feathers` to `equivalent number of boxes` is needed.
+If the vehicle's `capacity` is measured by `kg`, a conversion of `box of apples`
+to `equivalent number of kg` is needed.
 
 Showing how the 2 possible conversions can be done
 
@@ -664,7 +666,6 @@ Maximum values apply from vroom
 
 - :math:`100`
 
-
 .. list-table::
    :width: 81
    :widths: auto
@@ -1017,90 +1018,142 @@ Return columns & values
 Pick-Deliver result columns
 ...............................................................................
 
+.. rubric:: Results
+
 .. pd_result_start
 
-=================== ============= =================================================
-Column              Type           Description
-=================== ============= =================================================
-``seq``              ``INTEGER``  Sequential value starting from **1**.
-``vehicle_seq``      ``INTEGER``  Sequential value starting from **1** for
-                                  current vehicles. The :math:`n_{th}` vehicle
-                                  in the solution.
-``vehicle_id``       ``BIGINT``   Current vehicle identifier.
-``stop_seq``         ``INTEGER``  Sequential value starting from **1** for the
-                                  stops made by the current vehicle. The
-                                  :math:`m_{th}` stop of the current vehicle.
-``stop_type``        ``INTEGER``  Kind of stop location the vehicle is at:
+Returns set of
 
-                                  - ``1``: Starting location
-                                  - ``2``: Pickup location
-                                  - ``3``: Delivery location
-                                  - ``6``: Ending location
+| ``seq, vehicle_number, vehicle_id, stop_seq, stop_type, stop_id, order_id, cargo,``
+| ``travel_time, arrival_time, wait_time, service_time, departure_time``
 
-``stop_id``          ``BIGINT``   Identifier of the stop.
-``order_id``         ``BIGINT``   Pickup-Delivery order pair identifier.
+.. list-table::
+   :widths: auto
+   :header-rows: 1
 
-                                  - ``-1``: When no order is involved on the
-                                    current stop location.
+   * - Column
+     - Type
+     - Description
+   * - ``seq``
+     - ``INTEGER``
+     -   Sequential value starting from **1**.
+   * - ``vehicle_seq``
+     - ``INTEGER``
+     - Sequential value starting from **1** for current vehicles. The
+       :math:`n_{th}` vehicle in the solution.
+   * - ``vehicle_id``
+     - ``BIGINT``
+     - Current vehicle identifier.
+   * - ``stop_seq``
+     - ``INTEGER``
+     - Sequential value starting from **1** for the stops made by the current
+       vehicle. The :math:`m_{th}` stop of the current vehicle.
+   * - ``stop_type``
+     - ``INTEGER``
+     - Kind of stop location the vehicle is at:
 
-``cargo``            ``BIGINT``   Cargo units of the vehicle when leaving the stop.
+       - ``1``: Starting location
+       - ``2``: Pickup location
+       - ``3``: Delivery location
+       - ``6``: Ending location
+   * - ``stop_id``
+     - ``BIGINT``
+     - Identifier of the stop.
+   * - ``order_id``
+     - ``BIGINT``
+     - Pickup-Delivery order pair identifier.
 
-``travel_time``      ``BIGINT``   Travel time from previous ``stop_seq`` to
-                                  current ``stop_seq``.
+       - ``-1``: When no order is involved on the current stop location.
+   * - ``cargo``
+     - ``BIGINT``
+     -   Cargo units of the vehicle when leaving the stop.
+   * - ``travel_time``
+     - ``BIGINT``
+     - Travel time from previous ``stop_seq`` to current ``stop_seq``.
 
-                                  - ``0`` When ``stop_type = 1``
+       - ``0`` When ``stop_type = 1``
+   * - ``arrival_time``
+     - ``BIGINT``
+     -   Previous ``departure_time`` plus current ``travel_time``.
+   * - ``wait_time``
+     - ``BIGINT``
+     - Time spent waiting for current `location` to open.
+   * - ``service_time``
+     - ``BIGINT``
+     - Service time at current `location`.
+   * - ``departure_time``
+     - ``BIGINT``
+     - :math:`arrival\_time + wait\_time + service\_time`.
 
-``arrival_time``     ``BIGINT``   Previous ``departure_time`` plus current ``travel_time``.
-``wait_time``        ``BIGINT``   Time spent waiting for current `location` to open.
-``service_time``     ``BIGINT``   Service time at current `location`.
-``departure_time``   ``BIGINT``   :math:`arrival\_time + wait\_time + service\_time`.
-
-                                  - When ``stop_type = 6`` has the `total_time`
-                                    used for the current vehicle.
-=================== ============= =================================================
+       - When ``stop_type = 6`` has the `total_time` used for the current vehicle.
 
 .. pd_result_end
 
+.. rubric:: Euclidean Results
+
 .. pde_result_start
 
-=================== ============= =================================================
-Column              Type           Description
-=================== ============= =================================================
-``seq``              ``INTEGER``  Sequential value starting from **1**.
-``vehicle_seq``      ``INTEGER``  Sequential value starting from **1** for
-                                  current vehicles. The :math:`n_{th}` vehicle
-                                  in the solution.
-``vehicle_id``       ``BIGINT``   Current vehicle identifier.
-``stop_seq``         ``INTEGER``  Sequential value starting from **1** for the
-                                  stops made by the current vehicle. The
-                                  :math:`m_{th}` stop of the current vehicle.
-``stop_type``        ``INTEGER``  Kind of stop location the vehicle is at:
+Returns set of
 
-                                  - ``1``: Starting location
-                                  - ``2``: Pickup location
-                                  - ``3``: Delivery location
-                                  - ``6``: Ending location
+| ``seq, vehicle_seq, vehicle_id, stop_seq, stop_type, order_id, cargo,``
+| ``travel_time, arrival_time, wait_time, service_time, departure_time``
 
-``order_id``         ``BIGINT``   Pickup-Delivery order pair identifier.
+.. list-table::
+   :widths: auto
+   :header-rows: 1
 
-                                  - ``-1``: When no order is involved on the
-                                    current stop location.
+   * - Column
+     - Type
+     - Description
+   * - ``seq``
+     - ``INTEGER``
+     - Sequential value starting from **1**.
+   * - ``vehicle_seq``
+     - ``INTEGER``
+     - Sequential value starting from **1** for current vehicles. The
+       :math:`n_{th}` vehicle in the solution.
+   * - ``vehicle_id``
+     - ``BIGINT``
+     - Current vehicle identifier.
+   * - ``stop_seq``
+     - ``INTEGER``
+     - Sequential value starting from **1** for the stops made by the current
+       vehicle. The :math:`m_{th}` stop of the current vehicle.
+   * - ``stop_type``
+     - ``INTEGER``
+     - Kind of stop location the vehicle is at:
 
-``cargo``            ``BIGINT``   Cargo units of the vehicle when leaving the stop.
+       - ``1``: Starting location
+       - ``2``: Pickup location
+       - ``3``: Delivery location
+       - ``6``: Ending location
+   * - ``order_id``
+     - ``BIGINT``
+     - Pickup-Delivery order pair identifier.
 
-``travel_time``      ``BIGINT``   Travel time from previous ``stop_seq`` to
-                                  current ``stop_seq``.
+       - ``-1``: When no order is involved on the current stop location.
+   * - ``cargo``
+     - ``BIGINT``
+     -   Cargo units of the vehicle when leaving the stop.
+   * - ``travel_time``
+     - ``BIGINT``
+     - Travel time from previous ``stop_seq`` to current ``stop_seq``.
 
-                                  - ``0`` When ``stop_type = 1``
+       - ``0`` When ``stop_type = 1``
+   * - ``arrival_time``
+     - ``BIGINT``
+     -   Previous ``departure_time`` plus current ``travel_time``.
+   * - ``wait_time``
+     - ``BIGINT``
+     - Time spent waiting for current `location` to open.
+   * - ``service_time``
+     - ``BIGINT``
+     - Service time at current `location`.
+   * - ``departure_time``
+     - ``BIGINT``
+     - :math:`arrival\_time + wait\_time + service\_time`.
 
-``arrival_time``     ``BIGINT``   Previous ``departure_time`` plus current ``travel_time``.
-``wait_time``        ``BIGINT``   Time spent waiting for current `location` to open.
-``service_time``     ``BIGINT``   Service time at current `location`.
-``departure_time``   ``BIGINT``   :math:`arrival\_time + wait\_time + service\_time`.
-
-                                  - When ``stop_type = 6`` has the `total_time`
-                                    used for the current vehicle.
-=================== ============= =================================================
+       - When ``stop_type = 6`` has the `total_time` used for the current vehicle.
 
 .. pde_result_end
 

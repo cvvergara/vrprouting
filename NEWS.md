@@ -4,6 +4,23 @@
 ## vrpRouting 0.4
 
 
+### vrpRouting 0.4.2 Release Notes
+
+To see all issues & pull requests closed by this release see the
+[Git closed milestone for 0.4.2](https://github.com/pgRouting/vrprouting/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.4.2%22)
+on Github.
+
+**Code reorganization**
+
+* Renamed files to be compiled as C++ with .hpp & .cpp extensions
+* Moved sphinx doc from .c files .rst files
+
+
+**Documentation queries**
+
+* Renamed to extension `.pg`
+* Removed `doc-` and `doc-vrp_` suffixes on file names
+
 ### vrpRouting 0.4.1 Release Notes
 
 To see all issues & pull requests closed by this release see the

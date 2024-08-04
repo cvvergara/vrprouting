@@ -103,10 +103,8 @@ Terminologies
   a vehicle.
 - **Setup time**: Setup times serve as a mean to describe the time it takes to
   get started for a task at a given location.
-
   This models a duration that should not be re-applied for other tasks following
   at the same place.
-
   So the total "action time" for a task is ``setup + service`` upon arriving at
   a new location or ``service`` only if performing a new task at the previous
   vehicle location.
