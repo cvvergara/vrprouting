@@ -118,11 +118,13 @@ do_compatibleVehicles(
         char **err_msg) {
     using vrprouting::to_pg_msg;
     using vrprouting::alloc;
+    using vrprouting::free;
 
     std::ostringstream log;
     std::ostringstream notice;
     std::ostringstream err;
 
+    char* hint = nullptr;
 
     try {
         /*
@@ -227,19 +229,34 @@ do_compatibleVehicles(
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;
         err << except.what();
-        *err_msg = to_pg_msg(err.str());
-        *log_msg = to_pg_msg(log.str());
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
     } catch (std::exception& except) {
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;
         err << except.what();
-        *err_msg = to_pg_msg(err.str());
-        *log_msg = to_pg_msg(log.str());
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
+    } catch (const std::string &ex) {
+        *err_msg = to_pg_msg(ex.c_str());
+        *log_msg = hint? to_pg_msg(hint) : to_pg_msg(log.str().c_str());
+    } catch (const std::pair<std::string, std::string>& ex) {
+        (*return_count) = 0;
+        err << ex.first;
+        log << ex.second;
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
+    } catch (const std::pair<std::string, int64_t>& ex) {
+        (*return_count) = 0;
+        err << ex.first;
+        log << "Missing on matrix: id =  " << ex.second;
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
     } catch(...) {
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;
         err << "Caught unknown exception!";
-        *err_msg = to_pg_msg(err.str());
-        *log_msg = to_pg_msg(log.str());
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
     }
 }

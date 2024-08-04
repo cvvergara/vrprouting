@@ -370,11 +370,13 @@ do_optimize(
         char **err_msg) {
     using vrprouting::to_pg_msg;
     using vrprouting::alloc;
+    using vrprouting::free;
 
     std::ostringstream log;
     std::ostringstream notice;
     std::ostringstream err;
 
+    char* hint = nullptr;
     try {
         /*
          * verify preconditions
@@ -531,20 +533,37 @@ do_optimize(
             nullptr :
             to_pg_msg(notice.str());
     } catch (AssertFailedException &except) {
-        err << except.what() << log.str();
-        *err_msg = to_pg_msg(err.str());
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << except.what();
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
     } catch (std::exception& except) {
-        err << except.what() << log.str();
-        *err_msg = to_pg_msg(err.str());
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << except.what();
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
+    } catch (const std::string &ex) {
+        *err_msg = to_pg_msg(ex.c_str());
+        *log_msg = hint? to_pg_msg(hint) : to_pg_msg(log.str().c_str());
     } catch (const std::pair<std::string, std::string>& ex) {
+        (*return_count) = 0;
         err << ex.first;
-        log.str("");
-        log.clear();
         log << ex.second;
         *err_msg = to_pg_msg(err.str().c_str());
         *log_msg = to_pg_msg(log.str().c_str());
+    } catch (const std::pair<std::string, int64_t>& ex) {
+        (*return_count) = 0;
+        err << ex.first;
+        log << "Missing on matrix: id =  " << ex.second;
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
     } catch(...) {
-        err << "Caught unknown exception!" << log.str();
-        *err_msg = to_pg_msg(err.str());
+        if (*return_tuples) free(*return_tuples);
+        (*return_count) = 0;
+        err << "Caught unknown exception!";
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
     }
 }

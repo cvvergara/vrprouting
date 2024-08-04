@@ -94,10 +94,13 @@ do_pgr_pickDeliver(
         char **err_msg) {
     using vrprouting::to_pg_msg;
     using vrprouting::alloc;
+    using vrprouting::free;
 
     std::ostringstream log;
     std::ostringstream notice;
     std::ostringstream err;
+
+    char* hint = nullptr;
 
     try {
         pgassert(!(*log_msg));
@@ -256,6 +259,9 @@ do_pgr_pickDeliver(
         err << except.what();
         *err_msg = to_pg_msg(err.str().c_str());
         *log_msg = to_pg_msg(log.str().c_str());
+    } catch (const std::string &ex) {
+        *err_msg = to_pg_msg(ex.c_str());
+        *log_msg = hint? to_pg_msg(hint) : to_pg_msg(log.str().c_str());
     } catch (const std::pair<std::string, std::string>& ex) {
         (*return_count) = 0;
         err << ex.first;
@@ -265,7 +271,7 @@ do_pgr_pickDeliver(
     } catch (const std::pair<std::string, int64_t>& ex) {
         (*return_count) = 0;
         err << ex.first;
-        log << "FOOOO missing on matrix: id =  " << ex.second;
+        log << "Missing on matrix: id =  " << ex.second;
         *err_msg = to_pg_msg(err.str().c_str());
         *log_msg = to_pg_msg(log.str().c_str());
     } catch(...) {
