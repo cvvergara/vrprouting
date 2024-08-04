@@ -86,6 +86,9 @@ process(
          errhint("Value found: %d", max_cycles)));
   }
 
+  bool with_stops = false;
+  bool is_euclidean = false;
+
   pgr_SPI_connect();
 
   PickDeliveryOrders_t *pd_orders_arr = NULL;
@@ -216,20 +219,23 @@ process(
       matrix_cells_arr, total_cells,
       multipliers_arr,      total_multipliers_arr,
 
-      factor,
-      max_cycles,
-      execution_date,
+            factor,
+            max_cycles,
+            execution_date,
 
-      check_triangle_inequality,
-      subdivision_kind != 0,
-      subdivision_kind == 1,
+            check_triangle_inequality,
+            subdivision_kind,
 
-      result_tuples,
-      result_count,
+            use_timestamps,
+            is_euclidean,
+            with_stops,
 
-      &log_msg,
-      &notice_msg,
-      &err_msg);
+            result_tuples,
+            result_count,
+
+            &log_msg,
+            &notice_msg,
+            &err_msg);
 
   time_msg("pgr_pickDeliver", start_t, clock());
 

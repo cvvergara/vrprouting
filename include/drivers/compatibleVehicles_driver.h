@@ -55,15 +55,10 @@ void vrp_do_compatibleVehicles(
         Vehicle_t *vehicles_arr,              size_t total_vehicles,
         Matrix_cell_t *matrix_cells_arr,      size_t total_cells,
         Time_multipliers_t *multipliers_arr,               size_t total_multipliers,
+        double, bool, bool, bool,
 
-        double factor,
-
-        CompatibleVehicles_rt **return_tuples,
-        size_t *return_count,
-
-        char **log_msg,
-        char **notice_msg,
-        char **err_msg);
+        CompatibleVehicles_rt **, size_t*,
+        char**, char**, char**);
 
 
 #ifdef __cplusplus

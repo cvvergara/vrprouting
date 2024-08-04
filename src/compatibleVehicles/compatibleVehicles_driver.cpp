@@ -54,6 +54,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *  @param[in] multipliers_arr A C Array of the multipliers
  *  @param[in] total_multipliers size of the multipliers_arr
  *  @param[in] factor A global multiplier for the (time) matrix cells
+ *  @param[in] use_timestamps When true: data comes with timestamps
+ *  @param[in] is_euclidean When true: Data comes with coordinates
+ *  @param[in] with_stops When true: Vehicles have stops assigned
  *  @param[out] return_tuples C array of contents to be returned to postgres
  *  @param[out] return_count number of tuples returned
  *  @param[out] log_msg special log message pointer
@@ -109,6 +112,9 @@ vrp_do_compatibleVehicles(
         size_t total_multipliers,
 
         double factor,
+        [[maybe_unused]] bool use_timestamps,
+        [[maybe_unused]] bool is_euclidean,
+        [[maybe_unused]] bool with_stops,
 
         CompatibleVehicles_rt **return_tuples,
         size_t *return_count,

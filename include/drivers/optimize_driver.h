@@ -44,19 +44,10 @@ void vrp_do_optimize(
         Vehicle_t *vehicles_arr, size_t,
         Matrix_cell_t *, size_t,
         Time_multipliers_t *, size_t,
+        double, int, int64_t, bool, int, bool, bool, bool,
 
-        double,
-        int,
-        int64_t,
-
-        bool, bool, bool,
-
-        Short_vehicle_rt**,
-        size_t*,
-
-        char**,
-        char**,
-        char**);
+        Short_vehicle_rt**, size_t*,
+        char**, char**, char**);
 
 
 #ifdef __cplusplus

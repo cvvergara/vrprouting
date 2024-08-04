@@ -46,17 +46,10 @@ void vrp_do_vroom(
         Vroom_break_t *breaks, size_t total_breaks,
         Vroom_time_window_t *breaks_tws, size_t total_breaks_tws,
         Vroom_matrix_t *matrix_cells_arr, size_t total_cells,
+      int32_t, int32_t, int32_t, int16_t, bool,
 
-        int32_t exploration_level,
-        int32_t timeout,
-        int32_t loading_time,
-
-        Vroom_rt **return_tuples,
-        size_t *return_count,
-
-        char ** log_msg,
-        char ** notice_msg,
-        char ** err_msg);
+      Vroom_rt**, size_t*,
+      char**, char**, char**);
 
 #ifdef __cplusplus
 }

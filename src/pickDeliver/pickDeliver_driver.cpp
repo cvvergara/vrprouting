@@ -61,6 +61,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *  @param[in] max_cycles number of cycles to perform during the optimization phase
  *  @param[in] stop_on_all_served Indicator to stop optimization when all orders are served
  *  @param[in] execution_date Value used for not moving orders that are before this date
+ *  @param[in] use_timestamps When true: data comes with timestamps
+ *  @param[in] is_euclidean When true: Data comes with coordinates
+ *  @param[in] with_stops When true: Vehicles have stops assigned
  *  @param[out] return_tuples C array of contents to be returned to postgres
  *  @param[out] return_count number of tuples returned
  *  @param[out] log_msg special log message pointer
@@ -117,6 +120,9 @@ vrp_do_pickDeliver(
         int max_cycles,
         bool stop_on_all_served,
         int64_t execution_date,
+        [[maybe_unused]] bool use_timestamps,
+        [[maybe_unused]] bool is_euclidean,
+        [[maybe_unused]] bool with_stops,
 
         Solution_rt **return_tuples,
         size_t *return_count,

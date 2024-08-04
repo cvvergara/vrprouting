@@ -62,6 +62,9 @@ process(
                  errhint("Value found: %f <= 0", factor)));
     }
 
+    bool with_stops = false;
+    bool is_euclidean = false;
+
     pgr_SPI_connect();
 
     PickDeliveryOrders_t *pd_orders_arr = NULL;
@@ -186,6 +189,9 @@ process(
             multipliers_arr, total_multipliers_arr,
 
             factor,
+            use_timestamps,
+            is_euclidean,
+            with_stops,
 
             result_tuples,
             result_count,

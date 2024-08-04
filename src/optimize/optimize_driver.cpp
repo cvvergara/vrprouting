@@ -202,7 +202,6 @@ update_stops(std::vector<Short_vehicle>& the_stops,  // NOLINT [runtime/referenc
  *  @param[in] total_shipments size of the shipments_arr
  *  @param[in] vehicles_arr A C Array of vehicles
  *  @param[in] total_vehicles size of the vehicles_arr
- *  @param[in] new_stops stops that override the original stops.
  *  @param[in] time_matrix The unique time matrix
  *  @param[in] max_cycles number of cycles to perform during the optimization phase
  *  @param[in] execution_date Value used for not moving shipments that are before this date
@@ -296,18 +295,19 @@ subdivide_processing(
  *  @param[in] total_cells size of the matrix_cells_arr
  *  @param[in] multipliers_arr A C Array of the multipliers
  *  @param[in] total_multipliers size of the multipliers_arr
- *  @param[in] optimize flag to control optimization
  *  @param[in] factor A global multiplier for the (time) matrix cells
  *  @param[in] max_cycles number of cycles to perform during the optimization phase
- *  @param[in] stop_on_all_served Indicator to stop optimization when all shipments are served
  *  @param[in] execution_date Value used for not moving shipments that are before this date
+ *  @param[in] check_triangle_inequality @todo
+ *  @param[in] subdivision_kind @todo
+ *  @param[in] use_timestamps When true: data comes with timestamps
+ *  @param[in] is_euclidean When true: Data comes with coordinates
+ *  @param[in] with_stops When true: Vehicles have stops assigned
  *  @param[out] return_tuples C array of contents to be returned to postgres
  *  @param[out] return_count number of tuples returned
  *  @param[out] log_msg special log message pointer
  *  @param[out] notice_msg special message pointer to be returned as NOTICE
  *  @param[out] err_msg special message pointer to be returned as ERROR
- *  @return void
- *
  *
  * @pre The messages: log_msg, notice_msg, err_msg must be empty (=nullptr)
  * @pre The C arrays: shipments_arr, vehicles_arr, matrix_cells_arr must not be empty
@@ -359,8 +359,11 @@ vrp_do_optimize(
         int64_t execution_date,
 
         bool check_triangle_inequality,
-        bool subdivide,
-        bool subdivide_by_vehicle,
+        int subdivision_kind,
+
+        [[maybe_unused]] bool use_timestamps,
+        [[maybe_unused]] bool is_euclidean,
+        [[maybe_unused]] bool with_stops,
 
         Short_vehicle_rt **return_tuples,
         size_t *return_count,
@@ -389,6 +392,9 @@ vrp_do_optimize(
         pgassert(total_cells);
         pgassert(*return_count == 0);
         pgassert(!(*return_tuples));
+
+        bool subdivide = (subdivision_kind != 0);
+        bool subdivide_by_vehicle = (subdivision_kind == 1);
 
         *return_tuples = nullptr;
         *return_count = 0;

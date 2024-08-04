@@ -90,6 +90,9 @@ process(
          errhint("Value found: %d <= 0", max_cycles)));
   }
 
+  bool with_stops = false;
+  bool is_euclidean = false;
+
   pgr_SPI_connect();
 
   PickDeliveryOrders_t *pd_orders_arr = NULL;
@@ -228,6 +231,9 @@ process(
       stop_on_all_served,
 
       execution_date,
+      use_timestamps,
+      with_stops,
+      is_euclidean,
 
       result_tuples,
       result_count,

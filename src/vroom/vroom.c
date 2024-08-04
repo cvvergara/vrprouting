@@ -88,7 +88,6 @@ PG_FUNCTION_INFO_V1(_vrp_vroom);
  * @param result_tuples     the rows in the result
  * @param result_count      the count of rows in the result
  *
- * @returns void
  */
 static
 void
@@ -217,6 +216,9 @@ process(
     exploration_level,
     timeout,
     loading_time,
+
+    fn,
+    !is_plain,
 
     result_tuples,
     result_count,

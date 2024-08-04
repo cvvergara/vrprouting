@@ -71,14 +71,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  * @param total_matrix_rows   The total number of matrix rows
  * @param exploration_level   Exploration level to use while solving.
  * @param timeout             Timeout value to stop the solving process (seconds).
- * @param loading_timeout     Additional time spent in loading the data from SQL Query (seconds).
- * @param result_tuples       The rows in the result
- * @param result_count        The count of rows in the result
+ * @param loading_time        Additional time spent in loading the data from SQL Query (seconds).
+ * @param fn_used             @todo
+ * @param[in] use_timestamps  When true: data comes with timestamps
+ * @param return_tuples       The rows in the result
+ * @param return_count        The count of rows in the result
  * @param log_msg             Stores the log message
  * @param notice_msg          Stores the notice message
  * @param err_msg             Stores the error message
- *
- * @returns void
  */
 void
 vrp_do_vroom(
@@ -94,6 +94,9 @@ vrp_do_vroom(
         int32_t exploration_level,
         int32_t timeout,
         int32_t loading_time,
+
+        [[maybe_unused]] int16_t fn_used,
+        [[maybe_unused]] bool use_timestamps,
 
         Vroom_rt **return_tuples,
         size_t *return_count,
