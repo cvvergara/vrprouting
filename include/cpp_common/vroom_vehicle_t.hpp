@@ -41,21 +41,20 @@ namespace vrprouting {
 
 /** @brief Vroom's Vehicles's attributes
 
-  @note C/C++/postgreSQL connecting classure for input
-  name | description
-  :----- | :-------
-  id | The vehicle's identifier
-  start_id | Start location index in matrix
-  end_id | End location index in matrix
-  capacity | Vehicle's capacity array
-  skills | Vehicle's skills
-  skills_size | Number of vehicle's skills
-  tw_open | Time window start time
-  tw_close | Time window end time
-  speed_factor | Vehicle travel time multiplier
-  max_tasks | Max number of tasks in a route for the vehicle
-  data | Metadata information of vehicle
-  */
+  @note C/C++/postgreSQL connecting structure for input
+name | description
+:----- | :-------
+id | The vehicle's identifier
+start_id | Start location index in matrix
+end_id | End location index in matrix
+capacity | Vehicle's capacity array
+skills | Vehicle's skills
+tw_open | Time window start time
+tw_close | Time window end time
+speed_factor | Vehicle travel time multiplier
+max_tasks | Max number of tasks in a route for the vehicle
+data | Metadata information of vehicle
+*/
 class Vroom_vehicle_t {
  public:
      Idx id; /** The vehicle's identifier */

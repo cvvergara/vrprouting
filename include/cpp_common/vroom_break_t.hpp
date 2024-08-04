@@ -39,7 +39,7 @@ namespace vrprouting {
 
 /** @brief Vehicle's break attributes
 
-@note C/C++/postgreSQL connecting classure for input
+@note C/C++/postgreSQL connecting structure for input
 name | description
 :----- | :-------
 id | Identifier of break

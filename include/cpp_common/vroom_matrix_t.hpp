@@ -37,7 +37,7 @@ namespace vrprouting {
 
 /** @brief Matrix's attributes
 
-@note C/C++/postgreSQL connecting classure for input
+@note C/C++/postgreSQL connecting structure for input
 name | description
 :----- | :-------
 start_id | Start node identifier

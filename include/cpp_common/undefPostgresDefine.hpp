@@ -5,7 +5,7 @@ Copyright (c) 2024 Celia Virginia Vergara Castillo
 Mail: vicky at erosion.dev
 
 Copyright (c) 2024 pgRouting developers
-Mail: project@pgrouting.org
+Mail: pgrouting-dev@discourse.osgeo.org
 
 ------
 

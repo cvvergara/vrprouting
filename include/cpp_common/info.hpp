@@ -1,11 +1,8 @@
 /*PGR-GNU*****************************************************************
 File: info.hpp
 
-Copyright (c) 2024 Celia Virginia Vergara Castillo
-Mail: vicky at erosion.dev
-
-Copyright (c) 2015 pgRouting developers
-Mail: project@pgrouting.org
+Copyright (c) 2015 Celia Virginia Vergara Castillo
+Mail: vicky_vergara@hotmail.com
 
 ------
 

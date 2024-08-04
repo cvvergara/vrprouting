@@ -34,7 +34,7 @@ namespace vrprouting {
 
 /** @brief Time Dependant Multipliers
 
-@note C/C++/postgreSQL connecting classure for input
+@note C/C++/postgreSQL connecting structure for input
 name | description
 :----- | :-------
 start_time | with respect to 0
@@ -47,10 +47,10 @@ multiplier | takes effect starting from the @b start_time
 */
 class Time_multipliers_t {
  public:
-     /** Time of day where the multiplier starts to be valid */
-     TTimestamp start_time;
-     /** multiplier at hour */
-     Multiplier multiplier;
+    /** Time of day where the multiplier starts to be valid */
+    TTimestamp start_time;
+    /** multiplier at hour */
+    Multiplier multiplier;
 };
 
 }  // namespace vrprouting

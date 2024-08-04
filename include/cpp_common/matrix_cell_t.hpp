@@ -33,7 +33,7 @@ namespace vrprouting {
 
 /** @brief traveling costs
 
-  @note C/C++/postgreSQL connecting classure for input
+  @note C/C++/postgreSQL connecting structure for input
   name | description
   :----- | :-------
   from_vid | Departure node's identifier

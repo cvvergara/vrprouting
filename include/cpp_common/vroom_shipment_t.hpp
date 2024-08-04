@@ -42,7 +42,7 @@ namespace vrprouting {
 
 /** @brief Vroom's shipment's attributes
 
-@note C/C++/postgreSQL connecting classure for input
+@note C/C++/postgreSQL connecting structure for input
 name | description
 :----- | :-------
 id | Shipment identifier

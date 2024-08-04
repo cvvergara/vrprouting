@@ -40,7 +40,7 @@ namespace vrprouting {
 
 /** @brief Job's attributes
 
-@note C/C++/postgreSQL connecting classure for input
+@note C/C++/postgreSQL connecting structure for input
 name | description
 :----- | :-------
 id | The job's identifier

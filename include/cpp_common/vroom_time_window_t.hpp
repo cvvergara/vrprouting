@@ -37,14 +37,14 @@ namespace vrprouting {
 
 /** @brief Time window's attributes
 
-  @note C/C++/postgreSQL connecting classure for input
-  name | description
-  :----- | :-------
-  id | Identifier of the job/shipment/break
-  kind | Whether the shipment is a pickup ('p') or a delivery ('d')
-  tw_open | Time window opening time
-  tw_close | Time window closing time
-  */
+@note C/C++/postgreSQL connecting structure for input
+name | description
+:----- | :-------
+id | Identifier of the job/shipment/break
+kind | Whether the shipment is a pickup ('p') or a delivery ('d')
+tw_open | Time window opening time
+tw_close | Time window closing time
+*/
 class Vroom_time_window_t {
  public:
      Idx id;

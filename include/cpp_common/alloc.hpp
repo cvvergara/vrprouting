@@ -83,7 +83,7 @@ free(T* ptr) {
     return nullptr;
 }
 
-char* msg(const std::string &);
+char* to_pg_msg(const std::string &);
 
 }  // namespace vrprouting
 
