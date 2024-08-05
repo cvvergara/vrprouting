@@ -40,8 +40,6 @@ add_definitions(-DPROJECT_VERSION="v${PROJECT_VERSION}${PROJECT_VERSION_DEV}")
 set(PROJECT_LIB_NAME "${PROJECT_NAME_LOWER}-${PROJECT_LIB_VERSION}")
 
 
-
-
 #=============================================
 # Set the working directories
 #=============================================
