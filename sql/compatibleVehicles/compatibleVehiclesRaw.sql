@@ -80,7 +80,7 @@ BEGIN
         %5$s::FLOAT,
         false)
       $$,
-      -- orders, vehicles, matrix, tdm
+      /* shipments, vehicles, matrix, tdm */
       orders_sql, $2, $3, $4,
       factor);
 
