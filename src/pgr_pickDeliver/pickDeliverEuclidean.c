@@ -78,11 +78,8 @@ process(
         (*result_tuples) = NULL;
     }
 
-    vrp_global_report(log_msg, notice_msg, err_msg);
+    vrp_global_report(&log_msg, &notice_msg, &err_msg);
 
-    if (log_msg) pfree(log_msg);
-    if (notice_msg) pfree(notice_msg);
-    if (err_msg) pfree(err_msg);
     vrp_SPI_finish();
 }
 

@@ -28,19 +28,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #pragma once
 
 
-/*! @brief print log notice and error
- *
- *  ~~~~{.c}
- *  vrp_global_report(&log_msg, &notice_msg, &error_msg);
- *  ~~~~
- */
+/** @brief print log notice and error */
 void
 vrp_global_report(
-        char* log_msg,
-        char* notice_msg,
-        char* error_msg);
-
-/* @brief throws postgres error when first string is not null */
-void vrp_throw_error(char*, char*);
+        char** log_msg,
+        char** notice_msg,
+        char** error_msg);
 
 #endif  // INCLUDE_C_COMMON_E_REPORT_H_
