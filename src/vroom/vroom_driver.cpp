@@ -100,9 +100,9 @@ void vrp_do_vroom(
     char** log_msg,
     char** notice_msg,
     char** err_msg) {
-  using vrprouting::msg;
   using vrprouting::free;
   using vrprouting::alloc;
+  using vrprouting::to_pg_msg;
   using vrprouting::pgget::vroom::get_matrix;
   using vrprouting::pgget::vroom::get_breaks;
   using vrprouting::pgget::vroom::get_timewindows;
@@ -125,24 +125,24 @@ void vrp_do_vroom(
 
     if (!jobs_sql && !shipments_sql) {
       if (fn_used == 0) {
-          *err_msg = msg("Both Jobs SQL and Shipments NULL must not be NULL");
+          *err_msg = to_pg_msg("Both Jobs SQL and Shipments NULL must not be NULL");
           return;
       } else if (fn_used == 1) {
-          *err_msg = msg("Jobs SQL must not be NULL");
+          *err_msg = to_pg_msg("Jobs SQL must not be NULL");
           return;
       } else if (fn_used == 2) {
-          *err_msg = msg("Shipments SQL must not be NULL");
+          *err_msg = to_pg_msg("Shipments SQL must not be NULL");
           return;
       }
     }
 
     if (!vehicles_sql) {
-        *err_msg = msg("Vehicles SQL must not be NULL");
+        *err_msg = to_pg_msg("Vehicles SQL must not be NULL");
         return;
     }
 
     if (!matrix_sql) {
-        *err_msg = msg("Matrix SQL must not be NULL");
+        *err_msg = to_pg_msg("Matrix SQL must not be NULL");
         return;
     }
 
@@ -157,24 +157,24 @@ void vrp_do_vroom(
     if (jobs.empty() && shipments.empty()) {
         if (fn_used == 0) {
             if (!shipments_sql || !jobs_sql) {
-                *notice_msg = msg("Jobs SQL and/or Shipments SQL query are NULL");
+                *notice_msg = to_pg_msg("Jobs SQL and/or Shipments SQL query are NULL");
                 return;
             }
-            *notice_msg = msg("Insufficient data found on Jobs SQL and/or Shipments SQL query.");
+            *notice_msg = to_pg_msg("Insufficient data found on Jobs SQL and/or Shipments SQL query.");
             auto s1 = shipments_sql? std::string(shipments_sql) : "";
             auto s2 = jobs_sql? std::string(jobs_sql) : "";
             s1 = s1 + " " + s2;
-            *log_msg = msg(s1);
+            *log_msg = to_pg_msg(s1);
         } else if (fn_used == 1) {
             *notice_msg = jobs_sql?
-                msg("Insufficient data found on Jobs SQL query.")
-                : msg("Jobs SQL query not found");
-            *log_msg = jobs_sql? msg(std::string(jobs_sql)) : nullptr;
+                to_pg_msg("Insufficient data found on Jobs SQL query.")
+                : to_pg_msg("Jobs SQL query not found");
+            *log_msg = jobs_sql? to_pg_msg(std::string(jobs_sql)) : nullptr;
         } else if (fn_used == 2) {
             *notice_msg = shipments_sql?
-                msg("Insufficient data found on Shipments SQL query.")
-                : msg("Jobs SQL query not found");
-            *log_msg = shipments_sql? msg(std::string(shipments_sql)) : nullptr;
+                to_pg_msg("Insufficient data found on Shipments SQL query.")
+                : to_pg_msg("Jobs SQL query not found");
+            *log_msg = shipments_sql? to_pg_msg(std::string(shipments_sql)) : nullptr;
         }
         return;
     }
@@ -193,9 +193,9 @@ void vrp_do_vroom(
 
     if (vehicles.size() == 0) {
         *notice_msg = vehicles_sql?
-            msg("Insufficient data found on Vehicles SQL query.")
-                : msg("Vehicles SQL query not found");
-            *log_msg = vehicles_sql? msg(std::string(vehicles_sql)) : nullptr;
+            to_pg_msg("Insufficient data found on Vehicles SQL query.")
+                : to_pg_msg("Vehicles SQL query not found");
+            *log_msg = vehicles_sql? to_pg_msg(std::string(vehicles_sql)) : nullptr;
         return;
     }
 
@@ -212,9 +212,9 @@ void vrp_do_vroom(
         : std::vector<vrprouting::Vroom_matrix_t>();
 
     if (costs.size() == 0) {
-        *notice_msg = matrix_sql?  msg("Insufficient data found on Matrix SQL query.")
-                : msg("Matrix SQL query not found");
-        *log_msg = matrix_sql? msg(std::string(matrix_sql)) : nullptr;
+        *notice_msg = matrix_sql?  to_pg_msg("Insufficient data found on Matrix SQL query.")
+                : to_pg_msg("Matrix SQL query not found");
+        *log_msg = matrix_sql? to_pg_msg(std::string(matrix_sql)) : nullptr;
         return;
     }
 
@@ -255,7 +255,7 @@ void vrp_do_vroom(
       (*return_count) = 0;
       err << "The speed_factor " << max_speed_factor << " is more than five times "
              "the speed factor " << min_speed_factor;
-      *err_msg = msg(err.str());
+      *err_msg = to_pg_msg(err.str());
       return;
     }
 
@@ -284,8 +284,8 @@ void vrp_do_vroom(
       (*return_tuples) = NULL;
       (*return_count) = 0;
       err << "An Infinity value was found on the Matrix. Might be missing information of a node";
-      *err_msg = msg(err.str());
-      *log_msg = msg(log.str());
+      *err_msg = to_pg_msg(err.str());
+      *log_msg = to_pg_msg(log.str());
       return;
     }
 
@@ -296,7 +296,7 @@ void vrp_do_vroom(
       (*return_tuples) = NULL;
       (*return_count) = 0;
       err << "The size of time matrix exceeds the limit";
-      *err_msg = msg(err.str());
+      *err_msg = to_pg_msg(err.str());
       return;
     }
 
@@ -320,7 +320,7 @@ void vrp_do_vroom(
       notice << "No results found";
       *notice_msg = notice.str().empty()?
         *notice_msg :
-        msg(notice.str().c_str());
+        to_pg_msg(notice.str().c_str());
       return;
     }
 
@@ -334,42 +334,42 @@ void vrp_do_vroom(
     pgassert(*err_msg == NULL);
     *log_msg = log.str().empty()?
       *log_msg :
-      msg(log.str().c_str());
+      to_pg_msg(log.str().c_str());
     *notice_msg = notice.str().empty()?
       *notice_msg :
-      msg(notice.str().c_str());
+      to_pg_msg(notice.str().c_str());
     } catch (AssertFailedException &except) {
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;
         err << except.what();
-        *err_msg = msg(err.str().c_str());
-        *log_msg = msg(log.str().c_str());
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
     } catch (std::exception& except) {
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;
         err << except.what();
-        *err_msg = msg(err.str().c_str());
-        *log_msg = msg(log.str().c_str());
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
     } catch (const std::string &ex) {
-        *err_msg = msg(ex.c_str());
-        *log_msg = hint? msg(hint) : msg(log.str().c_str());
+        *err_msg = to_pg_msg(ex.c_str());
+        *log_msg = hint? to_pg_msg(hint) : to_pg_msg(log.str().c_str());
     } catch (const std::pair<std::string, std::string>& ex) {
         (*return_count) = 0;
         err << ex.first;
         log << ex.second;
-        *err_msg = msg(err.str().c_str());
-        *log_msg = msg(log.str().c_str());
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
     } catch (const std::pair<std::string, int64_t>& ex) {
         (*return_count) = 0;
         err << ex.first;
         log << "FOOOO missing on matrix: id =  " << ex.second;
-        *err_msg = msg(err.str().c_str());
-        *log_msg = msg(log.str().c_str());
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
     } catch(...) {
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;
         err << "Caught unknown exception!";
-        *err_msg = msg(err.str().c_str());
-        *log_msg = msg(log.str().c_str());
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
     }
 }

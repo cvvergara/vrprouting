@@ -125,8 +125,8 @@ vrp_do_pickDeliver(
         char **log_msg,
         char **notice_msg,
         char **err_msg) {
-    using vrprouting::msg;
     using vrprouting::alloc;
+    using vrprouting::to_pg_msg;
     using vrprouting::pgget::pickdeliver::get_matrix;
     using vrprouting::pgget::pickdeliver::get_orders;
     using vrprouting::pgget::pickdeliver::get_vehicles;
@@ -154,30 +154,30 @@ vrp_do_pickDeliver(
         }
 
         if (factor <= 0) {
-            *notice_msg = msg("Illegal value in parameter: factor");
-            *log_msg = msg("Expected value: factor > 0");
+            *notice_msg = to_pg_msg("Illegal value in parameter: factor");
+            *log_msg = to_pg_msg("Expected value: factor > 0");
             return;
         }
 
         if (max_cycles < 0) {
-            *notice_msg = msg("Illegal value in parameter: max_cycles");
-            *log_msg = msg("Expected value: max_cycles >= 0");
+            *notice_msg = to_pg_msg("Illegal value in parameter: max_cycles");
+            *log_msg = to_pg_msg("Expected value: max_cycles >= 0");
             return;
         }
 
         hint = orders_sql;
         auto orders = get_orders(std::string(orders_sql), is_euclidean, use_timestamps);
         if (orders.size() == 0) {
-            *notice_msg = msg("Insufficient data found on orders inner query");
-            *log_msg = hint? msg(hint) : nullptr;
+            *notice_msg = to_pg_msg("Insufficient data found on orders inner query");
+            *log_msg = hint? to_pg_msg(hint) : nullptr;
             return;
         }
 
         hint = vehicles_sql;
         auto vehicles = get_vehicles(std::string(vehicles_sql), is_euclidean, use_timestamps, with_stops);
         if (vehicles.size() == 0) {
-            *notice_msg = msg("Insufficient data found on vehicles inner query");
-            *log_msg = hint? msg(hint) : nullptr;
+            *notice_msg = to_pg_msg("Insufficient data found on vehicles inner query");
+            *log_msg = hint? to_pg_msg(hint) : nullptr;
             return;
         }
 
@@ -185,8 +185,8 @@ vrp_do_pickDeliver(
         auto costs = get_matrix(std::string(matrix_sql), use_timestamps);
 
         if (costs.size() == 0) {
-            *notice_msg = msg("Insufficient data found on matrix inner query");
-            *log_msg = hint? msg(hint) : nullptr;
+            *notice_msg = to_pg_msg("Insufficient data found on matrix inner query");
+            *log_msg = hint? to_pg_msg(hint) : nullptr;
             return;
         }
 
@@ -215,7 +215,7 @@ vrp_do_pickDeliver(
                 }
             }
             if (missing) {
-                *err_msg = msg(err.str());
+                *err_msg = to_pg_msg(err.str());
                 return;
             }
         }
@@ -242,7 +242,7 @@ vrp_do_pickDeliver(
          */
         if (!cost_matrix.has_no_infinity()) {
             err << "An Infinity value was found on the Matrix";
-            *err_msg = msg(err.str());
+            *err_msg = to_pg_msg(err.str());
             return;
         }
 
@@ -262,8 +262,8 @@ vrp_do_pickDeliver(
         if (!err.str().empty()) {
             log << pd_problem.msg.get_error();
             log << pd_problem.msg.get_log();
-            *log_msg = msg(log.str().c_str());
-            *err_msg = msg(err.str().c_str());
+            *log_msg = to_pg_msg(log.str().c_str());
+            *err_msg = to_pg_msg(err.str().c_str());
             return;
         }
         log << pd_problem.msg.get_log();
@@ -325,42 +325,42 @@ vrp_do_pickDeliver(
         pgassert(*err_msg == nullptr);
         *log_msg = log.str().empty()?
             nullptr :
-            msg(log.str().c_str());
+            to_pg_msg(log.str().c_str());
         *notice_msg = notice.str().empty()?
             nullptr :
-            msg(notice.str().c_str());
+            to_pg_msg(notice.str().c_str());
     } catch (AssertFailedException &except) {
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;
         err << except.what();
-        *err_msg = msg(err.str().c_str());
-        *log_msg = msg(log.str().c_str());
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
     } catch (std::exception& except) {
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;
         err << except.what();
-        *err_msg = msg(err.str().c_str());
-        *log_msg = msg(log.str().c_str());
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
     } catch (const std::string &ex) {
-        *err_msg = msg(ex.c_str());
-        *log_msg = hint? msg(hint) : msg(log.str().c_str());
+        *err_msg = to_pg_msg(ex.c_str());
+        *log_msg = hint? to_pg_msg(hint) : to_pg_msg(log.str().c_str());
     } catch (const std::pair<std::string, std::string>& ex) {
         (*return_count) = 0;
         err << ex.first;
         log << ex.second;
-        *err_msg = msg(err.str().c_str());
-        *log_msg = msg(log.str().c_str());
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
     } catch (const std::pair<std::string, int64_t>& ex) {
         (*return_count) = 0;
         err << ex.first;
         log << "FOOOO missing on matrix: id =  " << ex.second;
-        *err_msg = msg(err.str().c_str());
-        *log_msg = msg(log.str().c_str());
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
     } catch(...) {
         if (*return_tuples) free(*return_tuples);
         (*return_count) = 0;
         err << "Caught unknown exception!";
-        *err_msg = msg(err.str().c_str());
-        *log_msg = msg(log.str().c_str());
+        *err_msg = to_pg_msg(err.str().c_str());
+        *log_msg = to_pg_msg(log.str().c_str());
     }
 }
