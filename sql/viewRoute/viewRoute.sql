@@ -92,6 +92,7 @@ BEGIN
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE STRICT;
+/** [vrp_viewRoute_code] */
 
 
 COMMENT ON FUNCTION vrp_viewRoute(TEXT, TEXT, TEXT, TEXT, BIGINT, FLOAT)

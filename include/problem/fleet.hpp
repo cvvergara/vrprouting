@@ -54,16 +54,8 @@ class Fleet: protected std::vector<Vehicle_pickDeliver> {
     using std::vector<Vehicle_pickDeliver>::empty;
     using std::vector<Vehicle_pickDeliver>::at;
     using std::vector<Vehicle_pickDeliver>::back;
-#if 0
+
     /** @brief Create a fleet based on the Vehicles of the problem */
-    Fleet(
-        Vehicle_t* vehicles , size_t size_vehicles,
-        const Orders& p_orders, std::vector<Vehicle_node>& p_nodes, size_t& node_id)
-      : m_used(),
-      m_unused() {
-        build_fleet(vehicles, size_vehicles, {}, p_orders, p_nodes, node_id);
-      }
-#endif
     Fleet(
         const std::vector<Vehicle_t> &vehicles,
         const Orders& p_orders, std::vector<Vehicle_node>& p_nodes, size_t& node_id)
@@ -80,15 +72,6 @@ class Fleet: protected std::vector<Vehicle_pickDeliver> {
         : m_used(), m_unused() {
             build_fleet(vehicles, new_stops, p_orders, p_nodes, node_id);
         }
-#if 0
-    Fleet(Vehicle_t* vehicles , size_t size_vehicles,
-            const std::vector<Short_vehicle> &new_stops,
-            const Orders& p_orders, std::vector<Vehicle_node>& p_nodes, size_t& node_id)
-        : m_used(),
-        m_unused() {
-            build_fleet(vehicles, size_vehicles, new_stops, p_orders, p_nodes, node_id);
-        }
-#endif
 
     /** @brief creating a fleet without information is not allowed */
     Fleet() = delete;

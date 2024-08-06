@@ -53,7 +53,7 @@ void vrp_do_pickDeliver(
         bool, double, int, bool, int64_t, bool, bool, bool,
 
         Solution_rt**, size_t*,
-        char **, char **, char **);
+        char**, char**, char**);
 
 
 #ifdef __cplusplus

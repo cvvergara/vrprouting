@@ -300,7 +300,7 @@ void vrp_do_vroom(
       return;
     }
 
-    vrprouting::Vrp_vroom_problem problem;
+    vrprouting::problem::Vroom problem;
     problem.add_matrix(matrix);
     problem.add_vehicles(vehicles, breaks, breaks_tw);
     problem.add_jobs(jobs, jobs_tw);

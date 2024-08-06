@@ -49,8 +49,8 @@ namespace problem {
 /** @brief the pick deliver problem */
 class PickDeliver {
  public:
-    /** @brief General Constructor */
 #if 0
+    /** @brief General Constructor */
     PickDeliver(
         Orders_t* p_orders, size_t p_orders_size,
         Vehicle_t* p_vehicles, size_t p_vehicles_size,
@@ -58,12 +58,29 @@ class PickDeliver {
       m_cost_matrix(p_cost_matrix),
       m_orders(p_orders, p_orders_size, this),
       m_trucks(p_vehicles, p_vehicles_size, m_orders, m_nodes, m_node_id) {
-        if (!msg.get_error().empty()) return;
-        m_trucks.clean();
-        m_orders.set_compatibles();
-        m_trucks.set_compatibles(m_orders);
-      }
+    if (!msg.get_error().empty()) return;
+    m_trucks.clean();
+    m_orders.set_compatibles();
+    m_trucks.set_compatibles(m_orders);
+  }
+
+    /** @brief Override stops constructor */
+    PickDeliver(
+        Orders_t* p_orders, size_t p_orders_size,
+        Vehicle_t* p_vehicles, size_t p_vehicles_size,
+        std::vector<Short_vehicle> new_stops,
+        const Matrix &p_cost_matrix) :
+      m_cost_matrix(p_cost_matrix),
+      m_orders(p_orders, p_orders_size, this),
+      m_trucks(p_vehicles, p_vehicles_size, new_stops, m_orders, m_nodes, m_node_id) {
+    if (!msg.get_error().empty()) return;
+    m_trucks.clean();
+    m_orders.set_compatibles();
+    m_trucks.set_compatibles(m_orders);
+  }
 #endif
+
+
     PickDeliver(
         const std::vector<Orders_t> &p_orders,
         const std::vector<Vehicle_t> &p_vehicles,
@@ -92,21 +109,6 @@ class PickDeliver {
             m_trucks.set_compatibles(m_orders);
     }
 
-#if 0
-    PickDeliver(
-            Orders_t* p_orders, size_t p_orders_size,
-            Vehicle_t* p_vehicles, size_t p_vehicles_size,
-            std::vector<Short_vehicle> new_stops,
-            const Matrix &p_cost_matrix) :
-        m_cost_matrix(p_cost_matrix),
-        m_orders(p_orders, p_orders_size, this),
-        m_trucks(p_vehicles, p_vehicles_size, new_stops, m_orders, m_nodes, m_node_id) {
-            if (!msg.get_error().empty()) return;
-            m_trucks.clean();
-            m_orders.set_compatibles();
-            m_trucks.set_compatibles(m_orders);
-        }
-#endif
 
     virtual ~PickDeliver() = default;
 
