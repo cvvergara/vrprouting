@@ -122,6 +122,9 @@ vrp_do_compatibleVehicles(
     char* hint = nullptr;
 
     try {
+        /*
+         * verify preconditions
+         */
         pgassert(!(*log_msg));
         pgassert(!(*notice_msg));
         pgassert(!(*err_msg));
@@ -175,6 +178,9 @@ vrp_do_compatibleVehicles(
             node_ids += v.end_node_id;
         }
 
+        /*
+         * Verify matrix cells preconditions
+         */
         vrprouting::problem::Matrix cost_matrix(
                 costs,
                 multipliers,
