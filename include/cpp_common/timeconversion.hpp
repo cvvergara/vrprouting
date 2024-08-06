@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: timeconversion.h
+File: timeconversion.hpp
 
 Copyright (c) 2023 Celia Virginia Vergara Castillo
 vicky at erosion.dev

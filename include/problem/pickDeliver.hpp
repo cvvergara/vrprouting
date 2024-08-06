@@ -75,7 +75,7 @@ class PickDeliver {
         m_trucks.clean();
         m_orders.set_compatibles();
         m_trucks.set_compatibles(m_orders);
-      }
+    }
 
     /** @brief Override stops constructor */
     PickDeliver(
@@ -90,7 +90,8 @@ class PickDeliver {
             m_trucks.clean();
             m_orders.set_compatibles();
             m_trucks.set_compatibles(m_orders);
-        }
+    }
+
 #if 0
     PickDeliver(
             Orders_t* p_orders, size_t p_orders_size,

@@ -437,6 +437,7 @@ void Fleet::build_fleet(
     invariant();
 }
 
+#if 0
 void
 Fleet::build_fleet(
     Vehicle_t *vehicles, size_t size_vehicles,
@@ -512,6 +513,7 @@ Fleet::build_fleet(
     pgassert(m_unused.size() == size());
     invariant();
 }
+#endif
 
 }  // namespace problem
 }  // namespace vrprouting

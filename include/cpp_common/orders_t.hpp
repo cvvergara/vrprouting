@@ -32,7 +32,7 @@ namespace vrprouting {
 
 /** @brief order's attributes
 
-@note C/C++/postgreSQL connecting classure for input
+@note C/C++/postgreSQL connecting structure for input
 name | description
 :----- | :-------
 id | Order's identifier
@@ -51,16 +51,16 @@ class Orders_t{
      Id      id;     /** Order's identifier */
      PAmount  demand; /** Number of demand */
 
-     Coordinate pick_x; /** Pick x coordinate: used in stand alone program for benchmarks */
-     Coordinate pick_y; /** Pick y coordinate: used in stand alone program for benchmarks */
+     Coordinate pick_x; /** Pick x coordinate */
+     Coordinate pick_y; /** Pick y coordinate */
      Id  pick_node_id;  /** Pickup node identifier */
 
      TTimestamp pick_open_t;     /** Pickup open time*/
      TTimestamp pick_close_t;    /** Pickup close time*/
      TInterval  pick_service_t;  /** Pickup service duration */
 
-     Coordinate deliver_x;  /** Deliver x coordinate: used in stand alone program for benchmarks */
-     Coordinate deliver_y;  /** Deliver y coordinate: used in stand alone program for benchmarks */
+     Coordinate deliver_x;  /** Deliver x coordinate */
+     Coordinate deliver_y;  /** Deliver y coordinate */
      Id deliver_node_id;    /** Deliver node identifier */
 
      TTimestamp deliver_open_t;   /** Deliver open time */

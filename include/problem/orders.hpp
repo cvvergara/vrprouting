@@ -87,6 +87,13 @@ class Orders : public std::vector<Order> {
     }
 
  private:
+    /** @brief add in an order */
+    void add_order(const Orders_t &order,
+        const Vehicle_node &pick,
+        const Vehicle_node &drop) {
+      push_back(Order(size(), order.id, pick, drop));
+    }
+
     template <typename PTR>
       void build_orders(Orders_t *, size_t, const PTR problem_ptr);
 
@@ -122,12 +129,7 @@ class Orders : public std::vector<Order> {
         }
       }
 
-    /** @brief add in an order */
-    void add_order(const Orders_t &order,
-        const Vehicle_node &pick,
-        const Vehicle_node &drop) {
-      push_back(Order(size(), order.id, pick, drop));
-    }
+
 };
 
 /**
