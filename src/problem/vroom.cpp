@@ -38,7 +38,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <structures/vroom/vehicle.h>
 
 #include "c_types/vroom_rt.h"
-#include "cpp_common/vroom_types.hpp"
+#include "cpp_common/matrix_cell_t.hpp"
+#include "cpp_common/vroom_break_t.hpp"
+#include "cpp_common/vroom_job_t.hpp"
+#include "cpp_common/vroom_shipment_t.hpp"
+#include "cpp_common/vroom_time_window_t.hpp"
+#include "cpp_common/vroom_vehicle_t.hpp"
+
 #include "cpp_common/base_matrix.hpp"
 #include "cpp_common/interruption.hpp"
 #include "cpp_common/messages.hpp"
@@ -130,7 +136,7 @@ Vroom::get_vroom_job(
             skills, job.priority, time_windows, job.data);
 }
 
-voidVroom::problem_add_job(
+void Vroom::problem_add_job(
         const Vroom_job_t &job,
         const std::vector<Vroom_time_window_t> &job_tws) {
     m_jobs.push_back(get_vroom_job(job, job_tws));
