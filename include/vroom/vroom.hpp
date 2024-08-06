@@ -45,10 +45,10 @@ namespace problem {
 
 class Vroom : public vrprouting::Messages {
  public:
-    std::vector<vroom::Job> jobs() const { return m_jobs; }
-    std::vector<std::pair<vroom::Job, vroom::Job>> shipments() const { return m_shipments; }
-    std::vector<vroom::Vehicle> vehicles() const { return m_vehicles; }
-    vrprouting::base::Base_Matrix matrix() const { return m_matrix; }
+    std::vector<vroom::Job> jobs() const;
+    std::vector<std::pair<vroom::Job, vroom::Job>> shipments() const;
+    std::vector<vroom::Vehicle> vehicles() const;
+    vrprouting::base::Base_Matrix matrix() const;
 
     /**
      * @name vroom time window wrapper
