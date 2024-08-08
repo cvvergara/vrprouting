@@ -242,14 +242,15 @@ void Vroom::add_shipments(const std::vector <Vroom_shipment_t> &shipments,
  *
  * @return     The vroom vehicle break.
  */
+#if 0
 vroom::Break
 Vroom::get_vroom_break(
         const Vroom_break_t &v_break,
         const std::vector<Vroom_time_window_t> &break_tws) const {
-    std::vector <vroom::TimeWindow> tws = get_vroom_time_windows(break_tws);
+    std::vector<vroom::TimeWindow> tws = get_vroom_time_windows(break_tws);
     return vroom::Break(v_break.id, tws, v_break.service, v_break.data);
 }
-
+#endif
 std::vector<vroom::Break> Vroom::get_vroom_breaks(
         const std::vector<Vroom_break_t> &breaks,
         const std::vector<Vroom_time_window_t> &breaks_tws) const {
@@ -263,7 +264,9 @@ std::vector<vroom::Break> Vroom::get_vroom_breaks(
     }
     std::vector < vroom::Break > v_breaks;
     for (auto v_break : breaks) {
-        v_breaks.push_back(get_vroom_break(v_break, breaks_tws_map[v_break.id]));
+        v_breaks.push_back(
+                vroom::Break(
+                    v_break.id, get_vroom_time_windows(breaks_tws_map[v_break.id]), v_break.service, v_break.data));
     }
     return v_breaks;
 }

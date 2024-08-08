@@ -121,10 +121,12 @@ class Vroom : public vrprouting::Messages {
      * @name vroom breaks wrapper
      */
     /** @{ */
+ private:
+#if 0
     vroom::Break get_vroom_break(
             const Vroom_break_t&,
             const std::vector<Vroom_time_window_t>&) const;
-
+#endif
     std::vector<vroom::Break> get_vroom_breaks(
             const std::vector <Vroom_break_t>&,
             const std::vector <Vroom_time_window_t>&) const;
