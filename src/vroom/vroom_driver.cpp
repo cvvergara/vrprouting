@@ -34,10 +34,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <utility>
 #include <cmath>
 
+#include "c_types/vroom_rt.h"
+
 #include "cpp_common/alloc.hpp"
 #include "cpp_common/assert.hpp"
 #include "cpp_common/pgdata_getters.hpp"
-#include "c_types/vroom_rt.h"
+#include "cpp_common/identifiers.hpp"
+#include "cpp_common/base_matrix.hpp"
+#include "cpp_common/vroom_vehicle_t.hpp"
+#include "cpp_common/vroom_shipment_t.hpp"
+#include "cpp_common/vroom_job_t.hpp"
 #include "vroom/vroom.hpp"
 
 /** @file vroom_driver.cpp
@@ -300,7 +306,7 @@ void vrp_do_vroom(
       return;
     }
 
-    vrprouting::Vrp_vroom_problem problem;
+    vrprouting::problem::Vroom problem;
     problem.add_matrix(matrix);
     problem.add_vehicles(vehicles, breaks, breaks_tw);
     problem.add_jobs(jobs, jobs_tw);

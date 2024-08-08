@@ -29,6 +29,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_CPP_COMMON_BASE_MATRIX_HPP_
 #pragma once
 
+#include <structures/generic/matrix.h>
+
 #include <iosfwd>
 #include <vector>
 #include <map>
@@ -40,7 +42,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/pickdeliver_types.hpp"
 #include "cpp_common/vroom_types.hpp"
 
-#include <structures/generic/matrix.h>
 
 
 class Vroom_matrix_t;
