@@ -55,8 +55,11 @@ class Vroom : public vrprouting::Messages {
      * @name vroom time window wrapper
      */
     /** @{ */
+ private:
+#if 0
     vroom::TimeWindow get_vroom_time_window(const Vroom_time_window_t&) const;
     vroom::TimeWindow get_vroom_time_window(Duration, Duration) const;
+#endif
     std::vector<vroom::TimeWindow> get_vroom_time_windows(const std::vector<Vroom_time_window_t>&) const;
     /** @} */
 
@@ -81,8 +84,10 @@ class Vroom : public vrprouting::Messages {
      */
     /** @{ */
     vroom::Job get_vroom_job(const Vroom_job_t&, const std::vector<Vroom_time_window_t>&) const;
+#if 0
     void add_job(const Vroom_job_t&, const std::vector<Vroom_time_window_t>&);
-
+#endif
+ public:
     void add_jobs(const std::vector<Vroom_job_t>&, const std::vector<Vroom_time_window_t>&);
     /** @} */
 
@@ -91,16 +96,20 @@ class Vroom : public vrprouting::Messages {
      * @name vroom shipments wrapper
      */
     /** @{ */
+ private:
     std::pair<vroom::Job, vroom::Job> get_vroom_shipment(
             const Vroom_shipment_t&,
             const std::vector<Vroom_time_window_t>&,
             const std::vector<Vroom_time_window_t>&) const;
 
+#if 0
     void add_shipment(
             const Vroom_shipment_t&,
             const std::vector<Vroom_time_window_t>&,
             const std::vector<Vroom_time_window_t>&);
+#endif
 
+ public:
     void add_shipments(
             const std::vector<Vroom_shipment_t>&,
             const std::vector<Vroom_time_window_t>&);
@@ -136,21 +145,26 @@ class Vroom : public vrprouting::Messages {
             const std::vector<Vroom_break_t>&,
             const std::vector<Vroom_time_window_t>&);
 
+ public:
     void add_vehicles(const std::vector<Vroom_vehicle_t>&,
             const std::vector<Vroom_break_t>&,
             const std::vector<Vroom_time_window_t>&);
     /** @} */
 
 
+ public:
     void add_matrix(vrprouting::base::Base_Matrix);
 
+ private:
     void get_amount(vroom::Amount, Amount**);
 
     StepType get_job_step_type(vroom::JOB_TYPE);
 
     StepType get_step_type(vroom::Step);
 
+ public:
     std::vector<Vroom_rt> solve(int32_t, int32_t, int32_t);
+ private:
     std::vector<Vroom_rt> get_results(vroom::Solution);
 
  private:
