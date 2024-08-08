@@ -196,7 +196,7 @@ do_vrp_vroom(
             return;
         }
 
-        vrprouting::Vrp_vroom_problem problem;
+        vrprouting::problem::Vroom problem;
         problem.add_matrix(matrix);
         problem.add_vehicles(vehicles, total_vehicles,
                 breaks, total_breaks,
