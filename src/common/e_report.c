@@ -50,28 +50,28 @@ vrp_global_report(
         char** err) {
     if (!(*notice) && (*log)) {
         ereport(DEBUG1,
-                (errmsg_internal("%s", log)));
+                (errmsg_internal("%s", *log)));
     }
 
     if (*notice) {
         if (log) {
             ereport(NOTICE,
-                    (errmsg_internal("%s", notice),
-                     errhint("%s", log)));
+                    (errmsg_internal("%s", *notice),
+                     errhint("%s", *log)));
         } else {
             ereport(NOTICE,
-                    (errmsg_internal("%s", notice)));
+                    (errmsg_internal("%s", *notice)));
         }
     }
 
     if (*err) {
         if (*log) {
             ereport(ERROR,
-                    (errmsg_internal("%s", err),
-                     errhint("%s", log)));
+                    (errmsg_internal("%s", *err),
+                     errhint("%s", *log)));
         } else {
             ereport(ERROR,
-                    (errmsg_internal("%s", err)));
+                    (errmsg_internal("%s", *err)));
         }
     } else {
         if (*log) {

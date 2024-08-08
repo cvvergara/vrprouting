@@ -128,8 +128,6 @@ class Orders : public std::vector<Order> {
           this->emplace_back(Order{size(), o.id, pick, drop});
         }
       }
-
-
 };
 
 /**
