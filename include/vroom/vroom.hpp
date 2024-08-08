@@ -57,10 +57,10 @@ namespace problem {
 
 class Vroom : public vrprouting::Messages {
  public:
-    /** @brief converts container of Vroom_job_t to m_jobs */
+    /** @brief sets m_jobs by adding the Vroom_job_t */
     void add_jobs(const std::vector<Vroom_job_t>&, const std::vector<Vroom_time_window_t>&);
 
-    /** @brief converts container of Vroom_shipment_t to m_shipments */
+    /** @brief sets m_shipments by adding the Vroom_shipment_t */
     void add_shipments(
             const std::vector<Vroom_shipment_t>&,
             const std::vector<Vroom_time_window_t>&);
@@ -77,6 +77,7 @@ class Vroom : public vrprouting::Messages {
     std::vector<Vroom_rt> solve(int32_t, int32_t, int32_t);
 
  private:
+    /** @brief converts container of Vroom_time_window_t to container of vroom::TimeWindow */
     std::vector<vroom::TimeWindow> get_vroom_time_windows(const std::vector<Vroom_time_window_t>&) const;
 
     vroom::Amount get_vroom_amounts(const std::vector<Amount>&) const;
