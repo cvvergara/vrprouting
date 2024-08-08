@@ -142,10 +142,12 @@ class Vroom : public vrprouting::Messages {
             const std::vector<Vroom_break_t>&,
             const std::vector<Vroom_time_window_t>&) const;
 
+#if 0
     void add_vehicle(
             const Vroom_vehicle_t&,
             const std::vector<Vroom_break_t>&,
             const std::vector<Vroom_time_window_t>&);
+#endif
 
  public:
     void add_vehicles(const std::vector<Vroom_vehicle_t>&,
