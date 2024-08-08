@@ -54,17 +54,21 @@ namespace problem {
 
 class Vroom : public vrprouting::Messages {
  public:
+#if 0
     std::vector<vroom::Job> jobs() const;
     std::vector<std::pair<vroom::Job, vroom::Job>> shipments() const;
     std::vector<vroom::Vehicle> vehicles() const;
     vrprouting::base::Base_Matrix matrix() const;
+#endif
 
     /**
      * @name vroom time window wrapper
      */
     /** @{ */
+#if 0
     vroom::TimeWindow get_vroom_time_window(const Vroom_time_window_t&) const;
     vroom::TimeWindow get_vroom_time_window(Duration, Duration) const;
+#endif
     std::vector<vroom::TimeWindow> get_vroom_time_windows(const std::vector<Vroom_time_window_t>&) const;
     /** @} */
 
@@ -88,7 +92,9 @@ class Vroom : public vrprouting::Messages {
      */
     /** @{ */
     vroom::Job get_vroom_job(const Vroom_job_t&, const std::vector<Vroom_time_window_t>&) const;
+#if 0
     void add_job(const Vroom_job_t&, const std::vector<Vroom_time_window_t>&);
+#endif
     void add_jobs(const std::vector<Vroom_job_t>&, const std::vector<Vroom_time_window_t>&);
     void add_jobs(const Vroom_job_t*, size_t, const Vroom_time_window_t*, size_t );
     /** @} */
@@ -102,10 +108,12 @@ class Vroom : public vrprouting::Messages {
             const Vroom_shipment_t&,
             const std::vector<Vroom_time_window_t>&,
             const std::vector<Vroom_time_window_t>&) const;
+#if 0
     void add_shipment(
             const Vroom_shipment_t&,
             const std::vector<Vroom_time_window_t>&,
             const std::vector<Vroom_time_window_t>&);
+#endif
     void add_shipments(
             const std::vector<Vroom_shipment_t>&,
             const std::vector<Vroom_time_window_t>&);
@@ -117,9 +125,11 @@ class Vroom : public vrprouting::Messages {
      * @name vroom breaks wrapper
      */
     /** @{ */
+#if 0
     vroom::Break get_vroom_break(
             const Vroom_break_t&,
             const std::vector<Vroom_time_window_t>&) const;
+#endif
     std::vector<vroom::Break> get_vroom_breaks(
             const std::vector<Vroom_break_t>&,
             const std::vector<Vroom_time_window_t>&) const;
@@ -134,10 +144,12 @@ class Vroom : public vrprouting::Messages {
             const std::vector<Vroom_break_t>&,
             const std::vector<Vroom_time_window_t>&) const;
 
+#if 0
     void add_vehicle(
             const Vroom_vehicle_t&,
             const std::vector<Vroom_break_t>&,
             const std::vector<Vroom_time_window_t>&);
+#endif
 
     void add_vehicles(const std::vector<Vroom_vehicle_t>&,
             const std::vector<Vroom_break_t>&,
