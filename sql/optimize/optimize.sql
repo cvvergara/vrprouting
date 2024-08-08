@@ -52,7 +52,7 @@ BEGIN
   DROP TABLE IF EXISTS __results;
 
 
-  -- cycle to extract the times where the vehicle opens or ends
+  /** cycle to extract the times where the vehicle opens or ends **/
   FOR curr_time IN EXECUTE format($$
     SELECT s_tw_open AS start_time
       FROM (%1$s) a

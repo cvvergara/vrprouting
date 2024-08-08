@@ -64,7 +64,7 @@ BEGIN
     a.*
 
     FROM (SELECT * FROM vrp_pickDeliverRaw(
-        -- Passing only shipments that are in the selected vehicle
+        /* Passing only shipments that are in the selected vehicle */
         $__vr1__$
           WITH
             __shipments AS (%1$s),
@@ -72,7 +72,7 @@ BEGIN
           SELECT * FROM __shipments
           WHERE id IN (SELECT distinct(unnest(stops)) FROM  __vehicles v WHERE id = %5$s)
         $__vr1__$,
-        -- Passing only the vehicle selected vehicle question
+        /* Passing only the vehicle selected vehicle question */
         $__vr2__$
           SELECT * FROM  (%2$s) a
           WHERE id = %5$s
@@ -85,6 +85,7 @@ BEGIN
     $_q_$,
     $1, $2, $3, $4, $5, factor);
 
+  -- RAISE exception '%', main_query;
   RETURN QUERY
   EXECUTE main_query;
 
