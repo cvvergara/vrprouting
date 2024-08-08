@@ -162,7 +162,7 @@ Vroom::get_vroom_shipment(
 }
 
 
-void 
+void
 Vroom::add_shipments(const std::vector <Vroom_shipment_t> &shipments,
         const std::vector <Vroom_time_window_t> &shipments_tws) {
     std::map<Idx, std::vector<Vroom_time_window_t>> pickup_tws_map;
