@@ -341,7 +341,7 @@ void Vroom::add_vehicles(const std::vector<Vroom_vehicle_t> &vehicles,
             std::vector<Vroom_time_window_t> tws = breaks_tws_map[v_break.id];
             v_breaks_tws.insert(v_breaks_tws.end(), tws.begin(), tws.end());
         }
-        add_vehicle(vehicle, v_breaks, v_breaks_tws);
+        m_vehicles.push_back(get_vroom_vehicle(vehicle, v_breaks, v_breaks_tws));
     }
 }
 
