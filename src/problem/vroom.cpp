@@ -335,7 +335,7 @@ void Vroom::add_vehicles(const Vroom_vehicle_t *vehicles, size_t count,
 }
 
 
-void Vroom::add_matrix(vrprouting::base::Base_Matrix matrix) {
+void Vroom::add_matrix(const vrprouting::base::Base_Matrix &matrix) {
     m_matrix = matrix;
 }
 
