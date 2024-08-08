@@ -62,16 +62,13 @@ class Vroom_vehicle_t {
      MatrixIndex end_id; /** End location index in matrix */
 
      std::vector<Amount> capacity; /** Vehicle's capacity array */
-
      std::unordered_set<Skill> skills; /** Mandatory skills */
 
      Duration tw_open; /** Time window start time */
      Duration tw_close; /** Time window end time */
 
      double speed_factor; /** Vehicle travel time multiplier */
-
      int32_t max_tasks; /** Max number of tasks in a route for the vehicle */
-
      std::string data; /** Metadata information of vehicle */
 };
 

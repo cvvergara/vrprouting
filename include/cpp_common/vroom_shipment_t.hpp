@@ -53,9 +53,7 @@ d_location_id | Delivery location index in matrix
 d_setup | Delivery setup time
 d_service | Delivery service time
 amount | Quantities for shipment
-amount_size | Number of quantities
 skills | Mandatory skills
-skills_size | Number of skills
 priority | Priority level of shipment
 p_data | Metadata information of pickup shipment
 d_data | Metadata information of delivery shipment
@@ -75,9 +73,7 @@ class Vroom_shipment_t {
      Duration d_service; /** Delivery service time */
 
      std::vector<Amount> amount; /** Quantities for shipment */
-
      std::unordered_set<Skill> skills; /** Mandatory skills */
-
      Priority priority; /** Priority level of shipment */
 
      std::string p_data; /** Metadata information of pickup shipment */

@@ -101,19 +101,24 @@ Vroom::get_vroom_time_windows(const std::vector<Vroom_time_window_t> &time_windo
 vroom::Amount
 Vroom::get_vroom_amounts(const std::vector<Amount> &amounts) const {
     vroom::Amount amt;
-    if (amounts.size()) {
+    for (auto amount : amounts) {
+        amt.push_back(amount);
+    }
+#if 0
+    if (!amounts.empty()) {
         for (auto amount : amounts) {
             amt.push_back(amount);
         }
     } else {
         const unsigned int amount_size =
-            m_vehicles.size() ? static_cast<unsigned int>(m_vehicles[0].capacity.size()) : 0;
+            !m_vehicles.empty() ? static_cast<unsigned int>(m_vehicles[0].capacity.size()) : 0;
         // Default to zero amount with provided size.
         amt = vroom::Amount(amount_size);
         for (size_t i = 0; i < amounts.size(); i++) {
             amt[i] = amounts[i];
         }
     }
+#endif
     return amt;
 }
 

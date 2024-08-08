@@ -48,11 +48,8 @@ location_id | Location index of job in matrix
 setup | Job setup duration
 service | Job service duration
 delivery | Quantities for delivery
-delivery_size | Number of delivery quantities
 pickup | Quantities for pickup
-pickup_size | Number of pickup quantities
 skills | Mandatory skills
-skills_size | Number of mandatory skills
 priority | Priority level of job
 data | Metadata information of job
 */
