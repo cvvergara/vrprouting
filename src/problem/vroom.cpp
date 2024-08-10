@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: vroom_problem.cpp
+File: vroom.cpp
 
 Copyright (c) 2021 pgRouting developers
 Mail: project@pgrouting.org
@@ -84,10 +84,10 @@ vroom::Job
 Vroom::get_vroom_job(
         const Vroom_job_t &job,
         const std::vector<Vroom_time_window_t> &job_tws) const {
-    vroom::Amount delivery = get_vroom_amounts(job.delivery);
-    vroom::Amount pickup = get_vroom_amounts(job.pickup);
-    std::vector<vroom::TimeWindow> time_windows = get_vroom_time_windows(job_tws);
-    vroom::Index location_id = static_cast<vroom::Index>(m_matrix.get_index(job.location_id));
+    auto delivery = get_vroom_amounts(job.delivery);
+    auto pickup = get_vroom_amounts(job.pickup);
+    auto time_windows = get_vroom_time_windows(job_tws);
+    auto location_id = static_cast<vroom::Index>(m_matrix.get_index(job.location_id));
     return vroom::Job(
             job.id, location_id, job.setup, job.service,
             delivery, pickup, job.skills, job.priority,
@@ -120,11 +120,11 @@ Vroom::get_vroom_shipment(
         const Vroom_shipment_t &shipment,
         const std::vector<Vroom_time_window_t> &pickup_tws,
         const std::vector<Vroom_time_window_t> &delivery_tws) const {
-    vroom::Amount amount = get_vroom_amounts(shipment.amount);
-    std::vector<vroom::TimeWindow> p_time_windows = get_vroom_time_windows(pickup_tws);
-    std::vector<vroom::TimeWindow> d_time_windows = get_vroom_time_windows(delivery_tws);
-    vroom::Index p_location_id = static_cast<vroom::Index>(m_matrix.get_index(shipment.p_location_id));
-    vroom::Index d_location_id = static_cast<vroom::Index>(m_matrix.get_index(shipment.d_location_id));
+    auto amount = get_vroom_amounts(shipment.amount);
+    auto p_time_windows = get_vroom_time_windows(pickup_tws);
+    auto d_time_windows = get_vroom_time_windows(delivery_tws);
+    auto p_location_id = static_cast<vroom::Index>(m_matrix.get_index(shipment.p_location_id));
+    auto d_location_id = static_cast<vroom::Index>(m_matrix.get_index(shipment.d_location_id));
     vroom::Job pickup = vroom::Job(
             shipment.id, vroom::JOB_TYPE::PICKUP, p_location_id,
             shipment.p_setup, shipment.p_service, amount,
@@ -170,7 +170,7 @@ Vroom::get_vroom_breaks(
         const std::vector<Vroom_break_t> &breaks,
         const std::vector<Vroom_time_window_t> &breaks_tws) const {
     std::map<Idx, std::vector<Vroom_time_window_t>> breaks_tws_map;
-    for (auto break_tw : breaks_tws) {
+    for (const auto &break_tw : breaks_tws) {
         Idx id = break_tw.id;
         if (breaks_tws_map.find(id) == breaks_tws_map.end()) {
             breaks_tws_map[id] = std::vector<Vroom_time_window_t>();
@@ -178,7 +178,7 @@ Vroom::get_vroom_breaks(
         breaks_tws_map[id].push_back(break_tw);
     }
     std::vector<vroom::Break> v_breaks;
-    for (auto v_break : breaks) {
+    for (const auto &v_break : breaks) {
         v_breaks.push_back(
                 vroom::Break(
                     v_break.id, get_vroom_time_windows(breaks_tws_map[v_break.id]), v_break.service, v_break.data));
@@ -191,9 +191,9 @@ Vroom::get_vroom_vehicle(
         const Vroom_vehicle_t &vehicle,
         const std::vector<Vroom_break_t> &breaks,
         const std::vector<Vroom_time_window_t> &breaks_tws) const {
-    vroom::Amount capacity = get_vroom_amounts(vehicle.capacity);
+    auto capacity = get_vroom_amounts(vehicle.capacity);
     auto time_window = vroom::TimeWindow(vehicle.tw_open, vehicle.tw_close);
-    std::vector<vroom::Break> v_breaks = get_vroom_breaks(breaks, breaks_tws);
+    auto v_breaks = get_vroom_breaks(breaks, breaks_tws);
 
     std::optional<vroom::Location> start_id;
     std::optional<vroom::Location> end_id;
@@ -378,7 +378,7 @@ Vroom::get_results(vroom::Solution solution) {
         StepType job_step = get_job_step_type(job.type);
         Idx vehicle_id = static_cast<Idx>(-1);
         Idx job_id = job.id;
-        MatrixIndex location_id = m_matrix.get_original_id(job.location.index());
+        auto location_id = m_matrix.get_original_id(job.location.index());
         char *task_data = strdup(job.description.c_str());
         results.push_back({
                 vehicle_seq,      // vehicles_seq
