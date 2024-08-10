@@ -56,7 +56,8 @@ namespace vroom {
  * @param[in] use_timestamps When true postgres Time datatypes are used
  * @returns vector of Vroom_matrix_t containing the matrix cell contents
  */
-std::vector<Vroom_matrix_t> get_matrix(
+std::vector<Vroom_matrix_t>
+get_matrix(
         const std::string &sql,
         bool use_timestamps) {
     using vrprouting::Info;
@@ -78,7 +79,8 @@ std::vector<Vroom_matrix_t> get_matrix(
  * @param [in] use_timestamps When true postgres Time datatypes are used
  * @returns vector of Vroom_break_t containing the breaks information
  */
-std::vector<Vroom_break_t> get_breaks(
+std::vector<Vroom_break_t>
+get_breaks(
         const std::string &sql,
         bool use_timestamps) {
     using vrprouting::Info;
@@ -101,7 +103,8 @@ std::vector<Vroom_break_t> get_breaks(
  * @param [in] is_shipment When true c$the kind is compulsory
  * @returns vector of Vroom_time_window_t containing the time windows information
  */
-std::vector<Vroom_time_window_t> get_timewindows(
+std::vector<Vroom_time_window_t>
+get_timewindows(
         const std::string &sql,
         bool use_timestamps,
         bool is_shipment) {
@@ -113,6 +116,7 @@ std::vector<Vroom_time_window_t> get_timewindows(
         {-1, 0, is_shipment, "kind", vrprouting::CHAR1}};
 
     return pgget::get_data<Vroom_time_window_t>(sql, is_shipment, info, &fetch_timewindows);
+
 }
 
 /**

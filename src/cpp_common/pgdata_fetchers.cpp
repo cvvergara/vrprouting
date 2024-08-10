@@ -32,6 +32,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "cpp_common/pgdata_fetchers.hpp"
 
+#include <structures/vroom/input/input.h>
+#include <structures/vroom/job.h>
+#include <structures/vroom/vehicle.h>
+
 #include <string>
 #include <climits>
 #include <vector>
@@ -39,7 +43,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/info.hpp"
 #include "cpp_common/get_check_data.hpp"
 #include "cpp_common/pickdeliver_types.hpp"
-#include "cpp_common/vroom_types.hpp"
+
+#include "cpp_common/vroom_break_t.hpp"
+#include "cpp_common/vroom_job_t.hpp"
+#include "cpp_common/vroom_matrix_t.hpp"
+#include "cpp_common/vroom_shipment_t.hpp"
+#include "cpp_common/vroom_time_window_t.hpp"
+#include "cpp_common/vroom_vehicle_t.hpp"
 
 namespace {
 
@@ -58,7 +68,8 @@ namespace pgget {
 
 namespace vroom {
 
-Vroom_break_t fetch_breaks(
+Vroom_break_t
+fetch_breaks(
         const HeapTuple tuple, const TupleDesc &tupdesc,
         const std::vector<Info> &info,
         bool) {
@@ -70,7 +81,8 @@ Vroom_break_t fetch_breaks(
     return vroom_break;
 }
 
-Vroom_matrix_t fetch_matrix(
+Vroom_matrix_t
+fetch_matrix(
         const HeapTuple tuple, const TupleDesc &tupdesc,
         const std::vector<Info> &info,
         bool) {
@@ -82,7 +94,8 @@ Vroom_matrix_t fetch_matrix(
     return matrix;
 }
 
-Vroom_time_window_t fetch_timewindows(
+Vroom_time_window_t
+fetch_timewindows(
         const HeapTuple tuple, const TupleDesc &tupdesc,
         const std::vector<Info> &info,
         bool is_shipment) {
@@ -97,12 +110,15 @@ Vroom_time_window_t fetch_timewindows(
         }
     }
 
-    time_window.tw_open = get_value<Duration>(tuple, tupdesc, info[1], 0);
-    time_window.tw_close = get_value<Duration>(tuple, tupdesc, info[2], 0);
+    Duration tw_open = get_value<Duration>(tuple, tupdesc, info[1], 0);
+    Duration tw_close = get_value<Duration>(tuple, tupdesc, info[2], 0);
 
-    if (time_window.tw_open > time_window.tw_close) {
+    if (tw_open > tw_close) {
         throw std::string("Invalid time window found: '") + info[2].name + "' < '" + info[1].name + "'";
     }
+
+    time_window.tw = ::vroom::TimeWindow(tw_open, tw_close);
+
     return time_window;
 }
 

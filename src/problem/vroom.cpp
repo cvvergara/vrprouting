@@ -57,7 +57,7 @@ std::vector<vroom::TimeWindow>
 Vroom::get_vroom_time_windows(const std::vector<Vroom_time_window_t> &time_windows) const {
     std::vector<vroom::TimeWindow> tws;
     for (auto time_window : time_windows) {
-        tws.push_back(vroom::TimeWindow(time_window.tw_open, time_window.tw_close));
+        tws.push_back(time_window.tw);
     }
     return !tws.empty() ?
         tws

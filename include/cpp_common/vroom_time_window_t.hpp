@@ -31,6 +31,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_CPP_COMMON_VROOM_TIME_WINDOW_T_HPP_
 #pragma once
 
+#include <structures/vroom/input/input.h>
+#include <structures/vroom/job.h>
+#include <structures/vroom/vehicle.h>
+
 #include "c_types/typedefs.h"
 
 namespace vrprouting {
@@ -49,8 +53,7 @@ class Vroom_time_window_t {
  public:
      Idx id;
      char kind;
-     Duration tw_open;
-     Duration tw_close;
+     vroom::TimeWindow tw;
 };
 
 }  // namespace vrprouting
