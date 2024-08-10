@@ -53,16 +53,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 namespace vrprouting {
 namespace problem {
 
-std::vector<vroom::TimeWindow>
-Vroom::get_vroom_time_windows(const std::vector<Vroom_time_window_t> &time_windows) const {
-    std::vector<vroom::TimeWindow> tws;
-    for (auto time_window : time_windows) {
-        tws.push_back(time_window.tw);
-    }
-    return !tws.empty() ?
-        tws
-        : std::vector<vroom::TimeWindow>(1, vroom::TimeWindow());
-}
 
 vroom::Amount
 Vroom::get_vroom_amounts(const std::vector<Amount> &amounts) const {
@@ -105,28 +95,6 @@ Vroom::add_jobs(
      }
 }
 
-#if 0
-std::pair<vroom::Job, vroom::Job>
-Vroom::get_vroom_shipment(
-        const Vroom_shipment_t &shipment,
-        const std::vector<Vroom_time_window_t> &pickup_tws,
-        const std::vector<Vroom_time_window_t> &delivery_tws) const {
-    auto amount = get_vroom_amounts(shipment.amount);
-    auto p_time_windows = get_vroom_time_windows(pickup_tws);
-    auto d_time_windows = get_vroom_time_windows(delivery_tws);
-    auto p_location_id = static_cast<vroom::Index>(m_matrix.get_index(shipment.p_location_id));
-    auto d_location_id = static_cast<vroom::Index>(m_matrix.get_index(shipment.d_location_id));
-    vroom::Job pickup = vroom::Job(
-            shipment.id, vroom::JOB_TYPE::PICKUP, p_location_id,
-            shipment.p_setup, shipment.p_service, amount,
-            shipment.skills, shipment.priority, p_time_windows, shipment.p_data);
-    vroom::Job delivery = vroom::Job(
-            shipment.id, vroom::JOB_TYPE::DELIVERY, d_location_id,
-            shipment.d_setup, shipment.d_service, amount,
-            shipment.skills, shipment.priority, d_time_windows, shipment.d_data);
-    return std::make_pair(pickup, delivery);
-}
-#endif
 
 /*
  * param[in] shipments The vector container of Vroom_shipment_t
@@ -159,54 +127,7 @@ Vroom::add_shipments(
     }
 }
 
-#if 0
-std::vector<vroom::Break>
-Vroom::get_vroom_breaks(
-        const std::vector<Vroom_break_t> &breaks,
-        const std::vector<Vroom_time_window_t> &breaks_tws) const {
-    std::map<Idx, std::vector<Vroom_time_window_t>> breaks_tws_map;
-    for (const auto &break_tw : breaks_tws) {
-        Idx id = break_tw.id;
-        if (breaks_tws_map.find(id) == breaks_tws_map.end()) {
-            breaks_tws_map[id] = std::vector<Vroom_time_window_t>();
-        }
-        breaks_tws_map[id].push_back(break_tw);
-    }
-    std::vector<vroom::Break> v_breaks;
-    for (const auto &v_break : breaks) {
-        v_breaks.push_back(
-                vroom::Break(
-                    v_break.id, get_vroom_time_windows(breaks_tws_map[v_break.id]), v_break.service, v_break.data));
-    }
-    return v_breaks;
-}
-#endif
 
-#if 0
-vroom::Vehicle
-Vroom::get_vroom_vehicle(
-        const Vroom_vehicle_t &vehicle,
-        const std::vector<Vroom_break_t> &breaks,
-        const std::vector<::vroom::TimeWindow> &breaks_tws) const {
-    auto capacity = get_vroom_amounts(vehicle.capacity);
-    auto time_window = vroom::TimeWindow(vehicle.tw_open, vehicle.tw_close);
-    auto v_breaks = get_vroom_breaks(breaks, breaks_tws);
-
-    std::optional<vroom::Location> start_id;
-    std::optional<vroom::Location> end_id;
-    // Set the value of start or end index only if they are present
-    if (vehicle.start_id != -1) {
-        start_id = static_cast<vroom::Index>(m_matrix.get_index(vehicle.start_id));
-    }
-    if (vehicle.end_id != -1) {
-        end_id = static_cast<vroom::Index>(m_matrix.get_index(vehicle.end_id));
-    }
-    return vroom::Vehicle(vehicle.id, start_id, end_id,
-            vroom::DEFAULT_PROFILE, capacity, vehicle.skills, time_window,
-            v_breaks, vehicle.data, vehicle.speed_factor,
-            static_cast<size_t>(vehicle.max_tasks));
-}
-#endif
 
 /*
  * param[in] vehicles The vector container of Vroom_vehicle_t
@@ -220,16 +141,6 @@ Vroom::add_vehicles(
         const std::map<std::pair<Idx,char>, std::vector<::vroom::TimeWindow>> &breaks_tws) {
     std::vector<vroom::TimeWindow> default_tw(1, vroom::TimeWindow());
 
-#if 0
-    std::map<Idx, std::vector<Vroom_time_window_t>> breaks_tws_map;
-    for (auto break_tw : breaks_tws) {
-        Idx id = break_tw.id;
-        if (breaks_tws_map.find(id) == breaks_tws_map.end()) {
-            breaks_tws_map[id] = std::vector<Vroom_time_window_t>();
-        }
-        breaks_tws_map[id].push_back(break_tw);
-    }
-#endif
 
     std::map<Idx, std::vector<Vroom_break_t>> v_breaks_map;
     for (auto v_break : breaks) {
@@ -242,13 +153,6 @@ Vroom::add_vehicles(
 
     for (auto vehicle : vehicles) {
         std::vector<Vroom_break_t> vehicle_breaks = v_breaks_map[vehicle.id];
-#if 0
-        std::vector<Vroom_time_window_t> v_breaks_tws;
-        for (auto v_break : vehicle_breaks) {
-            std::vector<Vroom_time_window_t> tws = breaks_tws_map[v_break.id];
-            v_breaks_tws.insert(v_breaks_tws.end(), tws.begin(), tws.end());
-        }
-#endif
         /*
          * Builds the vroom::Break collection
          */

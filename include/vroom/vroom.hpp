@@ -81,23 +81,8 @@ class Vroom : public vrprouting::Messages {
     std::vector<Vroom_rt> solve(int32_t, int32_t, int32_t);
 
  private:
-    std::vector<vroom::TimeWindow> get_vroom_time_windows(const std::vector<Vroom_time_window_t>&) const;
-    vroom::Amount get_vroom_amounts(const std::vector<Amount>&) const;
-    vroom::Job    get_vroom_job(
-            const Vroom_job_t&,
-            const std::vector<vroom::TimeWindow>&) const;
-    std::pair<vroom::Job, vroom::Job> get_vroom_shipment(
-            const Vroom_shipment_t&,
-            const std::vector<Vroom_time_window_t>&,
-            const std::vector<Vroom_time_window_t>&) const;
-    std::vector<vroom::Break> get_vroom_breaks(
-            const std::vector<Vroom_break_t>&,
-            const std::vector<Vroom_time_window_t>&) const;
-    vroom::Vehicle get_vroom_vehicle(
-            const Vroom_vehicle_t&,
-            const std::vector<Vroom_break_t>&,
-            const std::vector<Vroom_time_window_t>&) const;
     void get_amount(vroom::Amount, Amount**);
+    vroom::Amount get_vroom_amounts(const std::vector<Amount> &amounts) const;
     StepType get_job_step_type(vroom::JOB_TYPE);
     StepType get_step_type(vroom::Step);
     std::vector<Vroom_rt> get_results(vroom::Solution);
