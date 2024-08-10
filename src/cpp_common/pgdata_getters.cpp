@@ -33,6 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "cpp_common/get_data.hpp"
 #include "cpp_common/get_check_data.hpp"
@@ -103,20 +104,28 @@ get_breaks(
  * @param [in] is_shipment When true c$the kind is compulsory
  * @returns vector of Vroom_time_window_t containing the time windows information
  */
-std::vector<Vroom_time_window_t>
+std::map<std::pair<Idx,char>, std::vector<::vroom::TimeWindow>>
 get_timewindows(
         const std::string &sql,
         bool use_timestamps,
         bool is_shipment) {
     using vrprouting::Info;
+    std::map<std::pair<Idx, char>, std::vector<::vroom::TimeWindow>> time_windows;
+    if (sql.empty()) return time_windows;
+
     std::vector<Info> info{
         {-1, 0, true, "id", vrprouting::ANY_INTEGER},
         {-1, 0, true, "tw_open", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
         {-1, 0, true, "tw_close", use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
         {-1, 0, is_shipment, "kind", vrprouting::CHAR1}};
 
-    return pgget::get_data<Vroom_time_window_t>(sql, is_shipment, info, &fetch_timewindows);
+    auto data = pgget::get_data<Vroom_time_window_t>(sql, is_shipment, info, &fetch_timewindows);
 
+    for (const auto &tw : data) {
+       time_windows[std::make_pair(tw.id, tw.kind)];
+       time_windows[std::make_pair(tw.id, tw.kind)].push_back(tw.tw);
+    }
+    return time_windows;
 }
 
 /**

@@ -56,22 +56,23 @@ class Vroom_job_t;
 namespace problem {
 
 class Vroom : public vrprouting::Messages {
+    using MapTW = std::map<std::pair<Idx,char>, std::vector<::vroom::TimeWindow>>;
  public:
     /** @brief sets m_jobs by adding the Vroom_job_t */
     void add_jobs(
             const std::vector<Vroom_job_t>&,
-            const std::vector<Vroom_time_window_t>&);
+            const MapTW&);
 
     /** @brief sets m_shipments by adding the Vroom_shipment_t */
     void add_shipments(
             const std::vector<Vroom_shipment_t>&,
-            const std::vector<Vroom_time_window_t>&);
+            const MapTW&);
 
     /** @brief sets m_vehicles by adding the Vroom_vehicle_t */
     void add_vehicles(
             const std::vector<Vroom_vehicle_t>&,
             const std::vector<Vroom_break_t>&,
-            const std::vector<Vroom_time_window_t>&);
+            const MapTW&);
 
     /** @brief sets m_matrix */
     void add_matrix(const vrprouting::base::Base_Matrix&);
@@ -84,7 +85,7 @@ class Vroom : public vrprouting::Messages {
     vroom::Amount get_vroom_amounts(const std::vector<Amount>&) const;
     vroom::Job    get_vroom_job(
             const Vroom_job_t&,
-            const std::vector<Vroom_time_window_t>&) const;
+            const std::vector<vroom::TimeWindow>&) const;
     std::pair<vroom::Job, vroom::Job> get_vroom_shipment(
             const Vroom_shipment_t&,
             const std::vector<Vroom_time_window_t>&,

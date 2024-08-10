@@ -186,16 +186,13 @@ void vrp_do_vroom(
     }
 
     hint = jobs_tws_sql;
-    auto jobs_tw  = jobs_tws_sql? get_timewindows(std::string(jobs_tws_sql), use_timestamps, false)
-        : std::vector<vrprouting::Vroom_time_window_t>();
+    auto jobs_tw  = get_timewindows(jobs_tws_sql? std::string(jobs_tws_sql) : std::string(), use_timestamps, false);
 
     hint = shipments_tws_sql;
-    auto shipments_tw  = shipments_tws_sql? get_timewindows(std::string(shipments_tws_sql), use_timestamps, true)
-        : std::vector<vrprouting::Vroom_time_window_t>();
+    auto shipments_tw  = get_timewindows(shipments_tws_sql? std::string(shipments_tws_sql) : std::string(), use_timestamps, true);
 
     hint = vehicles_sql;
-    auto vehicles = vehicles_sql? get_vehicles(std::string(vehicles_sql), use_timestamps)
-        : std::vector<vrprouting::Vroom_vehicle_t>();
+    auto vehicles = get_vehicles(vehicles_sql? std::string(vehicles_sql) : std::string() , use_timestamps);
 
     if (vehicles.size() == 0) {
         *notice_msg = vehicles_sql?
@@ -210,8 +207,7 @@ void vrp_do_vroom(
      : std::vector<vrprouting::Vroom_break_t>();
 
     hint = breaks_tws_sql;
-    auto breaks_tw = breaks_tws_sql? get_timewindows(std::string(breaks_tws_sql), use_timestamps, false)
-        : std::vector<vrprouting::Vroom_time_window_t>();
+    auto breaks_tw = get_timewindows(breaks_tws_sql? std::string(breaks_tws_sql) : std::string(), use_timestamps, false);
 
     hint = matrix_sql;
     auto costs = matrix_sql? get_matrix(std::string(matrix_sql), use_timestamps)

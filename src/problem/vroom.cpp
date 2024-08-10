@@ -80,19 +80,6 @@ Vroom::get_vroom_amounts(const std::vector<Amount> &amounts) const {
     return amt;
 }
 
-vroom::Job
-Vroom::get_vroom_job(
-        const Vroom_job_t &job,
-        const std::vector<Vroom_time_window_t> &job_tws) const {
-    auto delivery = get_vroom_amounts(job.delivery);
-    auto pickup = get_vroom_amounts(job.pickup);
-    auto time_windows = get_vroom_time_windows(job_tws);
-    auto location_id = static_cast<vroom::Index>(m_matrix.get_index(job.location_id));
-    return vroom::Job(
-            job.id, location_id, job.setup, job.service,
-            delivery, pickup, job.skills, job.priority,
-            time_windows, job.data);
-}
 
 /*
  * param[in] jobs The vector container of Vroom_job_t
@@ -101,20 +88,24 @@ Vroom::get_vroom_job(
 void
 Vroom::add_jobs(
         const std::vector<Vroom_job_t> &jobs,
-        const std::vector<Vroom_time_window_t> &jobs_tws) {
-    std::map<Idx, std::vector<Vroom_time_window_t>> job_tws_map;
-    for (auto job_tw : jobs_tws) {
-        Idx id = job_tw.id;
-        if (job_tws_map.find(id) == job_tws_map.end()) {
-            job_tws_map[id] = std::vector<Vroom_time_window_t>();
-        }
-        job_tws_map[id].push_back(job_tw);
-    }
+        const std::map<std::pair<Idx,char>, std::vector<::vroom::TimeWindow>> &job_tws) {
+    std::vector<vroom::TimeWindow> default_tw(1, vroom::TimeWindow());
     for (auto job : jobs) {
-        m_jobs.push_back(get_vroom_job(job, job_tws_map[job.id]));
-    }
+        auto job_tw = job_tws.find(std::make_pair(job.id, ' ')) == job_tws.end() ?
+            default_tw
+            : job_tws.at(std::make_pair(job.id, ' '));
+        auto delivery = get_vroom_amounts(job.delivery);
+        auto pickup = get_vroom_amounts(job.pickup);
+        auto location_id = static_cast<vroom::Index>(m_matrix.get_index(job.location_id));
+        auto vjob = vroom::Job(
+                job.id, location_id, job.setup, job.service,
+                delivery, pickup, job.skills, job.priority,
+                job_tw, job.data);
+        m_jobs.push_back(vjob);
+     }
 }
 
+#if 0
 std::pair<vroom::Job, vroom::Job>
 Vroom::get_vroom_shipment(
         const Vroom_shipment_t &shipment,
@@ -135,6 +126,7 @@ Vroom::get_vroom_shipment(
             shipment.skills, shipment.priority, d_time_windows, shipment.d_data);
     return std::make_pair(pickup, delivery);
 }
+#endif
 
 /*
  * param[in] shipments The vector container of Vroom_shipment_t
@@ -143,28 +135,31 @@ Vroom::get_vroom_shipment(
 void
 Vroom::add_shipments(
         const std::vector<Vroom_shipment_t> &shipments,
-        const std::vector<Vroom_time_window_t> &shipments_tws) {
-    std::map<Idx, std::vector<Vroom_time_window_t>> pickup_tws_map;
-    std::map<Idx, std::vector<Vroom_time_window_t>> delivery_tws_map;
-    for (auto shipment_tw : shipments_tws) {
-        Idx id = shipment_tw.id;
-        if (shipment_tw.kind == 'p') {
-            if (pickup_tws_map.find(id) == pickup_tws_map.end()) {
-                pickup_tws_map[id] = std::vector<Vroom_time_window_t>();
-            }
-            pickup_tws_map[id].push_back(shipment_tw);
-        } else if (shipment_tw.kind == 'd') {
-            if (delivery_tws_map.find(id) == delivery_tws_map.end()) {
-                delivery_tws_map[id] = std::vector<Vroom_time_window_t>();
-            }
-            delivery_tws_map[id].push_back(shipment_tw);
-        }
-    }
+        const std::map<std::pair<Idx,char>, std::vector<::vroom::TimeWindow>> &shipments_tws) {
+    std::vector<vroom::TimeWindow> default_tw(1, vroom::TimeWindow());
     for (auto shipment : shipments) {
-        m_shipments.push_back(get_vroom_shipment(shipment, pickup_tws_map[shipment.id], delivery_tws_map[shipment.id]));
+        auto pick_tw = shipments_tws.find(std::make_pair(shipment.id, 'p')) == shipments_tws.end() ?
+            default_tw
+            : shipments_tws.at(std::make_pair(shipment.id, 'p'));
+        auto drop_tw = shipments_tws.find(std::make_pair(shipment.id, 'd')) == shipments_tws.end() ?
+            default_tw
+            : shipments_tws.at(std::make_pair(shipment.id, 'd'));
+        auto amount = get_vroom_amounts(shipment.amount);
+        auto p_location_id = static_cast<vroom::Index>(m_matrix.get_index(shipment.p_location_id));
+        auto d_location_id = static_cast<vroom::Index>(m_matrix.get_index(shipment.d_location_id));
+        vroom::Job pickup = vroom::Job(
+                shipment.id, vroom::JOB_TYPE::PICKUP, p_location_id,
+                shipment.p_setup, shipment.p_service, amount,
+                shipment.skills, shipment.priority, pick_tw, shipment.p_data);
+        vroom::Job delivery = vroom::Job(
+                shipment.id, vroom::JOB_TYPE::DELIVERY, d_location_id,
+                shipment.d_setup, shipment.d_service, amount,
+                shipment.skills, shipment.priority, drop_tw, shipment.d_data);
+        m_shipments.push_back(std::make_pair(pickup, delivery));
     }
 }
 
+#if 0
 std::vector<vroom::Break>
 Vroom::get_vroom_breaks(
         const std::vector<Vroom_break_t> &breaks,
@@ -185,12 +180,14 @@ Vroom::get_vroom_breaks(
     }
     return v_breaks;
 }
+#endif
 
+#if 0
 vroom::Vehicle
 Vroom::get_vroom_vehicle(
         const Vroom_vehicle_t &vehicle,
         const std::vector<Vroom_break_t> &breaks,
-        const std::vector<Vroom_time_window_t> &breaks_tws) const {
+        const std::vector<::vroom::TimeWindow> &breaks_tws) const {
     auto capacity = get_vroom_amounts(vehicle.capacity);
     auto time_window = vroom::TimeWindow(vehicle.tw_open, vehicle.tw_close);
     auto v_breaks = get_vroom_breaks(breaks, breaks_tws);
@@ -209,6 +206,7 @@ Vroom::get_vroom_vehicle(
             v_breaks, vehicle.data, vehicle.speed_factor,
             static_cast<size_t>(vehicle.max_tasks));
 }
+#endif
 
 /*
  * param[in] vehicles The vector container of Vroom_vehicle_t
@@ -219,7 +217,10 @@ void
 Vroom::add_vehicles(
         const std::vector<Vroom_vehicle_t> &vehicles,
         const std::vector<Vroom_break_t> &breaks,
-        const std::vector<Vroom_time_window_t> &breaks_tws) {
+        const std::map<std::pair<Idx,char>, std::vector<::vroom::TimeWindow>> &breaks_tws) {
+    std::vector<vroom::TimeWindow> default_tw(1, vroom::TimeWindow());
+
+#if 0
     std::map<Idx, std::vector<Vroom_time_window_t>> breaks_tws_map;
     for (auto break_tw : breaks_tws) {
         Idx id = break_tw.id;
@@ -228,6 +229,7 @@ Vroom::add_vehicles(
         }
         breaks_tws_map[id].push_back(break_tw);
     }
+#endif
 
     std::map<Idx, std::vector<Vroom_break_t>> v_breaks_map;
     for (auto v_break : breaks) {
@@ -239,13 +241,42 @@ Vroom::add_vehicles(
     }
 
     for (auto vehicle : vehicles) {
-        std::vector<Vroom_break_t> v_breaks = v_breaks_map[vehicle.id];
+        std::vector<Vroom_break_t> vehicle_breaks = v_breaks_map[vehicle.id];
+#if 0
         std::vector<Vroom_time_window_t> v_breaks_tws;
-        for (auto v_break : v_breaks) {
+        for (auto v_break : vehicle_breaks) {
             std::vector<Vroom_time_window_t> tws = breaks_tws_map[v_break.id];
             v_breaks_tws.insert(v_breaks_tws.end(), tws.begin(), tws.end());
         }
-        m_vehicles.push_back(get_vroom_vehicle(vehicle, v_breaks, v_breaks_tws));
+#endif
+        /*
+         * Builds the vroom::Break collection
+         */
+        std::vector<vroom::Break> vroom_breaks;
+        for (const auto &vb : vehicle_breaks) {
+            auto tws = breaks_tws.find(std::make_pair(vb.id, ' ')) == breaks_tws.end() ?
+                default_tw
+                : breaks_tws.at(std::make_pair(vb.id, ' '));
+            vroom_breaks.push_back(vroom::Break(vb.id, tws, vb.service, vb.data));
+        }
+
+        auto capacity = get_vroom_amounts(vehicle.capacity);
+        auto time_window = vroom::TimeWindow(vehicle.tw_open, vehicle.tw_close);
+        std::optional<vroom::Location> start_id;
+        std::optional<vroom::Location> end_id;
+        // Set the value of start or end index only if they are present
+        if (vehicle.start_id != -1) {
+            start_id = static_cast<vroom::Index>(m_matrix.get_index(vehicle.start_id));
+        }
+        if (vehicle.end_id != -1) {
+            end_id = static_cast<vroom::Index>(m_matrix.get_index(vehicle.end_id));
+        }
+        auto vroom_vehicle = vroom::Vehicle(
+                vehicle.id, start_id, end_id,
+                vroom::DEFAULT_PROFILE, capacity, vehicle.skills, time_window,
+                vroom_breaks, vehicle.data, vehicle.speed_factor,
+                static_cast<size_t>(vehicle.max_tasks));
+        m_vehicles.push_back(vroom_vehicle);
     }
 }
 
