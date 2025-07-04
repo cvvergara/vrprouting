@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: pickDeliver.c
+FILE: pickDeliver.c
 
 Copyright (c) 2015 pgRouting developers
 Mail: project@pgrouting.org

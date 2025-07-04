@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: compatibleVehicles_driver.cpp
+FILE: compatibleVehicles_driver.cpp
 
 Copyright (c) 2015 pgRouting developers
 Mail: project@pgrouting.org

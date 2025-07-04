@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: pickDeliverEuclidean.c
+FILE: pickDeliverEuclidean.c
 
 Copyright (c) 2015 pgRouting developers
 Mail: project@pgrouting.org

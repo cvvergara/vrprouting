@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: compatibleVehicles.c
+FILE: compatibleVehicles.c
 
 Copyright (c) 2015 pgRouting developers
 Mail: project@pgrouting.org

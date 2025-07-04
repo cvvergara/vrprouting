@@ -1,5 +1,5 @@
 /*PGR-GNU*****************************************************************
-File: optimize.c
+FILE: optimize.c
 
 Copyright (c) 2021 pgRouting developers
 Mail: project@pgrouting.org
