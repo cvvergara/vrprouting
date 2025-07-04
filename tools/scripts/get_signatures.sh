@@ -11,7 +11,7 @@ if [  "$1" = "--help" ] ; then
     exit 0
 fi
 
-VERSION=$(grep -Po '(?<=project\(VRPROUTING VERSION )[^;]+' CMakeLists.txt)
+VERSION=$(grep -Po '(?<=project\(PGORTOOLS VERSION )[^;]+' CMakeLists.txt)
 MINOR=${VERSION%.*}
 
 DB_NAME="____sigs_routing____"

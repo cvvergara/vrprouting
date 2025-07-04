@@ -42,13 +42,6 @@ on Github.
   * Support for or-tools v9.10.4067
   
 
-* vrp_oneDepot
-
-  
-  * Code fix
-  * Result columns changed
-  
-
 **Removal of Boost on the build**
 
 * vrp_full_version

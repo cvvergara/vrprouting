@@ -29,18 +29,13 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 #---------------------------------------------
 #---------------------------------------------
 
-project(VRPROUTING VERSION 0.4.2
+project(PGORTOOLS VERSION 0.4.2
   LANGUAGES C CXX )
 set(PROJECT_VERSION_DEV "")
 string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
 
-set(MINORS 0.4 0.3 0.2 0.1)
+set(MINORS 0.1)
 set(OLD_SIGNATURES
-    0.4.1
-    0.4.0
-    0.3.0
-    0.2.0
-    0.1.0
   )
 
 
@@ -296,20 +291,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     )
 endif()
 
-
-#-------------------
-# Add the VROOM library and dependencies
-#-------------------
-
-if(NOT VROOM_INSTALL_PATH)
-  message(FATAL_ERROR "VROOM installation path not specified. Please specify the vroom root directory in -DVROOM_INSTALL_PATH")
-endif()
-
-message(STATUS "VROOM_INSTALL_PATH ${VROOM_INSTALL_PATH}")
-
-include_directories(SYSTEM ${VROOM_INSTALL_PATH}/src)
-link_libraries(${VROOM_INSTALL_PATH}/lib/libvroom.a)
-link_libraries(glpk)
 
 #-------------------
 # add the subdirectories that have the C/C++ code

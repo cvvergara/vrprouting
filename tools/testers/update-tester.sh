@@ -58,7 +58,7 @@ if [[ -z  "$1" ]]; then
 fi
 
 FROM_PGR="$1"
-CURRENT=$(grep -Po '(?<=project\(VRPROUTING VERSION )[^;]+' CMakeLists.txt)
+CURRENT=$(grep -Po '(?<=project\(PGORTOOLS VERSION )[^;]+' CMakeLists.txt)
 LONG=$2
 
 if [[ "$FROM_PGR" == 2.* ]];

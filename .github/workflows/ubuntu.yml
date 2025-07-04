@@ -31,7 +31,6 @@ permissions:
 
 env:
     postgis: 3
-    vroom: 1.12.0
 
 jobs:
   build:
@@ -84,46 +83,18 @@ jobs:
             postgresql-${{ matrix.psql }}-pgrouting \
             postgresql-server-dev-${{ matrix.psql }} \
             postgresql-plpython3-${{ matrix.psql }}
-          # vroom dependencies
-          sudo apt-get install libssl-dev libasio-dev libglpk-dev
 
       - name: Install Google OR-Tools dependencies
         run: |
           sudo pip install --root=/  ortools
 
-      - name: Cache VROOM
-        id: cache-vroom
-        uses: actions/cache@v4
-        env:
-          cache-name: vroom
-        with:
-          path: vroom-${{ env.vroom }}
-          key: ${{ matrix.os }}-${{ env.cache-name }}-${{ env.vroom }}
-
-      - name: Checkout VROOM
-        if: steps.cache-vroom.outputs.cache-hit != 'true'
-        uses: actions/checkout@v4
-        with:
-          path: vroom-${{ env.vroom }}
-          repository: VROOM-Project/vroom
-          ref: "v${{ env.vroom }}"
-          submodules: true
-
-      - name: Build VROOM
-        if: steps.cache-vroom.outputs.cache-hit != 'true'
-        run: |
-          cd vroom-${{ env.vroom }}/src
-          USE_ROUTING=false make shared
-
       - name: Configure
         run: |
           export PATH=/usr/lib/postgresql/${{ matrix.psql }}/bin:$PATH
-          VROOM=$(pwd)/vroom-${{ env.vroom }}
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }} \
-              -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} \
-              -DVROOM_INSTALL_PATH=${VROOM} ..
+              -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} ..
 
       - name: Build
         run: |
