@@ -7,7 +7,7 @@ DIR=$(git rev-parse --show-toplevel)/sql/sigs
 
 pushd "${DIR}" > /dev/null || exit
 # For bash, uses temporary files
-mapfile -t SIGNATURES < <(git ls-files "*.sig" | perl -pe 's/vrprouting--(.*)\.sig/$1/')
+mapfile -t SIGNATURES < <(git ls-files "*.sig" | perl -pe 's/pgortools--(.*)\.sig/$1/')
 
 for s1 in "${SIGNATURES[@]}"
 do
@@ -25,7 +25,7 @@ do
         # ignoring any signature changes made on v0
         if [ "$mayor1" == 0 ]; then continue; fi
 
-        missing+=$(diff "vrprouting--$s1.sig" "vrprouting--$s2.sig" | grep '<')
+        missing+=$(diff "pgortools--$s1.sig" "pgortools--$s2.sig" | grep '<')
     done
 done
 

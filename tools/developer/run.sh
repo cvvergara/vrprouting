@@ -13,9 +13,9 @@ pushd "${DIR}" > /dev/null || exit 1
 # adjust to your needs
 
 VERSION=$(grep -Po '(?<=project\(PGORTOOLS VERSION )[^;]+' CMakeLists.txt)
-echo "vrpRouting VERSION ${VERSION}"
+echo "pgOrtools VERSION ${VERSION}"
 
-VENV="/home/vicky/pgrouting/vrprouting/env-vrp"
+VENV="/home/vicky/pgrouting/pgortools/env-vrp"
 
 # set up your postgres version, port and compiler (if more than one)
 PGVERSION="15"

@@ -53,7 +53,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          # vrpRouting dependencies
+          # pgOrtools dependencies
           sudo apt-get install -y \
             postgresql-${PGVER} \
             postgresql-server-dev-${PGVER}

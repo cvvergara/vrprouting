@@ -96,7 +96,7 @@ LANGUAGE c VOLATILE STRICT;
 -- COMMENTS
 
 COMMENT ON FUNCTION _vrp_pickDeliverRaw(TEXT, TEXT, TEXT, TEXT, BOOLEAN, FLOAT, INTEGER, BOOLEAN, BIGINT)
-IS 'vrprouting internal function';
+IS 'pgortools internal function';
 
 COMMENT ON FUNCTION _vrp_pickDeliver(TEXT, TEXT, TEXT, TEXT, BOOLEAN, FLOAT, INTEGER, BOOLEAN, TIMESTAMP)
-IS 'vrprouting internal function';
+IS 'pgortools internal function';

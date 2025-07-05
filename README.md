@@ -1,4 +1,4 @@
-# vrpRouting - Vehicle Routing problems on PostgreSQL
+# pgOrtools - Vehicle Routing problems on PostgreSQL
 
 [![Join the chat at https://gitter.im/pgRouting/pgrouting](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pgRouting/pgrouting?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -17,16 +17,16 @@ https://github.com/pgRouting/pgrouting/releases
 
 * https://pgrouting.org/
 * https://vrp.pgrouting.org/
-* https://github.com/pgRouting/vrprouting
+* https://github.com/pgRouting/pgortools
 
 ## STATUS
 
-Status of the project can be found [here](https://github.com/pgRouting/vrprouting/wiki#status)
+Status of the project can be found [here](https://github.com/pgRouting/pgortools/wiki#status)
 
 
 ## INTRODUCTION
 
-vrpRouting extends the pgRouting/PostGIS/PostgreSQL geospatial database to provide algorithms for Vehicle Routing Problems.
+pgOrtools extends the pgRouting/PostGIS/PostgreSQL geospatial database to provide algorithms for Vehicle Routing Problems.
 It requires VROOM as a dependency for building and computing the VRP solution. This release is compatible with VROOM version 1.12.0
 
 This library is under development and currently contains the following functions:
@@ -76,7 +76,7 @@ Build with documentation (requires [Sphinx](http://sphinx-doc.org/))
 Postgresql
 
 	createdb mydatabase
-	psql mydatabase -c "CREATE EXTENSION vrprouting CASCADE"
+	psql mydatabase -c "CREATE EXTENSION pgortools CASCADE"
 
 ## USAGE
 

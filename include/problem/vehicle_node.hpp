@@ -36,7 +36,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 typedef struct Solution_rt Solution_rt;
 
-namespace vrprouting {
+namespace pgortools {
 namespace problem {
 
 
@@ -178,6 +178,6 @@ class Vehicle_node: public Tw_node {
 };
 
 }  //  namespace problem
-}  //  namespace vrprouting
+}  //  namespace pgortools
 
 #endif  // INCLUDE_PROBLEM_VEHICLE_NODE_HPP_

@@ -109,7 +109,7 @@ jobs:
         if: env.PROCESS == 'true'
         run: |
           sudo apt-get update
-          # vrpRouting dependencies
+          # pgOrtools dependencies
           sudo apt-get install -y \
             postgresql-${PGVER} \
             postgresql-server-dev-${PGVER}

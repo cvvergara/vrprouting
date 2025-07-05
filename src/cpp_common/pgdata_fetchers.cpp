@@ -43,17 +43,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 namespace {
 
-void check_pairs(vrprouting::Info lhs, vrprouting::Info rhs) {
-    if (!(vrprouting::column_found(lhs)) && vrprouting::column_found(rhs)) {
+void check_pairs(pgortools::Info lhs, pgortools::Info rhs) {
+    if (!(pgortools::column_found(lhs)) && pgortools::column_found(rhs)) {
         throw std::string("Column found: '") + rhs.name + "', missing column: '" + lhs.name + "'";
-    } else if (!(vrprouting::column_found(rhs)) && vrprouting::column_found(lhs)) {
+    } else if (!(pgortools::column_found(rhs)) && pgortools::column_found(lhs)) {
         throw std::string("Column found: '") + lhs.name + "', missing column: '" + rhs.name + "'";
     }
 }
 
 }  // namespace
 
-namespace vrprouting {
+namespace pgortools {
 namespace pgget {
 
 
@@ -186,4 +186,4 @@ fetch_vehicles(
 }   // namespace pickdeliver
 
 }   // namespace pgget
-}   // namespace vrprouting
+}   // namespace pgortools

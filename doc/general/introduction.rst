@@ -1,7 +1,7 @@
 ..
    ****************************************************************************
-    vrpRouting Manual
-    Copyright(c) vrpRouting Contributors
+    pgOrtools Manual
+    Copyright(c) pgOrtools Contributors
 
     This documentation is licensed under a Creative Commons Attribution-Share
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
@@ -9,7 +9,7 @@
 
 |
 
-* `Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 <https://vrp.pgrouting.org/v0>`__
+* `Documentation <https://vrp.pgrouting.org/>`__ → `pgOrtools v0 <https://vrp.pgrouting.org/v0>`__
 * Supported Versions
   `Latest <https://vrp.pgrouting.org/latest/en/introduction.html>`__
   (`v0 <https://vrp.pgrouting.org/v0/en/introduction.html>`__)
@@ -17,14 +17,14 @@
 Introduction
 ===============================================================================
 
-vrpRouting is a `PostgreSQL <https://www.postgresql.org>`__ extension that extends
+pgOrtools is a `PostgreSQL <https://www.postgresql.org>`__ extension that extends
 of `pgRouting <https://pgrouting.org>`__ extension, by adding solutions to several
 Vehicle Routing Problems.
 
 The project is supported and manatianed by `Georepublic <https://georepublic.info>`__,
 `Paragon Corporation <https://www.paragoncorporation.com/>`__ and a broad user community.
 
-vrpRouting is a subproduct of `pgRouting <https://pgrouting.org>`__  organization which is an
+pgOrtools is a subproduct of `pgRouting <https://pgrouting.org>`__  organization which is an
 `OSGeo Community Project <https://wiki.osgeo.org/wiki/OSGeo_Community_Projects>`__.
 
 
@@ -33,7 +33,7 @@ vrpRouting is a subproduct of `pgRouting <https://pgrouting.org>`__  organizatio
 Licensing
 -------------------------------------------------------------------------------
 
-The following licenses can be found in vrpRouting:
+The following licenses can be found in pgOrtools:
 
 * GNU General Public License 2 or latar, `GPL-2.0-or-later <https://spdx.org/licenses/GPL-2.0-or-later.html>`__.
 
@@ -61,7 +61,7 @@ Individuals (in alphabetical order)
 
 - Manas Sivakumar
 
-  - Adding Google Or tools functionality to vrprouting
+  - Adding Google Or tools functionality to pgortools
 
 - Joseph Percival
 
@@ -78,7 +78,7 @@ And all the people that give us a little of their time making comments, finding 
 Corporate Sponsors (in alphabetical order)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-These are corporate entities that have contributed developer time, hosting, or direct monetary funding to the vrpRouting project:
+These are corporate entities that have contributed developer time, hosting, or direct monetary funding to the pgOrtools project:
 
 - `Paragon Corporation <https://www.paragoncorporation.com/>`__
 
@@ -102,7 +102,7 @@ Corporate Sponsors (in alphabetical order)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 These are corporate entities that have contributed developer time, hosting, or
-direct monetary funding to the vrpRouting project:
+direct monetary funding to the pgOrtools project:
 
 - Georepublic
 - Leopark
@@ -112,7 +112,7 @@ direct monetary funding to the vrpRouting project:
 More Information
 -------------------------------------------------------------------------------
 
-* The latest software, documentation and news items are available at the vrpRouting web site https://vrp.pgrouting.org.
+* The latest software, documentation and news items are available at the pgOrtools web site https://vrp.pgrouting.org.
 * PostgreSQL database server at the PostgreSQL main site https://www.postgresql.org.
 * PostGIS extension at the PostGIS project web site https://postgis.net.
-* vrpRouting extension at the pgRouting project web site https://pgRouting.org.
+* pgOrtools extension at the pgRouting project web site https://pgRouting.org.

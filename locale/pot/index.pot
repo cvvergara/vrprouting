@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.4.2
-# This file is distributed under the same license as the vrpRouting package.
+# Copyright (C) pgOrtools Contributors - Version v0.4.2
+# This file is distributed under the same license as the pgOrtools package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.3.0-dev\n"
+"Project-Id-Version: pgOrtools v0.3.0-dev\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-28 10:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -25,11 +25,11 @@ msgid "Table of Contents"
 msgstr ""
 
 #: ../../build/doc/index.rst:22
-msgid "vrpRouting extends the `PostGIS <https://postgis.net>`__/`PostgreSQL <https://www.postgresql.org>`__ geospatial database to provide geospatial routing and other network analysis functionality."
+msgid "pgOrtools extends the `PostGIS <https://postgis.net>`__/`PostgreSQL <https://www.postgresql.org>`__ geospatial database to provide geospatial routing and other network analysis functionality."
 msgstr ""
 
 #: ../../build/doc/index.rst:25
-msgid "This is the manual for vrpRouting |release|."
+msgid "This is the manual for pgOrtools |release|."
 msgstr ""
 
 #: ../../build/doc/index.rst:None
@@ -37,7 +37,7 @@ msgid "Creative Commons Attribution-Share Alike 3.0 License"
 msgstr ""
 
 #: ../../build/doc/index.rst:31
-msgid "The vrpRouting Manual is licensed under a `Creative Commons Attribution-Share Alike 3.0 License <https://creativecommons.org/licenses/by-sa/3.0/>`_. Feel free to use this material any way you like, but we ask that you attribute credit to the vrpRouting Project and wherever possible, a link back to https://pgrouting.org. For other licenses used in vrpRouting see the :ref:`license` page."
+msgid "The pgOrtools Manual is licensed under a `Creative Commons Attribution-Share Alike 3.0 License <https://creativecommons.org/licenses/by-sa/3.0/>`_. Feel free to use this material any way you like, but we ask that you attribute credit to the pgOrtools Project and wherever possible, a link back to https://pgrouting.org. For other licenses used in pgOrtools see the :ref:`license` page."
 msgstr ""
 
 #: ../../build/doc/index.rst:38
@@ -57,11 +57,11 @@ msgid "Reference"
 msgstr ""
 
 #: ../../build/doc/index.rst:66
-msgid ":doc:`vrp_version` - Get vrpRouting's version information."
+msgid ":doc:`vrp_version` - Get pgOrtools's version information."
 msgstr ""
 
 #: ../../build/doc/index.rst:67
-msgid ":doc:`vrp_full_version` - Get vrpRouting's details of version."
+msgid ":doc:`vrp_full_version` - Get pgOrtools's details of version."
 msgstr ""
 
 #: ../../build/doc/index.rst:77
@@ -69,7 +69,7 @@ msgid "Official functions"
 msgstr ""
 
 #: ../../build/doc/index.rst:88
-msgid "Available functions but not official vrpRouting functions"
+msgid "Available functions but not official pgOrtools functions"
 msgstr ""
 
 #: ../../build/doc/index.rst:99

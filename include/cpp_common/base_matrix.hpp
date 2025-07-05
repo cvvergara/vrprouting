@@ -34,7 +34,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "c_types/typedefs.h"
 #include "cpp_common/identifiers.hpp"
 
-namespace vrprouting {
+namespace pgortools {
 
 class Matrix_cell_t;
 
@@ -117,6 +117,6 @@ class Base_Matrix {
 };
 
 }  // namespace base
-}  // namespace vrprouting
+}  // namespace pgortools
 
 #endif  // INCLUDE_CPP_COMMON_BASE_MATRIX_HPP_

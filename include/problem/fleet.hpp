@@ -35,7 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "problem/vehicle_pickDeliver.hpp"
 
-namespace vrprouting {
+namespace pgortools {
 class Messages;
 class Short_vehicle;
 
@@ -144,5 +144,5 @@ class Fleet: protected std::vector<Vehicle_pickDeliver> {
 };
 
 }  // namespace problem
-}  // namespace vrprouting
+}  // namespace pgortools
 #endif  // INCLUDE_PROBLEM_FLEET_HPP_

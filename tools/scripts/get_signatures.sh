@@ -20,14 +20,14 @@ DIR="sql/sigs"
 # DB_ARGS are the remaining of the arguments
 read -ra DB_ARGS <<< "$*"
 
-FILE="$DIR/vrprouting--$MINOR.sig"
+FILE="$DIR/pgortools--$MINOR.sig"
 
 dropdb --if-exists "${DB_ARGS[@]}" "$DB_NAME"
 createdb "${DB_ARGS[@]}" "$DB_NAME"
 
 psql  "${DB_ARGS[@]}"  "$DB_NAME" <<EOF
 SET client_min_messages = WARNING;
-CREATE EXTENSION vrprouting WITH VERSION '$VERSION' CASCADE;
+CREATE EXTENSION pgortools WITH VERSION '$VERSION' CASCADE;
 EOF
 
-psql "${DB_ARGS[@]}" "$DB_NAME" -c '\dx+ vrprouting' -A | grep '^function' | cut -d ' ' -f2- | sort -d > "$FILE"
+psql "${DB_ARGS[@]}" "$DB_NAME" -c '\dx+ pgortools' -A | grep '^function' | cut -d ' ' -f2- | sort -d > "$FILE"

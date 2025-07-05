@@ -38,7 +38,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "problem/vehicle.hpp"
 #include "problem/orders.hpp"
 
-namespace vrprouting {
+namespace pgortools {
 namespace problem {
 
 class Order;
@@ -142,6 +142,6 @@ class Vehicle_pickDeliver : public Vehicle {
 };
 
 }  //  namespace problem
-}  //  namespace vrprouting
+}  //  namespace pgortools
 
 #endif  // INCLUDE_PROBLEM_VEHICLE_PICKDELIVER_HPP_

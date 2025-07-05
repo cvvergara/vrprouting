@@ -45,7 +45,7 @@ SPI_pfree(void *pointer);
 }
 
 
-namespace vrprouting {
+namespace pgortools {
 
 /*! \fn alloc(std::size_t size, T *ptr)
 
@@ -85,6 +85,6 @@ free(T* ptr) {
 
 char* to_pg_msg(const std::string &);
 
-}  // namespace vrprouting
+}  // namespace pgortools
 
 #endif  // INCLUDE_CPP_COMMON_ALLOC_HPP_

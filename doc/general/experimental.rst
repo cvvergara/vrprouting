@@ -1,7 +1,7 @@
 ..
    ****************************************************************************
-    vrpRouting Manual
-    Copyright(c) vrpRouting Contributors
+    pgOrtools Manual
+    Copyright(c) pgOrtools Contributors
 
     This documentation is licensed under a Creative Commons Attribution-Share
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
@@ -37,8 +37,8 @@ Experimental Functions
     - Documentation if any might need to be rewritten.
     - Documentation examples might need to be automatically generated.
     - Might need a lot of feedback from the comunity.
-    - Might depend on a proposed function of vrpRouting
-    - Might depend on a deprecated function of vrpRouting
+    - Might depend on a proposed function of pgOrtools
+    - Might depend on a deprecated function of pgOrtools
 
 ..  end-warn-expr
 

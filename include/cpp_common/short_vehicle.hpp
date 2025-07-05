@@ -30,7 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <vector>
 #include "c_types/typedefs.h"
 
-namespace vrprouting {
+namespace pgortools {
 
 /** @brief short_vehicle
 
@@ -46,6 +46,6 @@ class Short_vehicle{
      std::vector<Id> stops; /** Stops */
 };
 
-}  //  namespace vrprouting
+}  //  namespace pgortools
 
 #endif  // INCLUDE_CPP_COMMON_SHORT_VEHICLE_HPP_

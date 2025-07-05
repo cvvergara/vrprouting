@@ -39,7 +39,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/pgdata_fetchers.hpp"
 #include "cpp_common/info.hpp"
 
-namespace vrprouting {
+namespace pgortools {
 namespace pgget {
 
 namespace pickdeliver {
@@ -47,12 +47,12 @@ namespace pickdeliver {
 std::vector<Time_multipliers_t> get_timeMultipliers(
         const std::string &sql,
         bool use_timestamps) {
-    using vrprouting::Info;
+    using pgortools::Info;
     std::vector<Info> info{
         {-1, 0, true,
             use_timestamps? "start_time" :  "start_value",
-            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
-        {-1, 0, true, "multiplier", vrprouting::ANY_NUMERICAL}};
+            use_timestamps? pgortools::TIMESTAMP : pgortools::TTIMESTAMP},
+        {-1, 0, true, "multiplier", pgortools::ANY_NUMERICAL}};
 
     return pgget::get_data<Time_multipliers_t>(sql, use_timestamps, info, &fetch_timeMultipliers);
 }
@@ -69,13 +69,13 @@ std::vector<Time_multipliers_t> get_timeMultipliers(
 std::vector<Matrix_cell_t> get_matrix(
         const std::string &sql,
         bool use_timestamps) {
-    using vrprouting::Info;
+    using pgortools::Info;
     std::vector<Info> info{
-        {-1, 0, true, "start_vid", vrprouting::ID},
-        {-1, 0, true, "end_vid", vrprouting::ID},
+        {-1, 0, true, "start_vid", pgortools::ID},
+        {-1, 0, true, "end_vid", pgortools::ID},
         {-1, 0, true,
             use_timestamps? "travel_time" : "agg_cost",
-            use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL}};
+            use_timestamps? pgortools::INTERVAL : pgortools::TINTERVAL}};
 
     return pgget::get_data<Matrix_cell_t>(sql, use_timestamps, info, &fetch_matrix);
 }
@@ -106,38 +106,38 @@ std::vector<Orders_t> get_orders(
         const std::string &sql,
         bool is_euclidean,
         bool use_timestamps) {
-    using vrprouting::Info;
+    using pgortools::Info;
 
     std::vector<Info> info{
-        {-1, 0, true, "id", vrprouting::ID},
-        {-1, 0, true, "amount", vrprouting::PAMOUNT},
+        {-1, 0, true, "id", pgortools::ID},
+        {-1, 0, true, "amount", pgortools::PAMOUNT},
 
-        {-1, 0, !is_euclidean, "p_id", vrprouting::ID},
-        {-1, 0, is_euclidean, "p_x", vrprouting::COORDINATE},
-        {-1, 0, is_euclidean, "p_y", vrprouting::COORDINATE},
+        {-1, 0, !is_euclidean, "p_id", pgortools::ID},
+        {-1, 0, is_euclidean, "p_x", pgortools::COORDINATE},
+        {-1, 0, is_euclidean, "p_y", pgortools::COORDINATE},
 
         {-1, 0, true,
             use_timestamps? "p_tw_open" : "p_open",
-            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+            use_timestamps? pgortools::TIMESTAMP : pgortools::TTIMESTAMP},
         {-1, 0, true,
             use_timestamps? "p_tw_close" : "p_close",
-            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+            use_timestamps? pgortools::TIMESTAMP : pgortools::TTIMESTAMP},
         {-1, 0, false,
             use_timestamps? "p_t_service" : "p_service",
-            use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+            use_timestamps? pgortools::INTERVAL : pgortools::TINTERVAL},
 
-        {-1, 0, !is_euclidean, "d_id", vrprouting::ID},
-        {-1, 0, is_euclidean, "d_x", vrprouting::COORDINATE},
-        {-1, 0, is_euclidean, "d_y", vrprouting::COORDINATE},
+        {-1, 0, !is_euclidean, "d_id", pgortools::ID},
+        {-1, 0, is_euclidean, "d_x", pgortools::COORDINATE},
+        {-1, 0, is_euclidean, "d_y", pgortools::COORDINATE},
         {-1, 0, true,
             use_timestamps? "d_tw_open" : "d_open",
-            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+            use_timestamps? pgortools::TIMESTAMP : pgortools::TTIMESTAMP},
         {-1, 0, true,
             use_timestamps? "d_tw_close" : "d_close",
-            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+            use_timestamps? pgortools::TIMESTAMP : pgortools::TTIMESTAMP},
         {-1, 0, false,
             use_timestamps? "d_t_service" : "d_service",
-            use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL}};
+            use_timestamps? pgortools::INTERVAL : pgortools::TINTERVAL}};
 
     return pgget::get_data<Orders_t>(sql, is_euclidean, info, &fetch_orders);
 }
@@ -172,45 +172,45 @@ std::vector<Vehicle_t> get_vehicles(
         bool is_euclidean,
         bool use_timestamps,
         bool with_stops) {
-    using vrprouting::Info;
+    using pgortools::Info;
 
     std::vector<Info> info{
-        {-1, 0, true, "id", vrprouting::ID},
-        {-1, 0, true, "capacity", vrprouting::PAMOUNT},
-        {-1, 0, false, "number", vrprouting::PAMOUNT},
-        {-1, 0, false, "speed", vrprouting::SPEED},
+        {-1, 0, true, "id", pgortools::ID},
+        {-1, 0, true, "capacity", pgortools::PAMOUNT},
+        {-1, 0, false, "number", pgortools::PAMOUNT},
+        {-1, 0, false, "speed", pgortools::SPEED},
 
-        {-1, 0, !is_euclidean, "s_id", vrprouting::ID},
-        {-1, 0, is_euclidean, "s_x", vrprouting::COORDINATE},
-        {-1, 0, is_euclidean, "s_y", vrprouting::COORDINATE},
+        {-1, 0, !is_euclidean, "s_id", pgortools::ID},
+        {-1, 0, is_euclidean, "s_x", pgortools::COORDINATE},
+        {-1, 0, is_euclidean, "s_y", pgortools::COORDINATE},
         {-1, 0, false,
             use_timestamps? "s_tw_open" : "s_open",
-            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+            use_timestamps? pgortools::TIMESTAMP : pgortools::TTIMESTAMP},
         {-1, 0, false,
             use_timestamps? "s_tw_close" : "s_close",
-            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+            use_timestamps? pgortools::TIMESTAMP : pgortools::TTIMESTAMP},
         {-1, 0, false,
             use_timestamps? "s_t_service" : "s_service",
-            use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+            use_timestamps? pgortools::INTERVAL : pgortools::TINTERVAL},
 
-        {-1, 0, false, "e_id", vrprouting::ID},
-        {-1, 0, false, "e_x", vrprouting::COORDINATE},
-        {-1, 0, false, "e_y", vrprouting::COORDINATE},
+        {-1, 0, false, "e_id", pgortools::ID},
+        {-1, 0, false, "e_x", pgortools::COORDINATE},
+        {-1, 0, false, "e_y", pgortools::COORDINATE},
         {-1, 0, false,
             use_timestamps? "e_tw_open" : "e_open",
-            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+            use_timestamps? pgortools::TIMESTAMP : pgortools::TTIMESTAMP},
         {-1, 0, false,
             use_timestamps? "e_tw_close" : "e_close",
-            use_timestamps? vrprouting::TIMESTAMP : vrprouting::TTIMESTAMP},
+            use_timestamps? pgortools::TIMESTAMP : pgortools::TTIMESTAMP},
         {-1, 0, false,
             use_timestamps? "e_t_service" : "e_service",
-            use_timestamps? vrprouting::INTERVAL : vrprouting::TINTERVAL},
+            use_timestamps? pgortools::INTERVAL : pgortools::TINTERVAL},
 
-        {-1, 0, with_stops, "stops", vrprouting::ANY_POSITIVE_ARRAY}};
+        {-1, 0, with_stops, "stops", pgortools::ANY_POSITIVE_ARRAY}};
 
     return get_data<Vehicle_t>(sql, is_euclidean, info, &fetch_vehicles);
 }
 }  // namespace pickdeliver
 
 }  // namespace pgget
-}  // namespace vrprouting
+}  // namespace pgortools

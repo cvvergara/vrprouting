@@ -38,7 +38,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 using CompatibleVehicles_rt = struct CompatibleVehicles_rt;
 
-namespace vrprouting {
+namespace pgortools {
 
 class Orders_t;
 class Vehicle_t;
@@ -112,6 +112,6 @@ class PickDeliver {
 };
 
 }  //  namespace problem
-}  //  namespace vrprouting
+}  //  namespace pgortools
 
 #endif  // INCLUDE_PROBLEM_PICKDELIVER_HPP_

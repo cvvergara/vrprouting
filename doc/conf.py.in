@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 '''
 
-Copyright (c) 2015 vrpRouting developers
+Copyright (c) 2015 pgOrtools developers
 Mail: project@pgrouting.org
 
 ------
@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 '''
 
 #
-# vrpRouting Documentation documentation build configuration file, created by
+# pgOrtools Documentation documentation build configuration file, created by
 # sphinx-quickstart on Sat Mar 23 16:03:51 2013.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -68,8 +68,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'vrpRouting'
-copyright = u'vrpRouting Contributors - Version @PROJECT_FULL_VERSION@'
+project = u'pgOrtools'
+copyright = u'pgOrtools Contributors - Version @PROJECT_FULL_VERSION@'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -138,7 +138,7 @@ html_theme_path = @SPHINX_THEME_DIR@
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
 
-html_title = "vrpRouting Manual (@PROJECT_SHORT_VERSION@)"
+html_title = "pgOrtools Manual (@PROJECT_SHORT_VERSION@)"
 
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
@@ -146,7 +146,7 @@ html_title = "vrpRouting Manual (@PROJECT_SHORT_VERSION@)"
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = "_static/images/vrprouting.png"
+html_logo = "_static/images/pgortools.png"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -208,7 +208,7 @@ html_show_copyright = True
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'vrpRoutingDocumentation'
+htmlhelp_basename = 'pgOrtoolsDocumentation'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -227,13 +227,13 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'vrpRoutingDocumentation.tex', u'vrpRouting Manual',
-   u'vrpRouting Contributors', 'manual'),
+  ('index', 'pgOrtoolsDocumentation.tex', u'pgOrtools Manual',
+   u'pgOrtools Contributors', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
-latex_logo = "_static/images/vrprouting.png"
+latex_logo = "_static/images/pgortools.png"
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
@@ -257,7 +257,7 @@ latex_domain_indices = False
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index_man', 'vrprouting', u'vrpRouting Reference', u'vrpRouting Contributors', 7)
+    ('index_man', 'pgortools', u'pgOrtools Reference', u'pgOrtools Contributors', 7)
 ]
 
 # If true, show URL addresses after external links.
@@ -270,8 +270,8 @@ man_show_urls = False
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'vrprouting', u'vrpRouting Manual',
-   u'vrpRouting Contributors', 'vrpRoutingDocumentation', 'One line description of project.',
+  ('index', 'pgortools', u'pgOrtools Manual',
+   u'pgOrtools Contributors', 'pgOrtoolsDocumentation', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -301,8 +301,8 @@ texinfo_documents = [
 pdf_documents = [(
         'index',
         u'vrp_Documentation',
-        'vrpRouting Manual',
-        u'vrpRouting Contributors')]
+        'pgOrtools Manual',
+        u'pgOrtools Contributors')]
 # A comma-separated list of custom stylesheets. Example:
 
 pdf_stylesheets = ['sphinx','kerning','a4']
@@ -320,7 +320,7 @@ linkcheck_ignore = [
     "https://www.leopark.mx",
 
     # (see: https://github.com/sphinx-doc/sphinx/issues/7388)
-    r"https://github.com/pgRouting/vrprouting/",    # limit only vrprouting
+    r"https://github.com/pgRouting/pgortools/",    # limit only pgortools
 ]
 
 linkcheck_timeout = 20

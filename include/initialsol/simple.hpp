@@ -33,7 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "problem/solution.hpp"
 #include "initialsol/initials_code.hpp"
 
-namespace vrprouting {
+namespace pgortools {
 namespace problem {
 class Vehicle_PickDeliver;
 class PickDeliver;
@@ -70,6 +70,6 @@ class Initial_solution : public problem::Solution {
 
 }  //  namespace simple
 }  //  namespace initialsol
-}  //  namespace vrprouting
+}  //  namespace pgortools
 
 #endif  // INCLUDE_INITIALSOL_SIMPLE_HPP_

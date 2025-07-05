@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.4.2
-# This file is distributed under the same license as the vrpRouting package.
+# Copyright (C) pgOrtools Contributors - Version v0.4.2
+# This file is distributed under the same license as the pgOrtools package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.4.2\n"
+"Project-Id-Version: pgOrtools v0.4.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-04 15:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../../build/doc/concepts.rst:12
-msgid "`Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 <https://vrp.pgrouting.org/v0>`__"
+msgid "`Documentation <https://vrp.pgrouting.org/>`__ → `pgOrtools v0 <https://vrp.pgrouting.org/v0>`__"
 msgstr ""
 
 #: ../../build/doc/concepts.rst:13
@@ -49,7 +49,7 @@ msgid "There are several variants of the VRP problem,"
 msgstr ""
 
 #: ../../build/doc/concepts.rst:31
-msgid "**vrpRouting does not try to implement all variants.**"
+msgid "**pgOrtools does not try to implement all variants.**"
 msgstr ""
 
 #: ../../build/doc/concepts.rst:35
@@ -157,7 +157,7 @@ msgid "Getting Started"
 msgstr ""
 
 #: ../../build/doc/concepts.rst:86
-msgid "This is a simple guide to walk you through the steps of getting started with vrpRouting. In this guide we will cover:"
+msgid "This is a simple guide to walk you through the steps of getting started with pgOrtools. In this guide we will cover:"
 msgstr ""
 
 #: ../../build/doc/concepts.rst:93
@@ -2043,11 +2043,11 @@ msgid "Wiki"
 msgstr ""
 
 #: ../../build/doc/concepts.rst:1277
-msgid "Edit an existing  `vrpRouting Wiki <https://github.com/pgRouting/vrprouting/wiki>`_ page."
+msgid "Edit an existing  `pgOrtools Wiki <https://github.com/pgRouting/pgortools/wiki>`_ page."
 msgstr ""
 
 #: ../../build/doc/concepts.rst:1281
-msgid "Adding Functionaity to vrpRouting"
+msgid "Adding Functionaity to pgOrtools"
 msgstr ""
 
 #: ../../build/doc/concepts.rst:1282

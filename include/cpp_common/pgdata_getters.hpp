@@ -49,7 +49,7 @@ extern "C" {
 #include "cpp_common/time_multipliers_t.hpp"
 #include "cpp_common/vehicle_t.hpp"
 
-namespace vrprouting {
+namespace pgortools {
 namespace pgget {
 namespace pickdeliver {
 
@@ -68,6 +68,6 @@ std::vector<Time_multipliers_t> get_timeMultipliers(const std::string&, bool);
 }  // namespace pickdeliver
 
 }  // namespace pgget
-}  // namespace vrprouting
+}  // namespace pgortools
 
 #endif  // INCLUDE_CPP_COMMON_PGDATA_GETTERS_HPP_

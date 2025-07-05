@@ -39,7 +39,7 @@ function info {
 
     # ----------------------
     #
-    echo "**vrpRouting version must be installed before calling**"
+    echo "**pgOrtools version must be installed before calling**"
     echo "$1"
 
     echo "EXAMPLE USAGE"
@@ -87,14 +87,14 @@ echo ------------------------------------
 
 createdb  "$DB"
 psql  "$DB"  <<EOF
-CREATE extension vrprouting with version '$1' CASCADE;
+CREATE extension pgortools with version '$1' CASCADE;
 EOF
 
 OLD_VERSION=$(psql "$DB" -t -c 'SELECT * FROM vrp_full_version()')
 echo "$OLD_VERSION"
 
 
-psql "$DB" -e -c "ALTER extension vrprouting update to '$2'"
+psql "$DB" -e -c "ALTER extension pgortools update to '$2'"
 
 
 NEW_VERSION=$(psql "$DB" -t -c 'SELECT * FROM vrp_full_version()')
@@ -110,12 +110,12 @@ fi
 
 
 DIR="sql/sigs"
-FILE="$DIR/vrprouting--$2.sig"
+FILE="$DIR/pgortools--$2.sig"
 
-echo "#VERSION vrprouting $2" > "$FILE"
+echo "#VERSION pgortools $2" > "$FILE"
 {
     echo "#FUNCTIONS"
-    psql ${DB} -c '\dx+ vrprouting' -A | grep '^function' | cut -d ' ' -f2-
+    psql ${DB} -c '\dx+ pgortools' -A | grep '^function' | cut -d ' ' -f2-
 } >> "${FILE}"
 
 

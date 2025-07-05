@@ -30,7 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "c_types/typedefs.h"
 
-namespace vrprouting {
+namespace pgortools {
 
 /** @brief Time Dependant Multipliers
 
@@ -53,6 +53,6 @@ class Time_multipliers_t {
      Multiplier multiplier;
 };
 
-}  // namespace vrprouting
+}  // namespace pgortools
 
 #endif  // INCLUDE_CPP_COMMON_TIME_MULTIPLIERS_T_HPP_

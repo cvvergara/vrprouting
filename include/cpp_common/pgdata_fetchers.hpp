@@ -40,7 +40,7 @@ extern "C" {
 #include <vector>
 #include "cpp_common/undefPostgresDefine.hpp"
 
-namespace vrprouting {
+namespace pgortools {
 
 class Info;
 class Matrix_cell_t;
@@ -61,6 +61,6 @@ Vehicle_t fetch_vehicles(const HeapTuple, const TupleDesc&, const std::vector<In
 }  // namespace pickdeliver
 
 }  // namespace pgget
-}  // namespace vrprouting
+}  // namespace pgortools
 
 #endif  // INCLUDE_CPP_COMMON_PGDATA_FETCHERS_HPP_

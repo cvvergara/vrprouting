@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.4.2
-# This file is distributed under the same license as the vrpRouting package.
+# Copyright (C) pgOrtools Contributors - Version v0.4.2
+# This file is distributed under the same license as the pgOrtools package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.4.1\n"
+"Project-Id-Version: pgOrtools v0.4.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-22 16:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../../build/doc/introduction.rst:12
-msgid "`Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 <https://vrp.pgrouting.org/v0>`__"
+msgid "`Documentation <https://vrp.pgrouting.org/>`__ → `pgOrtools v0 <https://vrp.pgrouting.org/v0>`__"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:13
@@ -29,7 +29,7 @@ msgid "Introduction"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:20
-msgid "vrpRouting is a `PostgreSQL <https://www.postgresql.org>`__ extension that extends of `pgRouting <https://pgrouting.org>`__ extension, by adding solutions to several Vehicle Routing Problems."
+msgid "pgOrtools is a `PostgreSQL <https://www.postgresql.org>`__ extension that extends of `pgRouting <https://pgrouting.org>`__ extension, by adding solutions to several Vehicle Routing Problems."
 msgstr ""
 
 #: ../../build/doc/introduction.rst:24
@@ -37,7 +37,7 @@ msgid "The project is supported and manatianed by `Georepublic <https://georepub
 msgstr ""
 
 #: ../../build/doc/introduction.rst:27
-msgid "vrpRouting is a subproduct of `pgRouting <https://pgrouting.org>`__  organization which is an `OSGeo Community Project <https://wiki.osgeo.org/wiki/OSGeo_Community_Projects>`__."
+msgid "pgOrtools is a subproduct of `pgRouting <https://pgrouting.org>`__  organization which is an `OSGeo Community Project <https://wiki.osgeo.org/wiki/OSGeo_Community_Projects>`__."
 msgstr ""
 
 #: ../../build/doc/introduction.rst:34
@@ -45,7 +45,7 @@ msgid "Licensing"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:36
-msgid "The following licenses can be found in vrpRouting:"
+msgid "The following licenses can be found in pgOrtools:"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:38
@@ -94,7 +94,7 @@ msgid "Manas Sivakumar"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:64
-msgid "Adding Google Or tools functionality to vrprouting"
+msgid "Adding Google Or tools functionality to pgortools"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:66
@@ -124,7 +124,7 @@ msgstr ""
 
 #: ../../build/doc/introduction.rst:81
 #: ../../build/doc/introduction.rst:104
-msgid "These are corporate entities that have contributed developer time, hosting, or direct monetary funding to the vrpRouting project:"
+msgid "These are corporate entities that have contributed developer time, hosting, or direct monetary funding to the pgOrtools project:"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:83
@@ -156,7 +156,7 @@ msgid "More Information"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:115
-msgid "The latest software, documentation and news items are available at the vrpRouting web site https://vrp.pgrouting.org."
+msgid "The latest software, documentation and news items are available at the pgOrtools web site https://vrp.pgrouting.org."
 msgstr ""
 
 #: ../../build/doc/introduction.rst:116
@@ -168,5 +168,5 @@ msgid "PostGIS extension at the PostGIS project web site https://postgis.net."
 msgstr ""
 
 #: ../../build/doc/introduction.rst:118
-msgid "vrpRouting extension at the pgRouting project web site https://pgRouting.org."
+msgid "pgOrtools extension at the pgRouting project web site https://pgRouting.org."
 msgstr ""

@@ -1,7 +1,7 @@
 ..
    ****************************************************************************
-    vrpRouting Manual
-    Copyright(c) vrpRouting Contributors
+    pgOrtools Manual
+    Copyright(c) pgOrtools Contributors
 
     This documentation is licensed under a Creative Commons Attribution-Share
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
@@ -9,7 +9,7 @@
 
 |
 
-* `Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 <https://vrp.pgrouting.org/v0>`__
+* `Documentation <https://vrp.pgrouting.org/>`__ → `pgOrtools v0 <https://vrp.pgrouting.org/v0>`__
 * Supported Versions
   `Latest <https://vrp.pgrouting.org/latest/en/vroom-category.html>`__
   (`v0 <https://vrp.pgrouting.org/v0/en/vroom-category.html>`__)
@@ -48,7 +48,7 @@ OR-Tools can solve
 - Scheduling
 - Bin Packing
 
-Currently only Bin Packing problems can be solved with OR-Tools in vrpRouting.
+Currently only Bin Packing problems can be solved with OR-Tools in pgOrtools.
 
 Terminologies
 ...............................................................................

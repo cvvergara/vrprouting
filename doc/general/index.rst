@@ -1,7 +1,7 @@
 ..
    ****************************************************************************
-    vrpRouting Manual
-    Copyright(c) vrpRouting Contributors
+    pgOrtools Manual
+    Copyright(c) pgOrtools Contributors
 
     This documentation is licensed under a Creative Commons Attribution-Share
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
@@ -19,20 +19,20 @@
 Table of Contents
 *******************************************************************************
 
-vrpRouting extends the `PostGIS <https://postgis.net>`__/`PostgreSQL <https://www.postgresql.org>`__
+pgOrtools extends the `PostGIS <https://postgis.net>`__/`PostgreSQL <https://www.postgresql.org>`__
 geospatial database to provide geospatial routing and other network analysis functionality.
 
-This is the manual for vrpRouting |release|.
+This is the manual for pgOrtools |release|.
 
 .. image:: _static/images/ccbysa.png
     :align: left
     :alt: Creative Commons Attribution-Share Alike 3.0 License
 
-The vrpRouting Manual is licensed under a `Creative Commons Attribution-Share Alike 3.0 License
+The pgOrtools Manual is licensed under a `Creative Commons Attribution-Share Alike 3.0 License
 <https://creativecommons.org/licenses/by-sa/3.0/>`_.
 Feel free to use this material any way you like, but we ask that you attribute credit to
-the vrpRouting Project and wherever possible, a link back to https://pgrouting.org.
-For other licenses used in vrpRouting see the :ref:`license` page.
+the pgOrtools Project and wherever possible, a link back to https://pgrouting.org.
+For other licenses used in pgOrtools see the :ref:`license` page.
 
 General
 ===============================================================================
@@ -63,8 +63,8 @@ Pgrouting Concepts
 
 .. rubric:: Reference
 
-* :doc:`vrp_version` - Get vrpRouting's version information.
-* :doc:`vrp_full_version` - Get vrpRouting's details of version.
+* :doc:`vrp_version` - Get pgOrtools's version information.
+* :doc:`vrp_full_version` - Get pgOrtools's details of version.
 
 Official functions
 ===============================================================================
@@ -77,7 +77,7 @@ Official functions
 
 
 
-Available functions but not official vrpRouting functions
+Available functions but not official pgOrtools functions
 ===============================================================================
 
 .. toctree::

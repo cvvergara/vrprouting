@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "c_types/typedefs.h"
 
-namespace vrprouting {
+namespace pgortools {
 
 /** @brief traveling costs
 
@@ -47,6 +47,6 @@ class Matrix_cell_t {
      TInterval cost;      /** Travel Interval from departure to arrival */
 };
 
-}  // namespace vrprouting
+}  // namespace pgortools
 
 #endif  // INCLUDE_CPP_COMMON_MATRIX_CELL_T_HPP_

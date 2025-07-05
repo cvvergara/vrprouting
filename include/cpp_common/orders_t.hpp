@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "c_types/typedefs.h"
 
-namespace vrprouting {
+namespace pgortools {
 
 /** @brief order's attributes
 
@@ -68,6 +68,6 @@ class Orders_t{
      TInterval deliver_service_t; /** Deliver service duration */
 };
 
-}  // namespace vrprouting
+}  // namespace pgortools
 
 #endif  // INCLUDE_CPP_COMMON_ORDERS_T_HPP_

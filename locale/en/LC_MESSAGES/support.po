@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.4.2
-# This file is distributed under the same license as the vrpRouting package.
+# Copyright (C) pgOrtools Contributors - Version v0.4.2
+# This file is distributed under the same license as the pgOrtools package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.0.0\n"
+"Project-Id-Version: pgOrtools v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-22 18:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #: ../../build/doc/support.rst:15
 msgid ""
-"vrpRouting community support is available through the `pgRouting website "
+"pgOrtools community support is available through the `pgRouting website "
 "<https://pgrouting.org/support.html>`_, `documentation "
 "<https://vrp.pgrouting.org>`_, tutorials, mailing lists and others."
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 #: ../../build/doc/support.rst:19
 msgid ""
 "If you’re looking for :ref:`commercial support <support_commercial>`, "
-"find below a list of companies providing vrpRouting development and "
+"find below a list of companies providing pgOrtools development and "
 "consulting services."
 msgstr ""
 
@@ -42,7 +42,7 @@ msgstr ""
 #: ../../build/doc/support.rst:26
 msgid ""
 "Bugs are reported and managed in an i `issue tracker "
-"<https://github.com/pgRouting/vrprouting/issues>`_. Please follow these "
+"<https://github.com/pgRouting/pgortools/issues>`_. Please follow these "
 "steps:"
 msgstr ""
 
@@ -57,7 +57,7 @@ msgstr ""
 #: ../../build/doc/support.rst:33
 msgid ""
 "If your problem is unreported, create a `new issue "
-"<https://github.com/pgRouting/vrprouting/issues/new>`__ for it."
+"<https://github.com/pgRouting/pgortools/issues/new>`__ for it."
 msgstr ""
 
 #: ../../build/doc/support.rst:35
@@ -75,7 +75,7 @@ msgstr ""
 #: ../../build/doc/support.rst:39
 msgid ""
 "For the versions where you can replicate the problem, note the operating "
-"system and version of vrpRouting, pgRouting, PostGIS and PostgreSQL."
+"system and version of pgOrtools, pgRouting, PostGIS and PostgreSQL."
 msgstr ""
 
 #: ../../build/doc/support.rst:41
@@ -90,7 +90,7 @@ msgstr ""
 
 #: ../../build/doc/support.rst:55
 msgid ""
-"There are two mailing lists for vrpRouting hosted on OSGeo mailing list "
+"There are two mailing lists for pgOrtools hosted on OSGeo mailing list "
 "server which are of pgRouting:"
 msgstr ""
 
@@ -108,18 +108,18 @@ msgstr ""
 
 #: ../../build/doc/support.rst:61
 msgid ""
-"For general questions and topics about how to use vrpRouting, please "
+"For general questions and topics about how to use pgOrtools, please "
 "write to the user mailing list."
 msgstr ""
 
 #: ../../build/doc/support.rst:63
 msgid ""
 "You can also ask at `GIS StackExchange <https://gis.stackexchange.com/>`_"
-" and tag the question with ``vrprouting``. Find all questions tagged with"
-" ``vrprouting`` under "
-"https://gis.stackexchange.com/questions/tagged/vrprouting or subscribe to"
-" the `vrpRouting questions feed "
-"<https://gis.stackexchange.com/feeds/tag?tagnames=vrprouting&sort=newest>`_."
+" and tag the question with ``pgortools``. Find all questions tagged with"
+" ``pgortools`` under "
+"https://gis.stackexchange.com/questions/tagged/pgortools or subscribe to"
+" the `pgOrtools questions feed "
+"<https://gis.stackexchange.com/feeds/tag?tagnames=pgortools&sort=newest>`_."
 msgstr ""
 
 #: ../../build/doc/support.rst:72
@@ -130,7 +130,7 @@ msgstr ""
 msgid ""
 "For users who require professional support, development and consulting "
 "services, consider contacting any of the following organizations, which "
-"have significantly contributed to the development of vrpRouting:"
+"have significantly contributed to the development of pgOrtools:"
 msgstr ""
 
 #: ../../build/doc/support.rst:81

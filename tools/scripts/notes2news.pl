@@ -47,7 +47,7 @@ my $file = '';
 my $start = '';
 my $end = '';
 while (my $line = <$ifh>) {
-    next if $skipping and $line !~ /^vrpRouting/;
+    next if $skipping and $line !~ /^pgOrtools/;
     $skipping = 0;
 
     next if $line =~ /contents|:local:|:depth:|\*\*\*\*\*\*\*|\=\=\=\=\=\=\=|\-\-\-\-\-\-\-|\+\+\+\+\+\+\+\+/;
@@ -56,15 +56,15 @@ while (my $line = <$ifh>) {
     $line =~ s/($check)/$conversions{$1}/go;
 
     # Handling the headers
-    if ($line =~ m/^vrpRouting [0-9]$/i) {
+    if ($line =~ m/^pgOrtools [0-9]$/i) {
         print $ofh "# $line";
         next;
     };
-    if ($line =~ m/^vrpRouting [0-9].[0-9]$/i) {
+    if ($line =~ m/^pgOrtools [0-9].[0-9]$/i) {
         print $ofh "## $line";
         next;
     };
-    if ($line =~ m/^vrpRouting [0-9].[0-9].[0-9] Release Notes$/i) {
+    if ($line =~ m/^pgOrtools [0-9].[0-9].[0-9] Release Notes$/i) {
         print $ofh "### $line";
         next;
     };

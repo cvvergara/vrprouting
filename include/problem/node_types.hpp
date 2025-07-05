@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_PROBLEM_NODE_TYPES_HPP_
 #pragma once
 
-namespace vrprouting {
+namespace pgortools {
 namespace problem {
 
 enum NodeType {
@@ -42,6 +42,6 @@ enum NodeType {
 };
 
 }  //  namespace problem
-}  //  namespace vrprouting
+}  //  namespace pgortools
 
 #endif  // INCLUDE_PROBLEM_NODE_TYPES_HPP_

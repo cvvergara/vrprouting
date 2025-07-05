@@ -62,7 +62,7 @@ vim ../.tx/config
 * Push the new resource
 
 ```
-tx push --source -r vrprouting.vrp_version
+tx push --source -r pgortools.vrp_version
 ```
 Note: Do not put the file extension
 

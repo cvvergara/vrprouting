@@ -41,7 +41,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/assert.hpp"
 #include "cpp_common/matrix_cell_t.hpp"
 
-namespace vrprouting {
+namespace pgortools {
 namespace base {
 
 namespace detail {
@@ -460,4 +460,4 @@ std::ostream& operator<<(std::ostream &log, const Base_Matrix &matrix) {
 
 
 }  // namespace base
-}  // namespace vrprouting
+}  // namespace pgortools

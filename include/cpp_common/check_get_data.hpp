@@ -50,7 +50,7 @@ extern "C" {
 #include "cpp_common/info.hpp"
 
 
-namespace vrprouting {
+namespace pgortools {
 
 /** @brief  Function will check whether the colNumber represent any specific column or NULL (SPI_ERROR_NOATTRIBUTE).  */
 bool column_found(const Info&);
@@ -153,7 +153,7 @@ std::vector<T> get_uint_array(const HeapTuple tuple, const TupleDesc &tupdesc, c
 }
 
 
-}  // namespace vrprouting
+}  // namespace pgortools
 
 
 #endif  // INCLUDE_CPP_COMMON_GET_CHECK_DATA_HPP_

@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #define INCLUDE_INITIALSOL_INITIALS_CODE_HPP_
 #pragma once
 
-namespace vrprouting {
+namespace pgortools {
 namespace initialsol {
 namespace simple {
 
@@ -47,6 +47,6 @@ enum Initials_code {
 
 }  // namespace simple
 }  // namespace initialsol
-}  // namespace vrprouting
+}  // namespace pgortools
 
 #endif  // INCLUDE_INITIALSOL_INITIALS_CODE_HPP_

@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.4.2
-# This file is distributed under the same license as the vrpRouting package.
+# Copyright (C) pgOrtools Contributors - Version v0.4.2
+# This file is distributed under the same license as the pgOrtools package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.0.0\n"
+"Project-Id-Version: pgOrtools v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-22 16:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: ../../build/doc/vrp_version.rst:12
 msgid ""
-"`Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 "
+"`Documentation <https://vrp.pgrouting.org/>`__ → `pgOrtools v0 "
 "<https://vrp.pgrouting.org/v0>`__"
 msgstr ""
 
@@ -55,7 +55,7 @@ msgid "Description"
 msgstr ""
 
 #: ../../build/doc/vrp_version.rst:33
-msgid "Returns vrpRouting version information."
+msgid "Returns pgOrtools version information."
 msgstr ""
 
 #: ../../build/doc/vrp_version.rst:39
@@ -79,7 +79,7 @@ msgid "Example"
 msgstr ""
 
 #: ../../build/doc/vrp_version.rst:47
-msgid "vrpRouting Version for this documentatoin"
+msgid "pgOrtools Version for this documentatoin"
 msgstr ""
 
 #: ../../build/doc/vrp_version.rst:54
@@ -95,7 +95,7 @@ msgid "``TEXT``"
 msgstr ""
 
 #: ../../build/doc/vrp_version.rst:59
-msgid "vrpRouting version"
+msgid "pgOrtools version"
 msgstr ""
 
 #: ../../build/doc/vrp_version.rst:64

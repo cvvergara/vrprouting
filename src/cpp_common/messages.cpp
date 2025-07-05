@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <sstream>
 #include "cpp_common/messages.hpp"
 
-namespace vrprouting {
+namespace pgortools {
 
 
 
@@ -68,4 +68,4 @@ Messages::clear() {
 }
 
 
-}  //  namespace vrprouting
+}  //  namespace pgortools

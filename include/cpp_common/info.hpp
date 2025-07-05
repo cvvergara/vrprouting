@@ -30,7 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include <cstdint>
 #include <string>
 
-namespace vrprouting {
+namespace pgortools {
 
 enum expectType {
     INTEGER,
@@ -74,6 +74,6 @@ class Info {
      expectType eType;
 };
 
-}  // namespace vrprouting
+}  // namespace pgortools
 
 #endif  // INCLUDE_CPP_COMMON_INFO_HPP_

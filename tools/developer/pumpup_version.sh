@@ -93,8 +93,8 @@ fi
 
 if [ "${WHAT_NEXT}" != "micro" ]
 then
-    cp -f "sql/sigs/vrprouting--${MAYOR}.${MINOR}.sig" "sql/sigs/vrprouting--${NEW_MAYOR}.${NEW_MINOR}.sig"
-    git add "sql/sigs/vrprouting--${MAYOR}.${NEW_MINOR}.sig"
+    cp -f "sql/sigs/pgortools--${MAYOR}.${MINOR}.sig" "sql/sigs/pgortools--${NEW_MAYOR}.${NEW_MINOR}.sig"
+    git add "sql/sigs/pgortools--${MAYOR}.${NEW_MINOR}.sig"
 fi
 
 # --------------------------------------------

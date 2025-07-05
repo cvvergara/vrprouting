@@ -300,8 +300,8 @@ if(FALSE)
     add_custom_command(
         TARGET pdf-${lang} POST_BUILD
         #fixes: Underfull \hbox (badness 10000) in paragraph
-        #perl -pi -e 's/warning/warning /' vrpRoutingDocumentation.tex
-        COMMAND pdflatex -interaction=nonstopmode "vrpRoutingDocumentation.tex" > /dev/null 2>&1
+        #perl -pi -e 's/warning/warning /' pgOrtoolsDocumentation.tex
+        COMMAND pdflatex -interaction=nonstopmode "pgOrtoolsDocumentation.tex" > /dev/null 2>&1
         WORKING_DIRECTORY "${PGR_DOCUMENTATION_BUILD_DIR}/pdf/${lang}"
         DEPENDS ${target}-${lang}
         COMMENT "Converting Latex to PDF format")

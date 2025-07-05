@@ -36,7 +36,7 @@ File from pgRouting
 #include <string>
 #include <sstream>
 
-namespace vrprouting {
+namespace pgortools {
 
 
 /** @brief Messages Handling
@@ -107,6 +107,6 @@ class Messages {
 
 
 
-}  // namespace vrprouting
+}  // namespace pgortools
 
 #endif  // INCLUDE_CPP_COMMON_MESSAGES_HPP_

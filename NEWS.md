@@ -1,20 +1,20 @@
-# vrpRouting 0
+# pgOrtools 0
 
 
-## vrpRouting 0.4
+## pgOrtools 0.4
 
 
-### vrpRouting 0.4.2 Release Notes
+### pgOrtools 0.4.2 Release Notes
 
 To see all issues & pull requests closed by this release see the
-[Git closed milestone for 0.4.2](https://github.com/pgRouting/vrprouting/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.4.2%22)
+[Git closed milestone for 0.4.2](https://github.com/pgRouting/pgortools/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.4.2%22)
 on Github.
 
 **Code reorganization**
 
 * Renamed files to be compiled as C++ with .hpp & .cpp extensions
 * Moved sphinx doc from .c files .rst files
-* Removing prefix `pgr_` & addding `namespace vrprouting`
+* Removing prefix `pgr_` & addding `namespace pgortools`
 * Separating implementation from header vroom.hpp
 * Queries are read on the cpp code.
 
@@ -23,10 +23,10 @@ on Github.
 * Renamed to extension `.pg`
 * Removed `doc-` and `doc-vrp_` suffixes on file names
 
-### vrpRouting 0.4.1 Release Notes
+### pgOrtools 0.4.1 Release Notes
 
 To see all issues & pull requests closed by this release see the
-[Git closed milestone for 0.4.1](https://github.com/pgRouting/vrprouting/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.4.1%22)
+[Git closed milestone for 0.4.1](https://github.com/pgRouting/pgortools/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.4.1%22)
 on Github.
 
 
@@ -52,13 +52,13 @@ on Github.
   
   
 
-### vrpRouting 0.4.0 Release Notes
+### pgOrtools 0.4.0 Release Notes
 
 To see all issues & pull requests closed by this release see the
-[Git closed milestone for 0.4.0](https://github.com/pgRouting/vrprouting/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.4.0%22)
+[Git closed milestone for 0.4.0](https://github.com/pgRouting/pgortools/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.4.0%22)
 on Github.
 
-**Added support for VROOM 1.12.0 ([#34](https://github.com/pgRouting/vrprouting/issues/34))**
+**Added support for VROOM 1.12.0 ([#34](https://github.com/pgRouting/pgortools/issues/34))**
 
 - No visible changes on user side with respect to signatures.
 - Adjusted to VROOM v1.12.0 due to internal breaking changes:
@@ -67,10 +67,10 @@ on Github.
   - CI changes to compile without routing support, with Position Independent Code.
   - Removed support for VROOM 1.11.0
 
-## vrpRouting 0.3
+## pgOrtools 0.3
 
 To see all issues & pull requests closed by this release see the
-[Git closed milestone for 0.3.0](https://github.com/pgRouting/vrprouting/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.3.0%22)
+[Git closed milestone for 0.3.0](https://github.com/pgRouting/pgortools/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.3.0%22)
 on Github.
 
 **Modification of experimental functions**
@@ -84,7 +84,7 @@ on Github.
   - vrp_vroomJobsPlain
   - vrp_vroomShipmentsPlain
 
-**Added support for VROOM 1.11.0 ([#24](https://github.com/pgRouting/vrprouting/issues/24))**
+**Added support for VROOM 1.11.0 ([#24](https://github.com/pgRouting/pgortools/issues/24))**
 
 - Added setup time in jobs and shipments to refine service time modeling.
 - Added support for custom cost matrices, along with the duration matrix.
@@ -100,7 +100,7 @@ on Github.
 
 - Honor client cancel requests for vroom-category functions.
 - Added more information in the inner query and result columns of VROOM category functions
-  ([#26](https://github.com/pgRouting/vrprouting/issues/26), [#27](https://github.com/pgRouting/vrprouting/issues/27)):
+  ([#26](https://github.com/pgRouting/pgortools/issues/26), [#27](https://github.com/pgRouting/pgortools/issues/27)):
 
   - Summary row in the output, for each vehicle and for the complete problem.
   - Uassigned rows in the output with vehicle_id = -1.
@@ -108,7 +108,7 @@ on Github.
   - Added data jsonb field in jobs, shipments, vehicles, breaks as well as in the result columns.
   - Added departure field and location_id field in the result columns.
 
-## vrpRouting 0.2
+## pgOrtools 0.2
 
 **New experimental functions**
 
@@ -130,7 +130,7 @@ on Github.
   - vrp_simulation
   - vrp_viewRoute
 
-## vrpRouting 0.1
+## pgOrtools 0.1
 
 **Extraction tasks**
 

@@ -1,5 +1,5 @@
-# vrpRouting Extension
-comment = 'vrpRouting Extension'
+# pgOrtools Extension
+comment = 'pgOrtools Extension'
 default_version = '${PROJECT_VERSION}'
 module_pathname = '${PROJECT_MODULE_PATHNAME}'
 relocatable = true

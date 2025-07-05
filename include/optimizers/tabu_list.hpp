@@ -36,7 +36,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "optimizers/move.hpp"
 
-namespace vrprouting {
+namespace pgortools {
 namespace optimizers {
 namespace tabu {
 
@@ -120,7 +120,7 @@ class TabuList {
 
 }  //  namespace tabu
 }  //  namespace optimizers
-}  //  namespace vrprouting
+}  //  namespace pgortools
 
 #endif  // INCLUDE_OPTIMIZERS_TABU_LIST_HPP_
 

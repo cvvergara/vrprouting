@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.4.2
-# This file is distributed under the same license as the vrpRouting package.
+# Copyright (C) pgOrtools Contributors - Version v0.4.2
+# This file is distributed under the same license as the pgOrtools package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.4.1\n"
+"Project-Id-Version: pgOrtools v0.4.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-22 16:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -25,23 +25,23 @@ msgid "Contents"
 msgstr ""
 
 #: ../../build/doc/installation.rst:15
-msgid "Instructions for downloading and installing binaries for different Operative systems instructions and additional notes and corrections not included in this documentation can be found in `Installation wiki <https://github.com/pgRouting/vrprouting/wiki/Notes-on-Download%2C-Installation-and-building-vrpRouting>`__"
+msgid "Instructions for downloading and installing binaries for different Operative systems instructions and additional notes and corrections not included in this documentation can be found in `Installation wiki <https://github.com/pgRouting/pgortools/wiki/Notes-on-Download%2C-Installation-and-building-pgOrtools>`__"
 msgstr ""
 
 #: ../../build/doc/installation.rst:20
-msgid "To use vrpRouting: PostgreSQL server, pgRouting and postGIS needs to be installed."
+msgid "To use pgOrtools: PostgreSQL server, pgRouting and postGIS needs to be installed."
 msgstr ""
 
 #: ../../build/doc/installation.rst:22
-msgid "There is no package for vrpRouting"
+msgid "There is no package for pgOrtools"
 msgstr ""
 
 #: ../../build/doc/installation.rst:25
-msgid "Get the vrpRouting sources"
+msgid "Get the pgOrtools sources"
 msgstr ""
 
 #: ../../build/doc/installation.rst:28
-msgid "The vrpRouting latest release can be found in https://github.com/pgRouting/vrprouting/releases/latest"
+msgid "The pgOrtools latest release can be found in https://github.com/pgRouting/pgortools/releases/latest"
 msgstr ""
 
 #: ../../build/doc/installation.rst:30
@@ -69,7 +69,7 @@ msgid "To compile assuming you have all the dependencies in your search path:"
 msgstr ""
 
 #: ../../build/doc/installation.rst:69
-msgid "Once vrpRouting is installed, it needs to be enabled in each individual database you want to use it in."
+msgid "Once pgOrtools is installed, it needs to be enabled in each individual database you want to use it in."
 msgstr ""
 
 #: ../../build/doc/installation.rst:73
@@ -81,7 +81,7 @@ msgid "Enabling the database"
 msgstr ""
 
 #: ../../build/doc/installation.rst:77
-msgid "vrpRouting is an extension and depends on postGIS. Enabling postGIS before enabling vrpRouting in the database"
+msgid "pgOrtools is an extension and depends on postGIS. Enabling postGIS before enabling pgOrtools in the database"
 msgstr ""
 
 #: ../../build/doc/installation.rst:85
@@ -89,7 +89,7 @@ msgid "Upgrading the database"
 msgstr ""
 
 #: ../../build/doc/installation.rst:86
-msgid "When the database has an old version of vrpRouting then an upgrade is needed."
+msgid "When the database has an old version of pgOrtools then an upgrade is needed."
 msgstr ""
 
 #: ../../build/doc/installation.rst:95
@@ -113,7 +113,7 @@ msgid "Compilation Dependencies"
 msgstr ""
 
 #: ../../build/doc/installation.rst:105
-msgid "To be able to compile vrpRouting, make sure that the following dependencies are met:"
+msgid "To be able to compile pgOrtools, make sure that the following dependencies are met:"
 msgstr ""
 
 #: ../../build/doc/installation.rst:109
@@ -221,7 +221,7 @@ msgid "Configuring"
 msgstr ""
 
 #: ../../build/doc/installation.rst:200
-msgid "vrpRouting uses the `cmake` system to do the configuration."
+msgid "pgOrtools uses the `cmake` system to do the configuration."
 msgstr ""
 
 #: ../../build/doc/installation.rst:202

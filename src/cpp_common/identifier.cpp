@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/identifier.hpp"
 
 
-namespace vrprouting {
+namespace pgortools {
 
 
 Identifier::Identifier(
@@ -53,4 +53,4 @@ std::ostream& operator<<(std::ostream& log, const Identifier &ident) {
     return log;
 }
 
-}  // namespace vrprouting
+}  // namespace pgortools

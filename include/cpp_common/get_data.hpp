@@ -39,7 +39,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/check_get_data.hpp"
 #include "cpp_common/alloc.hpp"
 
-namespace vrprouting {
+namespace pgortools {
 namespace pgget {
 
 /** @brief Retrives the tuples
@@ -88,6 +88,6 @@ get_data(const std::string& sql, bool flag, std::vector<Info> info, Func func) {
 }
 
 }  // namespace pgget
-}  // namespace vrprouting
+}  // namespace pgortools
 
 #endif  // INCLUDE_CPP_COMMON_GET_DATA_HPP_

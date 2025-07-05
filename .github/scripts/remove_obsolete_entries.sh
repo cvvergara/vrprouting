@@ -1,7 +1,7 @@
 #!/bin/bash
 # ------------------------------------------------------------------------------
-# vrpRouting Scripts
-# Copyright(c) vrpRouting Contributors
+# pgOrtools Scripts
+# Copyright(c) pgOrtools Contributors
 #
 # Remove all the obsolete entries, i.e. lines starting with #~ from .po files
 # ------------------------------------------------------------------------------

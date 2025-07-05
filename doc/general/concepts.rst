@@ -1,7 +1,7 @@
 ..
    ****************************************************************************
-    vrpRouting Manual
-    Copyright(c) vrpRouting Contributors
+    pgOrtools Manual
+    Copyright(c) pgOrtools Contributors
 
     This documentation is licensed under a Creative Commons Attribution-Share
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
@@ -9,7 +9,7 @@
 
 |
 
-* `Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 <https://vrp.pgrouting.org/v0>`__
+* `Documentation <https://vrp.pgrouting.org/>`__ → `pgOrtools v0 <https://vrp.pgrouting.org/v0>`__
 * Supported Versions
   `Latest <https://vrp.pgrouting.org/latest/en/concepts.html>`__
   (`v0 <https://vrp.pgrouting.org/v0/en/concepts.html>`__)
@@ -28,7 +28,7 @@ generalises the travelling salesman problem (TSP).
 - The objective of the VRP is to minimize the total route cost.
 - There are several variants of the VRP problem,
 
-**vrpRouting does not try to implement all variants.**
+**pgOrtools does not try to implement all variants.**
 
 
 Characteristics
@@ -84,7 +84,7 @@ Getting Started
 -------------------------------------------------------------------------------
 
 This is a simple guide to walk you through the steps of getting started
-with vrpRouting. In this guide we will cover:
+with pgOrtools. In this guide we will cover:
 
 .. contents::
     :local:
@@ -1274,10 +1274,10 @@ How to contribute
 
 .. rubric:: Wiki
 
-* Edit an existing  `vrpRouting Wiki <https://github.com/pgRouting/vrprouting/wiki>`_ page.
+* Edit an existing  `pgOrtools Wiki <https://github.com/pgRouting/pgortools/wiki>`_ page.
 
 
-.. rubric:: Adding Functionaity to vrpRouting
+.. rubric:: Adding Functionaity to pgOrtools
 
 Consult the `developer's documentation <https://vrp.pgrouting.org/doxy/main/index.html>`_
 

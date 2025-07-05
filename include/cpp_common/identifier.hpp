@@ -37,7 +37,7 @@ File from pgRouting
 
 #include <ostream>
 
-namespace vrprouting {
+namespace pgortools {
 
 /** @brief Class that stores the information about identifiers
 
@@ -88,6 +88,6 @@ class Identifier {
 };
 
 
-}  // namespace vrprouting
+}  // namespace pgortools
 
 #endif  // INCLUDE_CPP_COMMON_IDENTIFIER_HPP_

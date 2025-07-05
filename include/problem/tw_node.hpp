@@ -34,7 +34,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #include "cpp_common/identifier.hpp"
 #include "problem/node_types.hpp"
 
-namespace vrprouting {
+namespace pgortools {
 
 class Orders_t;
 class Vehicle_t;
@@ -190,6 +190,6 @@ class Tw_node : public Identifier {
 };
 
 }  //  namespace problem
-}  //  namespace vrprouting
+}  //  namespace pgortools
 
 #endif  // INCLUDE_PROBLEM_TW_NODE_HPP_

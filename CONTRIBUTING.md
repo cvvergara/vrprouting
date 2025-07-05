@@ -6,12 +6,12 @@ If you have not already, come find us in [![Join the chat at https://gitter.im/p
 
 Here are some important resources:
 
-  * [vrpRouting for Developers](http://vrp.pgrouting.org/doxy/main/index.html) has the internals C/C++ code information,
+  * [pgOrtools for Developers](http://vrp.pgrouting.org/doxy/main/index.html) has the internals C/C++ code information,
   * [Wish list on the wiki](https://github.com/pgRouting/pgrouting/wiki/GSoC-Ideas) is the foot view of what we think the community needs.
-  * [Additional wish lst](https://github.com/pgRouting/vrprouting/issues?q=is%3Aopen+is%3Aissue+label%3A%22Functionality+Request%22). (TODO to move the information to the wiki wish list)
-  * Participate on the [discussions](https://github.com/pgRouting/vrprouting/discussions)
-  * Participate fixing [Documentation](https://github.com/pgRouting/vrprouting/issues?q=is%3Aopen+is%3Aissue+label%3ADocumentation).
-  * Find a bug? [Let us know](https://github.com/pgRouting/vrprouting/issues).
+  * [Additional wish lst](https://github.com/pgRouting/pgortools/issues?q=is%3Aopen+is%3Aissue+label%3A%22Functionality+Request%22). (TODO to move the information to the wiki wish list)
+  * Participate on the [discussions](https://github.com/pgRouting/pgortools/discussions)
+  * Participate fixing [Documentation](https://github.com/pgRouting/pgortools/issues?q=is%3Aopen+is%3Aissue+label%3ADocumentation).
+  * Find a bug? [Let us know](https://github.com/pgRouting/pgortools/issues).
 
 ## Contribution agreement
 

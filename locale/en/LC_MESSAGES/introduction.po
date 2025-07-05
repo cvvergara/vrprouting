@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.4.2
-# This file is distributed under the same license as the vrpRouting package.
+# Copyright (C) pgOrtools Contributors - Version v0.4.2
+# This file is distributed under the same license as the pgOrtools package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.0.0\n"
+"Project-Id-Version: pgOrtools v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-22 16:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: ../../build/doc/introduction.rst:12
 msgid ""
-"`Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 "
+"`Documentation <https://vrp.pgrouting.org/>`__ → `pgOrtools v0 "
 "<https://vrp.pgrouting.org/v0>`__"
 msgstr ""
 
@@ -36,7 +36,7 @@ msgstr ""
 
 #: ../../build/doc/introduction.rst:20
 msgid ""
-"vrpRouting is a `PostgreSQL <https://www.postgresql.org>`__ extension "
+"pgOrtools is a `PostgreSQL <https://www.postgresql.org>`__ extension "
 "that extends of `pgRouting <https://pgrouting.org>`__ extension, by "
 "adding solutions to several Vehicle Routing Problems."
 msgstr ""
@@ -50,7 +50,7 @@ msgstr ""
 
 #: ../../build/doc/introduction.rst:27
 msgid ""
-"vrpRouting is a subproduct of `pgRouting <https://pgrouting.org>`__  "
+"pgOrtools is a subproduct of `pgRouting <https://pgrouting.org>`__  "
 "organization which is an `OSGeo Community Project "
 "<https://wiki.osgeo.org/wiki/OSGeo_Community_Projects>`__."
 msgstr ""
@@ -60,7 +60,7 @@ msgid "Licensing"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:36
-msgid "The following licenses can be found in vrpRouting:"
+msgid "The following licenses can be found in pgOrtools:"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:38
@@ -116,7 +116,7 @@ msgid "Manas Sivakumar"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:64
-msgid "Adding Google Or tools functionality to vrprouting"
+msgid "Adding Google Or tools functionality to pgortools"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:66
@@ -150,7 +150,7 @@ msgstr ""
 #: ../../build/doc/introduction.rst:81 ../../build/doc/introduction.rst:104
 msgid ""
 "These are corporate entities that have contributed developer time, "
-"hosting, or direct monetary funding to the vrpRouting project:"
+"hosting, or direct monetary funding to the pgOrtools project:"
 msgstr ""
 
 #: ../../build/doc/introduction.rst:83
@@ -188,7 +188,7 @@ msgstr ""
 #: ../../build/doc/introduction.rst:115
 msgid ""
 "The latest software, documentation and news items are available at the "
-"vrpRouting web site https://vrp.pgrouting.org."
+"pgOrtools web site https://vrp.pgrouting.org."
 msgstr ""
 
 #: ../../build/doc/introduction.rst:116
@@ -203,7 +203,7 @@ msgstr ""
 
 #: ../../build/doc/introduction.rst:118
 msgid ""
-"vrpRouting extension at the pgRouting project web site "
+"pgOrtools extension at the pgRouting project web site "
 "https://pgRouting.org."
 msgstr ""
 
