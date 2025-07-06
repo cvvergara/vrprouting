@@ -88,10 +88,6 @@ jobs:
           # vroom dependencies
           sudo apt-get install libssl-dev libasio-dev libglpk-dev
 
-      - name: Install Google OR-Tools dependencies
-        run: |
-          sudo pip install --root=/  ortools
-
       - name: Cache VROOM
         id: cache-vroom
         uses: actions/cache@v4

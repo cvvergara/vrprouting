@@ -48,7 +48,6 @@ jobs:
           echo "CC=gcc-12" >> $GITHUB_ENV;
           echo "CXX=g++-12" >> $GITHUB_ENV;
 
-
       - name: Cache VROOM
         id: cache-vroom
         uses: actions/cache@v4
