@@ -22,7 +22,7 @@ on:
     branches-ignore:
       - 'gh-pages'
 
-  tags: []
+    tags: []
 
   pull_request:
     paths:
