@@ -56,8 +56,6 @@ include(pgr/Configure)
 #---------------------------------------------
 # minimum versions
 #---------------------------------------------
-#TODO define precisely which versions
-set(DOXYGEN_MINIMUM_VERSION "1.7")
 set(SPHINX_MINIMUM_VERSION "1.8")
 set(POSTGRESQL_MINIMUM_VERSION "12.0")
 
@@ -65,59 +63,13 @@ message(STATUS "DOXYGEN_MINIMUM_VERSION=${DOXYGEN_MINIMUM_VERSION}")
 message(STATUS "SPHINX_MINIMUM_VERSION=${SPHINX_MINIMUM_VERSION}")
 message(STATUS "POSTGRESQL_MINIMUM_VERSION=${POSTGRESQL_MINIMUM_VERSION}")
 
-# cmake 3.2 adds unwanted flags
-if(WIN32 AND MSVC)
-  set(CMAKE_C_FLAGS "")
-  set(CMAKE_CXX_FLAGS "")
-endif()
-
-#-----------------------------------------------------------------------------
-#-----------------------------------------------------------------------------
-# C/C++ Compiler requirements
-#-----------------------------------------------------------------------------
-#-----------------------------------------------------------------------------
-
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_C_STANDARD 11)
-
-
-#---------------------------------------------
-# Windows compiler flags
-#---------------------------------------------
-
-
-if(WIN32 AND NOT MSVC)
-  set(OS_BUILD  $ENV{OS_BUILD})
-  if(NOT OS_BUILD)
-    set(OS_BUILD "64")
-  endif()
-  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}:/c/ming${OS_BUILD}/projects/pgx${OS_BUILD}/pg92)
-
-  if (PROJECT_DEBUG)
-    message(STATUS "OS_BUILD=${OS_BUILD}")
-    message(STATUS "CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}")
-  endif()
-endif(WIN32 AND NOT MSVC)
-
-#-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 # Finding prerequisites
 #-----------------------------------------------------------------------------
-#-----------------------------------------------------------------------------
-#-----------------------------------------------------------------------------
-
-#---------------------------------------------
-#---------------------------------------------
-# Perl
-#---------------------------------------------
-#---------------------------------------------
 find_package(Perl REQUIRED)
 
 #---------------------------------------------
-#---------------------------------------------
 # PostgreSQL
-#---------------------------------------------
 #---------------------------------------------
 set(PostgreSQL_ADDITIONAL_VERSIONS "12" "13" "14")
 find_package(PostgreSQL ${POSTGRESQL_MINIMUM_VERSION} REQUIRED)
@@ -146,8 +98,6 @@ find_program(POSTGRESQL_EXECUTABLE NAMES postgres
   NO_DEFAULT_PATH
   )
 
-
-
 # for XbetaY XalphaY XrcY -> X.Y
 string(REGEX REPLACE "^([0-9]+)[beta|alpha|rc|devel].*" "\\1.0" PostgreSQL_VERSION_STRING ${PostgreSQL_VERSION_STRING})
 
@@ -166,13 +116,9 @@ if(WIN32)
   endif()
 endif()
 
-
-
-
-#---------------------------------------------
+#[[
 #---------------------------------------------
 # Definitions for full_version
-#---------------------------------------------
 #---------------------------------------------
 add_definitions(-DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}")
 add_definitions(-DPROJECT_LIB_NAME="${PROJECT_NAME_LOWER}-${PROJECT_VERSION}")
@@ -194,16 +140,8 @@ if (PROJECT_DEBUG)
   message(STATUS "PostgreSQL_VERSION_NUM ${PostgreSQL_VERSION_NUM}")
   message(STATUS "POSTGRESQL_PG_CONFIG ${POSTGRESQL_PG_CONFIG}")
 endif()
+#]]
 
-
-
-#---------------------------------------------
-#---------------------------------------------
-# PROJECT includes
-#---------------------------------------------
-#---------------------------------------------
-
-include_directories(${PROJECT_SOURCE_DIR}/include)
 
 #---------------------------------------------
 # library directory
@@ -237,12 +175,9 @@ endif(SHARE_DIR)
 
 #---------------------------------------------
 
-if (PROJECT_DEBUG)
-  message(STATUS "PostgreSQL_LIBRARIES=${PostgreSQL_LIBRARIES}")
-  message(STATUS "LIBRARY_INSTALL_PATH=${LIBRARY_INSTALL_PATH}")
-  message(STATUS "SHARE_DIR=${SHARE_DIR}")
-endif()
-
+message(STATUS "PostgreSQL_LIBRARIES=${PostgreSQL_LIBRARIES}")
+message(STATUS "LIBRARY_INSTALL_PATH=${LIBRARY_INSTALL_PATH}")
+message(STATUS "SHARE_DIR=${SHARE_DIR}")
 
 
 #---------------------------------------------
@@ -262,112 +197,25 @@ if (PROJECT_DEBUG)
 endif()
 
 
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#compiler directives
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# https://www.postgresql.org/docs/10/xfunc-c.html
-
-if(NOT WIN32 AND NOT APPLE)
-  add_compile_options(-fPIC)
-endif()
-
-if(WIN32 AND MSVC)
-  add_compile_options(
-    -D_CRT_SECURE_NO_DEPRECATE
-    -D_SCL_SECURE_NO_DEPRECATE
-    -D_CRT_SECURE_NO_WARNINGS
-    -D_SCL_SECURE_NO_WARNINGS
-    -D_CRT_NONSTDC_NO_DEPRECATE
-    -D_CRT_NONSTDC_NO_DEPRECATE
-    -EHsc)
-endif()
-
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-  add_compile_options(
-    "$<$<CONFIG:Debug>:-Wall;-Wextra;-Werror;-Wpedantic;-W;-Wunused;-Wuninitialized;-Wextra;-Wdouble-promotion;-Wconversion>"
-    "$<$<CXX_COMPILER_ID:GNU>:-frounding-math>"
-    )
-endif()
-
-
-#-------------------
-# add the subdirectories that have the C/C++ code
-#-------------------
-
-foreach (subdir ${PROJECT_SRC_DIRECTORIES})
-  add_subdirectory("${PROJECT_SOURCE_DIR}/src/${subdir}")
-endforeach()
-
-
-
-#-----------------------------------------------------------------------------
-#-----------------------------------------------------------------------------
-#-----------------------------------------------------------------------------
-# PROJECT Library
-#-----------------------------------------------------------------------------
-#-----------------------------------------------------------------------------
-#-----------------------------------------------------------------------------
-
-#[[
-set(LIBRARY_OUTPUT_DIRECTORY lib)
-
-if(APPLE)
-  set(LIBRARY_MODE_TARGET "MODULE")
-else(APPLE)
-  set(LIBRARY_MODE_TARGET "SHARED")
-endif(APPLE)
-
-
-#-------------------
-# pgRouting objects to be linked
-#-------------------
-foreach (subdir ${PROJECT_SRC_DIRECTORIES} )
-  set(PROJECT_OBJECTS ${PROJECT_OBJECTS} "$<TARGET_OBJECTS:${subdir}>")
-endforeach()
-
-
-add_library(${PROJECT_LIB_NAME}
-  ${LIBRARY_MODE_TARGET}
-  ${PROJECT_OBJECTS})
-
-
-if(APPLE)
-  set_target_properties(${PROJECT_LIB_NAME}
-    PROPERTIES
-    LINK_FLAGS "-bundle_loader ${POSTGRESQL_EXECUTABLE} -bundle")
-endif(APPLE)
-
-if(WIN32 AND MSVC)
-  set_target_properties(${PROJECT_LIB_NAME} PROPERTIES PREFIX "lib")
-endif(WIN32 AND MSVC)
-#]]
-
-
-#-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 # sql subdirectory creates the files:
 #  ${PROJECT_NAME_LOWER}--(version).sql
 #  ${PROJECT_NAME_LOWER}--(oldVersion)--(version).sql
 #-----------------------------------------------------------------------------
-#-----------------------------------------------------------------------------
 
 add_subdirectory(sql)
 
 #-----------------------------------------------------------------------------
-#-----------------------------------------------------------------------------
 # INSTALLATION
-#-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 
 install(FILES
   ${PROJECT_FILES_TO_INSTALL}
   DESTINATION "${SHARE_DIR}"
-  )
+)
 
-#-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 # DOCUMENTATION
 # We are not installing documentation
-#-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 add_subdirectory(doc)
