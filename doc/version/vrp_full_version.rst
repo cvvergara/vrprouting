@@ -45,7 +45,7 @@ Signatures
 .. admonition:: \ \
    :class: signatures
 
-   | pgr_full_version()
+   | vrp_full_version()
    | RETURNS ``(version, build_type, compile_date, library, system, PostgreSQL, compiler, hash)``
 
 :Example: Get the version installed for this documentation.

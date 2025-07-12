@@ -24,27 +24,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
---v0.4
+--v0.0
 CREATE FUNCTION vrp_full_version(
-    OUT version TEXT,
-    OUT build_type TEXT,
-    OUT compile_date TEXT,
-    OUT library TEXT,
-    OUT system TEXT,
-    OUT PostgreSQL TEXT,
-    OUT compiler TEXT,
-    OUT hash TEXT
+  OUT version TEXT,
+  OUT hash TEXT
 )
 RETURNS Record AS
 $BODY$
-    SELECT vrp_version(),
-        _vrp_build_type(),
-        _vrp_compilation_date(),
-        _vrp_lib_version(),
-        _vrp_operating_system(),
-        _vrp_pgsql_version(),
-        _vrp_compiler_version(),
-        _vrp_git_hash()
+  SELECT vrp_version(), '${PROJECT_GIT_HASH}'::TEXT
 $BODY$
 LANGUAGE sql IMMUTABLE;
 

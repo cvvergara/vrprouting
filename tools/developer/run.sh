@@ -12,7 +12,7 @@ pushd "${DIR}" > /dev/null || exit 1
 # copy this file into the root of your repository
 # adjust to your needs
 
-VERSION=$(grep -Po '(?<=project\(VRPROUTING VERSION )[^;]+' CMakeLists.txt)
+VERSION=$(grep -Po '(?<=project\(PORTOOLS_PY VERSION )[^;]+' CMakeLists.txt)
 echo "vrpRouting VERSION ${VERSION}"
 
 # VROOM

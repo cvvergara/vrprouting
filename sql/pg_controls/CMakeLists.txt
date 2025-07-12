@@ -1,7 +1,6 @@
-
 SET(LOCAL_FILES
-    vrpRouting-header.sql
-    )
+  ${PROJECT_NAME_LOWER}-header.sql
+)
 
 foreach (f ${LOCAL_FILES})
     configure_file(${f} ${f})

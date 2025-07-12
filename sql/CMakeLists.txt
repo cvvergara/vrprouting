@@ -1,6 +1,3 @@
-add_subdirectory(sigs)
-
-
 #-------------------
 # From the parent get the subdirectories that have the SQL files
 #
@@ -10,12 +7,12 @@ add_subdirectory(sigs)
 set(PROJECT_MODULE_PATHNAME "$libdir/lib${PROJECT_NAME_LOWER}-${PROJECT_LIB_VERSION}")
 
 foreach (subdir ${PROJECT_SQL_DIRECTORIES})
-    add_subdirectory(${subdir})
+  message(STATUS "Adding sql/${subdir}")
+  add_subdirectory(${subdir})
 endforeach()
 
-if (PROJECT_DEBUG)
-    message(STATUS "PROJECT_MODULE_PATHNAME ${PROJECT_MODULE_PATHNAME}")
-endif()
+message(STATUS "PROJECT_CONTROL=${PROJECT_CONTROL}")
+message(STATUS "PROJECT_MODULE_PATHNAME=${PROJECT_MODULE_PATHNAME}")
 
 
 
@@ -36,45 +33,46 @@ set(PROJECT_EXTENSION_FILE "${PROJECT_NAME_LOWER}--${PROJECT_VERSION}.sql")
 # subdirectory that has the perl files
 add_subdirectory(scripts)
 
+# subdirectory that has the signatures of old versions
+add_subdirectory(sigs)
 
 
 add_custom_command(
-    OUTPUT ${PROJECT_EXTENSION_FILE}
-    COMMAND ${PERL_EXECUTABLE} ./scripts/build-extension-file.pl '${PROJECT_SQL_FILES}'
-    DEPENDS
-    scripts/build-extension-file.pl
-    ${PROJECT_SQL_FILES}
-    )
+  OUTPUT ${PROJECT_EXTENSION_FILE}
+  COMMAND ${PERL_EXECUTABLE} ./scripts/build-extension-file.pl '${PROJECT_SQL_FILES}'
+  DEPENDS scripts/build-extension-file.pl
+  ${PROJECT_SQL_FILES}
+)
 
 add_custom_target(extension_file ALL
-    DEPENDS
-    ${PROJECT_EXTENSION_FILE}
-    )
+  DEPENDS ${PROJECT_EXTENSION_FILE}
+)
 
+# For the moment there is no update from old versions
 if (FALSE)
-#-------------------
-# TARGET: update_files
-#-------------------
-foreach (old_s ${OLD_SIGNATURES})
+  #-------------------
+  # TARGET: update_files
+  #-------------------
+  foreach (old_s ${OLD_SIGNATURES})
     string(REGEX REPLACE "^([0-9]+\\.[0-9]+).*" "\\1" minor_s ${old_s})
     SET (UPDATE_FILES ${UPDATE_FILES} ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME_LOWER}--${old_s}--${PROJECT_VERSION}.sql)
     add_custom_command(
-        OUTPUT ${PROJECT_NAME_LOWER}--${old_s}--${PROJECT_VERSION}.sql
+      OUTPUT ${PROJECT_NAME_LOWER}--${old_s}--${PROJECT_VERSION}.sql
 
-        COMMAND ${PERL_EXECUTABLE} ./scripts/build-extension-update-files.pl "${PROJECT_VERSION}" "${old_s}" "${CMAKE_CURRENT_BINARY_DIR}/sigs" "${CMAKE_CURRENT_BINARY_DIR}" "${PROJECT_DEBUG}"
-        DEPENDS
-        ./scripts/build-extension-update-files.pl
-        ${PROJECT_EXTENSION_FILE}
-        extension_file
-        ./sigs/${PROJECT_NAME_LOWER}--${minor_s}.sig
-        )
-endforeach()
+      COMMAND ${PERL_EXECUTABLE} ./scripts/build-extension-update-files.pl "${PROJECT_VERSION}" "${old_s}" "${CMAKE_CURRENT_BINARY_DIR}/sigs" "${CMAKE_CURRENT_BINARY_DIR}" "${PROJECT_DEBUG}"
+      DEPENDS
+      ./scripts/build-extension-update-files.pl
+      ${PROJECT_EXTENSION_FILE}
+      extension_file
+      ./sigs/${PROJECT_NAME_LOWER}--${minor_s}.sig
+    )
+  endforeach()
 
 add_custom_target(update_files ALL
     DEPENDS
     ${UPDATE_FILES}
-    )
+  )
 endif()
 
 
-SET(PROJECT_FILES_TO_INSTALL  ${UPDATE_FILES} ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_EXTENSION_FILE} ${CMAKE_CURRENT_BINARY_DIR}/pg_controls/${PROJECT_NAME_LOWER}.control PARENT_SCOPE)
+SET(PROJECT_FILES_TO_INSTALL ${UPDATE_FILES} ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_EXTENSION_FILE} ${CMAKE_CURRENT_BINARY_DIR}/pg_controls/${PROJECT_NAME_LOWER}.control PARENT_SCOPE)

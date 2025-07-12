@@ -1,9 +1,7 @@
-# vrpRouting Extension
-comment = 'vrpRouting Extension'
+# ${PROJECT_NAME_LOWER} Extension
+comment = '${PROJECT_NAME_LOWER} Extension'
 default_version = '${PROJECT_VERSION}'
 module_pathname = '${PROJECT_MODULE_PATHNAME}'
 relocatable = true
 requires = 'plpgsql'
-requires = 'postgis'
-requires = 'pgrouting'
 requires = 'plpython3u'

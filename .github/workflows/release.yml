@@ -30,7 +30,7 @@ jobs:
         run: |
           sudo service postgresql start
           PGVER=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
-          PROJECT_VERSION=$(grep -Po '(?<=project\(VRPROUTING VERSION )[^;]+' CMakeLists.txt)
+          PROJECT_VERSION=$(grep -Po '(?<=project\(PORTOOLS_PY VERSION )[^;]+' CMakeLists.txt)
           echo "PGVER=${PGVER}" >> $GITHUB_ENV
           echo "PGPORT=5432" >> $GITHUB_ENV
           echo "PROJECT_VERSION=${PROJECT_VERSION}" >> $GITHUB_ENV

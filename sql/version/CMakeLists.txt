@@ -1,8 +1,6 @@
 
 SET(LOCAL_FILES
-    _version.sql
     version.sql
-    full_version.sql
     )
 
 foreach (f ${LOCAL_FILES})

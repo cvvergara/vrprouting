@@ -425,16 +425,12 @@ sub createTestDB {
     #TODO put as parameter
     my $encoding = "SET client_encoding TO 'UTF8';";
 
-    mysystem("$psql $connopts -c \"$encoding DROP EXTENSION IF EXISTS vrprouting CASCADE\"  $DBNAME");
-    mysystem("$psql $connopts -c \"$encoding CREATE EXTENSION vrprouting CASCADE\"  $DBNAME");
-    mysystem("$psql $connopts -c \"$encoding CREATE EXTENSION IF NOT EXISTS plpython3u \" $DBNAME");
-    mysystem("$psql $connopts -c \"$encoding CREATE EXTENSION IF NOT EXISTS postgis $postgis_ver \" $DBNAME");
-    mysystem("$psql $connopts -c \"$encoding CREATE EXTENSION IF NOT EXISTS pgrouting $pgrouting_ver \" $DBNAME");
+    mysystem("$psql $connopts -c \"$encoding DROP EXTENSION IF EXISTS portools_py CASCADE\"  $DBNAME");
+    mysystem("$psql $connopts -c \"$encoding CREATE EXTENSION portools_py CASCADE\"  $DBNAME");
 
     # print database information
     print `$psql $connopts -c "select version();" postgres `, "\n";
-    print `$psql $connopts -c "select postgis_full_version();" $DBNAME `, "\n";
-    print `$psql $connopts -c "select vrp_full_version();" $DBNAME `, "\n";
+    print `$psql $connopts -c "select vrp_version();" $DBNAME `, "\n";
 }
 
 sub version_greater_eq {

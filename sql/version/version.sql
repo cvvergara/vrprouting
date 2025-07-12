@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 CREATE FUNCTION vrp_version()
 RETURNS TEXT AS
 $BODY$
-    SELECT '${PROJECT_VERSION}${PROJECT_VERSION_DEV}'::varchar AS vrp_version;
+  SELECT '${PROJECT_VERSION}${PROJECT_VERSION_DEV}'::TEXT;
 $BODY$
 LANGUAGE sql IMMUTABLE;
 
