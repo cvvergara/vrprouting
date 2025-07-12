@@ -20,9 +20,6 @@ concurrency:
 permissions:
   contents: read
 
-env:
-    postgis: 3
-
 jobs:
   build:
     name: Ubuntu psql
@@ -33,7 +30,6 @@ jobs:
         matrix:
           release: [Debug, Release]
           psql: [13,14,15,16,17,18]
-          postgis: [3]
           os: [ubuntu-latest, ubuntu-22.04]
 
     steps:
@@ -70,9 +66,12 @@ jobs:
             postgresql-server-dev-${{ matrix.psql }} \
             postgresql-plpython3-${{ matrix.psql }}
 
-      - name: Install Google OR-Tools dependencies
+      - name: Install Google OR-Tools
         run: |
-          sudo pip install --verbose --root=/  ortools=9.10.4067
+          sudo pip install --root=/ Sphinx>4.0.0
+          sudo pip install --root=/ sphinx-bootstrap-theme>=0.8.0
+          sudo pip install --root=/ sphinx-intl==2.2.0
+          sudo pip install --root=/ ortools==9.10.4067
 
       - name: Configure
         run: |
@@ -101,5 +100,5 @@ jobs:
       - name: pgTap test
         run: |
           sudo service postgresql start
-          psql -c "CREATE DATABASE ___vrp___test___;"
-          bash ./tools/testers/pg_prove_tests.sh -U ${PG_RUNNER_USER} -p ${PGPORT} -d ___vrp___test___
+          psql -c "CREATE DATABASE ___por___test___;"
+          bash ./tools/testers/pg_prove_tests.sh -U ${PG_RUNNER_USER} -p ${PGPORT} -d ___por___test___
