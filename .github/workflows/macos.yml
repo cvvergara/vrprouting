@@ -32,6 +32,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: to process or to fail
+        run: |
+            exit 1
+
       - name: Install python
         uses: actions/setup-python@v5
         with:
