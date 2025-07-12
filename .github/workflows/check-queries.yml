@@ -90,8 +90,7 @@ jobs:
             postgresql-${PGVER}-pgtap \
             postgresql-server-dev-${PGVER} \
             postgresql-plpython3-${PGVER}
-          # vroom dependencies
-          sudo apt-get install libssl-dev libasio-dev libglpk-dev
+
 
       - name: Install Google OR-Tools
         run: |

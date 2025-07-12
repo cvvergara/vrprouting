@@ -3,45 +3,32 @@
 # Find Sphinx executable to build documentation
 # Source: https://ericscottbarr.com/blog/2012/03/sphinx-and-cmake-beautiful-documentation-for-c-projects/
 #
-# Daniel Kastl 03/2013
-#
 
 #---------------------------------------------
 # Kind of sphinx output
 #---------------------------------------------
 
-option(WITH_DOC
-    "Set ON|OFF (default=OFF) to build Documentation library tree" OFF)
+option(WITH_DOC "Set ON|OFF (default=OFF) to build Documentation library tree" OFF)
 
-option(LOCALE
-    "Set ON|OFF (default=OFF) to build ithe latest pot/po files" OFF)
+option(LOCALE "Set ON|OFF (default=OFF) to build ithe latest pot/po files" OFF)
 
-option(WITH_ALL_DOC
-    "Set ON|OFF (default=OFF) to build Documentation library tree" OFF)
+option(WITH_ALL_DOC "Set ON|OFF (default=OFF) to build Documentation library tree" OFF)
 
-#option(PDF
-#    "Set ON|OFF (default=OFF) to build Documentation library tree as PDF" OFF)
+#option(PDF "Set ON|OFF (default=OFF) to build Documentation library tree as PDF" OFF)
 
-option(BUILD_LATEX
-    "Set ON|OFF (default=OFF) to build Documentation library tree as PDF" OFF)
+option(BUILD_LATEX "Set ON|OFF (default=OFF) to build Documentation library tree as PDF" OFF)
 
-option(SINGLEHTML
-    "Set ON|OFF (default=OFF) to build Documentation library tree as SINGLE HTML" OFF)
+option(SINGLEHTML "Set ON|OFF (default=OFF) to build Documentation library tree as SINGLE HTML" OFF)
 
-option(BUILD_HTML
-    "Set ON|OFF (default=OFF) to build Documentation library tree as HTML" ON)
+option(BUILD_HTML "Set ON|OFF (default=OFF) to build Documentation library tree as HTML" ON)
 
-option(BUILD_MAN
-    "Set ON|OFF (default=OFF) to build Documentation library tree as MAN page" OFF)
+option(BUILD_MAN "Set ON|OFF (default=OFF) to build Documentation library tree as MAN page" OFF)
 
-option(LINKCHECK
-    "Set ON|OFF (default=OFF) to build Documentation library tree as LINKCHECK page" OFF)
+option(LINKCHECK "Set ON|OFF (default=OFF) to build Documentation library tree as LINKCHECK page" OFF)
 
-option(EPUB
-    "Set ON|OFF (default=OFF) to build Documentation library tree as EPUB page" OFF)
+option(EPUB "Set ON|OFF (default=OFF) to build Documentation library tree as EPUB page" OFF)
 
-option(DUMMY
-    "Set ON|OFF (default=OFF) for debugging purposes" OFF)
+option(DUMMY "Set ON|OFF (default=OFF) for debugging purposes" OFF)
 
 if (LOCALE)
     set(WITH_DOC ON)
@@ -78,7 +65,7 @@ message(STATUS "PROJECT_DOC_TARGETS = ${PROJECT_DOC_TARGETS}")
 # Available Languages
 # English is always built
 #---------------------------------------------
-set(PROJECT_SUPPORTED_LANGUAGES  "de"   "es"  "fr"  "it"  "ja"  "ru")
+set(PROJECT_SUPPORTED_LANGUAGES "es")
 set(PROJECT_ENGLISH "en")
 
 #---------------------------------------------
@@ -190,6 +177,8 @@ message(STATUS "PGR_DOCUMENTATION_BUILD_DIR = ${PGR_DOCUMENTATION_BUILD_DIR}")
 #---------------------------------------------
 # Adding documentation directories
 #---------------------------------------------
+add_subdirectory(general)
+
 foreach (subdir ${PROJECT_DOC_DIRECTORIES})
     add_subdirectory("${subdir}")
     add_subdirectory("../docqueries/${subdir}" "build/doc/${subdir}")

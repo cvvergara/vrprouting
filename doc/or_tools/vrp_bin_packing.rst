@@ -24,7 +24,7 @@ vrp_bin_packing - Experimental
 
 .. rubric:: Availability
 
-..rubric:: Version 0.0.1
+.. rubric:: Version 0.0.1
 
 * Experimental function.
 * Support for or-tools v9.10.4067
@@ -97,7 +97,6 @@ Inner Queries
 
 Weights SQL
 ...............................................................................
-
 
 .. include:: or_tools-category.rst
    :start-after: weights_start

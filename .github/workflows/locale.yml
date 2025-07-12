@@ -32,6 +32,7 @@ jobs:
   update-locale:
     name: Update Locale
     runs-on: ubuntu-latest
+
     strategy:
         fail-fast: false
 
@@ -73,48 +74,22 @@ jobs:
             postgresql-${PGVER} \
             postgresql-server-dev-${PGVER} \
             postgresql-plpython3-${PGVER}
-          # vroom dependencies
-          sudo apt-get install libssl-dev libasio-dev libglpk-dev
+
           # documentation dependencies
           sudo apt-get install -y graphviz doxygen
           pip install -r requirements.txt
 
-      - name: Install Google OR-Tools dependencies
+      - name: Install Google OR-Tools
         run: |
-          sudo pip install --root=/  ortools
-
-      - name: Cache VROOM
-        id: cache-vroom
-        uses: actions/cache@v4
-        env:
-          cache-name: vroom
-        with:
-          path: vroom-${{ env.vroom }}
-          key: ${{ env.os }}-${{ env.cache-name }}-${{ env.vroom }}
-
-      - name: Checkout VROOM
-        if: steps.cache-vroom.outputs.cache-hit != 'true'
-        uses: actions/checkout@v4
-        with:
-          path: vroom-${{ env.vroom }}
-          repository: VROOM-Project/vroom
-          ref: "v${{ env.vroom }}"
-          submodules: true
-
-      - name: Build VROOM
-        if: steps.cache-vroom.outputs.cache-hit != 'true'
-        run: |
-          cd vroom-${{ env.vroom }}/src
-          USE_ROUTING=false make shared
+          sudo pip install --root=/  ortools==9.10.4067
 
       - name: Configure
         run: |
-          VROOM=$(pwd)/vroom-${{ env.vroom }}
+          export PATH=/usr/lib/postgresql/${PGVER}/bin:$PATH
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
-              -DWITH_DOC=ON -DLOCALE=ON \
-              -DVROOM_INSTALL_PATH=${VROOM} ..
+              -DWITH_DOC=ON -DLOCALE=ON  ..
 
       - name: Build
         run: |
