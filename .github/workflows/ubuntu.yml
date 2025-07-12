@@ -104,7 +104,7 @@ jobs:
           sudo service postgresql start
           export PG_RUNNER_USER=`whoami`
           export PGPORT=5432
-          sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS ___pgr___test___;"
+          sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS ___por___test___;"
           sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS \"${PG_RUNNER_USER}\";"
           sudo -u postgres psql -p ${PGPORT} -c "DROP ROLE IF EXISTS \"${PG_RUNNER_USER}\";"
           sudo -u postgres psql -p ${PGPORT} -c "CREATE ROLE \"${PG_RUNNER_USER}\" WITH LOGIN SUPERUSER;"
