@@ -88,9 +88,6 @@ jobs:
           sudo apt-get install -y \
             postgresql-${PGVER} \
             postgresql-${PGVER}-pgtap \
-            postgresql-${PGVER}-postgis-${{ env.postgis }} \
-            postgresql-${PGVER}-postgis-${{ env.postgis }}-scripts \
-            postgresql-${PGVER}-pgrouting \
             postgresql-server-dev-${PGVER} \
             postgresql-plpython3-${PGVER}
           # vroom dependencies
@@ -111,7 +108,6 @@ jobs:
       - name: Build
         run: |
           cd build
-          make -j 4
           sudo make install
 
       - name: Create superuser
