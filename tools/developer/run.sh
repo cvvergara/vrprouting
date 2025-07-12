@@ -30,14 +30,16 @@ TAP_DIRS=$(ls pgtap -1)
 
 
 QUERIES_DIRS="
+version
 "
 
 TAP_DIRS="
+version
 "
 
 function set_cmake {
     cmake "-DPOSTGRESQL_BIN=${PGBIN}" "-DPostgreSQL_INCLUDE_DIR=${PGINC}" \
-        -DWITH_DOC=ON -DBUILD_DOXY=ON ..
+        -DWITH_DOC=ON ..
 }
 
 function tap_test {
@@ -77,11 +79,8 @@ function set_compiler {
 
 function build_doc {
     pushd build > /dev/null || exit 1
-    #rm -rf doc/*
-    #make doc
-    #make linkcheck
-    rm -rf doxygen/*
-    make doxy
+    rm -rf doc/*
+    make doc
     popd > /dev/null || exit 1
 }
 
@@ -93,13 +92,6 @@ function build {
     sudo make install
     popd > /dev/null || exit 1
 
-}
-
-function check {
-    pushd build > /dev/null || exit 1
-    cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .
-    cppcheck --project=compile_commands.json -q
-    popd > /dev/null || exit 1
 }
 
 function test_compile {
@@ -127,6 +119,7 @@ function test_compile {
         bash taptest.sh  "${d}" "-p ${PGPORT}"
     done
 
+    build_doc
     tap_test
     exit 0
     tools/testers/doc_queries_generator.pl -pgport "${PGPORT}" -venv "${VENV}"
