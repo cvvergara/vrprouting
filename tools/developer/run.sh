@@ -22,12 +22,6 @@ PGVERSION="15"
 PGPORT="5432"
 PGBIN="/usr/lib/postgresql/${PGVERSION}/bin"
 PGINC="/usr/include/postgresql/${PGVERSION}/server"
-# When more than one compiler is installed
-GCC=""
-
-QUERIES_DIRS=$(ls docqueries -1)
-TAP_DIRS=$(ls pgtap -1)
-
 
 QUERIES_DIRS="
 version
@@ -66,17 +60,6 @@ function action_tests {
     tools/testers/doc_queries_generator.pl  -documentation  -pgport $PGPORT
 }
 
-function set_compiler {
-    echo ------------------------------------
-    echo ------------------------------------
-    echo "Compiling with G++-$1"
-    echo ------------------------------------
-
-    if [ -n "$1" ]; then
-        update-alternatives --set gcc "/usr/bin/gcc-$1"
-    fi
-}
-
 function build_doc {
     pushd build > /dev/null || exit 1
     rm -rf doc/*
@@ -87,17 +70,13 @@ function build_doc {
 function build {
     pushd build > /dev/null || exit 1
     set_cmake
-    make #-j 16
-    #make VERBOSE=1
+    make
     sudo make install
     popd > /dev/null || exit 1
 
 }
 
 function test_compile {
-
-    set_compiler "${GCC}"
-
     build
 
     echo --------------------------------------------
@@ -120,12 +99,8 @@ function test_compile {
     done
 
     build_doc
-    tap_test
-    exit 0
-    tools/testers/doc_queries_generator.pl -pgport "${PGPORT}" -venv "${VENV}"
-    build_doc
-    tap_test
-
     action_tests
+    tap_test
 }
+
 test_compile
