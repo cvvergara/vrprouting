@@ -1,8 +1,28 @@
 name: Build for Ubuntu
 
+# This action runs:
+# - When this file changes
+# - When changes on code (src, include, sql)
+# - When changes on data or testing scripts (tools/testers)
+# - When the way the build changes (CMakeLists.txt)
+# - On request
+
 on:
   workflow_dispatch:
   push:
+    paths:
+      - '.github/workflows/ubuntu.yml'
+      - 'sql/**'
+      - 'pgtap/**'
+      - 'tools/testers/**'
+      - 'CMakeLists.txt'
+
+    branches-ignore:
+      - 'gh-pages'
+
+    tags: []
+
+  pull_request:
     paths:
       - '.github/workflows/ubuntu.yml'
       - 'sql/**'
@@ -22,56 +42,62 @@ permissions:
 
 jobs:
   build:
-    name: Ubuntu psql
-    runs-on: ${{ matrix.os }}
+    name: G++ compiler
+    runs-on: ubuntu-latest
 
     strategy:
         fail-fast: false
         matrix:
           release: [Debug, Release]
-          psql: [13,14,15,16,17,18]
-          os: [ubuntu-latest, ubuntu-22.04]
+          psql: [12,13,14,15]
+          os: [ubuntu-latest, ubuntu-24.04, ubuntu-22.04]
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: 'Raise Priority for apt.postgresql.org'
+      - name: Get postgres version
         run: |
-          cat << EOF >> ./pgdg.pref
-          Package: *
-          Pin: release o=apt.postgresql.org
-          Pin-Priority: 600
-          EOF
-          sudo mv ./pgdg.pref /etc/apt/preferences.d/
-          sudo apt update
+          sudo service postgresql start
+          pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
+          echo "PGVER=${pgver}" >> $GITHUB_ENV
+          PGP=5433
+          if [ "${{ matrix.psql }}" == "${pgver}" ]; then PGP=5432; fi
+          echo "PGPORT=${PGP}" >> $GITHUB_ENV
+          echo "PGBIN=/usr/lib/postgresql/${{ matrix.psql }}/bin" >> $GITHUB_ENV
+          echo "PGINC=/usr/include/postgresql/${{ matrix.psql }}/server" >> $GITHUB_ENV
 
-     - name: Add PostgreSQL APT repository
+      - name: Add PostgreSQL APT repository
         run: |
-          sudo apt-get purge postgresql-*
-          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg-testing main ${{ matrix.psql }}" > /etc/apt/sources.list.d/pgdg.list'
-          curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
-        
+          sudo apt-get install curl ca-certificates gnupg
+          curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ \
+            $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+
       - name: Install python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.x'
 
       - name: Install dependencies
         run: |
           sudo apt-get update
+          # vrpRouting dependencies
           sudo apt-get install -y \
             libtap-parser-sourcehandler-pgtap-perl \
             postgresql-${{ matrix.psql }} \
             postgresql-${{ matrix.psql }}-pgtap \
+            postgresql-${{ matrix.psql }}-postgis-${{ env.postgis }} \
+            postgresql-${{ matrix.psql }}-postgis-${{ env.postgis }}-scripts \
+            postgresql-${{ matrix.psql }}-pgrouting \
             postgresql-server-dev-${{ matrix.psql }} \
             postgresql-plpython3-${{ matrix.psql }}
+          # vroom dependencies
+          sudo apt-get install libssl-dev libasio-dev libglpk-dev
+
 
       - name: Install Google OR-Tools
         run: |
-          sudo pip install --root=/ Sphinx>4.0.0
-          sudo pip install --root=/ sphinx-bootstrap-theme>=0.8.0
-          sudo pip install --root=/ sphinx-intl==2.2.0
-          sudo pip install --root=/ ortools==9.10.4067
+          sudo pip install --root=/  ortools==9.10.4067
 
       - name: Configure
         run: |
@@ -84,7 +110,6 @@ jobs:
       - name: Build
         run: |
           cd build
-          make -j 4
           sudo make install
 
       - name: Create superuser
