@@ -38,17 +38,17 @@ vrpRouting 0.0
    :local:
    :depth: 1
 
-vrpRouting 0.4.2 Release Notes
+vrpRouting 0.0.1 Release Notes
 -------------------------------------------------------------------------------
 
 To see all issues & pull requests closed by this release see the
-`Git closed milestone for 0.4.2 <https://github.com/pgRouting/vrprouting/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.4.2%22>`_
+`Git closed milestone for 0.0.1
+<https://github.com/pgRouting/vrprouting/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.0.1%22>`_
 on Github.
 
 .. rubric:: Extraction tasks
 
-* Porting or-tools functionality
-
+Porting or-tools functionality
 
 * vrp_bin_packing
 
@@ -73,15 +73,3 @@ on Github.
   .. include:: vrp_version.rst
      :start-after: Version 0.0.1
      :end-before: Description
-
-vrpRouting 0.1
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-.. rubric:: Extraction tasks
-
-- Porting pgRouting's VRP functionality
-
-.. rubric:: New official functions
-
-* vrp_version
-* vrp_full_version
