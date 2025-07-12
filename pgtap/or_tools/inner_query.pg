@@ -61,7 +61,7 @@ BEGIN
 
   -- vrp_knapsack
   fn := 'vrp_knapsack';
-  inner_query_table := 'knapsack_data';
+  inner_query_table := 'knapsack';
   start_sql := '';
   rest_sql := ', 15)';
   params := ARRAY['id', 'weight', 'cost'];
@@ -71,7 +71,7 @@ BEGIN
 
   -- vrp_multiple_knapsack
   fn := 'vrp_multiple_knapsack';
-  inner_query_table := 'multiple_knapsack_data';
+  inner_query_table := 'multiple_knapsack';
   start_sql := '';
   rest_sql := ', ARRAY[100,100,100,100,100])';
   params := ARRAY['id', 'weight', 'cost'];
@@ -81,7 +81,7 @@ BEGIN
 
   -- bin_packing
   fn := 'vrp_bin_packing';
-  inner_query_table := 'bin_packing_data';
+  inner_query_table := 'bin_packing';
   start_sql := '';
   rest_sql := ', 100)';
   params := ARRAY['id', 'weight'];
