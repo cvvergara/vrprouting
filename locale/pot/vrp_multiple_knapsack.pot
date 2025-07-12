@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.4.2
+# Copyright (C) vrpRouting Contributors - Version v0.0.1
 # This file is distributed under the same license as the vrpRouting package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.4.2\n"
+"Project-Id-Version: vrpRouting v0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-04 15:19+0000\n"
+"POT-Creation-Date: 2025-07-12 10:54-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgid "`Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 <https:
 msgstr ""
 
 #: ../../build/doc/vrp_multiple_knapsack.rst:13
-msgid "Supported Versions `Latest <https://vrp.pgrouting.org/latest/en/vrp_oneDepot.html>`__ (`v0 <https://vrp.pgrouting.org/v0/en/vrp_oneDepot.html>`__)"
+msgid "Supported Versions `Latest <https://vrp.pgrouting.org/latest/en/vrp_multiple_knapsack.html>`__ (`v0 <https://vrp.pgrouting.org/v0/en/vrp_multiple_knapsack.html>`__)"
 msgstr ""
 
 #: ../../build/doc/vrp_multiple_knapsack.rst:18
@@ -100,43 +100,35 @@ msgstr ""
 msgid "Availability"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:26
-msgid "Version 0.4.1"
+#: ../../build/doc/vrp_multiple_knapsack.rst:27
+msgid "Version 0.0.1"
 msgstr ""
 
 #: ../../build/doc/vrp_multiple_knapsack.rst:28
+msgid "Experimental function."
+msgstr ""
+
+#: ../../build/doc/vrp_multiple_knapsack.rst:29
 msgid "Support for or-tools v9.10.4067"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:30
-msgid "Version 0.4.0"
-msgstr ""
-
 #: ../../build/doc/vrp_multiple_knapsack.rst:32
-msgid "New **experimental** function"
-msgstr ""
-
-#: ../../build/doc/vrp_multiple_knapsack.rst:34
-msgid "vrp_knapsack"
-msgstr ""
-
-#: ../../build/doc/vrp_multiple_knapsack.rst:39
-#: ../../build/doc/vrp_multiple_knapsack.rst:66
-#: ../../build/doc/vrp_multiple_knapsack.rst:85
-#: ../../build/doc/vrp_multiple_knapsack.rst:111
+#: ../../build/doc/vrp_multiple_knapsack.rst:59
+#: ../../build/doc/vrp_multiple_knapsack.rst:78
+#: ../../build/doc/vrp_multiple_knapsack.rst:104
 #: ../../build/doc/or_tools-category.rst:10
 msgid "Description"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:41
+#: ../../build/doc/vrp_multiple_knapsack.rst:34
 msgid "The multiple knapsack problem is a problem in combinatorial optimization: it is a more general verison of the classic knapsack problem where instead of a single knapsack, you will be given multiple knapsacks and your goal is maximise the total value of packed items in all knapsacks."
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:47
+#: ../../build/doc/vrp_multiple_knapsack.rst:40
 msgid "Signatures"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:49
+#: ../../build/doc/vrp_multiple_knapsack.rst:42
 msgid "\\ \\"
 msgstr ""
 
@@ -152,84 +144,84 @@ msgstr ""
 msgid "OR EMPTY SET"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:57
+#: ../../build/doc/vrp_multiple_knapsack.rst:50
 msgid "Parameters"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:64
-#: ../../build/doc/vrp_multiple_knapsack.rst:82
-#: ../../build/doc/vrp_multiple_knapsack.rst:109
+#: ../../build/doc/vrp_multiple_knapsack.rst:57
+#: ../../build/doc/vrp_multiple_knapsack.rst:75
+#: ../../build/doc/vrp_multiple_knapsack.rst:102
 #: ../../build/doc/or_tools-category.rst:8
 msgid "Column"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:65
-#: ../../build/doc/vrp_multiple_knapsack.rst:83
-#: ../../build/doc/vrp_multiple_knapsack.rst:110
+#: ../../build/doc/vrp_multiple_knapsack.rst:58
+#: ../../build/doc/vrp_multiple_knapsack.rst:76
+#: ../../build/doc/vrp_multiple_knapsack.rst:103
 #: ../../build/doc/or_tools-category.rst:9
 msgid "Type"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:67
+#: ../../build/doc/vrp_multiple_knapsack.rst:60
 msgid "`Weight Costs SQL`_"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:68
+#: ../../build/doc/vrp_multiple_knapsack.rst:61
 msgid "``TEXT``"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:69
+#: ../../build/doc/vrp_multiple_knapsack.rst:62
 msgid "`Weight Costs SQL`_ as described below"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:70
+#: ../../build/doc/vrp_multiple_knapsack.rst:63
 msgid "capacities"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:71
+#: ../../build/doc/vrp_multiple_knapsack.rst:64
 msgid "``ARRAY[`` **ANY-INTEGER** ``]``"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:72
+#: ../../build/doc/vrp_multiple_knapsack.rst:65
 msgid "An array describing the capacity of each knapsack."
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:75
+#: ../../build/doc/vrp_multiple_knapsack.rst:68
 msgid "Optional Parameters"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:84
+#: ../../build/doc/vrp_multiple_knapsack.rst:77
 msgid "Default"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:86
+#: ../../build/doc/vrp_multiple_knapsack.rst:79
 msgid "``max_rows``"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:87
+#: ../../build/doc/vrp_multiple_knapsack.rst:80
 #: ../../build/doc/or_tools-category.rst:12
 #: ../../build/doc/or_tools-category.rst:15
 #: ../../build/doc/or_tools-category.rst:18
 msgid "**ANY-INTEGER**"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:88
+#: ../../build/doc/vrp_multiple_knapsack.rst:81
 msgid ":math:`100000`"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:89
+#: ../../build/doc/vrp_multiple_knapsack.rst:82
 msgid "Maximum items(rows) to fetch from bin_packing_data table."
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:92
+#: ../../build/doc/vrp_multiple_knapsack.rst:85
 msgid "Inner Queries"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:95
+#: ../../build/doc/vrp_multiple_knapsack.rst:88
 msgid "Weight Costs SQL"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:115
+#: ../../build/doc/vrp_multiple_knapsack.rst:108
 #: ../../build/doc/or_tools-category.rst:11
 msgid "``id``"
 msgstr ""
@@ -266,32 +258,32 @@ msgstr ""
 msgid "``SMALLINT``, ``INTEGER``, ``BIGINT``"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:102
+#: ../../build/doc/vrp_multiple_knapsack.rst:95
 msgid "Result Columns"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:112
+#: ../../build/doc/vrp_multiple_knapsack.rst:105
 msgid "``knapsak``"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:113
-#: ../../build/doc/vrp_multiple_knapsack.rst:116
+#: ../../build/doc/vrp_multiple_knapsack.rst:106
+#: ../../build/doc/vrp_multiple_knapsack.rst:109
 msgid "``INTEGER``"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:114
+#: ../../build/doc/vrp_multiple_knapsack.rst:107
 msgid "Indentifier of the knapsack."
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:117
+#: ../../build/doc/vrp_multiple_knapsack.rst:110
 msgid "Indentifier of an item in the ``knapsack``."
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:120
+#: ../../build/doc/vrp_multiple_knapsack.rst:113
 msgid "Example"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:127
+#: ../../build/doc/vrp_multiple_knapsack.rst:120
 msgid "See Also"
 msgstr ""
 
@@ -303,14 +295,14 @@ msgstr ""
 msgid "`OR-Tools: Google OR-Tools <https://developers.google.com/optimization>`__"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:134
+#: ../../build/doc/vrp_multiple_knapsack.rst:127
 msgid "Indices and tables"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:135
+#: ../../build/doc/vrp_multiple_knapsack.rst:128
 msgid ":ref:`genindex`"
 msgstr ""
 
-#: ../../build/doc/vrp_multiple_knapsack.rst:136
+#: ../../build/doc/vrp_multiple_knapsack.rst:129
 msgid ":ref:`search`"
 msgstr ""

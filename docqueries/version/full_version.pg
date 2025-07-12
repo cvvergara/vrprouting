@@ -1,3 +1,0 @@
-/* -- q1 */
-SELECT * FROM vrp_full_version();
-/* -- q2 */

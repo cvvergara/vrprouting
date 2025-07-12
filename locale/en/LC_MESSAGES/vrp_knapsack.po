@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.4.2
+# Copyright (C) vrpRouting Contributors - Version v0.0.1
 # This file is distributed under the same license as the vrpRouting package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.4.1\n"
+"Project-Id-Version: vrpRouting v0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-22 19:34+0000\n"
+"POT-Creation-Date: 2025-07-12 10:54-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.15.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #: ../../build/doc/vrp_knapsack.rst:13
 msgid ""
@@ -28,8 +28,8 @@ msgstr ""
 #: ../../build/doc/vrp_knapsack.rst:14
 msgid ""
 "Supported Versions `Latest "
-"<https://vrp.pgrouting.org/latest/en/vrp_oneDepot.html>`__ (`v0 "
-"<https://vrp.pgrouting.org/v0/en/vrp_oneDepot.html>`__)"
+"<https://vrp.pgrouting.org/latest/en/vrp_knapsack.html>`__ (`v0 "
+"<https://vrp.pgrouting.org/v0/en/vrp_knapsack.html>`__)"
 msgstr ""
 
 #: ../../build/doc/vrp_knapsack.rst:19
@@ -108,33 +108,25 @@ msgstr ""
 msgid "Availability"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:27
-msgid "Version 0.4.1"
+#: ../../build/doc/vrp_knapsack.rst:28
+msgid "Version 0.0.1"
 msgstr ""
 
 #: ../../build/doc/vrp_knapsack.rst:29
+msgid "Experimental function."
+msgstr ""
+
+#: ../../build/doc/vrp_knapsack.rst:30
 msgid "Support for or-tools v9.10.4067"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:31
-msgid "Version 0.4.0"
-msgstr ""
-
-#: ../../build/doc/vrp_knapsack.rst:33
-msgid "New **experimental** function"
-msgstr ""
-
-#: ../../build/doc/vrp_knapsack.rst:35
-msgid "vrp_knapsack"
-msgstr ""
-
-#: ../../build/doc/or_tools-category.rst:10 ../../build/doc/vrp_knapsack.rst:40
-#: ../../build/doc/vrp_knapsack.rst:68 ../../build/doc/vrp_knapsack.rst:87
-#: ../../build/doc/vrp_knapsack.rst:117
+#: ../../build/doc/or_tools-category.rst:10 ../../build/doc/vrp_knapsack.rst:33
+#: ../../build/doc/vrp_knapsack.rst:61 ../../build/doc/vrp_knapsack.rst:80
+#: ../../build/doc/vrp_knapsack.rst:110
 msgid "Description"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:42
+#: ../../build/doc/vrp_knapsack.rst:35
 msgid ""
 "The knapsack problem is a problem in combinatorial optimization: Given a "
 "set of items, each with a weight and a value, Determine the number of "
@@ -143,11 +135,11 @@ msgid ""
 "possible"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:49
+#: ../../build/doc/vrp_knapsack.rst:42
 msgid "Signatures"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:51
+#: ../../build/doc/vrp_knapsack.rst:44
 msgid "\\ \\"
 msgstr ""
 
@@ -163,69 +155,69 @@ msgstr ""
 msgid "OR EMPTY SET"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:59
+#: ../../build/doc/vrp_knapsack.rst:52
 msgid "Parameters"
 msgstr ""
 
-#: ../../build/doc/or_tools-category.rst:8 ../../build/doc/vrp_knapsack.rst:66
-#: ../../build/doc/vrp_knapsack.rst:84 ../../build/doc/vrp_knapsack.rst:115
+#: ../../build/doc/or_tools-category.rst:8 ../../build/doc/vrp_knapsack.rst:59
+#: ../../build/doc/vrp_knapsack.rst:77 ../../build/doc/vrp_knapsack.rst:108
 msgid "Column"
 msgstr ""
 
-#: ../../build/doc/or_tools-category.rst:9 ../../build/doc/vrp_knapsack.rst:67
-#: ../../build/doc/vrp_knapsack.rst:85 ../../build/doc/vrp_knapsack.rst:116
+#: ../../build/doc/or_tools-category.rst:9 ../../build/doc/vrp_knapsack.rst:60
+#: ../../build/doc/vrp_knapsack.rst:78 ../../build/doc/vrp_knapsack.rst:109
 msgid "Type"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:69
+#: ../../build/doc/vrp_knapsack.rst:62
 msgid "`Weight Costs SQL`_"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:70
+#: ../../build/doc/vrp_knapsack.rst:63
 msgid "``TEXT``"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:71
+#: ../../build/doc/vrp_knapsack.rst:64
 msgid "`Weight Costs SQL`_ as described below."
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:72
+#: ../../build/doc/vrp_knapsack.rst:65
 msgid "capacity"
 msgstr ""
 
 #: ../../build/doc/or_tools-category.rst:12
 #: ../../build/doc/or_tools-category.rst:15
-#: ../../build/doc/or_tools-category.rst:18 ../../build/doc/vrp_knapsack.rst:73
-#: ../../build/doc/vrp_knapsack.rst:89
+#: ../../build/doc/or_tools-category.rst:18 ../../build/doc/vrp_knapsack.rst:66
+#: ../../build/doc/vrp_knapsack.rst:82
 msgid "**ANY-INTEGER**"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:74
+#: ../../build/doc/vrp_knapsack.rst:67
 msgid "Maximum Capacity of the knapsack."
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:77
+#: ../../build/doc/vrp_knapsack.rst:70
 msgid "Optional Parameters"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:86
+#: ../../build/doc/vrp_knapsack.rst:79
 msgid "Default"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:88
+#: ../../build/doc/vrp_knapsack.rst:81
 msgid "``max_rows``"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:90
+#: ../../build/doc/vrp_knapsack.rst:83
 msgid ":math:`100000`"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:91
+#: ../../build/doc/vrp_knapsack.rst:84
 msgid "Maximum items(rows) to fetch from knapsack_data table."
 msgstr ""
 
-#: ../../build/doc/or_tools-category.rst:21 ../../build/doc/vrp_knapsack.rst:93
-#: ../../build/doc/vrp_knapsack.rst:122
+#: ../../build/doc/or_tools-category.rst:21 ../../build/doc/vrp_knapsack.rst:86
+#: ../../build/doc/vrp_knapsack.rst:115
 msgid "Where:"
 msgstr ""
 
@@ -233,21 +225,21 @@ msgstr ""
 msgid "ANY-INTEGER"
 msgstr ""
 
-#: ../../build/doc/or_tools-category.rst:23 ../../build/doc/vrp_knapsack.rst:95
-#: ../../build/doc/vrp_knapsack.rst:124
+#: ../../build/doc/or_tools-category.rst:23 ../../build/doc/vrp_knapsack.rst:88
+#: ../../build/doc/vrp_knapsack.rst:117
 msgid "``SMALLINT``, ``INTEGER``, ``BIGINT``"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:98
+#: ../../build/doc/vrp_knapsack.rst:91
 msgid "Inner Queries"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:101
+#: ../../build/doc/vrp_knapsack.rst:94
 msgid "Weight Costs SQL"
 msgstr ""
 
 #: ../../build/doc/or_tools-category.rst:11
-#: ../../build/doc/vrp_knapsack.rst:118
+#: ../../build/doc/vrp_knapsack.rst:111
 msgid "``id``"
 msgstr ""
 
@@ -271,39 +263,39 @@ msgstr ""
 msgid "Cost of the item."
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:108
+#: ../../build/doc/vrp_knapsack.rst:101
 msgid "Result Columns"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:119
+#: ../../build/doc/vrp_knapsack.rst:112
 msgid "``INTEGER``"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:120
+#: ../../build/doc/vrp_knapsack.rst:113
 msgid "Indentifier of an item in the knapsack."
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:127
+#: ../../build/doc/vrp_knapsack.rst:120
 msgid "Example"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:134
+#: ../../build/doc/vrp_knapsack.rst:127
 msgid "See Also"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:136
+#: ../../build/doc/vrp_knapsack.rst:129
 msgid "`OR-Tools: Google OR-Tools <https://developers.google.com/optimization>`__"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:139
+#: ../../build/doc/vrp_knapsack.rst:132
 msgid "Indices and tables"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:140
+#: ../../build/doc/vrp_knapsack.rst:133
 msgid ":ref:`genindex`"
 msgstr ""
 
-#: ../../build/doc/vrp_knapsack.rst:141
+#: ../../build/doc/vrp_knapsack.rst:134
 msgid ":ref:`search`"
 msgstr ""
 

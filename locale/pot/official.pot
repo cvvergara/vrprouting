@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.4.2
+# Copyright (C) vrpRouting Contributors - Version v0.0.1
 # This file is distributed under the same license as the vrpRouting package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.3.0-dev\n"
+"Project-Id-Version: vrpRouting v0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-28 10:43+0000\n"
+"POT-Creation-Date: 2025-07-12 10:54-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,34 +29,17 @@ msgid "Oficial functions"
 msgstr ""
 
 #: ../../build/doc/official.rst:21
-msgid "Function Families"
-msgstr ""
-
-#: ../../build/doc/official.rst:26
-#: ../../build/doc/official.rst:40
 msgid "Version"
 msgstr ""
 
-#: ../../build/doc/official.rst:37
-msgid "Functions by categories"
-msgstr ""
-
-#: ../../build/doc/official.rst:42
-msgid ":doc:`vrp_version` - Get vrpRouting's version information."
-msgstr ""
-
-#: ../../build/doc/official.rst:43
-msgid ":doc:`vrp_full_version` - Get vrpRouting's details of version."
-msgstr ""
-
-#: ../../build/doc/official.rst:47
+#: ../../build/doc/official.rst:29
 msgid "Indices and tables"
 msgstr ""
 
-#: ../../build/doc/official.rst:48
+#: ../../build/doc/official.rst:30
 msgid ":ref:`genindex`"
 msgstr ""
 
-#: ../../build/doc/official.rst:49
+#: ../../build/doc/official.rst:31
 msgid ":ref:`search`"
 msgstr ""

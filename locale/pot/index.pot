@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.4.2
+# Copyright (C) vrpRouting Contributors - Version v0.0.1
 # This file is distributed under the same license as the vrpRouting package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.3.0-dev\n"
+"Project-Id-Version: vrpRouting v0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-28 10:43+0000\n"
+"POT-Creation-Date: 2025-07-12 10:54-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,7 +32,7 @@ msgstr ""
 msgid "This is the manual for vrpRouting |release|."
 msgstr ""
 
-#: ../../build/doc/index.rst:None
+#: ../../build/doc/index.rst:27
 msgid "Creative Commons Attribution-Share Alike 3.0 License"
 msgstr ""
 
@@ -52,38 +52,42 @@ msgstr ""
 msgid "Pgrouting Concepts"
 msgstr ""
 
-#: ../../build/doc/index.rst:65
-msgid "Reference"
-msgstr ""
-
-#: ../../build/doc/index.rst:66
-msgid ":doc:`vrp_version` - Get vrpRouting's version information."
-msgstr ""
-
-#: ../../build/doc/index.rst:67
-msgid ":doc:`vrp_full_version` - Get vrpRouting's details of version."
-msgstr ""
-
-#: ../../build/doc/index.rst:77
+#: ../../build/doc/index.rst:64
 msgid "Official functions"
 msgstr ""
 
-#: ../../build/doc/index.rst:88
+#: ../../build/doc/index.rst:72
 msgid "Available functions but not official vrpRouting functions"
 msgstr ""
 
-#: ../../build/doc/index.rst:99
+#: ../../build/doc/experimental.rst:3
+msgid ":doc:`or_tools-category`"
+msgstr ""
+
+#: ../../build/doc/or_tools-category.rst:3
+msgid ":doc:`vrp_knapsack`"
+msgstr ""
+
+#: ../../build/doc/or_tools-category.rst:4
+msgid ":doc:`vrp_multiple_knapsack`"
+msgstr ""
+
+#: ../../build/doc/or_tools-category.rst:5
+msgid ":doc:`vrp_bin_packing`"
+msgstr ""
+
+#: ../../build/doc/index.rst:85
 msgid "Release Notes"
 msgstr ""
 
-#: ../../build/doc/index.rst:107
+#: ../../build/doc/index.rst:92
 msgid "Indices and tables"
 msgstr ""
 
-#: ../../build/doc/index.rst:108
+#: ../../build/doc/index.rst:93
 msgid ":ref:`genindex`"
 msgstr ""
 
-#: ../../build/doc/index.rst:109
+#: ../../build/doc/index.rst:94
 msgid ":ref:`search`"
 msgstr ""

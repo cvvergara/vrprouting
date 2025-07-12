@@ -1,21 +1,23 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.4.2
+# Copyright (C) vrpRouting Contributors - Version v0.0.1
 # This file is distributed under the same license as the vrpRouting package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.0.0\n"
+"Project-Id-Version: vrpRouting v0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-04 15:19+0000\n"
+"POT-Creation-Date: 2025-07-12 10:54-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.15.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #: ../../build/doc/concepts.rst:12
 msgid ""
@@ -1118,6 +1120,7 @@ msgstr ""
 #: ../../build/doc/concepts.rst:638 ../../build/doc/concepts.rst:696
 #: ../../build/doc/concepts.rst:712 ../../build/doc/concepts.rst:816
 #: ../../build/doc/concepts.rst:909
+#, python-brace-format
 msgid "``'{}'::JSONB``"
 msgstr ""
 
@@ -1570,6 +1573,7 @@ msgid "``vehicle_seq``"
 msgstr ""
 
 #: ../../build/doc/concepts.rst:1042 ../../build/doc/concepts.rst:1113
+#, python-brace-format
 msgid ""
 "Sequential value starting from **1** for current vehicles. The "
 ":math:`n_{th}` vehicle in the solution."
@@ -1601,6 +1605,7 @@ msgid "``stop_seq``"
 msgstr ""
 
 #: ../../build/doc/concepts.rst:1049 ../../build/doc/concepts.rst:1120
+#, python-brace-format
 msgid ""
 "Sequential value starting from **1** for the stops made by the current "
 "vehicle. The :math:`m_{th}` stop of the current vehicle."
@@ -1723,6 +1728,7 @@ msgid "VROOM result columns"
 msgstr ""
 
 #: ../../build/doc/concepts.rst:1185
+#, python-brace-format
 msgid ""
 "Sequential value starting from **1** for current vehicles.  The "
 ":math:`n^{th}` vehicle in the solution."
@@ -1749,6 +1755,7 @@ msgid "``step_seq``"
 msgstr ""
 
 #: ../../build/doc/concepts.rst:1198
+#, python-brace-format
 msgid ""
 "Sequential value starting from **1** for the stops made by the current "
 "vehicle. The :math:`m^{th}` stop of the current vehicle."
