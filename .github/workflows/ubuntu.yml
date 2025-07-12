@@ -49,8 +49,8 @@ jobs:
         fail-fast: false
         matrix:
           release: [Debug, Release]
-          psql: [12,13,14,15]
-          os: [ubuntu-latest, ubuntu-24.04, ubuntu-22.04]
+          psql: [12,13,14,15,16,17,18]
+          os: [ubuntu-latest, ubuntu-22.04]
 
     steps:
       - uses: actions/checkout@v4

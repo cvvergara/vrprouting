@@ -41,7 +41,7 @@ bash setup_db.sh "${PGPORT}" "${PGDATABASE}" "${PGUSER}" "0.0.1"
 
 popd
 
-PGOPTIONS="-c client_min_messages=WARNING" pg_prove --failures --Q --recurse \
+PGOPTIONS="-c client_min_messages=WARNING" pg_prove --failures -v --recurse \
     -S on_error_rollback=off \
     -S on_error_stop=true \
     -P format=unaligned \
