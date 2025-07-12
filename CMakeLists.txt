@@ -370,5 +370,4 @@ install(FILES
 # We are not installing documentation
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
-add_subdirectory(doxygen)
 add_subdirectory(doc)

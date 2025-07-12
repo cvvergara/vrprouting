@@ -42,23 +42,21 @@ Experimental Functions
 
 ..  end-warn-expr
 
-.. rubric:: categories
 
-:doc:`pgr-category`
+.. experimental_start
 
+:doc:`or_tools-category`
 
-.. toctree::
-  :maxdepth: 2
+.. include:: or_tools-category.rst
+   :start-after: experimental-start
+   :end-before: experimental-end
 
-  pgr-category
-  vroom-category
-  or_tools-category
+.. experimental_end
 
 .. rubric:: See Also
 
 * :doc:`proposed`
 * :doc:`official`
-
 
 .. rubric:: Indices and tables
 

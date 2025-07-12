@@ -17,11 +17,6 @@
 Oficial functions
 *******************************************************************************
 
-Function Families
-===============================================================================
-
-
-
 Version
 -------------------------------------------------------------------------------
 
@@ -29,19 +24,6 @@ Version
    :maxdepth: 1
 
    vrp_version
-   vrp_full_version
-
-
-
-Functions by categories
-===============================================================================
-
-Version
--------------------------------------------------------------------------------
-
-* :doc:`vrp_version` - Get vrpRouting's version information.
-* :doc:`vrp_full_version` - Get vrpRouting's details of version.
-
 
 .. rubric:: Indices and tables
 

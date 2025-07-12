@@ -60,19 +60,6 @@ Pgrouting Concepts
 
    concepts
 
-
-.. rubric:: Reference
-
-* :doc:`vrp_version` - Get vrpRouting's version information.
-* :doc:`vrp_full_version` - Get vrpRouting's details of version.
-
-.. toctree::
-   :hidden:
-
-   vrp_version
-   vrp_full_version
-
-
 Official functions
 ===============================================================================
 
@@ -81,27 +68,25 @@ Official functions
 
    official
 
-
-
-
 Available functions but not official vrpRouting functions
 ===============================================================================
 
+.. include:: experimental.rst
+   :start-after: experimental_start
+   :end-before: experimental_end
+
 .. toctree::
-   :maxdepth: 3
+   :hidden:
 
    proposed
    experimental
-
-
 
 Release Notes
 ===============================================================================
 
 .. toctree::
 
-    release_notes
-
+   release_notes
 
 .. rubric:: Indices and tables
 

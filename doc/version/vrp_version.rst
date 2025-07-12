@@ -21,11 +21,9 @@ vrp_version
 
 .. rubric:: Availability
 
-Version 0.0.0
+.. rubric:: Version 0.0.1
 
-* New **Official** function
-
-
+* Official function
 
 Description
 -------------------------------------------------------------------------------
@@ -59,10 +57,7 @@ Result Columns
 ``TEXT``    vrpRouting version
 =========== ===============================
 
-
 .. rubric:: See Also
-
-* :doc:`vrp_full_version`
 
 .. rubric:: Indices and tables
 

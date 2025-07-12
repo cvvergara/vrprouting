@@ -12,8 +12,8 @@
 
 * `Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 <https://vrp.pgrouting.org/v0>`__
 * Supported Versions
-  `Latest <https://vrp.pgrouting.org/latest/en/vrp_oneDepot.html>`__
-  (`v0 <https://vrp.pgrouting.org/v0/en/vrp_oneDepot.html>`__)
+  `Latest <https://vrp.pgrouting.org/latest/en/vrp_bin_packing.html>`__
+  (`v0 <https://vrp.pgrouting.org/v0/en/vrp_bin_packing.html>`__)
 
 vrp_bin_packing - Experimental
 ===============================================================================
@@ -24,15 +24,10 @@ vrp_bin_packing - Experimental
 
 .. rubric:: Availability
 
-Version 0.4.1
+..rubric:: Version 0.0.1
 
+* Experimental function.
 * Support for or-tools v9.10.4067
-
-Version 0.4.0
-
-* New **experimental** function
-
-  * vrp_knapsack
 
 
 
