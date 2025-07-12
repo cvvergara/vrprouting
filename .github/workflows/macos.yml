@@ -45,38 +45,6 @@ jobs:
         run: |
           brew install postgis pgrouting asio glpk rapidjson
 
-      - name: Set environment
-        shell: bash
-        run: |
-          # Building vroom fails with clang
-          echo "CC=gcc-12" >> $GITHUB_ENV;
-          echo "CXX=g++-12" >> $GITHUB_ENV;
-
-
-      - name: Cache VROOM
-        id: cache-vroom
-        uses: actions/cache@v4
-        env:
-          cache-name: vroom
-        with:
-          path: vroom-${{ env.vroom }}
-          key: ${{ matrix.os }}-${{ env.cache-name }}-${{ env.vroom }}
-
-      - name: Checkout VROOM
-        if: steps.cache-vroom.outputs.cache-hit != 'true'
-        uses: actions/checkout@v4
-        with:
-          path: vroom-${{ env.vroom }}
-          repository: VROOM-Project/vroom
-          ref: "v${{ env.vroom }}"
-          submodules: true
-
-      - name: Build VROOM
-        if: steps.cache-vroom.outputs.cache-hit != 'true'
-        run: |
-          cd vroom-${{ env.vroom }}/src
-          USE_ROUTING=false make shared
-
       - name: Cache pgtap
         id: cache-pgtap
         uses: actions/cache@v4
@@ -101,11 +69,9 @@ jobs:
 
       - name: Configure
         run: |
-          VROOM=$(pwd)/vroom-${{ env.vroom }}
           mkdir build
           cd build
-          CXX=clang++ CC=clang cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }}  \
-              -DVROOM_INSTALL_PATH=${VROOM} ..
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }} ..
 
       - name: Build
         run: |
@@ -113,12 +79,6 @@ jobs:
           make -j 4
           sudo make
           sudo make install
-
-      - name: Unpack data
-        if: false
-        run: |
-          cd tools/testers
-          tar -xf matrix_new_values.tar.gz
 
       - name: Create superuser
         if: false
