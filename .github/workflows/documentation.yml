@@ -22,7 +22,7 @@ on:
     branches-ignore:
       - 'gh-pages'
 
-    tags: []
+  tags: []
 
   pull_request:
     paths:
@@ -30,9 +30,6 @@ on:
       - 'doc/**'
       - 'locale/**'
       - 'CMakeLists.txt'
-
-    branches-ignore:
-      - 'gh-pages'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -44,13 +41,12 @@ permissions:
 env:
     postgis: 3
     release: Release
-    os: ubuntu-latest
-    vroom: 1.12.0
 
 jobs:
   check-documentation:
     name: documentation
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
+
     strategy:
         fail-fast: false
         matrix:
@@ -101,7 +97,7 @@ jobs:
         if: env.PROCESS == 'true'
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       - name: Install dependencies
         if: env.PROCESS == 'true'
@@ -110,36 +106,32 @@ jobs:
           # vrpRouting dependencies
           sudo apt-get install -y \
             postgresql-${PGVER} \
-            postgresql-server-dev-${PGVER}
-          # vroom dependencies
-          sudo apt-get install libssl-dev libasio-dev libglpk-dev
+            postgresql-server-dev-${PGVER} \
+            postgresql-plpython3-${PGVER}
+
           # documentation dependencies
-          sudo apt-get install -y graphviz doxygen
-          pip install -r requirements.txt
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip list
+          sudo apt-get install -y graphviz
+
+      - name: Install Google OR-Tools
+        run: |
+          sudo pip install --root=/ Sphinx>4.0.0
+          sudo pip install --root=/ sphinx-bootstrap-theme>=0.8.0
+          sudo pip install --root=/ sphinx-intl==2.2.0
+          sudo pip install --root=/ ortools==9.10.4067
 
       - name: Configure
         if: env.PROCESS == 'true'
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ env.release }} -DWITH_DOC=ON -DLINKCHECK=ON -DBUILD_DOXY=ON \
-              -DVROOM_INSTALL_PATH=${GIT_WORKSPACE}/vroom-${{ env.vroom }} ..
+          cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
+              -DWITH_DOC=ON -DLINKCHECK=ON ..
 
-      - name: Check Documentation
+      - name: Build
         if: env.PROCESS == 'true'
         run: |
           cd build
           make html-${{ matrix.language }}
-
-      - name: Check Developers Documentation
-        if: env.PROCESS == 'true'
-        run: |
-          cd build
-          make doxy
-          [ ! -s build/doxygen/LOG ] || exit 1
 
       - name: Check Links
         if: env.CHK_LINK == 'true'
