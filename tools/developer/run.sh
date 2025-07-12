@@ -13,14 +13,9 @@ pushd "${DIR}" > /dev/null || exit 1
 # adjust to your needs
 
 VERSION=$(grep -Po '(?<=project\(PORTOOLS_PY VERSION )[^;]+' CMakeLists.txt)
-echo "vrpRouting VERSION ${VERSION}"
+echo "PORTOOLS_PY VERSION ${VERSION}"
 
-# VROOM
-#VROOMVER="1.14"
-#VROOMVER="1.13"
-VROOMVER="1.12"
-#VROOMVER="1.11"
-VENV="/home/vicky/pgrouting/vrprouting/env-vrp"
+VENV="$DIR/../env-ort"
 
 # set up your postgres version, port and compiler (if more than one)
 PGVERSION="15"
@@ -40,50 +35,9 @@ QUERIES_DIRS="
 TAP_DIRS="
 "
 
-function install_vroom {
-    cd "${DIR}"
-    rm -rf ./vroom-v${VROOMVER}.0
-    git clone --depth 1 --branch "v${VROOMVER}.0" https://github.com/VROOM-Project/vroom "./vroom-v${VROOMVER}.0"
-    pushd "./vroom-v${VROOMVER}.0"
-    git submodule update --init
-    cd src/
-    USE_ROUTING=false make shared
-    popd
-}
-
-function install_data {
-    cd "${DIR}"
-    pushd tools/testers
-    tar -xf matrix_new_values.tar.gz
-    popd
-}
-
 function set_cmake {
-    # Using all defaults
-    #cmake ..
-
-    # Options Release RelWithDebInfo MinSizeRel Debug
-    #cmake  -DCMAKE_BUILD_TYPE=Debug ..
-
-    # Additional debug information
-    #cmake -DPgRouting_DEBUG=ON -DCMAKE_BUILD_TYPE=Debug ..
-
-    # with documentation (like the one the website)
-    #cmake  -DDOC_USE_BOOTSTRAP=ON -DWITH_DOC=ON ..
-
-    # with developers documentation
-    #cmake  -DWITH_DOC=ON -DBUILD_DOXY=ON ..
-
-    #CXX=clang++ CC=clang cmake -DPOSTGRESQL_BIN=${PGBIN} -DCMAKE_BUILD_TYPE=Debug -DVROOM_INSTALL_PATH="${DIR}/vroom-${VROOMVER}" ..
-    #CXX=clang++ CC=clang cmake "-DPOSTGRESQL_BIN=${PGBIN}" "-DPostgreSQL_INCLUDE_DIR=${PGINC}" \
-        #-DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Release \
-        #-DWITH_DOC=ON -DBUILD_DOXY=ON -DVROOM_INSTALL_PATH="${DIR}/vroom-${VROOMVER}" ..
     cmake "-DPOSTGRESQL_BIN=${PGBIN}" "-DPostgreSQL_INCLUDE_DIR=${PGINC}" \
-        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Release \
-        -DWITH_DOC=ON -DBUILD_DOXY=ON \
-        -DVROOM_INSTALL_PATH="${DIR}/vroom-v${VROOMVER}.0" ..
-
-    #cmake "-DPostgreSQL_INCLUDE_DIR=${PGINC}" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DPOSTGRESQL_BIN=${PGBIN} -DCMAKE_BUILD_TYPE=Debug -DWITH_DOC=ON -DVROOM_INSTALL_PATH="${DIR}/vroom-${VROOMVER}" ..
+        -DWITH_DOC=ON -DBUILD_DOXY=ON ..
 }
 
 function tap_test {
@@ -91,8 +45,9 @@ function tap_test {
     echo pgTap test all
     echo --------------------------------------------
 
-    bash tools/testers/pg_prove_tests.sh -U vicky -p 5432 -c
-
+    dropdb --if-exists -p $PGPORT ___por___test___
+    createdb  -p $PGPORT ___por___test___
+    bash tools/testers/pg_prove_tests.sh vicky $PGPORT
 }
 
 function action_tests {
@@ -151,8 +106,6 @@ function test_compile {
 
     set_compiler "${GCC}"
 
-    #install_vroom
-    install_data
     build
 
     echo --------------------------------------------
@@ -171,7 +124,7 @@ function test_compile {
     echo --------------------------------------------
     for d in ${TAP_DIRS}
     do
-        bash taptest.sh  "pgtap/${d}" "-p ${PGPORT}"
+        bash taptest.sh  "${d}" "-p ${PGPORT}"
     done
 
     tap_test
