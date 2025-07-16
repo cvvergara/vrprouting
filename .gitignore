@@ -1,3 +1,10 @@
+# default build directory
+build
+fix_typos
+v[0-9]*
+*.swp
+
+# Ignore because of python
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
