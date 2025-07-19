@@ -27,9 +27,11 @@ sub Usage {
     die "Usage: notes2news.pl (from the root of the repository or pre-commit hook)\n";
 }
 
+my $ROOT = '';
+$ROOT = "../../" if $0 !~ /script/;
 my $DEBUG = '';
-my $in_file = "doc/general/release_notes.rst";
-my $out_file = "NEWS.md";
+my $in_file = $ROOT . "doc/general/release_notes.rst";
+my $out_file = $ROOT . "NEWS.md";
 
 my $ofh;
 open($ofh, ">$out_file") || die "ERROR: failed to open '$out_file' for write! : $!\n";
@@ -80,7 +82,7 @@ while (my $line = <$ifh>) {
             sub{
                 -f $_ && $_ =~ /$file/
                 && push @wanted_files,$File::Find::name
-            }, "doc"
+            }, $ROOT . "doc"
         );
         die "ERROR: file '$file' not found" if ! @wanted_files;
         foreach(@wanted_files){
@@ -151,7 +153,7 @@ sub find_stuff {
 }
 
 sub get_substitutions {
-    my $file = "doc/conf.py.in";
+    my $file = $ROOT . "doc/conf.py.in";
     my $mstart = "rst_epilog";
     my $mend = "epilog_end";
     print "get_substitutions $file from $mstart to $mend \n" if $DEBUG;
