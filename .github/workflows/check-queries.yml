@@ -19,6 +19,7 @@ on:
       - 'docqueries/**'
       - 'tools/testers/**'
       - 'CMakeLists.txt'
+      - 'tools/scripts/get_signatures.sh'
 
     branches-ignore:
       - 'gh-pages'
@@ -32,6 +33,7 @@ on:
       - 'docqueries/**'
       - 'tools/testers/**'
       - 'CMakeLists.txt'
+      - 'tools/scripts/get_signatures.sh'
 
     branches-ignore:
       - 'gh-pages'
