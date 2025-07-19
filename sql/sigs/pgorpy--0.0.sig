@@ -1,2 +1,2 @@
-por_version()
 por_full_version()
+por_version()
