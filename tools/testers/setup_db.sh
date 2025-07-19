@@ -2,7 +2,7 @@
 
 # PGR-GNU*****************************************************************
 # File: setup_db.sh
-# Copyright (c) 2021 pgRouting developers
+# Copyright (c) 2025 pgRouting developers
 # Mail: project@pgrouting.org
 # ------
 # This program is free software; you can redistribute it and/or modify
@@ -19,10 +19,10 @@
 # ********************************************************************PGR-GNU*/
 set -e
 
-DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
 
 psql -p "$1" -U "$3"  -d "$2" -X -q --set client_min_messages=WARNING --set ON_ERROR_STOP=1 --pset pager=off \
-    -c "CREATE EXTENSION IF NOT EXISTS pgtap; CREATE EXTENSION IF NOT EXISTS portools_py WITH VERSION '${4}' CASCADE;"
+    -c "CREATE EXTENSION IF NOT EXISTS pgtap; CREATE EXTENSION IF NOT EXISTS pgorpy WITH VERSION '${4}' CASCADE;"
 
 psql -p "$1" -U "$3"  -d "$2" -X -q --set client_min_messages=WARNING --set ON_ERROR_STOP=1 --pset pager=off \
     -f "${DIR}/sampledata.sql"
