@@ -28,6 +28,7 @@ set -e
 if [ "$#" -ne 2 ]; then
     echo "Illegal number of parameters $#"
     echo "Parameters: user port"
+    exit 1
 fi
 
 PGUSER=$1
@@ -35,15 +36,15 @@ PGPORT=$2
 PGDATABASE="___por_pgtap___"
 VERSION=$(grep -Po '(?<=project\(PGORPY VERSION )[^;]+' CMakeLists.txt)
 
-pushd ./tools/testers/ || exit 1
+pushd ./tools/testers/ > /dev/null || exit 1
 
 dropdb --if-exists -U "${PGUSER}" -p "${PGPORT}" "${PGDATABASE}"
 createdb -U "${PGUSER}" -p "${PGPORT}" "${PGDATABASE}"
 bash setup_db.sh "${PGPORT}" "${PGDATABASE}" "${PGUSER}" "${VERSION}"
 
-popd
+popd > /dev/null || exit 1
 
-PGOPTIONS="-c client_min_messages=WARNING" pg_prove --failures -v --recurse \
+PGOPTIONS="-c client_min_messages=WARNING" pg_prove --failures -q --recurse \
     -S on_error_rollback=off \
     -S on_error_stop=true \
     -P format=unaligned \
