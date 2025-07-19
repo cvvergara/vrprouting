@@ -5,15 +5,23 @@ name: Check files
 # Verifies:
 # - the signatures are up-to-date
 # - the release_notes and NEWS are consitent
-# - the C/C++ files have a license
+# - the files have a license
 # - the shell scripts are ok
-# - the code style is ok
 # Does not makes a compilation
 
 on: [push, pull_request]
 
 permissions:
   contents: read
+
+defaults:
+  run:
+    shell: bash
+    working-directory: ./.github/scripts
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   Signature_check:
@@ -22,8 +30,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Signatures are not removed
-        run: |
-          tools/scripts/test_signatures.sh
+        run: ./test_signatures.sh
 
   News_check:
     runs-on: ubuntu-latest
