@@ -42,31 +42,11 @@ vrpRouting 0.0.1 Release Notes
 -------------------------------------------------------------------------------
 
 To see all issues & pull requests closed by this release see the
-`Git closed milestone for 0.0.1
-<https://github.com/pgRouting/vrprouting/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.0.1%22>`_
+`Git closed milestone for 0.0.0
+<https://github.com/pgRouting/vrprouting/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.0.0%22>`_
 on Github.
 
-.. rubric:: Extraction tasks
-
-Porting or-tools functionality
-
-* vrp_bin_packing
-
-  .. include:: vrp_bin_packing.rst
-     :start-after: Version 0.0.1
-     :end-before: Description
-
-* vrp_knapsack
-
-  .. include:: vrp_knapsack.rst
-     :start-after: Version 0.0.1
-     :end-before: Description
-
-* vrp_multiple_knapsack
-
-  .. include:: vrp_multiple_knapsack.rst
-     :start-after: Version 0.0.1
-     :end-before: Description
+.. rubric:: Version functions
 
 * por_version
 
