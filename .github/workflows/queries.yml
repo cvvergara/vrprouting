@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - '.github/workflows/check-queries.yml'
+      - '.github/workflows/queries.yml'
       - 'sql/**'
       - 'docqueries/**'
       - 'tools/testers/**'
@@ -28,7 +28,7 @@ on:
 
   pull_request:
     paths:
-      - '.github/workflows/check-queries.yml'
+      - '.github/workflows/queries.yml'
       - 'sql/**'
       - 'docqueries/**'
       - 'tools/testers/**'
