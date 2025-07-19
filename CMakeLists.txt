@@ -110,15 +110,6 @@ string(REGEX REPLACE "^([0-9]+)\\.([0-9]+).*" "\\2" PostgreSQL_VERSION_MINOR ${P
 math(EXPR PostgreSQL_VERSION_NUM "${PostgreSQL_VERSION_MAYOR} * 10000 + ${PostgreSQL_VERSION_MINOR}")
 
 
-#-------
-include_directories(SYSTEM ${PostgreSQL_INCLUDE_DIRS})
-if(WIN32)
-  include_directories(SYSTEM ${PostgreSQL_INCLUDE_DIRS}/port/win32)
-  if(MSVC)
-    include_directories(SYSTEM ${PostgreSQL_INCLUDE_DIRS}/port/win32_msvc/)
-  endif()
-endif()
-
 #[[
 #---------------------------------------------
 # Definitions for full_version
@@ -136,7 +127,6 @@ add_definitions(-DPostgreSQL_VERSION_NUM=${PostgreSQL_VERSION_NUM})
 
 if (PROJECT_DEBUG)
   message(STATUS "PostgreSQL_FOUND ${PostgreSQL_FOUND}")
-  message(STATUS "PostgreSQL_INCLUDE_DIRS ${PostgreSQL_INCLUDE_DIRS}")
   message(STATUS "PostgreSQL_LIBRARIES ${PostgreSQL_LIBRARIES}")
   message(STATUS "PostgreSQL_LIBRARY_DIRS ${PostgreSQL_LIBRARY_DIRS}")
   message(STATUS "PostgreSQL_VERSION_STRING ${PostgreSQL_VERSION_STRING}")
