@@ -29,7 +29,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 #---------------------------------------------
 #---------------------------------------------
 
-project(PGORPY VERSION 0.0.1
+project(PGORPY VERSION 0.0.0
 )
 set(PROJECT_VERSION_DEV "")
 string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
