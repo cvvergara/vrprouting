@@ -126,12 +126,4 @@ jobs:
       - name: Test documentation queries are up to date
         run: |
           sudo service postgresql start
-          psql -c "CREATE DATABASE ___vrp___test___;"
-          TESTDIRS="version"
-          for d in ${TESTDIRS}
-          do
-            ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}" -doc -alg "${d}"
-          done
-          git diff
-
-          ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}"
+          ./tools/testers/doc_queries_generator.pl --port "${PGPORT}"
