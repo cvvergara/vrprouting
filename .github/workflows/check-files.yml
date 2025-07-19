@@ -50,7 +50,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install Requirements
-        run:  sudo apt install -y licensecheck
+        run:  sudo apt-get install -y licensecheck
       - name: Run License Check
         run: ./test_license.sh
 
@@ -60,6 +60,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install Requirements
-        run:  sudo apt install -y shellcheck
+        run:  sudo apt-get install -y shellcheck
       - name: Run Shell Check
         run: ./test_shell.sh
