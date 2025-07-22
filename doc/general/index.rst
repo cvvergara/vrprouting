@@ -1,7 +1,7 @@
 ..
    ****************************************************************************
-    vrpRouting Manual
-    Copyright(c) vrpRouting Contributors
+    pgORpy Manual
+    Copyright(c) pgORpy Contributors
 
     This documentation is licensed under a Creative Commons Attribution-Share
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
@@ -9,30 +9,26 @@
 
 |
 
-* Supported Versions
-  `Latest <https://vrp.pgrouting.org/latest/en/index.html>`__
-  (`v0 <https://vrp.pgrouting.org/v0/en/index.html>`__)
-
 .. _index:
 
 *******************************************************************************
 Table of Contents
 *******************************************************************************
 
-vrpRouting extends the `PostGIS <https://postgis.net>`__/`PostgreSQL <https://www.postgresql.org>`__
-geospatial database to provide geospatial routing and other network analysis functionality.
+pgORpy brings to the database Operations Research tools from `OR-tools
+<https://developers.google.com/optimization>`__
 
-This is the manual for vrpRouting |release|.
+This is the manual for pgORpy |release|.
 
 .. image:: _static/images/ccbysa.png
     :align: left
     :alt: Creative Commons Attribution-Share Alike 3.0 License
 
-The vrpRouting Manual is licensed under a `Creative Commons Attribution-Share Alike 3.0 License
+The pgORpy Manual is licensed under a `Creative Commons Attribution-Share Alike 3.0 License
 <https://creativecommons.org/licenses/by-sa/3.0/>`_.
 Feel free to use this material any way you like, but we ask that you attribute credit to
-the vrpRouting Project and wherever possible, a link back to https://pgrouting.org.
-For other licenses used in vrpRouting see the :ref:`license` page.
+the pgORpy project and wherever possible, a link back to https://pgrouting.org.
+For other licenses used in pgORpy see the :ref:`license` page.
 
 General
 ===============================================================================
@@ -52,14 +48,6 @@ General
 
    sampledata
 
-Pgrouting Concepts
-===============================================================================
-
-.. toctree::
-   :maxdepth: 2
-
-   concepts
-
 Official functions
 ===============================================================================
 
@@ -67,19 +55,6 @@ Official functions
    :maxdepth: 3
 
    official
-
-Available functions but not official vrpRouting functions
-===============================================================================
-
-.. include:: experimental.rst
-   :start-after: experimental_start
-   :end-before: experimental_end
-
-.. toctree::
-   :hidden:
-
-   proposed
-   experimental
 
 Release Notes
 ===============================================================================

@@ -6,8 +6,7 @@ SET(LOCAL_FILES
   release_notes.rst
   support.rst
   official.rst
-  proposed.rst
-  experimental.rst
+  sampledata.rst
 )
 
 foreach (f ${LOCAL_FILES})
