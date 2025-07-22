@@ -31,15 +31,23 @@ License
 
 The following licenses can be found in pgORpy:
 
-- GNU General Public License 2 or later, `GPL-2.0-or-later
-  <https://spdx.org/licenses/GPL-2.0-or-later.html>`__.
+.. list-table::
+   :widths: 250 500
 
-  - For code in any language.
+   * - **License**
+     -
+   * - GNU General Public License v2.0 or later
+     - Most features of pgORpy are available under GNU General Public License
+       v2.0 or later `GPL-2.0-or-later
+       <https://spdx.org/licenses/GPL-2.0-or-later.html>`__.
+   * - Apache license Version 2.0
+     - OR-tool is under 'Apache license Version 2.0
+       <https://github.com/google/or-tools/blob/stable/LICENSE>'__
+   * - Creative Commons Attribution-Share Alike 3.0 License
+     - The pgORpy Manual and examples is licensed under a `Creative Commons
+       Attribution-Share Alike 3.0 License
+       <https://creativecommons.org/licenses/by-sa/3.0/>`_.
 
-- Creative Commons Attribution-Share Alike 3.0 License `CC BY-SA 3.0
-  <https://creativecommons.org/licenses/by-sa/3.0/>`__.
-
-  - For user's & developer's documentation
 
 In general license information is included in the header of each source file.
 
