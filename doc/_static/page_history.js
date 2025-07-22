@@ -6,25 +6,23 @@ function createInfo(file, newat, altnames = '', removedat = '') {
 }
 
 const versionsArr = ['0.0'];
-var unsuportedArr = [];
+const unsuportedArr = [ ];
 var titles = [
     {k: 'en', v: ['Supported versions', 'Unsupported versions']},
 ];
 
 
 var newpages = [
-    {v: '0.0', pages: ['por_version', 'por_full_version', 'index',
-        'installation', 'introduction', 'official', 'release_notes'
-        'sampledata', 'support']},
+    {v: '0.0', pages: [ 'index', 'introduction', 'installation', 'support',
+        'por_version', 'por_full_version', 'official', 'release_notes',
+        'sampledata' ] },
 ];
 
-var filesArr = [
-
-];
+var filesArr = [ ];
 
 function get_titles(data, k) {
-    for (var i = 0; i < titles.length; i++) {
-        if (titles[i].k == k) { return titles[i]; }
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].k == k) { return data[i]; }
     }
     return '';
 }

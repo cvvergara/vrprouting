@@ -24,6 +24,7 @@ Version
    :maxdepth: 1
 
    por_version
+   por_full_version
 
 .. rubric:: Indices and tables
 
