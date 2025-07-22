@@ -33,6 +33,8 @@ use File::Find ();
 use File::Basename;
 use Data::Dumper;
 use Time::HiRes qw(gettimeofday tv_interval);
+use Getopt::Long;
+
 $Data::Dumper::Sortkeys = 1;
 
 # for the convenience of &wanted calls, including -eval statements:
@@ -51,97 +53,81 @@ my $LEVEL = "NOTICE";
 my $FORCE = 0;
 
 my $DBNAME = "___".$PROJECT."_generator___";
-my $DBUSER;
-my $DBHOST;
-my $DBPORT;
+my $DBUSER = "";
+my $DBHOST = "";
+my $DBPORT = "";
+my $POSGRES_VER = "";
+my $alg = '';
+my $VENV = '';
+my $psql = '';
 
-sub Usage {
+sub HelpMessage {
     die "Usage: doc_queries_generator.pl -pgver vpg -pgisver vpgis -psql /path/to/psql\n" .
-    " --alg 'dir'          - directory to select which algorithm subdirs to test\n" .
+    " --alg 'dir'           - directory to select which algorithm subdirs to test\n" .
     " --pgver version       - postgresql version\n" .
     " [-d|--dbname] name    - database name (default '$DBNAME')\n" .
     " [-h|--host] host      - postgresql host or socket directory to use\n" .
     " [-p|--port] port      - postgresql port to use\n" .
     " [-U|--username] name  - postgresql user role to use\n" .
     " --psql /path/to/psql  - optional path to psql\n" .
-    " --py venv             - python environment\n" .
+    " --py VENV             - python environment\n" .
     " [-v|--verbose]        - verbose messages of the execution\n" .
     " --data                - only install the sampledata.\n" .
     " [-l|--level] NOTICE   - client_min_messages value. Defaults to $LEVEL. other values can be WARNING, DEBUG3, etc\n" .
     " [-c|--clean]          - dropdb before running.\n" .
-    " --doc(cumentation)    - Generate documentation examples. LEVEL is set to NOTICE\n" .
+    " --doccumentation|doc  - Generate documentation examples. LEVEL is set to NOTICE\n" .
     " --help                - Show this help\n";
 }
 
 print "RUNNING: doc_queries_generator.pl " . join(" ", @ARGV) . "\n";
 
-my ($POSGRES_VER, $psql);
-my $alg = '';
 my @testpath = ("docqueries/");
 my @test_directory = ();
-my $clean;
+my $CLEAN = '';
 my $ignore;
-my $venv = '';
 
+my $opts = GetOptions(
+    'dbname=s' => \$DBNAME,
+    'host|h=s' => \$DBHOST,
+    'port|p=i' => \$DBPORT,
+    'username|U=s' => \$DBUSER,
+    'pgver=s' => \$POSGRES_VER,
+    'psql=s' => \$psql,
+    'level=s' => \$LEVEL,
 
-while (my $a = shift @ARGV) {
-    if ( $a eq '--pgver') {
-        $POSGRES_VER = shift @ARGV || Usage();
-    } elsif ( $a =~ '--dbname | -d') {
-        $DBNAME   = shift @ARGV || Usage();
-    } elsif ($a eq '--host | -h') {
-        $DBHOST = shift @ARGV || Usage();
-    } elsif ($a =~ '--port|-p') {
-        $DBPORT = shift @ARGV || Usage();
-    } elsif ($a =~ '--username|-U') {
-        $DBUSER = shift @ARGV || Usage();
-    } elsif ($a eq '--alg') {
-        $alg = shift @ARGV || Usage();
-        $alg =~ s/docqueries//;
-        @testpath = ("docqueries/$alg");
-    } elsif ($a eq '-psql') {
-        $psql = shift @ARGV || Usage();
-        die "'$psql' is not executable!\n" unless -x $psql;
-    } elsif ($a eq '--help') {
-        Usage();
-    } elsif ($a eq '-venv') {
-        $venv = shift @ARGV || Usage();
-    } elsif ($a eq '--data') {
-        $DATA = 1;
-    } elsif ($a =~ '--clean | -c') {
-        $clean = 1;
-    } elsif ($a =~ '--level | -l') {
-        $LEVEL = shift @ARGV || Usage();
-        print "The level $LEVEL\n";
-    } elsif ($a =~ '--verbose | -v') {
-        $VERBOSE = 1;
-    } elsif ($a =~ /^-force/i) {
-        $FORCE = 1;
-    } elsif ($a =~ /^-doc(umentation)?/i) {
-        $DOCUMENTATION = 1;
-    } else {
-        warn "Error: unknown option '$a'\n";
-        Usage();
-    }
-}
+    'alg=s' => \$alg,
+    'venv=s' => \$VENV,
+
+    'verbose' => \$VERBOSE,
+    'data' => \$DATA,
+    'clean' => \$CLEAN,
+    'force' => \$FORCE,
+    "help" => sub { HelpMessage() },
+    'documentation|doc=s' => \$DOCUMENTATION,
+);
+
+die "An option is wrong" unless $opts;
+
+$alg =~ s/docqueries//;
+@testpath = ("docqueries/$alg");
+if ($psql ne '') {
+    die "'$psql' is not executable!\n" unless -x $psql;
+};
 
 # documentation gets NOTICE
 $LEVEL = "NOTICE" if $DOCUMENTATION;
 
 my $connopts = "";
-$connopts .= " -U $DBUSER" if defined $DBUSER;
-$connopts .= " -h $DBHOST" if defined $DBHOST;
-$connopts .= " -p $DBPORT" if defined $DBPORT;
+$connopts .= " -U $DBUSER" if $DBUSER;
+$connopts .= " -h $DBHOST" if $DBHOST;
+$connopts .= " -p $DBPORT" if $DBPORT;
 print "connection options '$connopts'\n" if $VERBOSE;
 
 %main::tests = ();
 my @cfgs = ();
 my %stats = (z_pass=>0, z_fail=>0, z_crash=>0, RunTimeTotal=>0);
-my $TMP = "/tmp/pgr-test-runner-$$";
-my $TMP2 = "/tmp/pgr-test-runner-$$-2";
-my $TMP3 = "/tmp/pgr-test-runner-$$-3";
-my $nopyA = "/tmp/pgr-test-runner-$$-4";
-my $nopyE = "/tmp/pgr-test-runner-$$-5";
+my $TMP = "/tmp/other-commands-$$";
+my $TMP2 = "/tmp/compare-result-$$";
 
 if (! $psql) {
     $psql = findPsql() || die "ERROR: can not find psql, specify it on the command line.\n";
@@ -167,7 +153,7 @@ if ($DATA) {exit 0;};
 # Find the desired queries files
 File::Find::find({wanted => \&want_tests}, @testpath);
 
-die "Error: no queries files found. Run this command from the top path of pgRouting repository!\n" unless @cfgs;
+die "Error: no queries files found. Run this command from the top path of pgORpy repository!\n" unless @cfgs;
 
 
 # cfgs = SET of configuration file names
@@ -195,7 +181,6 @@ print Data::Dumper->Dump([\%stats], ['stats']);
 
 unlink $TMP;
 unlink $TMP2;
-unlink $TMP3;
 
 if ($stats{z_crash} > 0 || $stats{z_fail} > 0) {
     exit 1;  # signal we had failures
@@ -352,7 +337,7 @@ sub process_single_test{
 sub createTestDB {
     print "-> createTestDB\n" if $VERBOSE;
 
-    dropTestDB() if $clean && dbExists();
+    dropTestDB() if $CLEAN && dbExists();
 
     my $template;
     my $dbver = getServerVersion();
