@@ -15,7 +15,7 @@
 ``por_full_version``
 ===============================================================================
 
-``por_full_version`` - Get versions used for building pgorpy.
+``por_full_version`` - Get versions used for building pgORpy.
 
 .. rubric:: Availability
 
@@ -26,7 +26,7 @@
 Description
 -------------------------------------------------------------------------------
 
-Returns pgorpy version information and or-tools version used.
+Returns pgORpy version information and or-tools version used.
 
 Signatures
 -------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ Result Columns
 ==========  =========== ===============================
  column      Type       Description
 ==========  =========== ===============================
- version     ``TEXT``    pgorpy version
+ version     ``TEXT``    pgORpy version
  or-tools    ``TEXT``    OR-tools version
 ==========  =========== ===============================
 

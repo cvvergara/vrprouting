@@ -72,8 +72,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'pgorpy'
-copyright = u'pgorpy Contributors - Version @PROJECT_FULL_VERSION@'
+project = u'pgORpy'
+copyright = u'pgORpy Contributors - Version @PROJECT_FULL_VERSION@'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -335,9 +335,6 @@ pdf_style_path = ['.', '_styles']
 
 # cases to ignore during link checking
 linkcheck_ignore = [
-    # might not exist yet (we are generating it!)
-    r"https://gis.stackexchange.com/",
-
     # (see: https://github.com/sphinx-doc/sphinx/issues/7388)
     r"https://github.com/pgRouting/pgorpy/",
 ]

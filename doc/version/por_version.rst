@@ -15,7 +15,7 @@
 ``por_version``
 ===============================================================================
 
-``por_version`` - Get pgorpy version.
+``por_version`` - Get pgORpy version.
 
 .. rubric:: Availability
 
@@ -26,7 +26,7 @@
 Description
 -------------------------------------------------------------------------------
 
-Gets the pgorpy version information.
+Gets the pgORpy version information.
 
 Signatures
 -------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ Result Columns
 =========== ===============================
  Type       Description
 =========== ===============================
-``TEXT``    pgorpy version
+``TEXT``    pgORpy version
 =========== ===============================
 
 .. rubric:: See Also
