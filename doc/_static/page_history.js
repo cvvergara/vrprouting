@@ -23,8 +23,8 @@ var filesArr = [
 ];
 
 function get_titles(data, k) {
-    for (var i = 0; i < data.length; i++) {
-        if (data[i].k == k) { return data[i]; }
+    for (var i = 0; i < titles.length; i++) {
+        if (titles[i].k == k) { return titles[i]; }
     }
     return '';
 }
@@ -61,12 +61,13 @@ function get_history(name, lang) {
     prepare();
     var data = get(name);
     var title = get_titles(titles, lang);
-    var home = `<a class="reference external" href="https://docs.pgrouting.org/`;
+    var home = `<a class="reference external" href="https://pgORpy.pgrouting.org/`;
     var validlang = lang;
 
     var result;
     result = '<strong>' + title.v[0] + ':</strong>';
     result += home + 'latest/' + validlang + '/' + data.file + '.html"> latest </a> ';
+
     latest = versionsArr[0];
     for (var i = 0; i < versionsArr.length; i++) {
         validlang = lang;
