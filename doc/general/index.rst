@@ -25,10 +25,11 @@ This is the manual for pgORpy |release|.
     :alt: Creative Commons Attribution-Share Alike 3.0 License
 
 The pgORpy Manual is licensed under a `Creative Commons Attribution-Share Alike 3.0 License
-<https://creativecommons.org/licenses/by-sa/3.0/>`_.
-Feel free to use this material any way you like, but we ask that you attribute credit to
-the pgORpy project and wherever possible, a link back to https://pgrouting.org.
-For other licenses used in pgORpy see the :ref:`license` page.
+<https://creativecommons.org/licenses/by-sa/3.0/>`__.
+
+Feel free to use this documentation material any way you like, but we ask that
+you attribute credit to the pgORpy project and wherever possible, a link back
+to https://pgrouting.org.
 
 General
 ===============================================================================
