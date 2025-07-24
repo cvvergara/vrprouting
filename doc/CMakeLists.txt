@@ -1,14 +1,19 @@
 #---------------------------------------------
 # Checking for prerequisites
 #---------------------------------------------
-find_package(Sphinx ${SPHINX_MINIMUM_VERSION})
+find_program(SPHINX_EXECUTABLE
+  NAMES sphinx-build
+  DOC "Sphinx Documentation Builder (sphinx-doc.org)"
+  )
 
-if (NOT SPHINX_FOUND)
+if (NOT SPHINX_EXECUTABLE)
   message(WARNING "Sphinx not found.
   Building without documentation")
   return()
 endif()
 
+set(SPHINX_FLAGS "" CACHE STRING "Flags to pass to sphinx-build")
+separate_arguments(sphinx_flags UNIX_COMMAND "${SPHINX_FLAGS}")
 
 option(SPHINX_HTML "Set ON|OFF (default=OFF) to build Documentation library tree as HTML" ON)
 option(SPHINX_PDF "Set ON|OFF (default=OFF) to build Documentation library tree as PDF" OFF)
@@ -115,58 +120,67 @@ configure_file(
 string(REPLACE ";" "," SPHINXINTL_LANGUAGE "${PROJECT_BUILD_LANGUAGES}")
 message(STATUS "SPHINXINTL_LANGUAGE=${SPHINXINTL_LANGUAGE}")
 
-foreach (target ${PROJECT_DOC_TARGETS})
+foreach (format ${PROJECT_DOC_TARGETS})
 
-  if ("${target}" STREQUAL "locale")
+  if ("${format}" STREQUAL "locale")
 
-    add_custom_target(locale
-      COMMAND ${SPHINX_EXECUTABLE}
-      -b gettext
-      -c "${PGR_DOCUMENTATION_SOURCE_DIR}"
-      "${PGR_DOCUMENTATION_SOURCE_DIR}"
-      "${CMAKE_SOURCE_DIR}/locale/pot"
-
-      COMMAND sphinx-intl update -d ${CMAKE_SOURCE_DIR}/locale -l ${SPHINXINTL_LANGUAGE} > locale_changes.txt
-
-      COMMENT "Generating POT files ..."
-      SOURCES ${PROJECT_DOC_FILES}
+    find_program(SPHINX_INTL_EXECUTABLE
+      NAMES sphinx-intl
+      DOC "Sphinx Documentation Builder (sphinx-doc.org)"
     )
+
+    if (SPHINX_INTL_EXECUTABLE)
+
+      add_custom_target(locale
+        COMMAND ${SPHINX_EXECUTABLE}
+        -b gettext
+        -c "${PGR_DOCUMENTATION_SOURCE_DIR}"
+        "${PGR_DOCUMENTATION_SOURCE_DIR}"
+        "${CMAKE_SOURCE_DIR}/locale/pot"
+
+        COMMAND ${SPHINX_INTL_EXECUTABLE} update
+        -d ${CMAKE_SOURCE_DIR}/locale
+        -l ${SPHINXINTL_LANGUAGE} > locale_changes.txt
+
+        COMMENT "Generating POT and PO files"
+        SOURCES ${PROJECT_DOC_FILES})
+
+    else()
+
+      message(WARNING "sphinx-intl not found.
+      Not building the pot and po locale files")
+
+    endif()
 
   else()
 
-    add_custom_target("${target}"
-      COMMENT "Building ${target} documentation with Sphinx")
+    add_custom_target("${format}"
+      COMMENT "Building ${format} documentation with Sphinx")
 
     configure_file(
       "${CMAKE_CURRENT_SOURCE_DIR}/forward.html"
-      "${PGR_DOCUMENTATION_BUILD_DIR}/${target}/index.html")
+      "${PGR_DOCUMENTATION_BUILD_DIR}/${format}/index.html")
 
     foreach (lang ${PROJECT_BUILD_LANGUAGES})
       add_custom_target(
-        "${target}-${lang}"
+        "${format}-${lang}"
         COMMAND ${SPHINX_EXECUTABLE}
-        #-q  # Enable for quiet mode
-        #-Q  # Enable for even more quiet mode
-        #-v   # increase verbosity
-        -W
-        --keep-going
-        #-j auto
-        -E  # don't use a saved environment, always read all file
-        #-a  # write all files; default is to only write new and changed files
-        -b ${target}
+        -c ${CMAKE_CURRENT_BINARY_DIR}
+        -d ${CMAKE_CURRENT_BINARY_DIR}/doctrees
+        -b ${format}
         -D language='${lang}'
-        -c "${PGR_DOCUMENTATION_SOURCE_DIR}"
+        ${sphinx_flags}
         "${PGR_DOCUMENTATION_SOURCE_DIR}"
-        "${PGR_DOCUMENTATION_BUILD_DIR}/${target}/${lang}"
+        "${PGR_DOCUMENTATION_BUILD_DIR}/${format}/${lang}"
 
-        COMMENT "Generating ${target}/${lang} documentation ..."
+        COMMENT "Generating ${format}/${lang} documentation"
         SOURCES ${PROJECT_DOC_FILES}  ${PROJECT_IMG_FILES}
         DEPENDS ${PROJECT_DOC_FILES}  ${PROJECT_IMG_FILES}
       )
-      add_dependencies(${target} "${target}-${lang}")
+      add_dependencies(${format} "${format}-${lang}")
 
     endforeach()
-    add_dependencies(doc "${target}")
+    add_dependencies(doc "${format}")
 
   endif()
 endforeach()

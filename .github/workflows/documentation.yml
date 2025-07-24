@@ -103,19 +103,19 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            python3-sphinx \
-            python3-sphinx-bootstrap-theme \
-            sphinx-intl \
             postgresql-${PGVER} \
             postgresql-server-dev-${PGVER} \
             postgresql-plpython3-${PGVER}
 
           # documentation dependencies
-          sudo apt-get install -y graphviz
+          sudo apt-get install -y
+            graphviz \
+            python3-sphinx \
+            python3-sphinx-bootstrap-theme \
+            sphinx-intl
 
-      - name: Install Google OR-Tools
+      - name: Install python requirements
         run: |
-          sudo pip install --root=/ sphinx-collapse
           sudo pip install --root=/ ortools==9.10.4067
 
       - name: Configure
@@ -124,7 +124,7 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
-              -DWITH_DOC=ON -DLINKCHECK=ON ..
+              -DSPHINX_LINKCHECK=ON ..
 
       - name: Build
         if: env.PROCESS == 'true'

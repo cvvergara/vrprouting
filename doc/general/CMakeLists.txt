@@ -14,5 +14,9 @@ foreach (f ${LOCAL_FILES})
   list(APPEND LOCAL_DOC_FILES  ${PGR_DOCUMENTATION_SOURCE_DIR}/${f})
 endforeach()
 
+file(READ ${PGR_DOCUMENTATION_SOURCE_DIR}/release_notes.rst FILE_CONTENTS)
+string(REGEX REPLACE ":issue:`([0-9]+)`" "`#\\1 <https://github.com/pgRouting/pgrouting/issues/\\1>`__" FILE_CONTENTS "${FILE_CONTENTS}")
+file(WRITE ${PGR_DOCUMENTATION_SOURCE_DIR}/release_notes.rst "${FILE_CONTENTS}")
+
 set(PROJECT_DOC_FILES ${PROJECT_DOC_FILES} ${LOCAL_DOC_FILES} PARENT_SCOPE)
 

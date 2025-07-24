@@ -23,7 +23,6 @@ permissions:
   contents: write
 
 env:
-    postgis: 3
     release: Release
 
 jobs:
@@ -61,20 +60,20 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          # vrpRouting dependencies
           sudo apt-get install -y \
             postgresql-${PGVER} \
             postgresql-server-dev-${PGVER} \
             postgresql-plpython3-${PGVER}
 
           # documentation dependencies
-          sudo apt-get install -y graphviz
+          sudo apt-get install -y
+            graphviz \
+            python3-sphinx \
+            python3-sphinx-bootstrap-theme \
+            sphinx-intl
 
-      - name: Install Google OR-Tools
+      - name: Install python requirements
         run: |
-          sudo pip install --root=/ Sphinx>4.0.0
-          sudo pip install --root=/ sphinx-bootstrap-theme>=0.8.0
-          sudo pip install --root=/ sphinx-intl==2.2.0
           sudo pip install --root=/ ortools==9.10.4067
 
       - name: Configure
@@ -83,9 +82,9 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
-              -DWITH_DOC=ON -DLOCALE=ON  ..
+              -DSPHINX_LOCALE=ON  ..
 
-      - name: Build
+      - name: Build the locale files
         run: |
           cd build
           make locale
