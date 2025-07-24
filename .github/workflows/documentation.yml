@@ -116,7 +116,7 @@ jobs:
 
       - name: Install Google OR-Tools
         run: |
-          sudo pip install --root=/ sphinx-bootstrap-theme>=0.8.0
+          sudo pip install --root=/ sphinx-collapse
           sudo pip install --root=/ ortools==9.10.4067
 
       - name: Configure
