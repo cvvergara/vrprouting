@@ -29,7 +29,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 #---------------------------------------------
 #---------------------------------------------
 
-project(PGORPY VERSION 0.0.0
+project(pgORpy VERSION 0.0.0
 )
 set(PROJECT_VERSION_DEV "")
 string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
@@ -57,7 +57,7 @@ include(pgr/Configure)
 #---------------------------------------------
 # minimum versions
 #---------------------------------------------
-set(SPHINX_MINIMUM_VERSION "1.8")
+set(SPHINX_MINIMUM_VERSION "4.0.0")
 set(POSTGRESQL_MINIMUM_VERSION "12.0")
 set(ORTOOLS_VERSION "9.10.4067")
 string(TIMESTAMP YEAR "%Y")

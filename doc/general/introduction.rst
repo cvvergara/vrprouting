@@ -41,8 +41,8 @@ The following licenses can be found in pgORpy:
        v2.0 or later `GPL-2.0-or-later
        <https://spdx.org/licenses/GPL-2.0-or-later.html>`__.
    * - Apache license Version 2.0
-     - OR-tool is under 'Apache license Version 2.0
-       <https://github.com/google/or-tools/blob/stable/LICENSE>'__
+     - OR-tools is under `Apache license Version 2.0
+       <https://github.com/google/or-tools/blob/stable/LICENSE>`__
    * - Creative Commons Attribution-Share Alike 3.0 License
      - The pgORpy Manual and examples is licensed under a `Creative Commons
        Attribution-Share Alike 3.0 License
@@ -79,8 +79,8 @@ Corporate Sponsors (in alphabetical order)
 These are corporate entities that have contributed developer time, hosting, or
 direct monetary funding to the pgORpy project:
 
+- `Erosion developers <https://www.erosion.dev/>`__
 - `Paragon Corporation <https://www.paragoncorporation.com/>`__
-- `erosion <https://www.erosion.dev/>`__
 
 Contributors Past & Present:
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -102,7 +102,7 @@ Corporate Sponsors past & present (in alphabetical order)
 These are corporate entities that have contributed developer time, hosting, or
 direct monetary funding to the pgORpy project:
 
-- erosion
+- Erosion developers
 - Paragon Corporation
 
 

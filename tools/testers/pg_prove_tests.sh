@@ -27,14 +27,14 @@ set -e
 
 if [ "$#" -ne 2 ]; then
     echo "Illegal number of parameters $#"
-    echo "Parameters: user port"
+    echo "Parameters: <user> <port>"
     exit 1
 fi
 
 PGUSER=$1
 PGPORT=$2
-PGDATABASE="___por_pgtap___"
-VERSION=$(grep -Po '(?<=project\(PGORPY VERSION )[^;]+' CMakeLists.txt)
+PGDATABASE="___pgorpy___pgtap___"
+VERSION=$(grep -Po '(?<=project\(pgORpy VERSION )[^;]+' CMakeLists.txt)
 
 pushd ./tools/testers/ > /dev/null || exit 1
 

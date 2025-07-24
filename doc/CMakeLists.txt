@@ -5,17 +5,18 @@ find_package(Sphinx ${SPHINX_MINIMUM_VERSION})
 
 if (NOT SPHINX_FOUND)
   message(WARNING "Sphinx not found.
-  building without documentation")
+  Building without documentation")
   return()
 endif()
 
 
-option(BUILD_HTML "Set ON|OFF (default=OFF) to build Documentation library tree as HTML" ON)
-option(BUILD_LOCALE "Set ON|OFF (default=OFF) to build Documentation library tree as EPUB page" OFF)
-option(BUILD_PDF "Set ON|OFF (default=OFF) to build Documentation library tree as PDF" OFF)
-option(LINKCHECK "Set ON|OFF (default=OFF) to build Documentation library tree as LINKCHECK page" OFF)
+option(SPHINX_HTML "Set ON|OFF (default=OFF) to build Documentation library tree as HTML" ON)
+option(SPHINX_PDF "Set ON|OFF (default=OFF) to build Documentation library tree as PDF" OFF)
+option(SPHINX_LOCALE "Set ON|OFF (default=OFF) to build the locale files" OFF)
+option(SPHINX_LINKCHECK "Set ON|OFF (default=OFF) to build Documentation library tree as LINKCHECK page" OFF)
 
-#[[ following options have not been tested
+#[[
+following options have not been tested
 option(BUILD_LATEX "Set ON|OFF (default=OFF) to build Documentation library tree as PDF" OFF)
 option(SINGLEHTML "Set ON|OFF (default=OFF) to build Documentation library tree as SINGLE HTML" OFF)
 option(BUILD_MAN "Set ON|OFF (default=OFF) to build Documentation library tree as MAN page" OFF)
@@ -23,14 +24,13 @@ option(EPUB "Set ON|OFF (default=OFF) to build Documentation library tree as EPU
 option(DUMMY "Set ON|OFF (default=OFF) for debugging purposes" OFF)
 #]]
 
-foreach(opt BUILD_HTML BUILD_LOCALE LINKCHECK)
+foreach(opt SPHINX_HTML SPHINX_LOCALE SPHINX_LINKCHECK)
   if (${${opt}})
     string(TOLOWER ${opt} val)
-    string(REPLACE "build_" "" val ${val})
+    string(REPLACE "sphinx_" "" val ${val})
     list(APPEND PROJECT_DOC_TARGETS ${val})
   endif()
 endforeach()
-
 
 message(STATUS "PROJECT_DOC_TARGETS = ${PROJECT_DOC_TARGETS}")
 if("${PROJECT_DOC_TARGETS}" STREQUAL "")
@@ -39,7 +39,7 @@ if("${PROJECT_DOC_TARGETS}" STREQUAL "")
   return()
 endif()
 
-
+add_custom_target(doc ALL COMMENT "Building documentation with Sphinx")
 
 set(PROJECT_LANGUAGES "en")
 
@@ -112,66 +112,61 @@ configure_file(
 # Add documentation to targets
 
 
-set(ENV{SPHINXINTL_LANGUAGE} ${SPHINXINTL_LANGUAGE})
+string(REPLACE ";" "," SPHINXINTL_LANGUAGE "${PROJECT_BUILD_LANGUAGES}")
 message(STATUS "SPHINXINTL_LANGUAGE=${SPHINXINTL_LANGUAGE}")
 
-if (BUILD_LOCALE)
-    add_custom_target(locale
-        COMMAND ${SPHINX_EXECUTABLE}
-        -b gettext
-        -c "${PGR_DOCUMENTATION_SOURCE_DIR}"
-        "${PGR_DOCUMENTATION_SOURCE_DIR}"
-        "${CMAKE_SOURCE_DIR}/locale/pot"
-
-        COMMAND sphinx-intl update -d ${CMAKE_SOURCE_DIR}/locale -l en > locale_changes.txt
-    #COMMAND sphinx-intl update -p ${CMAKE_SOURCE_DIR}/locale/pot -d ${CMAKE_SOURCE_DIR}/locale --language=${SPHINXINTL_LANGUAGE}
-    #COMMAND sphinx-intl update-txconfig-resources --locale-dir ${CMAKE_SOURCE_DIR}/locale --pot-dir ${CMAKE_SOURCE_DIR}/locale/pot --transifex-project-name pgrouting
-
-
-    COMMENT "Generating POT files ..."
-    SOURCES ${PROJECT_DOC_FILES}
-    )
-endif()
-
-
-# The doc target will build all documentation targets.
-add_custom_target(doc
-    COMMENT "Building documentation with Sphinx")
-
-
 foreach (target ${PROJECT_DOC_TARGETS})
+
+  if ("${target}" STREQUAL "locale")
+
+    add_custom_target(locale
+      COMMAND ${SPHINX_EXECUTABLE}
+      -b gettext
+      -c "${PGR_DOCUMENTATION_SOURCE_DIR}"
+      "${PGR_DOCUMENTATION_SOURCE_DIR}"
+      "${CMAKE_SOURCE_DIR}/locale/pot"
+
+      COMMAND sphinx-intl update -d ${CMAKE_SOURCE_DIR}/locale -l ${SPHINXINTL_LANGUAGE} > locale_changes.txt
+
+      COMMENT "Generating POT files ..."
+      SOURCES ${PROJECT_DOC_FILES}
+    )
+
+  else()
+
     add_custom_target("${target}"
-        COMMENT "Building ${target} documentation with Sphinx")
+      COMMENT "Building ${target} documentation with Sphinx")
 
     configure_file(
-        "${CMAKE_CURRENT_SOURCE_DIR}/forward.html"
-        "${PGR_DOCUMENTATION_BUILD_DIR}/${target}/index.html")
+      "${CMAKE_CURRENT_SOURCE_DIR}/forward.html"
+      "${PGR_DOCUMENTATION_BUILD_DIR}/${target}/index.html")
 
     foreach (lang ${PROJECT_BUILD_LANGUAGES})
-        add_custom_target(
-            "${target}-${lang}"
-            COMMAND ${SPHINX_EXECUTABLE}
-            #-q  # Enable for quiet mode
-            #-Q  # Enable for even more quiet mode
-            -v   # increase verbosity
-            -W
-            --keep-going
-            #-j auto
-            #-E  # don't use a saved environment, always read all file
-            #-a  # write all files; default is to only write new and changed files
-            -b ${target}
-            -D language='${lang}'
-            -c "${PGR_DOCUMENTATION_SOURCE_DIR}"
-            "${PGR_DOCUMENTATION_SOURCE_DIR}"
-            "${PGR_DOCUMENTATION_BUILD_DIR}/${target}/${lang}"
+      add_custom_target(
+        "${target}-${lang}"
+        COMMAND ${SPHINX_EXECUTABLE}
+        #-q  # Enable for quiet mode
+        #-Q  # Enable for even more quiet mode
+        #-v   # increase verbosity
+        -W
+        --keep-going
+        #-j auto
+        -E  # don't use a saved environment, always read all file
+        #-a  # write all files; default is to only write new and changed files
+        -b ${target}
+        -D language='${lang}'
+        -c "${PGR_DOCUMENTATION_SOURCE_DIR}"
+        "${PGR_DOCUMENTATION_SOURCE_DIR}"
+        "${PGR_DOCUMENTATION_BUILD_DIR}/${target}/${lang}"
 
-            COMMENT "Generating ${target}/${lang} documentation ..."
-            SOURCES ${PROJECT_DOC_FILES}  ${PROJECT_IMG_FILES}
-            DEPENDS ${PROJECT_DOC_FILES}  ${PROJECT_IMG_FILES}
-            )
-        add_dependencies(${target} "${target}-${lang}")
+        COMMENT "Generating ${target}/${lang} documentation ..."
+        SOURCES ${PROJECT_DOC_FILES}  ${PROJECT_IMG_FILES}
+        DEPENDS ${PROJECT_DOC_FILES}  ${PROJECT_IMG_FILES}
+      )
+      add_dependencies(${target} "${target}-${lang}")
 
     endforeach()
     add_dependencies(doc "${target}")
-endforeach()
 
+  endif()
+endforeach()
