@@ -34,7 +34,7 @@ fi
 PGUSER=$1
 PGPORT=$2
 PGDATABASE="___pgorpy___pgtap___"
-VERSION=$(grep -Po '(?<=project\(pgORpy VERSION )[^;]+' CMakeLists.txt)
+VERSION=$(grep pgORpy CMakeLists.txt | awk '{print $3}')
 
 pushd ./tools/testers/ > /dev/null || exit 1
 
