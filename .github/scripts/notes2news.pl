@@ -48,28 +48,17 @@ my $skipping = 1;
 my $file = '';
 my $start = '';
 my $end = '';
+my $blank = 0;
 while (my $line = <$ifh>) {
-    next if $skipping and $line !~ /^vrpRouting/;
+    next if $skipping and $line !~ /^pgORpy/;
     $skipping = 0;
 
     next if $line =~ /contents|:local:|:depth:|\*\*\*\*\*\*\*|\=\=\=\=\=\=\=|\-\-\-\-\-\-\-|\+\+\+\+\+\+\+\+/;
 
-    $line =~ s/[\|]+//g;
-    $line =~ s/($check)/$conversions{$1}/go;
-
-    # Handling the headers
-    if ($line =~ m/^vrpRouting [0-9]$/i) {
-        print $ofh "# $line";
+    if ($line eq "\n") {
+        ++$blank;
         next;
-    };
-    if ($line =~ m/^vrpRouting [0-9].[0-9]$/i) {
-        print $ofh "## $line";
-        next;
-    };
-    if ($line =~ m/^vrpRouting [0-9].[0-9].[0-9] Release Notes$/i) {
-        print $ofh "### $line";
-        next;
-    };
+    }
 
     # get include filename
     if ($line =~ /include/) {
@@ -110,10 +99,35 @@ while (my $line = <$ifh>) {
         $end = $line;
         print "--->      $file from $start to $end \n" if $DEBUG;
         find_stuff($file, $start, $end);
+        $blank = 0;
         next;
     }
 
+    if ($blank >= 1) {
+        print $ofh "\n";
+        $blank = 0;
+    }
 
+    $line =~ s/[\|]+//g;
+    $line =~ s/($check)/$conversions{$1}/go;
+
+    # Handling the headers
+    if ($line =~ m/^pgORpy [0-9]$/i) {
+        print $ofh "# $line";
+        next;
+    };
+    if ($line =~ m/^pgORpy [0-9].[0-9]$/i) {
+        print $ofh "## $line";
+        next;
+    };
+    if ($line =~ m/^pgORpy [0-9].[0-9].[0-9] Release Notes$/i) {
+        print $ofh "### $line";
+        next;
+    };
+
+    # Convert :pr: & issue to markdown
+    $line =~ s/:pr:`([^<]+?)`/\[#$1\](https:\/\/github.com\/pgRouting\/pgORpy\/pull\/$1)/g;
+    $line =~ s/:issue:`([^<]+?)`/\[#$1\](https:\/\/github.com\/pgRouting\/pgORpy\/issues\/$1)/g;
 
     # convert urls to markdown
     $line =~ s/`([^<]+?)\s*<([^>]+)>`_*/\[$1\]($2)/g;
@@ -123,8 +137,6 @@ while (my $line = <$ifh>) {
 
     # convert rubric to bold
     $line =~ s/^\.\. rubric::\s*(.+)$/**$1**/;
-
-    next if $line =~ /^\.\. _changelog/;
 
     print $ofh $line;
 }
