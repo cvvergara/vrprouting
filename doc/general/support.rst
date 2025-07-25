@@ -1,7 +1,7 @@
 ..
    ****************************************************************************
-    vrpRouting Manual
-    Copyright(c) vrpRouting Contributors
+    pgORpy Manual
+    Copyright(c) pgORpy Contributors
 
     This documentation is licensed under a Creative Commons Attribution-Share
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
@@ -12,10 +12,10 @@ Support
 
 Support is available through the
 `pgRouting website <https://pgrouting.org/support.html>`_,
-`documentation <https://vrp.pgrouting.org>`_, tutorials, mailing lists and others.
+`documentation <https://pgORpy.pgrouting.org>`_, tutorials, mailing lists and others.
 
 If you’re looking for `commercial support`_, find below
-a list of companies providing vrpRouting development and consulting services.
+a list of companies providing pgORpy development and consulting services.
 
 
 Reporting Problems
@@ -66,7 +66,7 @@ Commercial Support
 
 For users who require professional support, development and consulting services,
 consider contacting any of the following organizations, which have significantly
-contributed to the development of vrpRouting:
+contributed to the development of pgORpy:
 
 .. list-table::
    :widths: 100 160 200

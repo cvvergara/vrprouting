@@ -1,7 +1,7 @@
 ..
    ****************************************************************************
-    vrpRouting Manual
-    Copyright(c) vrpRouting Contributors
+    pgORpy Manual
+    Copyright(c) pgORpy Contributors
 
     This documentation is licensed under a Creative Commons Attribution-Share
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
@@ -9,36 +9,31 @@
 
 |
 
-* `Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 <https://vrp.pgrouting.org/v0>`__
-* Supported Versions
-  `Latest <https://vrp.pgrouting.org/latest/en/release_notes.html>`__
-  (`v0 <https://vrp.pgrouting.org/v0/en/release_notes.html>`__)
-
 Release Notes
 ===============================================================================
 
 To see the full list of changes check the list of `Git commits
-<https://github.com/pgRouting/vrprouting/commits>`_ on Github.
+<https://github.com/pgRouting/pgORpy/commits>`_ on Github.
 
 .. contents:: Mayors
    :local:
    :depth: 1
 
-vrpRouting 0
+pgORpy 0
 *******************************************************************************
 
 .. contents:: Minors 0.x
    :local:
    :depth: 1
 
-vrpRouting 0.0
+pgORpy 0.0
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. contents:: Contents
    :local:
    :depth: 1
 
-vrpRouting 0.0.1 Release Notes
+pgORpy 0.0.0 Release Notes
 -------------------------------------------------------------------------------
 
 To see all issues & pull requests closed by this release see the
