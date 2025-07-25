@@ -67,7 +67,6 @@ foreach(lang ${PROJECT_LANGUAGES})
   endif()
 endforeach()
 
-message(STATUS "PROJECT_BUILD_LANGUAGES = ${PROJECT_BUILD_LANGUAGES}")
 if("${PROJECT_BUILD_LANGUAGES}" STREQUAL "")
   message(WARNING "No documentation languages found
   Building without documentation")
@@ -78,9 +77,7 @@ message(STATUS "PROJECT_BUILD_LANGUAGES = ${PROJECT_BUILD_LANGUAGES}")
 
 
 # configured documentation tools and intermediate build results
-# TODO for 3.0 Use _build
-# set(PGR_DOCUMENTATION_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/_build")
-set(PGR_DOCUMENTATION_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+set(PGR_DOCUMENTATION_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/_build")
 set(PGR_DOCUMENTATION_SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 
 message(STATUS "PGR_DOCUMENTATION_BUILD_DIR = ${PGR_DOCUMENTATION_BUILD_DIR}")
@@ -101,13 +98,8 @@ endforeach()
 configure_file("../tools/testers/sampledata.sql" "${PGR_DOCUMENTATION_SOURCE_DIR}/sampledata/sampledata.sql")
 
 
-#TODO ???
-#add_subdirectory("static")
-#add_subdirectory("themes")
-file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/_static" DESTINATION "${PGR_DOCUMENTATION_SOURCE_DIR}")
-file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/_themes" DESTINATION "${PGR_DOCUMENTATION_SOURCE_DIR}")
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/_templates/layout.html" "${PGR_DOCUMENTATION_SOURCE_DIR}/_templates/layout.html" @ONLY)
-
+add_subdirectory("_static")
+add_subdirectory("_templates")
 
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/conf.py.in"

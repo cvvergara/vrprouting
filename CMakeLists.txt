@@ -65,8 +65,9 @@ find_package(Perl REQUIRED)
 #---------------------------------------------
 # PostgreSQL
 #---------------------------------------------
-set(PostgreSQL_ADDITIONAL_VERSIONS "12" "13" "14")
+set(PostgreSQL_ADDITIONAL_VERSIONS "18" "17" "16")
 find_package(PostgreSQL ${POSTGRESQL_MINIMUM_VERSION} REQUIRED)
+
 if(POSTGRESQL_BIN)
   # Checking POSTGRESQL_PG_CONFIG
   find_program(POSTGRESQL_PG_CONFIG NAMES pg_config
@@ -99,8 +100,9 @@ endif(EXTENSION_DIR)
 
 message(STATUS "EXTENSION_DIR=${EXTENSION_DIR}")
 
-
-
+#-----------------------------------------------------------------------------
+# Build and install the extension
+#-----------------------------------------------------------------------------
 add_subdirectory(sql)
 
 install(FILES
@@ -110,6 +112,6 @@ install(FILES
 
 #-----------------------------------------------------------------------------
 # DOCUMENTATION
-# We are not installing documentation
+# Not installing
 #-----------------------------------------------------------------------------
 add_subdirectory(doc)
