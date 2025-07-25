@@ -44,6 +44,8 @@ bash setup_db.sh "${PGPORT}" "${PGDATABASE}" "${PGUSER}" "${VERSION}"
 
 popd > /dev/null || exit 1
 
+echo "Starting pgtap tests"
+
 PGOPTIONS="-c client_min_messages=WARNING" pg_prove --failures -q --recurse \
     -S on_error_rollback=off \
     -S on_error_stop=true \
