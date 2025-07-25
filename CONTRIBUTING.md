@@ -3,7 +3,7 @@
 We are really glad you are reading this because we need volunteer developers to
 help with this project.
 
-If you have not already, come find us on 
+If you have not already, come find us on
 [![Join the chat at https://gitter.im/pgRouting/pgrouting](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pgRouting/pgrouting?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 or contact us via [discourse](http://discourse.osgeo.org/c/17).
 
@@ -38,15 +38,15 @@ Any kind of contribution will automatically fall to the following Licences:
 
 Contributions developed for an employer or as part of a work project also fall
 under the above licences. This should be cleared with an authorized supervisor
-or manager in advance. 
+or manager in advance.
 
 Contributions should be developed by the contributor, from the public domain,
 or from an open source project under a compatible licence. If the code does not
-come from the contributor, the original source should be clearly marked. 
+come from the contributor, the original source should be clearly marked.
 
 Do not remove existing copyright headers and licence text from contributions.
 If the copyright holder wants to give up copyright, they must do so in writing
-before any copyright messages are deleted. 
+before any copyright messages are deleted.
 
 ## Submitting changes
 

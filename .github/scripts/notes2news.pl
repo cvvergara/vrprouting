@@ -141,6 +141,7 @@ while (my $line = <$ifh>) {
     print $ofh $line;
 }
 
+print $ofh "-----";
 
 close($ifh);
 close($ofh);
