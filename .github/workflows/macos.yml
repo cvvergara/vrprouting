@@ -5,6 +5,24 @@ on:
   push:
     paths:
       - '.github/workflows/macos.yml'
+      - 'pgtap/**'
+      - 'tools/testers/**'
+      - './CMakeLists.txt'
+
+    branches-ignore:
+      - 'gh-pages'
+
+    tags: []
+
+  pull_request:
+    paths:
+      - '.github/workflows/macos.yml'
+      - 'pgtap/**'
+      - 'tools/testers/**'
+      - './CMakeLists.txt'
+
+    branches-ignore:
+      - 'gh-pages'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -13,93 +31,49 @@ concurrency:
 permissions:
   contents: read
 
-env:
-    postgis: 3
-    vroom: 1.12.0
-
-# TODO: Fix the macOS build for compiling and building VROOM with vrprouting.
 jobs:
   build:
     name: Build
     runs-on: ${{ matrix.os }}
 
     strategy:
-        fail-fast: false
-        matrix:
-          release: [Debug, Release]
-          os: [macos-latest]
+      fail-fast: false
+      matrix:
+        os: [macos-latest, macos-14]
 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: to process or to fail
-        run: |
-            exit 1
-
-      - name: Install python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Install dependencies
-        run: |
-          brew install postgis pgrouting asio glpk rapidjson
-
-      - name: Cache pgtap
-        id: cache-pgtap
-        uses: actions/cache@v4
-        with:
-          path: ./pgTapExtension/
-          key: ${{ matrix.os }}-pgtap-${{ hashFiles('**/packages*.txt') }}
-
-      - name: Checkout pgtap
-        if: steps.cache-pgtap.outputs.cache-hit != 'true'
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          repository: theory/pgtap
-          path: ./pgTapExtension/
 
-      - name: Install pgTAP
-        if: steps.cache-pgtap.outputs.cache-hit != 'true'
+      - name: install dependencies
         run: |
-          cd ./pgTapExtension/
-          make -j 4
-          sudo make install
-          cpan TAP::Parser::SourceHandler::pgTAP
+          brew install postgresql@14
 
       - name: Configure
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }} ..
+          cmake -DSPHINX_HTML=OFF ..
 
       - name: Build
         run: |
           cd build
-          make -j 4
-          sudo make
-          sudo make install
+          make -j
+          make install
 
-      - name: Create superuser
-        if: false
+      - name: Install pgTAP
         run: |
-          export PATH=/usr/local/Cellar/perl/$(perl -e 'print substr($^V, 1)')/bin:$PATH
-          pg_ctl -D /usr/local/var/postgres start
-          export PG_RUNNER_USER=`whoami`
-          sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS \"${PG_RUNNER_USER}\";"
-          sudo -u postgres psql -p ${PGPORT} -c "DROP ROLE IF EXISTS \"${PG_RUNNER_USER}\";"
-          sudo -u postgres psql -p ${PGPORT} -c "CREATE ROLE \"${PG_RUNNER_USER}\" WITH LOGIN SUPERUSER;"
-          sudo -u postgres psql -p ${PGPORT} -c "CREATE DATABASE \"${PG_RUNNER_USER}\";"
-          echo "PG_RUNNER_USER=${PG_RUNNER_USER}" >> $GITHUB_ENV
+          git clone https://github.com/theory/pgtap.git pgTapExtension
+          cd pgTapExtension
+          make -j
+          make install
+          cpan TAP::Parser::SourceHandler::pgTAP
+          ln -s $(find `brew --prefix` -name pg_prove) symlink it into $(brew --prefix)/bin
 
-      - name: Test documentation queries are up to date
-        if: false
+      - name: Test
         run: |
-          export PATH=/usr/local/Cellar/perl/$(perl -e 'print substr($^V, 1)')/bin:$PATH
-          pg_ctl -D /usr/local/var/postgres start
+          export PATH=$(brew --prefix)/Cellar/perl/$(perl -e 'print substr($^V, 1)')/bin:$PATH
+          pg_ctl -D $(brew --prefix)/var/postgresql@14 start
           createuser -s postgres
-          createdb ___vrp___test___
-          cd tools/testers
-          psql -p 5432 -U postgres -d ___vrp___test___ -X -q -v ON_ERROR_STOP=1 --pset pager=off -f setup_db.sql
-          psql -p 5432 -U postgres -d ___vrp___test___ -c "SELECT * FROM vrp_full_version();"
-          pg_prove --failures --quiet --recurse --ext .sql -p 5432 -d ___vrp___test___ -U postgres ../../pgtap/
+          createdb ___pgr___test___
+          bash ./tools/testers/pg_prove_tests.sh postgres 5432
