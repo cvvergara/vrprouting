@@ -11,10 +11,10 @@ if [  "$1" = "--help" ] ; then
     exit 0
 fi
 
-VERSION=$(grep -Po '(?<=project\(PGORPY VERSION )[^;]+' CMakeLists.txt)
+VERSION=$(grep -Po '(?<=project\(pgORpy VERSION )[^;]+' CMakeLists.txt)
 MINOR=${VERSION%.*}
 
-DB_NAME="____signatures____"
+DB_NAME="___por__signatures___"
 DIR="sql/sigs"
 
 # DB_ARGS are the remaining of the arguments

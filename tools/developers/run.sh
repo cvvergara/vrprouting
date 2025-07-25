@@ -12,28 +12,31 @@ pushd "${DIR}" > /dev/null || exit 1
 # copy this file into the root of your repository
 # adjust to your needs
 
-VERSION=$(grep -Po '(?<=project\(PGORPY VERSION )[^;]+' CMakeLists.txt)
-echo "PGORPY VERSION ${VERSION}"
+VERSION=$(grep -Po '(?<=project\(pgORpy VERSION )[^;]+' CMakeLists.txt)
+echo "pgORpy VERSION ${VERSION}"
 
 VENV="$DIR/../env-ort"
 
 # set up your postgres version, port and compiler (if more than one)
-PGVERSION="17"
-PGPORT="5432"
+PGVERSION="16"
+PGPORT="${PGPORT:-5432}"
+PGUSER="${PGUSER:-$USER}"
 PGBIN="/usr/lib/postgresql/${PGVERSION}/bin"
 PGINC="/usr/include/postgresql/${PGVERSION}/server"
 
 QUERIES_DIRS="
-version
 "
 
 TAP_DIRS="
-version
 "
 
 function set_cmake {
     cmake "-DPOSTGRESQL_BIN=${PGBIN}" "-DPostgreSQL_INCLUDE_DIR=${PGINC}" \
-        -DBUILD_HTML=ON -DPROJECT_DEBUG=ON ..
+        -DSPHINX_HTML=ON  \
+        -DPROJECT_DEBUG=ON ..
+
+    #cmake -DSPHINX_LINKCHECK=ON ..
+    #cmake -DSPHINX_LOCALE=ON ..
 }
 
 function tap_test {
@@ -41,22 +44,19 @@ function tap_test {
     echo pgTap test all
     echo --------------------------------------------
 
-    dropdb --if-exists -p $PGPORT ___por___test___
-    createdb  -p $PGPORT ___por___test___
-    bash tools/testers/pg_prove_tests.sh vicky $PGPORT
+    bash tools/testers/pg_prove_tests.sh "${PGUSER}" "${PGPORT}"
 }
 
 function action_tests {
     echo --------------------------------------------
-    echo  Update signatures
+    echo  Action tests
     echo --------------------------------------------
-
-    #bash tools/scripts/get_signatures.sh -p ${PGPORT}
+    bash tools/scripts/get_signatures.sh -p "${PGPORT}"
     .github/scripts/notes2news.pl
     bash .github/scripts/test_signatures.sh
     bash .github/scripts/test_shell.sh
     bash .github/scripts/test_license.sh
-    tools/testers/doc_queries_generator.pl --documentation  -pgport $PGPORT
+    tools/testers/doc_queries_generator.pl --documentation  -pgport "$PGPORT"
 }
 
 function build_doc {
@@ -75,7 +75,7 @@ function build {
 
 }
 
-function test_compile {
+function test_build {
     build
 
     echo --------------------------------------------
@@ -83,8 +83,8 @@ function test_compile {
     echo --------------------------------------------
     for d in ${QUERIES_DIRS}
     do
-        tools/testers/doc_queries_generator.pl  --alg "${d}" --doc  --port "${PGPORT}" -venv "${VENV}"
-        tools/testers/doc_queries_generator.pl  --alg "${d}" --level=DEBUG3  --port "${PGPORT}" -venv "${VENV}"
+        #tools/testers/doc_queries_generator.pl  --alg "${d}" --doc  --port "${PGPORT}" -venv "${VENV}"
+        #tools/testers/doc_queries_generator.pl  --alg "${d}" --level=DEBUG3  --port "${PGPORT}" -venv "${VENV}"
         tools/testers/doc_queries_generator.pl  --alg "${d}" --port "${PGPORT}" -venv "${VENV}"
     done
 
@@ -105,4 +105,4 @@ function test_compile {
     tap_test
 }
 
-test_compile
+test_build
