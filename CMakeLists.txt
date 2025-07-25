@@ -37,9 +37,6 @@ set(OLD_SIGNATURES
 set(CMAKE_BUILD_TYPE "Release")
 include(Version)
 
-add_definitions(-DPROJECT_VERSION="v${PROJECT_VERSION}${PROJECT_VERSION_DEV}")
-set(PROJECT_LIB_NAME "${PROJECT_NAME_LOWER}-${PROJECT_LIB_VERSION}")
-
 option(PROJECT_DEBUG "Set ON|OFF to get more output" OFF)
 
 #=============================================
@@ -80,31 +77,6 @@ if(POSTGRESQL_BIN)
 else()
   find_program(POSTGRESQL_PG_CONFIG NAMES pg_config)
 endif()
-
-if(POSTGRESQL_PG_CONFIG)
-  execute_process(
-    COMMAND ${POSTGRESQL_PG_CONFIG} --bindir
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    OUTPUT_VARIABLE T_POSTGRESQL_BIN)
-endif(POSTGRESQL_PG_CONFIG)
-
-# search for POSTGRESQL_EXECUTABLE only in the directory specified by pg_config
-find_program(POSTGRESQL_EXECUTABLE NAMES postgres
-  PATHS
-  ${T_POSTGRESQL_BIN}
-  NO_DEFAULT_PATH
-)
-
-#[[
-# for XbetaY XalphaY XrcY -> X.Y
-string(REGEX REPLACE "^([0-9]+)[beta|alpha|rc|devel].*" "\\1.0" PostgreSQL_VERSION_STRING ${PostgreSQL_VERSION_STRING})
-
-#for X.Y.Z -> XY  Y<10
-string(REGEX REPLACE "^([0-9]+)\\.([0-9]+).*" "\\1" PostgreSQL_VERSION_MAYOR ${PostgreSQL_VERSION_STRING})
-string(REGEX REPLACE "^([0-9]+)\\.([0-9]+).*" "\\2" PostgreSQL_VERSION_MINOR ${PostgreSQL_VERSION_STRING})
-math(EXPR PostgreSQL_VERSION_NUM "${PostgreSQL_VERSION_MAYOR} * 10000 + ${PostgreSQL_VERSION_MINOR}")
-]]
-
 
 #---------------------------------------------
 # extension directory
