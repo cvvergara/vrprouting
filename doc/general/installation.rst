@@ -17,14 +17,14 @@ systems instructions and additional notes and corrections not included in this
 documentation can be found in `Installation wiki
 <https://github.com/pgRouting/${PROJECT_NAME_LOWER}/wiki/Notes-on-Download%2C-Installation-and-building-pgORpy>`__
 
-pgORpy is an extension for PostgreSQL.
+${PROJECT_NAME} is an extension for PostgreSQL.
 
 There is no package for ${PROJECT_NAME_LOWER}.
 
-Get the ${PROJECT_NAME_LOWER} sources
+Get the ${PROJECT_NAME} sources
 -------------------------------------------------------------------------------
 
-The pgORpy latest release can be found in
+The ${PROJECT_NAME} latest release can be found in
 https://github.com/pgRouting/${PROJECT_NAME_LOWER}/releases/latest
 
 To get this release:
@@ -50,7 +50,7 @@ Extract the tarball.
 .. code-block:: bash
 
    tar xvfz ${PROJECT_NAME_LOWER}-${PROJECT_VERSION}.tar.gz
-   cd pgorpy-${PROJECT_VERSION}
+   cd ${PROJECT_NAME_LOWER}-${PROJECT_VERSION}
 
 Build the extension.
 ...............................................................................
@@ -68,9 +68,9 @@ Enabling and upgrading in the database
 Once ${PROJECT_NAME_LOWER} is installed, it needs to be enabled in each
 individual database you want to use it in.
 
-${PROJECT_NAME_LOWER} is an extension and depends on `plpython3u
+${PROJECT_NAME} is an extension and depends on `plpython3u
 <https://www.postgresql.org/docs/current/plpython.html>`__
-Enable `plpython3u` before enabling ${PROJECT_NAME_LOWER} in the database.
+Enable `plpython3u` before enabling ${PROJECT_NAME} in the database.
 
 .. code-block:: sql
 
@@ -78,7 +78,7 @@ Enable `plpython3u` before enabling ${PROJECT_NAME_LOWER} in the database.
 
 .. rubric:: Upgrading the database
 
-When the database has an old version of ${PROJECT_NAME_LOWER} then an upgrade is
+When the database has an old version of ${PROJECT_NAME} then an upgrade is
 needed.
 
 .. code-block:: sql
@@ -99,30 +99,36 @@ Make sure that the following dependencies are met:
 * Postgresql version >= ${POSTGRESQL_MINIMUM_VERSION}
 * CMake >=  ${CMAKE_MINIMUM_REQUIRED_VERSION}
 * OR-tools == ${ORTOOLS_VERSION}
+* PostgreSQL extension `plpython3u`
+
+This example is for PostgreSQL ${POSTGRESQL_MINIMUM_VERSION}
+
+.. code-block:: none
+
+   sudo apt-get install -y
+      cmake \
+      postgresql-${POSTGRESQL_MINIMUM_VERSION} \
+      postgresql-server-dev-${POSTGRESQL_MINIMUM_VERSION} \
+      postgresql-plpython3-${POSTGRESQL_MINIMUM_VERSION}
 
 .. rubric:: optional dependencies
 
 For user's documentation:
 
 * Sphinx > ${SPHINX_MINIMUM_VERSION}
-
-* PostgreSQL extension `plpython3u`
-
-.. rubric:: Example: Installing dependencies on linux
-
-This example is for PostgreSQL ${POSTGRESQL_MINIMUM_VERSION}
+* sphinx-bootstrap-theme
 
 .. code-block:: none
 
-    sudo apt-get install -y
-        cmake \
-        python-sphinx \
-        postgresql-${POSTGRESQL_MINIMUM_VERSION} \
-        postgresql-server-dev-${POSTGRESQL_MINIMUM_VERSION} \
-        postgresql-plpython3-${POSTGRESQL_MINIMUM_VERSION}
+   sudo apt-get install -y \
+      graphviz \
+      python3-sphinx \
+      python3-sphinx-bootstrap-theme \
+      sphinx-intl
 
-For developers
-...............................................................................
+.. rubric:: Example: Installing dependencies on linux
+
+For developers:
 
 Tests are done on CI, and these are used on CI:
 
