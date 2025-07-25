@@ -24,11 +24,6 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-
-#---------------------------------------------
-#---------------------------------------------
-#---------------------------------------------
-
 project(pgORpy VERSION 0.0.0
 )
 set(PROJECT_VERSION_DEV "")
@@ -39,9 +34,8 @@ set(OLD_SIGNATURES
 )
 
 
-include(pgr/BuildType)
-include(pgr/GitInfo)
-include(pgr/Version)
+set(CMAKE_BUILD_TYPE "Release")
+include(Version)
 
 add_definitions(-DPROJECT_VERSION="v${PROJECT_VERSION}${PROJECT_VERSION_DEV}")
 set(PROJECT_LIB_NAME "${PROJECT_NAME_LOWER}-${PROJECT_LIB_VERSION}")
@@ -51,7 +45,7 @@ option(PROJECT_DEBUG "Set ON|OFF to get more output" OFF)
 #=============================================
 # Set the working directories
 #=============================================
-include(pgr/Configure)
+include(Configure)
 
 
 #---------------------------------------------
@@ -94,13 +88,14 @@ if(POSTGRESQL_PG_CONFIG)
     OUTPUT_VARIABLE T_POSTGRESQL_BIN)
 endif(POSTGRESQL_PG_CONFIG)
 
-# search for POSTGRESQL_EXECUTABLE _only_ in the dir specified by pg_config
+# search for POSTGRESQL_EXECUTABLE only in the directory specified by pg_config
 find_program(POSTGRESQL_EXECUTABLE NAMES postgres
   PATHS
   ${T_POSTGRESQL_BIN}
   NO_DEFAULT_PATH
 )
 
+#[[
 # for XbetaY XalphaY XrcY -> X.Y
 string(REGEX REPLACE "^([0-9]+)[beta|alpha|rc|devel].*" "\\1.0" PostgreSQL_VERSION_STRING ${PostgreSQL_VERSION_STRING})
 
@@ -108,47 +103,8 @@ string(REGEX REPLACE "^([0-9]+)[beta|alpha|rc|devel].*" "\\1.0" PostgreSQL_VERSI
 string(REGEX REPLACE "^([0-9]+)\\.([0-9]+).*" "\\1" PostgreSQL_VERSION_MAYOR ${PostgreSQL_VERSION_STRING})
 string(REGEX REPLACE "^([0-9]+)\\.([0-9]+).*" "\\2" PostgreSQL_VERSION_MINOR ${PostgreSQL_VERSION_STRING})
 math(EXPR PostgreSQL_VERSION_NUM "${PostgreSQL_VERSION_MAYOR} * 10000 + ${PostgreSQL_VERSION_MINOR}")
+]]
 
-
-#[[
-#---------------------------------------------
-# Definitions for full_version
-#---------------------------------------------
-add_definitions(-DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}")
-add_definitions(-DPROJECT_LIB_NAME="${PROJECT_NAME_LOWER}-${PROJECT_VERSION}")
-add_definitions(-DPROJECT_GIT_HASH="${PROJECT_GIT_HASH}")
-string(TIMESTAMP COMPILATION_DATE "\"%Y/%m/%d\"")
-add_definitions(-DCOMPILATION_DATE=${COMPILATION_DATE})
-add_definitions(-DCOMPILER_VERSION="${CMAKE_CXX_COMPILER_ID}-${CMAKE_CXX_COMPILER_VERSION}")
-add_definitions(-DPostgreSQL_VERSION_STRING="${PostgreSQL_VERSION_STRING}")
-add_definitions(-DSYSTEM_NAME="${CMAKE_SYSTEM}")
-# Definitions
-add_definitions(-DPostgreSQL_VERSION_NUM=${PostgreSQL_VERSION_NUM})
-
-if (PROJECT_DEBUG)
-  message(STATUS "PostgreSQL_FOUND ${PostgreSQL_FOUND}")
-  message(STATUS "PostgreSQL_LIBRARIES ${PostgreSQL_LIBRARIES}")
-  message(STATUS "PostgreSQL_LIBRARY_DIRS ${PostgreSQL_LIBRARY_DIRS}")
-  message(STATUS "PostgreSQL_VERSION_STRING ${PostgreSQL_VERSION_STRING}")
-  message(STATUS "PostgreSQL_VERSION_NUM ${PostgreSQL_VERSION_NUM}")
-  message(STATUS "POSTGRESQL_PG_CONFIG ${POSTGRESQL_PG_CONFIG}")
-endif()
-#]]
-
-
-#---------------------------------------------
-# library directory
-#---------------------------------------------
-execute_process(
-  COMMAND ${POSTGRESQL_PG_CONFIG} --pkglibdir
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-  OUTPUT_VARIABLE LIBRARY_INSTALL_PATH)
-
-if(NOT LIBRARY_INSTALL_PATH)
-  message(FATAL_ERROR "pg_config --pkglibdir failed to return a value. Please check your PostgreSQL installation!")
-endif()
-
-message(STATUS "LIBRARY_INSTALL_PATH ${LIBRARY_INSTALL_PATH}")
 
 #---------------------------------------------
 # extension directory
@@ -157,54 +113,27 @@ message(STATUS "LIBRARY_INSTALL_PATH ${LIBRARY_INSTALL_PATH}")
 execute_process(
   COMMAND ${POSTGRESQL_PG_CONFIG} --sharedir
   OUTPUT_STRIP_TRAILING_WHITESPACE
-  OUTPUT_VARIABLE SHARE_DIR)
+  OUTPUT_VARIABLE EXTENSION_DIR)
 
 #-------
-if(SHARE_DIR)
-  set(SHARE_DIR "${SHARE_DIR}/extension")
-else(SHARE_DIR)
-  message(FATAL_ERROR "pg_config --sharedir failed to return a value. Please check your PostgreSQL installation!")
-endif(SHARE_DIR)
+if(EXTENSION_DIR)
+  set(EXTENSION_DIR "${EXTENSION_DIR}/extension")
+else(EXTENSION_DIR)
+  message(FATAL_ERROR "pg_config --sharedir failed to return a value.
+  Please check your PostgreSQL installation!")
+endif(EXTENSION_DIR)
 
 #---------------------------------------------
 
-message(STATUS "PostgreSQL_LIBRARIES=${PostgreSQL_LIBRARIES}")
-message(STATUS "LIBRARY_INSTALL_PATH=${LIBRARY_INSTALL_PATH}")
-message(STATUS "SHARE_DIR=${SHARE_DIR}")
+message(STATUS "EXTENSION_DIR=${EXTENSION_DIR}")
 
 
-#---------------------------------------------
-# Special cases for windows
-#---------------------------------------------
-
-if(WIN32)
-  link_directories(${PostgreSQL_LIBRARIES})
-  link_libraries(${POSTGRES_EXECUTABLE})
-endif()
-
-#-----------------------------------------------------------------------------
-
-if (PROJECT_DEBUG)
-  get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-  message(STATUS "INCLUDE_DIRECTORIES='${dirs}'")
-endif()
-
-
-#-----------------------------------------------------------------------------
-# sql subdirectory creates the files:
-#  ${PROJECT_NAME_LOWER}--(version).sql
-#  ${PROJECT_NAME_LOWER}--(oldVersion)--(version).sql
-#-----------------------------------------------------------------------------
 
 add_subdirectory(sql)
 
-#-----------------------------------------------------------------------------
-# INSTALLATION
-#-----------------------------------------------------------------------------
-
 install(FILES
   ${PROJECT_FILES_TO_INSTALL}
-  DESTINATION "${SHARE_DIR}"
+  DESTINATION "${EXTENSION_DIR}"
 )
 
 #-----------------------------------------------------------------------------
