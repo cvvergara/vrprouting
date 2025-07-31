@@ -1,22 +1,26 @@
 
 SET(LOCAL_FILES
-    concepts.rst
-    experimental.rst
-    index.rst
-    introduction.rst
-    official.rst
-    installation.rst
-    proposed.rst
-    release_notes.rst
-    sampledata.rst
-    support.rst
-    or_tools-category.rst
-    )
+  index.rst
+  introduction.rst
+  installation.rst
+  release_notes.rst
+  support.rst
+  official.rst
+  sampledata.rst
+  concepts.rst
+  experimental.rst
+  or_tools-category.rst
+  proposed.rst
+)
 
 foreach (f ${LOCAL_FILES})
-    configure_file(${f} "${PGR_DOCUMENTATION_SOURCE_DIR}/${f}")
-    list(APPEND LOCAL_DOC_FILES  ${PGR_DOCUMENTATION_SOURCE_DIR}/${f})
+  configure_file(${f} "${PGR_DOCUMENTATION_SOURCE_DIR}/${f}")
+  list(APPEND LOCAL_DOC_FILES  ${PGR_DOCUMENTATION_SOURCE_DIR}/${f})
 endforeach()
+
+file(READ ${PGR_DOCUMENTATION_SOURCE_DIR}/release_notes.rst FILE_CONTENTS)
+string(REGEX REPLACE ":issue:`([0-9]+)`" "`#\\1 <https://github.com/pgRouting/pgrouting/issues/\\1>`__" FILE_CONTENTS "${FILE_CONTENTS}")
+file(WRITE ${PGR_DOCUMENTATION_SOURCE_DIR}/release_notes.rst "${FILE_CONTENTS}")
 
 set(PROJECT_DOC_FILES ${PROJECT_DOC_FILES} ${LOCAL_DOC_FILES} PARENT_SCOPE)
 
