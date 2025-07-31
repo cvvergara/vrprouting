@@ -1,10 +1,7 @@
 /*PGR-GNU*****************************************************************
 
-Copyright (c) 2019 pgRouting developers
+Copyright (c) 2025 pgRouting developers
 Mail: project@pgrouting.org
-
-Developer:
-Copyright (c) 2019 Celia Virginia Vergara Castillo
 
 ------
 
@@ -24,32 +21,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
---v0.4
-CREATE FUNCTION vrp_full_version(
-    OUT version TEXT,
-    OUT build_type TEXT,
-    OUT compile_date TEXT,
-    OUT library TEXT,
-    OUT system TEXT,
-    OUT PostgreSQL TEXT,
-    OUT compiler TEXT,
-    OUT hash TEXT
-)
-RETURNS Record AS
+--v0.0
+CREATE FUNCTION por_full_version(OUT version TEXT, OUT or_tools TEXT)
+RETURNS RECORD AS
 $BODY$
-    SELECT vrp_version(),
-        _vrp_build_type(),
-        _vrp_compilation_date(),
-        _vrp_lib_version(),
-        _vrp_operating_system(),
-        _vrp_pgsql_version(),
-        _vrp_compiler_version(),
-        _vrp_git_hash()
+  SELECT '${PROJECT_VERSION}${PROJECT_VERSION_DEV}'::TEXT, '${ORTOOLS_VERSION}'::TEXT;
 $BODY$
 LANGUAGE sql IMMUTABLE;
 
-COMMENT ON FUNCTION vrp_full_version() IS
-'vrp_full_version
+COMMENT ON FUNCTION por_full_version() IS
+'por_full_version
 - Documentation
-  - ${PROJECT_DOC_LINK}/vrp_full_version.html
+  - ${PROJECT_DOC_LINK}/por_full_version.html
 ';

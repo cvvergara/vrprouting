@@ -62,6 +62,7 @@ message(STATUS "POSTGRESQL_MINIMUM_VERSION=${POSTGRESQL_MINIMUM_VERSION}")
 # Finding prerequisites
 #-----------------------------------------------------------------------------
 find_package(Perl REQUIRED)
+#[[
 find_package(Python REQUIRED)
 
 message(STATUS "Python_FOUND=${Python_FOUND}")
@@ -78,6 +79,7 @@ message(STATUS "ORTOOLS_VERSION=${ORTOOLS_VERSION}")
 if (NOT ${ORTOOLS_VERSION} EQUAL ${ORTOOLS_VERSION})
   message(FATAL_ERROR "The python \"ortools\" package version ${ORTOOLS_VERSION} is not installed.")
 endif()
+#]]
 
 #---------------------------------------------
 # PostgreSQL

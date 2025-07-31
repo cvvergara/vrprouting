@@ -1,13 +1,9 @@
 
-SET(LOCAL_FILES
-    pgortools-header.sql
-    )
+# the header file
+SET(PROJECT_HEADER ${PROJECT_NAME_LOWER}-header.sql)
+configure_file(${PROJECT_HEADER} ${PROJECT_HEADER})
+set(PROJECT_SQL_FILES ${PROJECT_SQL_FILES} ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_HEADER} PARENT_SCOPE)
 
-foreach (f ${LOCAL_FILES})
-    configure_file(${f} ${f})
-    list(APPEND PACKAGE_SQL_FILES  ${CMAKE_CURRENT_BINARY_DIR}/${f})
-endforeach()
-
-set(PROJECT_SQL_FILES ${PROJECT_SQL_FILES} ${PACKAGE_SQL_FILES} PARENT_SCOPE)
-
+# the control file
 configure_file(${PROJECT_NAME_LOWER}.control ${PROJECT_NAME_LOWER}.control)
+set(PROJECT_CONTROL ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME_LOWER}.control PARENT_SCOPE)
