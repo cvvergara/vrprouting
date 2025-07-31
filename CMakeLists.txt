@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.17 FATAL_ERROR)
 
 if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
   message(FATAL_ERROR "In-source builds not allowed.
@@ -53,6 +53,7 @@ set(POSTGRESQL_MINIMUM_VERSION "12.0")
 set(ORTOOLS_VERSION "9.10.4067")
 string(TIMESTAMP YEAR "%Y")
 
+message(STATUS "ORTOOLS_VERSION=${ORTOOLS_VERSION}")
 message(STATUS "DOXYGEN_MINIMUM_VERSION=${DOXYGEN_MINIMUM_VERSION}")
 message(STATUS "SPHINX_MINIMUM_VERSION=${SPHINX_MINIMUM_VERSION}")
 message(STATUS "POSTGRESQL_MINIMUM_VERSION=${POSTGRESQL_MINIMUM_VERSION}")
@@ -61,6 +62,22 @@ message(STATUS "POSTGRESQL_MINIMUM_VERSION=${POSTGRESQL_MINIMUM_VERSION}")
 # Finding prerequisites
 #-----------------------------------------------------------------------------
 find_package(Perl REQUIRED)
+find_package(Python REQUIRED)
+
+message(STATUS "Python_FOUND=${Python_FOUND}")
+message(STATUS "Python_EXECUTABLE=${Python_EXECUTABLE}")
+
+execute_process(
+  COMMAND ${Python_EXECUTABLE} -c "import ortools; print(ortools.__version__)"
+  OUTPUT_VARIABLE ORTOOLS_VERSION
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+message(STATUS "ORTOOLS_VERSION=${ORTOOLS_VERSION}")
+
+if (NOT ${ORTOOLS_VERSION} EQUAL ${ORTOOLS_VERSION})
+  message(FATAL_ERROR "The python \"ortools\" package version ${ORTOOLS_VERSION} is not installed.")
+endif()
 
 #---------------------------------------------
 # PostgreSQL
