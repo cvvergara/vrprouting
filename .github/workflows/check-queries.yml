@@ -15,12 +15,11 @@ on:
   push:
     paths:
       - '.github/workflows/check-queries.yml'
-      - 'src/**'
-      - 'include/**'
       - 'sql/**'
       - 'docqueries/**'
       - 'tools/testers/**'
       - 'CMakeLists.txt'
+      - 'tools/scripts/get_signatures.sh'
 
     branches-ignore:
       - 'gh-pages'
@@ -30,12 +29,11 @@ on:
   pull_request:
     paths:
       - '.github/workflows/check-queries.yml'
-      - 'src/**'
-      - 'include/**'
       - 'sql/**'
       - 'docqueries/**'
       - 'tools/testers/**'
       - 'CMakeLists.txt'
+      - 'tools/scripts/get_signatures.sh'
 
     branches-ignore:
       - 'gh-pages'
