@@ -12,22 +12,7 @@
 OR-Tools - Category (Experimental)
 ===============================================================================
 
-.. include:: experimental.rst
-   :start-after: begin-warn-expr
-   :end-before: end-warn-expr
-
-
 .. contents::
-
-.. rubric:: Functions
-
-.. toctree::
-  :maxdepth: 1
-
-  vrp_knapsack
-  vrp_multiple_knapsack
-  vrp_bin_packing
-
 
 Synopsis
 -------------------------------------------------------------------------------

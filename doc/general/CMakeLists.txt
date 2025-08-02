@@ -5,11 +5,8 @@ SET(LOCAL_FILES
   installation.rst
   release_notes.rst
   support.rst
-  official.rst
   sampledata.rst
-  experimental.rst
   or_tools-category.rst
-  proposed.rst
 )
 
 foreach (f ${LOCAL_FILES})

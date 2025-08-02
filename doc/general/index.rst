@@ -40,7 +40,7 @@ General
     introduction
     installation
     support
-    or-tools-category
+    or_tools-category
 
 - :doc:`sampledata` that is used in the examples of this manual.
 

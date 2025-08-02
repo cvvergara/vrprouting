@@ -6,29 +6,21 @@
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
    ****************************************************************************
 
+.. index::
+   single: Knapsack problems ; por_multiple_knapsack
+   single: multiple_knapsack
 
 |
 
 vrp_multiple_knapsack - Experimental
 ===============================================================================
 
-.. include:: experimental.rst
-   :start-after: begin-warn-expr
-   :end-before: end-warn-expr
-
 .. rubric:: Availability
 
-Version 0.4.1
+.. rubric:: Version 0.0.1
 
+* New function
 * Support for or-tools v9.10.4067
-
-Version 0.4.0
-
-* New **experimental** function
-
-  * vrp_knapsack
-
-
 
 Description
 -------------------------------------------------------------------------------
