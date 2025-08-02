@@ -114,7 +114,7 @@ jobs:
             python3-sphinx-bootstrap-theme \
             sphinx-intl
 
-      - name: Install python requirements
+      - name: Install Google OR-Tools
         run: |
           sudo pip install --root=/ ortools==9.10.4067
 
