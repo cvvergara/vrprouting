@@ -1,12 +1,15 @@
 #!/bin/bash
 
 # ------------------------------------------------------------------------------
-# pgRouting Scripts
+# pgORpy Scripts
+#
+# Based on pgRouting's pumpup_version script
 # Copyright(c) pgRouting Contributors
 #
 # Pump up version
 # ------------------------------------------------------------------------------
 # shellcheck disable=SC2016
+# TODO adjust the script
 WHAT_NEXT=$1
 
 # Script to pump up branch to next development
@@ -14,7 +17,11 @@ WHAT_NEXT=$1
 # bash tools/developer/pumpup_version.sh minor
 
 
-OLD_VERSION=$(grep -Po '(?<=project\(PGORTOOLS VERSION )[^;]+' CMakeLists.txt)
+if ! OLDVERSION=$(grep pgORpy CMakeLists.txt | awk '{print $3}'); then
+    echo "Error: Failed to extract version from CMakeLists.txt" >&2
+    exit 1
+fi
+
 KIND=$(grep -Po '(?<=set\(PROJECT_VERSION_DEV )[^;]+\"\)' CMakeLists.txt)
 echo "KIND=${KIND}"
 KIND=$(echo "${KIND}" | awk -F'"' '{print $2}')
@@ -151,8 +158,6 @@ fi
 # ------
 # Documentation related
 # ------
-perl -pi -e 's/# Copyright(.*) v(.*)$/# Copyright$1 v'"${NEW_VERSION}${NEW_KIND}"'/' locale/pot/*.pot
-perl -pi -e 's/# Copyright(.*) v(.*)$/# Copyright$1 v'"${NEW_VERSION}${NEW_KIND}"'/' locale/*/*/*.po
-#perl -pi -e 's/('"${MAYOR}.${MINOR}"')/'"${NEW_MAYOR}.${NEW_MINOR}\', \'${MAYOR}.${MINOR}"'/g' doc/_static/page_history.js
-#bash tools/transifex/locale.sh
-
+perl -pi -e 's/# Copyright(.*) v(.*)$/# Copyright$1 v'"${NEW_MAYOR}.${NEW_MINOR}"'/' locale/pot/*.pot
+perl -pi -e 's/# Copyright(.*) v(.*)$/# Copyright$1 v'"${NEW_MAYOR}.${NEW_MINOR}"'/' locale/*/*/*.po
+perl -pi -e 's/('"${MAYOR}.${MINOR}"')/'"${NEW_MAYOR}.${NEW_MINOR}\', \'${MAYOR}.${MINOR}"'/g' doc/_static/page_history.js
