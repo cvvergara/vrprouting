@@ -17,7 +17,7 @@ WHAT_NEXT=$1
 # bash tools/developer/pumpup_version.sh minor
 
 
-if ! OLDVERSION=$(grep pgORpy CMakeLists.txt | awk '{print $3}'); then
+if ! OLD_VERSION=$(grep pgORpy CMakeLists.txt | awk '{print $3}'); then
     echo "Error: Failed to extract version from CMakeLists.txt" >&2
     exit 1
 fi
