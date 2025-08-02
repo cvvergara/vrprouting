@@ -77,7 +77,6 @@ jobs:
           if git diff --name-only HEAD^ HEAD | grep -q "^locale/${{ matrix.language }}" ; then  echo "PROCESS=true" >> $GITHUB_ENV; echo "CHK_LINK=true" >> $GITHUB_ENV; exit 0; fi
 
       - name: Get postgres version
-        if: env.PROCESS == 'true'
         run: |
           sudo service postgresql start
           pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
@@ -85,7 +84,6 @@ jobs:
           echo "PGPORT=5432" >> $GITHUB_ENV
 
       - name: Add PostgreSQL APT repository
-        if: env.PROCESS == 'true'
         run: |
           sudo apt-get install curl ca-certificates gnupg
           curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
@@ -93,13 +91,11 @@ jobs:
             $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 
       - name: Install python
-        if: env.PROCESS == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
       - name: Install dependencies
-        if: env.PROCESS == 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y \

@@ -66,7 +66,6 @@ jobs:
           echo "PGVER=${pgver}" >> $GITHUB_ENV
           echo "PGPORT=5432" >> $GITHUB_ENV
           echo "PGBIN=/usr/lib/postgresql/${pgver}/bin" >> $GITHUB_ENV
-          echo "PGINC=/usr/include/postgresql/${pgver}/server" >> $GITHUB_ENV
 
       - name: Add PostgreSQL APT repository
         run: |
@@ -87,9 +86,6 @@ jobs:
           sudo apt-get install -y \
             postgresql-${PGVER} \
             postgresql-${PGVER}-pgtap \
-            postgresql-${PGVER}-postgis-${{ env.postgis }} \
-            postgresql-${PGVER}-postgis-${{ env.postgis }}-scripts \
-            postgresql-${PGVER}-pgrouting \
             postgresql-server-dev-${PGVER} \
             postgresql-plpython3-${PGVER}
 
