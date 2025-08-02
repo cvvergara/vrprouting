@@ -7,7 +7,6 @@ SET(LOCAL_FILES
   support.rst
   official.rst
   sampledata.rst
-  concepts.rst
   experimental.rst
   or_tools-category.rst
   proposed.rst

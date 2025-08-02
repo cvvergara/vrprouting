@@ -9,12 +9,6 @@
 
 |
 
-* `Documentation <https://vrp.pgrouting.org/>`__ → `pgOrtools v0 <https://vrp.pgrouting.org/v0>`__
-* Supported Versions
-  `Latest <https://vrp.pgrouting.org/latest/en/vroom-category.html>`__
-  (`v0 <https://vrp.pgrouting.org/v0/en/vroom-category.html>`__)
-
-
 OR-Tools - Category (Experimental)
 ===============================================================================
 

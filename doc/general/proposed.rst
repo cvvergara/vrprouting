@@ -9,10 +9,6 @@
 
 |
 
-* Supported Versions
-  `Latest <https://vrp.pgrouting.org/latest/en/proposed.html>`__
-  (`v0 <https://vrp.pgrouting.org/v0/en/proposed.html>`__)
-
 Proposed Functions
 ==================================
 

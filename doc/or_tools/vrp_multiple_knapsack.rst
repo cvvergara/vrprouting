@@ -9,11 +9,6 @@
 
 |
 
-* `Documentation <https://vrp.pgrouting.org/>`__ → `pgOrtools v0 <https://vrp.pgrouting.org/v0>`__
-* Supported Versions
-  `Latest <https://vrp.pgrouting.org/latest/en/vrp_oneDepot.html>`__
-  (`v0 <https://vrp.pgrouting.org/v0/en/vrp_oneDepot.html>`__)
-
 vrp_multiple_knapsack - Experimental
 ===============================================================================
 

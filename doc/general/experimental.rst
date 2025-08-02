@@ -9,14 +9,10 @@
 
 |
 
-* Supported Versions
-  `Latest <https://vrp.pgrouting.org/latest/en/experimental.html>`__
-  (`v0 <https://vrp.pgrouting.org/v0/en/experimental.html>`__)
-
 Experimental Functions
 ===============================================================================
 
-..  begin-warn-expr
+..  begin-warning
 
 .. warning:: Possible server crash
 
@@ -40,17 +36,14 @@ Experimental Functions
     - Might depend on a proposed function of pgOrtools
     - Might depend on a deprecated function of pgOrtools
 
-..  end-warn-expr
-
-.. rubric:: categories
-
-:doc:`or_tools-category`
-
+..  end-warning
 
 .. toctree::
-  :maxdepth: 2
+  :maxdepth: 1
 
-  or_tools-category
+  vrp_knapsack
+  vrp_multiple_knapsack
+  vrp_bin_packing
 
 .. rubric:: See Also
 

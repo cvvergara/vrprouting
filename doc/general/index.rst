@@ -40,7 +40,7 @@ General
     introduction
     installation
     support
-
+    or-tools-category
 
 - :doc:`sampledata` that is used in the examples of this manual.
 
@@ -49,13 +49,34 @@ General
 
    sampledata
 
-Official functions
+Functions
 ===============================================================================
 
-.. toctree::
-   :maxdepth: 3
+Utilities
+-------------------------------------------------------------------------------
 
-   official
+- :doc:`por_version`
+- :doc:`por_full_version`
+
+.. toctree::
+   :hidden:
+
+   por_version
+   por_full_version
+
+OR-tools
+-------------------------------------------------------------------------------
+
+- :doc:`vrp_bin_packing`
+- :doc:`vrp_knapsack`
+- :doc:`vrp_multiple_knapsack`
+
+.. toctree::
+   :hidden:
+
+   vrp_bin_packing
+   vrp_knapsack
+   vrp_multiple_knapsack
 
 Release Notes
 ===============================================================================
@@ -68,4 +89,3 @@ Release Notes
 
 * :ref:`genindex`
 * :ref:`search`
-
