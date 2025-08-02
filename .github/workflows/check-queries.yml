@@ -46,9 +46,7 @@ permissions:
   contents: read
 
 env:
-    postgis: 3
     release: Release
-    os: ubuntu-latest
 
 jobs:
   build:
@@ -80,7 +78,7 @@ jobs:
       - name: Install python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
@@ -97,7 +95,7 @@ jobs:
 
       - name: Install Google OR-Tools
         run: |
-          sudo pip install --root=/  ortools
+          sudo pip install --root=/ ortools==9.10.4067
 
       - name: Configure
         run: |
@@ -105,7 +103,7 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
-              -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} ..
+              -DPOSTGRESQL_BIN=${PGBIN} ..
 
       - name: Build
         run: |
@@ -127,7 +125,6 @@ jobs:
         run: |
           sudo service postgresql start
           psql -c "CREATE DATABASE ____sigs_routing____;"
-          psql -c "SHOW timezone;"
           tools/scripts/get_signatures.sh -p ${PGPORT}
           git diff --exit-code --quiet sql/sigs/*.sig
 
@@ -135,11 +132,5 @@ jobs:
         run: |
           sudo service postgresql start
           psql -c "CREATE DATABASE ___vrp___test___;"
-          TESTDIRS=""
-          for d in ${TESTDIRS}
-          do
-            ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}" -doc -alg "${d}"
-          done
-          git diff
 
-          ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}"
+          ./tools/testers/doc_queries_generator.pl --port "${PGPORT}"
