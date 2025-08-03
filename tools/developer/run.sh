@@ -22,7 +22,6 @@ PGVERSION="16"
 PGPORT="${PGPORT:-5432}"
 PGUSER="${PGUSER:-$USER}"
 PGBIN="/usr/lib/postgresql/${PGVERSION}/bin"
-PGINC="/usr/include/postgresql/${PGVERSION}/server"
 
 QUERIES_DIRS="
 "
