@@ -31,7 +31,7 @@ TAP_DIRS="
 "
 
 function set_cmake {
-    cmake "-DPOSTGRESQL_BIN=${PGBIN}" "-DPostgreSQL_INCLUDE_DIR=${PGINC}" \
+    cmake "-DPOSTGRESQL_BIN=${PGBIN}" \
         -DSPHINX_HTML=ON  \
         -DPROJECT_DEBUG=ON ..
 

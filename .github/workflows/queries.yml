@@ -1,5 +1,6 @@
 name: Check queries
 
+
 # This action runs:
 # - When this file changes
 # - When changes on code (src, include, sql)
@@ -8,13 +9,13 @@ name: Check queries
 # - On request
 #
 # using
-# - the postgres installed version
+# - postgres installed version on actions
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - '.github/workflows/check-queries.yml'
+      - '.github/workflows/queries.yml'
       - 'sql/**'
       - 'docqueries/**'
       - 'tools/testers/**'
@@ -28,7 +29,7 @@ on:
 
   pull_request:
     paths:
-      - '.github/workflows/check-queries.yml'
+      - '.github/workflows/queries.yml'
       - 'sql/**'
       - 'docqueries/**'
       - 'tools/testers/**'
@@ -47,6 +48,7 @@ permissions:
 
 env:
     release: Release
+    os: ubuntu-latest
 
 jobs:
   build:
@@ -62,10 +64,9 @@ jobs:
       - name: Get postgres version
         run: |
           sudo service postgresql start
-          pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
-          echo "PGVER=${pgver}" >> $GITHUB_ENV
+          PGVER=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
+          echo "PGVER=${PGVER}" >> $GITHUB_ENV
           echo "PGPORT=5432" >> $GITHUB_ENV
-          echo "PGBIN=/usr/lib/postgresql/${pgver}/bin" >> $GITHUB_ENV
 
       - name: Add PostgreSQL APT repository
         run: |
@@ -82,51 +83,41 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          # pgOrtools dependencies
           sudo apt-get install -y \
             postgresql-${PGVER} \
             postgresql-${PGVER}-pgtap \
             postgresql-server-dev-${PGVER} \
             postgresql-plpython3-${PGVER}
 
+
       - name: Install Google OR-Tools
         run: |
-          sudo pip install --root=/ ortools==9.10.4067
+          sudo pip install --root=/  ortools==9.10.4067
 
-      - name: Configure
+      - name: Configure and build
         run: |
           export PATH=/usr/lib/postgresql/${PGVER}/bin:$PATH
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
-              -DPOSTGRESQL_BIN=${PGBIN} ..
-
-      - name: Build
-        run: |
-          cd build
-          make -j 4
+          cmake -DBUILD_HTML=OFF -DCMAKE_BUILD_TYPE=${{ env.release }} ..
           sudo make install
-
-      - name: Create superuser
-        run: |
-          sudo service postgresql start
-          export PG_RUNNER_USER=`whoami`
-          sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS \"${PG_RUNNER_USER}\";"
-          sudo -u postgres psql -p ${PGPORT} -c "DROP ROLE IF EXISTS \"${PG_RUNNER_USER}\";"
-          sudo -u postgres psql -p ${PGPORT} -c "CREATE ROLE \"${PG_RUNNER_USER}\" WITH LOGIN SUPERUSER;"
-          sudo -u postgres psql -p ${PGPORT} -c "CREATE DATABASE \"${PG_RUNNER_USER}\";"
-          echo "PG_RUNNER_USER=${PG_RUNNER_USER}" >> $GITHUB_ENV
 
       - name: Test signature is up to date
         run: |
           sudo service postgresql start
-          psql -c "CREATE DATABASE ____sigs_routing____;"
-          tools/scripts/get_signatures.sh -p ${PGPORT}
+          sudo -u postgres createdb -p ${PGPORT}  ___por__signatures___
+          sudo -u postgres psql -p ${PGPORT} -c "CREATE ROLE runner SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN" -d ___por__signatures___
+          tools/release-scripts/get_signatures.sh -p ${PGPORT}
+          git diff --name-only sql/sigs/*.sig
           git diff --exit-code --quiet sql/sigs/*.sig
 
       - name: Test documentation queries are up to date
         run: |
-          sudo service postgresql start
-          psql -c "CREATE DATABASE ___vrp___test___;"
+          sudo -u postgres createdb -p ${PGPORT}  ___pgorpy_generator___
+          TESTDIRS=""
+          for d in ${TESTDIRS}
+          do
+            ./tools/testers/doc_queries_generator.pl -pgver "${PGVER}" -U runner -p ${PGPORT} --documentation -alg "docqueries/${d}"
+          done
 
-          ./tools/testers/doc_queries_generator.pl --port "${PGPORT}"
+          ./tools/testers/doc_queries_generator.pl -pgver "${PGVER}" -U runner -p ${PGPORT}
