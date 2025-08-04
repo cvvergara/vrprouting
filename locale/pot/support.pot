@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.4.1\n"
+"Project-Id-Version: vrpRouting v0.4.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-22 18:55+0000\n"
+"POT-Creation-Date: 2025-08-04 01:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,7 +33,7 @@ msgid "Reporting Problems"
 msgstr ""
 
 #: ../../build/doc/support.rst:26
-msgid "Bugs are reported and managed in an i `issue tracker <https://github.com/pgRouting/vrprouting/issues>`_. Please follow these steps:"
+msgid "Bugs are reported and managed in an `issue tracker <https://github.com/pgRouting/vrprouting/issues>`_. Please follow these steps:"
 msgstr ""
 
 #: ../../build/doc/support.rst:30
@@ -69,11 +69,11 @@ msgid "There are two mailing lists for vrpRouting hosted on OSGeo mailing list s
 msgstr ""
 
 #: ../../build/doc/support.rst:58
-msgid "User mailing list: https://lists.osgeo.org/mailman/listinfo/pgrouting-users"
+msgid "User category: https://discourse.osgeo.org/c/pgrouting/pgrouting-users"
 msgstr ""
 
 #: ../../build/doc/support.rst:59
-msgid "Developer mailing list: https://discourse.osgeo.org/c/pgrouting/pgrouting-dev"
+msgid "Developer category: https://discourse.osgeo.org/c/pgrouting/pgrouting-dev"
 msgstr ""
 
 #: ../../build/doc/support.rst:61
@@ -105,15 +105,15 @@ msgid "**Website**"
 msgstr ""
 
 #: ../../build/doc/support.rst:84
-msgid "Georepublic"
+msgid "Erosion"
 msgstr ""
 
 #: ../../build/doc/support.rst:85
-msgid "Germany, Japan"
+msgid "Mexico"
 msgstr ""
 
 #: ../../build/doc/support.rst:86
-msgid "https://georepublic.info"
+msgid "https://www.erosion.dev"
 msgstr ""
 
 #: ../../build/doc/support.rst:87
