@@ -45,6 +45,7 @@ env:
 jobs:
   check-documentation:
     name: documentation
+    runs-on: ubuntu-latest
 
     strategy:
         fail-fast: false
