@@ -40,7 +40,7 @@ pushd ./tools/testers/ > /dev/null || exit 1
 
 dropdb --if-exists -U "${PGUSER}" -p "${PGPORT}" "${PGDATABASE}"
 createdb -U "${PGUSER}" -p "${PGPORT}" "${PGDATABASE}"
-bash setup_db.sh "${PGPORT}" "${PGDATABASE}" "${PGUSER}"
+bash setup_db.sh "${PGPORT}" "${PGDATABASE}" "${PGUSER}" "${VERSION}"
 
 popd > /dev/null || exit 1
 
