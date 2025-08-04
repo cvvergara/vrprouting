@@ -48,7 +48,6 @@ permissions:
   contents: read
 
 env:
-    postgis: 3
     os: ubuntu-latest
     vroom: 1.12.0
 
@@ -98,13 +97,9 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          # vrpRouting dependencies
           sudo apt-get install -y \
             postgresql-${PGVER} \
             postgresql-${PGVER}-pgtap \
-            postgresql-${PGVER}-postgis-${{ env.postgis }} \
-            postgresql-${PGVER}-postgis-${{ env.postgis }}-scripts \
-            postgresql-${PGVER}-pgrouting \
             postgresql-server-dev-${PGVER} \
             postgresql-plpython3-${PGVER}
 
