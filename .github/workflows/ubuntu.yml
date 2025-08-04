@@ -2,7 +2,7 @@ name: Build for Ubuntu
 
 # This action runs:
 # - When this file changes
-# - When changes on code (src, include, sql)
+# - When changes on code (sql)
 # - When changes on data or testing scripts (tools/testers)
 # - When the way the build changes (CMakeLists.txt)
 # - On request
@@ -28,11 +28,12 @@ permissions:
   contents: read
 
 env:
+    os: ubuntu-latest
     vroom: 1.12.0
 
 jobs:
   build:
-    name: build
+    name: pgtap
     runs-on: ubuntu-latest
 
     strategy:
@@ -47,7 +48,6 @@ jobs:
 
       - name: Set postgres version
         run: |
-          sudo service postgresql start
           echo "PGVER=${{ matrix.psql }}" >> $GITHUB_ENV
           echo "PGPORT=5432" >> $GITHUB_ENV
           echo "PGBIN=/usr/lib/postgresql/${{ matrix.psql }}/bin" >> $GITHUB_ENV

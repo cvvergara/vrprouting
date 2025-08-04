@@ -26,6 +26,7 @@
 set -e
 
 PGDATABASE="___vrp___test___"
+VERSION=$(grep 'VRPROUTING VERSION' CMakeLists.txt | awk '{print $3}')
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -73,7 +74,7 @@ if [ -n "${CLEANDB}" ]; then
 fi
 
 pushd ./tools/testers/ > /dev/null || exit 1
-bash setup_db.sh "${PGPORT}" "${PGDATABASE}" "${PGUSER}" "${VERSION}"
+bash setup_db.sh "${PGPORT[1]}" "${PGDATABASE}" "${PGUSER[1]}" "${VERSION}"
 popd > /dev/null || exit 1
 
 echo "Starting pgtap tests"
@@ -84,7 +85,7 @@ PGOPTIONS="-c client_min_messages=WARNING" pg_prove --failures -q --recurse \
     -P format=unaligned \
     -P tuples_only=true \
     -P pager=off \
-    -p "${PGPORT[@]}" "${PGDATABASE}" "${PGUSER[@]}" pgtap
+    "${PGPORT[@]}" -d "${PGDATABASE}" "${PGUSER[@]}" pgtap
 
 # database wont be removed unless script does not fails
 if [ -n "$CLEANDB" ]; then
