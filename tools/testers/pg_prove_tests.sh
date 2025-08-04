@@ -72,10 +72,19 @@ if [ -n "${CLEANDB}" ]; then
     createdb "${PGPORT[@]}" "${PGUSER[@]}" "${PGDATABASE}"
 fi
 
-cd ./tools/testers/
-psql "${PGPORT[@]}" "${PGUSER[@]}" -d "${PGDATABASE}" -X -q -v ON_ERROR_STOP=1 --pset pager=off -f setup_db.sql
+pushd ./tools/testers/ > /dev/null || exit 1
+bash setup_db.sh "${PGPORT}" "${PGDATABASE}" "${PGUSER}" "${VERSION}"
+popd > /dev/null || exit 1
 
-pg_prove --failures --recurse "${PGPORT[@]}" "${PGUSER[@]}" -d "${PGDATABASE}" ../../pgtap/
+echo "Starting pgtap tests"
+
+PGOPTIONS="-c client_min_messages=WARNING" pg_prove --failures -q --recurse \
+    -S on_error_rollback=off \
+    -S on_error_stop=true \
+    -P format=unaligned \
+    -P tuples_only=true \
+    -P pager=off \
+    -p "${PGPORT[@]}" "${PGDATABASE}" "${PGUSER[@]}" pgtap
 
 # database wont be removed unless script does not fails
 if [ -n "$CLEANDB" ]; then
