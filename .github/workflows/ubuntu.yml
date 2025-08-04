@@ -117,7 +117,7 @@ jobs:
       - name: Configure
         run: |
           export PATH=/usr/lib/postgresql/${{ matrix.psql }}/bin:$PATH
-          PGBIN="/usr/lib/postgresql/${{ matrix.psql }}/bin
+          PGBIN="/usr/lib/postgresql/${{ matrix.psql }}/bin"
           PGINC="/usr/include/postgresql/${{ matrix.psql }}/server"
           VROOM=$(pwd)/vroom-${{ env.vroom }}
           mkdir build
