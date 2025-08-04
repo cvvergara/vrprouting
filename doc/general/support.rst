@@ -23,7 +23,7 @@ a list of companies providing vrpRouting development and consulting services.
 Reporting Problems
 -------------------------------------------------------------------------------
 
-Bugs are reported and managed in an i
+Bugs are reported and managed in an
 `issue tracker <https://github.com/pgRouting/vrprouting/issues>`_. Please follow
 these steps:
 
@@ -55,8 +55,8 @@ Mailing List and GIS StackExchange
 There are two mailing lists for vrpRouting hosted on OSGeo mailing list server
 which are of pgRouting:
 
-* User mailing list: https://lists.osgeo.org/mailman/listinfo/pgrouting-users
-* Developer mailing list: https://discourse.osgeo.org/c/pgrouting/pgrouting-dev
+* User category: https://discourse.osgeo.org/c/pgrouting/pgrouting-users
+* Developer category: https://discourse.osgeo.org/c/pgrouting/pgrouting-dev
 
 For general questions and topics about how to use vrpRouting, please write to the user mailing list.
 
@@ -81,9 +81,9 @@ contributed to the development of vrpRouting:
    * - **Company**
      - **Offices in**
      - **Website**
-   * - Georepublic
-     - Germany, Japan
-     - https://georepublic.info
+   * - Erosion
+     - Mexico
+     - https://www.erosion.dev
    * - Paragon Corporation
      - United States
      - https://www.paragoncorporation.com
