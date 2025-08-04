@@ -755,7 +755,10 @@ get_char(const HeapTuple tuple, const TupleDesc &tupdesc, const Info &info, char
  * DatumGetCString in an inline function not a define.
  */
 std::string get_jsonb(const HeapTuple tuple, const TupleDesc &tupdesc,  const vrprouting::Info &info) {
-    return column_found(info)? text_to_cstring(SPI_getvalue(tuple, tupdesc, info.colNumber)) : "{}";
+    Datum binval;
+    bool isnull;
+    binval = SPI_getbinval(tuple, tupdesc, info.colNumber, &isnull);
+    return column_found(info)? DatumGetCString(binval) : "{}";
 }
 
 std::unordered_set<uint32_t>
