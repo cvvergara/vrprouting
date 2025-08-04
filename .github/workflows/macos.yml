@@ -13,10 +13,6 @@ concurrency:
 permissions:
   contents: read
 
-env:
-    vroom: 1.12.0
-
-# TODO: Fix the macOS build for compiling and building VROOM with vrprouting.
 jobs:
   build:
     name: macos
@@ -39,30 +35,6 @@ jobs:
       - name: Install dependencies
         run: |
           brew install postgresql@14 asio glpk rapidjson
-
-      - name: Cache pgtap
-        id: cache-pgtap
-        uses: actions/cache@v4
-        with:
-          path: ./pgTapExtension/
-          key: ${{ matrix.os }}-pgtap-${{ hashFiles('**/packages*.txt') }}
-
-      - name: Checkout pgtap
-        if: steps.cache-pgtap.outputs.cache-hit != 'true'
-        uses: actions/checkout@v4
-        with:
-          repository: theory/pgtap
-          path: ./pgTapExtension/
-
-      - name: Install pgTAP
-        run: |
-          git clone https://github.com/theory/pgtap.git pgTapExtension
-          cd pgTapExtension
-          make -j
-          make install
-          cpan TAP::Parser::SourceHandler::pgTAP
-          ln -s $(find `brew --prefix` -name pg_prove) symlink it into $(brew --prefix)/bin
-
 
       - name: Configure
         run: |
