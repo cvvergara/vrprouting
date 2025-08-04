@@ -138,19 +138,16 @@ jobs:
           cd tools/testers
           tar -xf matrix_new_values.tar.gz
 
-      - name: Create superuser
+      - name: Run pgtap tests
         run: |
           sudo service postgresql start
           export PG_RUNNER_USER=`whoami`
+          export PGPORT=5432
           sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS \"${PG_RUNNER_USER}\";"
           sudo -u postgres psql -p ${PGPORT} -c "DROP ROLE IF EXISTS \"${PG_RUNNER_USER}\";"
           sudo -u postgres psql -p ${PGPORT} -c "CREATE ROLE \"${PG_RUNNER_USER}\" WITH LOGIN SUPERUSER;"
           sudo -u postgres psql -p ${PGPORT} -c "CREATE DATABASE \"${PG_RUNNER_USER}\";"
-          echo "PG_RUNNER_USER=${PG_RUNNER_USER}" >> $GITHUB_ENV
 
-      - name: pgTap test
-        run: |
-          sudo service postgresql start
           psql -c "CREATE DATABASE ___vrp___test___;"
           bash ./tools/testers/pg_prove_tests.sh -U ${PG_RUNNER_USER} -p ${PGPORT} -d ___vrp___test___
 
