@@ -22,6 +22,8 @@ permissions:
 
 jobs:
   build:
+    # disbale action, TODO install plpython3u.control
+    if: ${{ false }}
     name: macos
     runs-on: ${{ matrix.os }}
 
