@@ -135,6 +135,6 @@ jobs:
       - name: pgTap test
         run: |
           sudo service postgresql start
-          psql -c "CREATE DATABASE ___vrp___test___;"
-          bash ./tools/testers/pg_prove_tests.sh -U ${PG_RUNNER_USER} -p ${PGPORT} -d ___vrp___test___
+          psql -c "CREATE DATABASE ___vrp___pgtap___;"
+          bash ./tools/testers/pg_prove_tests.sh -U ${PG_RUNNER_USER} -p ${PGPORT} -d ___vrp___pgtap___
 
