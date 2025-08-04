@@ -1,0 +1,5 @@
+por_bin_packing()
+por_full_version()
+por_knapsack()
+por_multiple_knapsack()
+por_version()

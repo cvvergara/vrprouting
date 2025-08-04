@@ -1,10 +1,7 @@
 /*PGR-GNU*****************************************************************
 
-Copyright (c) 2020 pgRouting developers
+Copyright (c) 2025 pgRouting developers
 Mail: project@pgrouting.org
-
-Developer:
-Copyright (c) 2020 Celia Virginia Vergara Castillo
 
 ------
 
@@ -28,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 CREATE FUNCTION vrp_version()
 RETURNS TEXT AS
 $BODY$
-    SELECT '${PROJECT_VERSION}${PROJECT_VERSION_DEV}'::varchar AS vrp_version;
+  SELECT '${PROJECT_VERSION}${PROJECT_VERSION_DEV}'::TEXT;
 $BODY$
 LANGUAGE sql IMMUTABLE;
 
