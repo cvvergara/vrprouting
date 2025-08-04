@@ -23,7 +23,6 @@ permissions:
   contents: write
 
 env:
-    postgis: 3
     release: Release
     os: ubuntu-latest
     vroom: 1.12.0
@@ -44,8 +43,8 @@ jobs:
       - name: Get postgres version
         run: |
           sudo service postgresql start
-          pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
-          echo "PGVER=${pgver}" >> $GITHUB_ENV
+          PGVER=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
+          echo "PGVER=${PGVER}" >> $GITHUB_ENV
           echo "PGPORT=5432" >> $GITHUB_ENV
 
       - name: Add PostgreSQL APT repository
@@ -63,14 +62,11 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          # vrpRouting dependencies
+
+          # Basic dependencies
           sudo apt-get install -y \
             postgresql-${PGVER} \
-            postgresql-server-dev-${PGVER} \
-            postgresql-plpython3-${PGVER}
-
-          # vroom dependencies
-          sudo apt-get install libssl-dev libasio-dev libglpk-dev
+            postgresql-server-dev-${PGVER}
 
           # documentation dependencies
           sudo apt-get install -y \
@@ -79,42 +75,16 @@ jobs:
             python3-sphinx-bootstrap-theme \
             sphinx-intl
 
-      - name: Install python requirements
+      - name: Install Google OR-Tools
         run: |
           sudo pip install --root=/ ortools==9.10.4067
 
-      - name: Cache VROOM
-        id: cache-vroom
-        uses: actions/cache@v4
-        env:
-          cache-name: vroom
-        with:
-          path: vroom-${{ env.vroom }}
-          key: ${{ env.os }}-${{ env.cache-name }}-${{ env.vroom }}
-
-      - name: Checkout VROOM
-        if: steps.cache-vroom.outputs.cache-hit != 'true'
-        uses: actions/checkout@v4
-        with:
-          path: vroom-${{ env.vroom }}
-          repository: VROOM-Project/vroom
-          ref: "v${{ env.vroom }}"
-          submodules: true
-
-      - name: Build VROOM
-        if: steps.cache-vroom.outputs.cache-hit != 'true'
-        run: |
-          cd vroom-${{ env.vroom }}/src
-          USE_ROUTING=false make shared
-
       - name: Configure
         run: |
-          VROOM=$(pwd)/vroom-${{ env.vroom }}
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
-              -DWITH_DOC=ON -DLOCALE=ON \
-              -DVROOM_INSTALL_PATH=${VROOM} ..
+                -DWITH_DOC=ON -DLOCALE=ON ..
 
       - name: Build the locale files
         run: |
