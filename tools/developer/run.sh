@@ -151,7 +151,7 @@ function test_compile {
 
     set_compiler "${GCC}"
 
-    #install_vroom
+    install_vroom
     install_data
     build
 
@@ -175,11 +175,7 @@ function test_compile {
     done
 
     tap_test
-    exit 0
-    tools/testers/doc_queries_generator.pl -pgport "${PGPORT}" -venv "${VENV}"
     build_doc
-    tap_test
-
     action_tests
 }
 test_compile
