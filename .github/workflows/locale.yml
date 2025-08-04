@@ -23,7 +23,6 @@ permissions:
   contents: write
 
 env:
-    postgis: 3
     release: Release
     os: ubuntu-latest
 
@@ -39,58 +38,55 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Extract branch name and commit hash
-        run: |
-          branch=${GITHUB_REF#refs/heads/}
-          git_hash=$(git rev-parse --short "$GITHUB_SHA")
-          echo "GIT_HASH=$git_hash" >> $GITHUB_ENV
-
       - name: Get postgres version
         run: |
           sudo service postgresql start
-          pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
-          echo "PGVER=${pgver}" >> $GITHUB_ENV
+          PGVER=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
+          echo "PGVER=${PGVER}" >> $GITHUB_ENV
           echo "PGPORT=5432" >> $GITHUB_ENV
-
-      - name: Add PostgreSQL APT repository
-        run: |
-          sudo apt-get install curl ca-certificates gnupg
-          curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ \
-            $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 
       - name: Install python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
           sudo apt-get update
-          # pgOrtools dependencies
+
+          # Basic dependencies
           sudo apt-get install -y \
             postgresql-${PGVER} \
-            postgresql-server-dev-${PGVER} \
-            postgresql-plpython3-${PGVER}
-          # documentation dependencies
-          sudo apt-get install -y graphviz doxygen
-          pip install -r requirements.txt
+            postgresql-server-dev-${PGVER}
 
-      - name: Install Google OR-Tools dependencies
+          # documentation dependencies
+          sudo apt-get install -y \
+            graphviz \
+            python3-sphinx \
+            python3-sphinx-bootstrap-theme \
+            sphinx-intl
+
+      - name: Install Google OR-Tools
         run: |
-          sudo pip install --root=/  ortools
+          sudo pip install --root=/ ortools==9.10.4067
 
       - name: Configure
         run: |
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
-              -DWITH_DOC=ON -DLOCALE=ON ..
+                -DSPHINX_LOCALE=ON ..
 
-      - name: Build
+      - name: Build the locale files
         run: |
           cd build
           make locale
+
+      - name: Extract branch name and commit hash
+        run: |
+          branch=${GITHUB_REF#refs/heads/}
+          git_hash=$(git rev-parse --short "$GITHUB_SHA")
+          echo "GIT_HASH=$git_hash" >> $GITHUB_ENV
 
       - name: Initialize mandatory git config
         run: |
