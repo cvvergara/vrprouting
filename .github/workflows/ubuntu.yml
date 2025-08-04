@@ -35,7 +35,7 @@ env:
 
 jobs:
   build:
-    name: Using G++ compiler
+    name: build
     runs-on: ubuntu-latest
 
     strategy:
@@ -86,7 +86,7 @@ jobs:
           # vroom dependencies
           sudo apt-get install libssl-dev libasio-dev libglpk-dev
 
-      - name: Install python requirements
+      - name: Install Google OR-Tools
         run: |
           sudo pip install --root=/ ortools==9.10.4067
 
