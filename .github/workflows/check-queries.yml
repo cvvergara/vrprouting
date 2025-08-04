@@ -125,11 +125,6 @@ jobs:
           cd build
           sudo make install
 
-      - name: Unpack data
-        run: |
-          cd tools/testers
-          tar -xf matrix_new_values.tar.gz
-
       - name: Create superuser
         run: |
           sudo service postgresql start
