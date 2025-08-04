@@ -1,4 +1,4 @@
-name: Update Website
+name: Website
 
 on:
   workflow_dispatch:
@@ -35,21 +35,30 @@ jobs:
       - name: Get postgres version
         run: |
           sudo service postgresql start
-          pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
-          echo "PGVER=${pgver}" >> $GITHUB_ENV
+          PGVER=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
+          echo "PGVER=${PGVER}" >> $GITHUB_ENV
           echo "PGPORT=5432" >> $GITHUB_ENV
+
+      - name: 'Raise Priority for apt.postgresql.org'
+        run: |
+          cat << EOF >> ./pgdg.pref
+          Package: *
+          Pin: release o=apt.postgresql.org
+          Pin-Priority: 600
+          EOF
+          sudo mv ./pgdg.pref /etc/apt/preferences.d/
+          sudo apt update
 
       - name: Add PostgreSQL APT repository
         run: |
-          sudo apt-get install curl ca-certificates gnupg
-          curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ \
-            $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          sudo apt-get purge postgresql-*
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg-testing main ${{ matrix.psql }}" > /etc/apt/sources.list.d/pgdg.list'
+          curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
 
       - name: Install python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
@@ -63,6 +72,10 @@ jobs:
           # documentation dependencies
           sudo apt-get install -y graphviz doxygen
           pip install -r requirements.txt
+
+      - name: Install Google OR-Tools
+        run: |
+          sudo pip install --root=/ ortools==9.10.4067
 
       - name: Cache VROOM
         id: cache-vroom
@@ -85,17 +98,19 @@ jobs:
       - name: Build VROOM
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
+          # Probably this step is not needed because I dont think we need to build vrprouting
           cd vroom-${{ env.vroom }}/src
           USE_ROUTING=false make shared
 
       - name: Configure
         run: |
+          export PATH=/usr/lib/postgresql/${PGVER}/bin:$PATH
           VROOM=$(pwd)/vroom-${{ env.vroom }}
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
-              -DWITH_DOC=ON -DDOC_USE_BOOTSTRAP=ON -DBUILD_DOXY=ON \
-              -DVROOM_INSTALL_PATH=${VROOM} ..
+                -DDOC_USE_BOOTSTRAP=ON -DWITH_DOC=ON -DBUILD_DOXY=ON \
+                -DVROOM_INSTALL_PATH=${VROOM} ..
 
       - name: Build
         run: |
@@ -146,5 +161,3 @@ jobs:
           git rebase origin/gh-pages
           git push origin gh-pages
           git checkout @{-1}
-
-

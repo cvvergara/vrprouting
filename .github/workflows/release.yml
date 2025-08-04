@@ -5,6 +5,8 @@ on:
 
 env:
     postgis: 3
+    release: Release
+    os: ubuntu-latest
     vroom: 1.12.0
 
 jobs:
@@ -43,17 +45,26 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: 'Raise Priority for apt.postgresql.org'
+        run: |
+          cat << EOF >> ./pgdg.pref
+          Package: *
+          Pin: release o=apt.postgresql.org
+          Pin-Priority: 600
+          EOF
+          sudo mv ./pgdg.pref /etc/apt/preferences.d/
+          sudo apt update
+
       - name: Add PostgreSQL APT repository
         run: |
-          sudo apt-get install curl ca-certificates gnupg
-          curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ \
-            $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          sudo apt-get purge postgresql-*
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg-testing main ${{ matrix.psql }}" > /etc/apt/sources.list.d/pgdg.list'
+          curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
 
       - name: Install python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
@@ -63,19 +74,13 @@ jobs:
             postgresql-${PGVER}-postgis-${{ env.postgis }} \
             postgresql-${PGVER}-postgis-${{ env.postgis }}-scripts \
             postgresql-server-dev-${PGVER} \
-            graphviz \
-            doxygen
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip list
-
-      - name: Install VROOM dependencies
-        run: |
+            postgresql-plpython3-${PGVER}
+          # vroom dependencies
           sudo apt-get install libssl-dev libasio-dev libglpk-dev
 
-      - name: Install Google OR-Tools dependencies
+      - name: Install Google OR-Tools
         run: |
-          sudo pip install --root=/  ortools
+          sudo pip install --root=/ ortools==9.10.4067
 
       - name: Cache VROOM
         id: cache-vroom
@@ -84,7 +89,7 @@ jobs:
           cache-name: vroom
         with:
           path: vroom-${{ env.vroom }}
-          key: ${{ matrix.os }}-${{ env.cache-name }}-${{ env.vroom }}
+          key: ${{ env.os }}-${{ env.cache-name }}-${{ env.vroom }}
 
       - name: Checkout VROOM
         if: steps.cache-vroom.outputs.cache-hit != 'true'
@@ -98,6 +103,7 @@ jobs:
       - name: Build VROOM
         if: steps.cache-vroom.outputs.cache-hit != 'true'
         run: |
+          # Probably this step is not needed because I dont think we need to build vrprouting
           cd vroom-${{ env.vroom }}/src
           USE_ROUTING=false make shared
 
@@ -107,15 +113,18 @@ jobs:
           VROOM=$(pwd)/vroom-${{ env.vroom }}
           mkdir build
           cd build
-          cmake -DPOSTGRESQL_VERSION=${PGVER} -DDOC_USE_BOOTSTRAP=ON -DWITH_DOC=ON -DBUILD_DOXY=ON -DCMAKE_BUILD_TYPE=Release -DES=ON -DVROOM_INSTALL_PATH=${VROOM} ..
+          cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
+                -DDOC_USE_BOOTSTRAP=ON -DWITH_DOC=ON -DBUILD_DOXY=ON \
+                -DVROOM_INSTALL_PATH=${VROOM} ..
 
       - name: Build
         run: |
           cd build
           make doc
-          make -j 4
-          sudo make install
           make doxy
+          # I dont think it needs to be built
+          #make -j 4
+          #sudo make install
 
       - name: Update Users Documentation
         run: |

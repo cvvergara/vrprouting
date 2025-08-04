@@ -68,11 +68,11 @@ jobs:
       - name: Get postgres version
         run: |
           sudo service postgresql start
-          pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
-          echo "PGVER=${pgver}" >> $GITHUB_ENV
+          PGVER=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
+          echo "PGVER=${PGVER}" >> $GITHUB_ENV
           echo "PGPORT=5432" >> $GITHUB_ENV
-          echo "PGBIN=/usr/lib/postgresql/${pgver}/bin" >> $GITHUB_ENV
-          echo "PGINC=/usr/include/postgresql/${pgver}/server" >> $GITHUB_ENV
+          echo "PGBIN=/usr/lib/postgresql/${PGVER}/bin" >> $GITHUB_ENV
+          echo "PGINC=/usr/include/postgresql/${PGVER}/server" >> $GITHUB_ENV
 
       - name: 'Raise Priority for apt.postgresql.org'
         run: |
@@ -145,8 +145,8 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }} \
-              -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} \
-              -DVROOM_INSTALL_PATH=${VROOM} ..
+                -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} \
+                -DVROOM_INSTALL_PATH=${VROOM} ..
 
       - name: Build
         run: |
