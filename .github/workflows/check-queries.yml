@@ -49,7 +49,6 @@ permissions:
 
 env:
     postgis: 3
-    release: Release
     os: ubuntu-latest
     vroom: 1.12.0
 
@@ -60,6 +59,8 @@ jobs:
 
     strategy:
         fail-fast: false
+        matrix:
+          release: [Debug, Release]
 
     steps:
       - uses: actions/checkout@v4
@@ -96,7 +97,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # sudo apt-get update
+          sudo apt-get update
           # vrpRouting dependencies
           sudo apt-get install -y \
             postgresql-${PGVER} \
@@ -143,7 +144,7 @@ jobs:
           VROOM=$(pwd)/vroom-${{ env.vroom }}
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }} \
               -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} \
               -DVROOM_INSTALL_PATH=${VROOM} ..
 

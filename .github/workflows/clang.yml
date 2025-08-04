@@ -39,7 +39,7 @@ env:
 
 jobs:
   build:
-    name: Clang compiler
+    name: Clang
     runs-on: ubuntu-latest
 
     strategy:
@@ -59,17 +59,26 @@ jobs:
           echo "PGBIN=/usr/lib/postgresql/${pgver}/bin" >> $GITHUB_ENV
           echo "PGINC=/usr/include/postgresql/${pgver}/server" >> $GITHUB_ENV
 
+      - name: 'Raise Priority for apt.postgresql.org'
+        run: |
+          cat << EOF >> ./pgdg.pref
+          Package: *
+          Pin: release o=apt.postgresql.org
+          Pin-Priority: 600
+          EOF
+          sudo mv ./pgdg.pref /etc/apt/preferences.d/
+          sudo apt update
+
       - name: Add PostgreSQL APT repository
         run: |
-          sudo apt-get install curl ca-certificates gnupg
-          curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ \
-            $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          sudo apt-get purge postgresql-*
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg-testing main ${{ matrix.psql }}" > /etc/apt/sources.list.d/pgdg.list'
+          curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
 
       - name: Install python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
@@ -88,9 +97,9 @@ jobs:
           # vroom dependencies
           sudo apt-get install libssl-dev libasio-dev libglpk-dev
 
-      - name: Install Google OR-Tools dependencies
+      - name: Install Google OR-Tools
         run: |
-          sudo pip install --root=/  ortools
+          sudo pip install --root=/ ortools==9.10.4067
 
       - name: Cache VROOM
         id: cache-vroom
@@ -122,7 +131,7 @@ jobs:
           VROOM=$(pwd)/vroom-${{ env.vroom }}
           mkdir build
           cd build
-          CXX=clang++ CC=clang cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }}  \
+          CXX=clang++ CC=clang cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }} \
               -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} \
               -DVROOM_INSTALL_PATH=${VROOM} ..
 
@@ -137,7 +146,7 @@ jobs:
           cd tools/testers
           tar -xf matrix_new_values.tar.gz
 
-      - name: Create superuser
+      - name: Run pgtap tests
         run: |
           sudo service postgresql start
           export PG_RUNNER_USER=`whoami`
@@ -145,11 +154,7 @@ jobs:
           sudo -u postgres psql -p ${PGPORT} -c "DROP ROLE IF EXISTS \"${PG_RUNNER_USER}\";"
           sudo -u postgres psql -p ${PGPORT} -c "CREATE ROLE \"${PG_RUNNER_USER}\" WITH LOGIN SUPERUSER;"
           sudo -u postgres psql -p ${PGPORT} -c "CREATE DATABASE \"${PG_RUNNER_USER}\";"
-          echo "PG_RUNNER_USER=${PG_RUNNER_USER}" >> $GITHUB_ENV
 
-      - name: pgTap test
-        run: |
-          sudo service postgresql start
           psql -c "CREATE DATABASE ___vrp___test___;"
           bash ./tools/testers/pg_prove_tests.sh -U ${PG_RUNNER_USER} -p ${PGPORT} -d ___vrp___test___
 
