@@ -46,10 +46,10 @@ popd > /dev/null || exit 1
 
 echo "Starting pgtap tests"
 
-PGOPTIONS="-c client_min_messages=WARNING" pg_prove --failures -q --recurse \
+PGOPTIONS="-c client_min_messages=WARNING" pg_prove --failures --recurse \
     -S on_error_rollback=off \
     -S on_error_stop=true \
     -P format=unaligned \
     -P tuples_only=true \
     -P pager=off \
-    -p "${PGPORT}" -d "${PGDATABASE}"  -U "${PGUSER}"  pgtap
+    -p "${PGPORT}" -d "${PGDATABASE}" -U "${PGUSER}" pgtap
