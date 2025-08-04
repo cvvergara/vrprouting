@@ -82,8 +82,8 @@ jobs:
         if: env.PROCESS == 'true'
         run: |
           sudo service postgresql start
-          pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
-          echo "PGVER=${pgver}" >> $GITHUB_ENV
+          PGVER=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
+          echo "PGVER=${PGVER}" >> $GITHUB_ENV
           echo "PGPORT=5432" >> $GITHUB_ENV
 
       - name: Add PostgreSQL APT repository
@@ -104,14 +104,11 @@ jobs:
         if: env.PROCESS == 'true'
         run: |
           sudo apt-get update
-          # vrpRouting dependencies
+
+          # Basic dependencies
           sudo apt-get install -y \
             postgresql-${PGVER} \
-            postgresql-server-dev-${PGVER} \
-            postgresql-plpython3-${PGVER}
-
-          # vroom dependencies
-          sudo apt-get install libssl-dev libasio-dev libglpk-dev
+            postgresql-server-dev-${PGVER}
 
           # documentation dependencies
           sudo apt-get install -y \
@@ -129,7 +126,8 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ env.release }} -DWITH_DOC=ON -DLINKCHECK=ON -DBUILD_DOXY=ON
+          cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
+                -DWITH_DOC=ON -DLINKCHECK=ON ..
 
       - name: Build Documentation
         if: env.PROCESS == 'true'
