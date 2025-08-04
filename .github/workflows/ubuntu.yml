@@ -30,7 +30,6 @@ permissions:
   contents: read
 
 env:
-    postgis: 3
     vroom: 1.12.0
 
 jobs:
@@ -77,66 +76,29 @@ jobs:
             libtap-parser-sourcehandler-pgtap-perl \
             postgresql-${{ matrix.psql }} \
             postgresql-${{ matrix.psql }}-pgtap \
-            postgresql-${{ matrix.psql }}-postgis-${{ env.postgis }} \
-            postgresql-${{ matrix.psql }}-postgis-${{ env.postgis }}-scripts \
-            postgresql-${{ matrix.psql }}-pgrouting \
             postgresql-plpython3-${{ matrix.psql }} \
             postgresql-server-dev-${{ matrix.psql }}
-
-          # vroom dependencies
-          sudo apt-get install libssl-dev libasio-dev libglpk-dev
 
       - name: Install Google OR-Tools
         run: |
           sudo pip install --root=/ ortools==9.10.4067
-
-      - name: Cache VROOM
-        id: cache-vroom
-        uses: actions/cache@v4
-        env:
-          cache-name: vroom
-        with:
-          path: vroom-${{ env.vroom }}
-          key: ${{ matrix.os }}-${{ env.cache-name }}-${{ env.vroom }}
-
-      - name: Checkout VROOM
-        if: steps.cache-vroom.outputs.cache-hit != 'true'
-        uses: actions/checkout@v4
-        with:
-          path: vroom-${{ env.vroom }}
-          repository: VROOM-Project/vroom
-          ref: "v${{ env.vroom }}"
-          submodules: true
-
-      - name: Build VROOM
-        if: steps.cache-vroom.outputs.cache-hit != 'true'
-        run: |
-          cd vroom-${{ env.vroom }}/src
-          USE_ROUTING=false make shared
 
       - name: Configure
         run: |
           export PATH=/usr/lib/postgresql/${{ matrix.psql }}/bin:$PATH
           PGBIN="/usr/lib/postgresql/${{ matrix.psql }}/bin"
           PGINC="/usr/include/postgresql/${{ matrix.psql }}/server"
-          VROOM=$(pwd)/vroom-${{ env.vroom }}
           mkdir build
           cd build
           cmake -DPOSTGRESQL_VERSION=${{ matrix.psql }} \
               -DCMAKE_BUILD_TYPE=${{ matrix.release }} \
-              -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} \
-              -DVROOM_INSTALL_PATH=${VROOM} ..
+              -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} ..
 
       - name: Build
         run: |
           cd build
           make -j 4
           sudo make install
-
-      - name: Unpack data
-        run: |
-          cd tools/testers
-          tar -xf matrix_new_values.tar.gz
 
       - name: Run pgtap tests
         run: |
@@ -150,4 +112,3 @@ jobs:
 
           psql -c "CREATE DATABASE ___vrp___test___;"
           bash ./tools/testers/pg_prove_tests.sh -U ${PG_RUNNER_USER} -p ${PGPORT} -d ___vrp___test___
-
