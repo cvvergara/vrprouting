@@ -45,6 +45,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set postgres version
+        run: |
+          sudo service postgresql start
+          echo "PGVER=${{ matrix.psql }}" >> $GITHUB_ENV
+          echo "PGPORT=5432" >> $GITHUB_ENV
+          echo "PGBIN=/usr/lib/postgresql/${{ matrix.psql }}/bin" >> $GITHUB_ENV
+          echo "PGINC=/usr/include/postgresql/${{ matrix.psql }}/server" >> $GITHUB_ENV
+
       - name: 'Raise Priority for apt.postgresql.org'
         run: |
           cat << EOF >> ./pgdg.pref
@@ -69,13 +77,12 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          # vrpRouting dependencies
           sudo apt-get install -y \
             libtap-parser-sourcehandler-pgtap-perl \
-            postgresql-${{ matrix.psql }} \
-            postgresql-${{ matrix.psql }}-pgtap \
-            postgresql-server-dev-${{ matrix.psql }} \
-            postgresql-plpython3-${{ matrix.psql }}
+            postgresql-${PGVER} \
+            postgresql-${PGVER}-pgtap \
+            postgresql-server-dev-${PGVER} \
+            postgresql-plpython3-${PGVER}
 
       - name: Install Google OR-Tools
         run: |
@@ -83,14 +90,11 @@ jobs:
 
       - name: Configure
         run: |
-          export PATH=/usr/lib/postgresql/${{ matrix.psql }}/bin:$PATH
-          PGBIN="/usr/lib/postgresql/${{ matrix.psql }}/bin"
-          PGINC="/usr/include/postgresql/${{ matrix.psql }}/server"
-          echo "PGPORT=5432" >> $GITHUB_ENV
+          export PATH=/usr/lib/postgresql/${PGVER}/bin:$PATH
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }} \
-              -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} ..
+                -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} ..
 
       - name: Build
         run: |
@@ -107,7 +111,29 @@ jobs:
           sudo -u postgres psql -p ${PGPORT} -c "CREATE DATABASE \"${PG_RUNNER_USER}\";"
           echo "PG_RUNNER_USER=${PG_RUNNER_USER}" >> $GITHUB_ENV
 
+      - name: Test signature is up to date
+        run: |
+          sudo service postgresql start
+          psql -c "CREATE DATABASE ____sigs_routing____;"
+          tools/scripts/get_signatures.sh -p ${PGPORT}
+          git diff sql/sigs/*.sig
+          git diff --exit-code --quiet sql/sigs/*.sig
+
+      - name: Test documentation queries are up to date
+        run: |
+          sudo service postgresql start
+          psql -c "CREATE DATABASE ___vrp___test___;"
+          TESTDIRS="version"
+          for d in ${TESTDIRS}
+          do
+            ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}" -doc -alg "${d}"
+          done
+          git diff
+
+          ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}"
+
       - name: pgTap test
+        if: ${{ false }}
         run: |
           sudo service postgresql start
           psql -c "CREATE DATABASE ___vrp___test___;"
