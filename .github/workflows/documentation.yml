@@ -118,6 +118,7 @@ jobs:
             sphinx-intl
 
       - name: Install Google OR-Tools
+        if: env.PROCESS == 'true'
         run: |
           sudo pip install --root=/ ortools==9.10.4067
 
