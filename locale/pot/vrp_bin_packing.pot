@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.4.2
+# Copyright (C) vrpRouting Contributors - Version v0.0.0
 # This file is distributed under the same license as the vrpRouting package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.4.1\n"
+"Project-Id-Version: vrpRouting v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-22 19:34+0000\n"
+"POT-Creation-Date: 2025-08-04 17:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,131 +16,47 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../../build/doc/vrp_bin_packing.rst:13
-msgid "`Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 <https://vrp.pgrouting.org/v0>`__"
-msgstr ""
-
-#: ../../build/doc/vrp_bin_packing.rst:14
-msgid "Supported Versions `Latest <https://vrp.pgrouting.org/latest/en/vrp_oneDepot.html>`__ (`v0 <https://vrp.pgrouting.org/v0/en/vrp_oneDepot.html>`__)"
-msgstr ""
-
-#: ../../build/doc/vrp_bin_packing.rst:19
+#: ../../build/doc/vrp_bin_packing.rst:16
 msgid "vrp_bin_packing - Experimental"
 msgstr ""
 
-#: ../../build/doc/experimental.rst:3
-msgid "Possible server crash"
-msgstr ""
-
-#: ../../build/doc/experimental.rst:5
-msgid "These functions might create a server crash"
-msgstr ""
-
-#: ../../build/doc/experimental.rst:7
-msgid "Experimental functions"
-msgstr ""
-
-#: ../../build/doc/experimental.rst:9
-msgid "They are not officially of the current release."
-msgstr ""
-
-#: ../../build/doc/experimental.rst:10
-msgid "They likely will not be officially be part of the next release:"
-msgstr ""
-
-#: ../../build/doc/experimental.rst:12
-msgid "The functions might not make use of ANY-INTEGER and ANY-NUMERICAL"
-msgstr ""
-
-#: ../../build/doc/experimental.rst:13
-msgid "Name might change."
-msgstr ""
-
-#: ../../build/doc/experimental.rst:14
-msgid "Signature might change."
-msgstr ""
-
-#: ../../build/doc/experimental.rst:15
-msgid "Functionality might change."
-msgstr ""
-
-#: ../../build/doc/experimental.rst:16
-msgid "pgTap tests might be missing."
-msgstr ""
-
-#: ../../build/doc/experimental.rst:17
-msgid "Might need c/c++ coding."
-msgstr ""
-
-#: ../../build/doc/experimental.rst:18
-msgid "May lack documentation."
-msgstr ""
-
-#: ../../build/doc/experimental.rst:19
-msgid "Documentation if any might need to be rewritten."
-msgstr ""
-
-#: ../../build/doc/experimental.rst:20
-msgid "Documentation examples might need to be automatically generated."
-msgstr ""
-
-#: ../../build/doc/experimental.rst:21
-msgid "Might need a lot of feedback from the comunity."
-msgstr ""
-
-#: ../../build/doc/experimental.rst:22
-msgid "Might depend on a proposed function of vrpRouting"
-msgstr ""
-
-#: ../../build/doc/experimental.rst:23
-msgid "Might depend on a deprecated function of vrpRouting"
-msgstr ""
-
-#: ../../build/doc/vrp_bin_packing.rst:26
+#: ../../build/doc/vrp_bin_packing.rst:19
 msgid "Availability"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:27
-msgid "Version 0.4.1"
+#: ../../build/doc/vrp_bin_packing.rst:21
+msgid "Version 0.0.1"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:29
+#: ../../build/doc/vrp_bin_packing.rst:22
+msgid "New function"
+msgstr ""
+
+#: ../../build/doc/vrp_bin_packing.rst:23
 msgid "Support for or-tools v9.10.4067"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:31
-msgid "Version 0.4.0"
-msgstr ""
-
-#: ../../build/doc/vrp_bin_packing.rst:33
-msgid "New **experimental** function"
-msgstr ""
-
-#: ../../build/doc/vrp_bin_packing.rst:35
-msgid "vrp_knapsack"
-msgstr ""
-
-#: ../../build/doc/vrp_bin_packing.rst:40
-#: ../../build/doc/vrp_bin_packing.rst:71
-#: ../../build/doc/vrp_bin_packing.rst:90
-#: ../../build/doc/vrp_bin_packing.rst:121
+#: ../../build/doc/vrp_bin_packing.rst:26
+#: ../../build/doc/vrp_bin_packing.rst:57
+#: ../../build/doc/vrp_bin_packing.rst:76
+#: ../../build/doc/vrp_bin_packing.rst:107
 #: ../../build/doc/or_tools-category.rst:12
 msgid "Description"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:42
+#: ../../build/doc/vrp_bin_packing.rst:28
 msgid "The bin packing problem is an optimization problem, in which items of different sizes must be packed into a finite number of bins or containers, each of a fixed given capacity, in a way that minimizes the number of bins used. The problem has many applications, such as filling up containers, loading trucks with weight capacity constraints, creating file backups in media and technology mapping in FPGA semiconductor chip design."
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:50
+#: ../../build/doc/vrp_bin_packing.rst:36
 msgid "Signatures"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:53
+#: ../../build/doc/vrp_bin_packing.rst:39
 msgid "Summary"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:54
+#: ../../build/doc/vrp_bin_packing.rst:40
 msgid "\\ \\"
 msgstr ""
 
@@ -156,75 +72,75 @@ msgstr ""
 msgid "OR EMPTY SET"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:62
+#: ../../build/doc/vrp_bin_packing.rst:48
 msgid "Parameters"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:69
-#: ../../build/doc/vrp_bin_packing.rst:87
-#: ../../build/doc/vrp_bin_packing.rst:119
+#: ../../build/doc/vrp_bin_packing.rst:55
+#: ../../build/doc/vrp_bin_packing.rst:73
+#: ../../build/doc/vrp_bin_packing.rst:105
 #: ../../build/doc/or_tools-category.rst:10
 msgid "Column"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:70
-#: ../../build/doc/vrp_bin_packing.rst:88
-#: ../../build/doc/vrp_bin_packing.rst:120
+#: ../../build/doc/vrp_bin_packing.rst:56
+#: ../../build/doc/vrp_bin_packing.rst:74
+#: ../../build/doc/vrp_bin_packing.rst:106
 #: ../../build/doc/or_tools-category.rst:11
 msgid "Type"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:72
+#: ../../build/doc/vrp_bin_packing.rst:58
 msgid "`Weights SQL`_"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:73
+#: ../../build/doc/vrp_bin_packing.rst:59
 msgid "``TEXT``"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:74
+#: ../../build/doc/vrp_bin_packing.rst:60
 msgid "`Weights SQL`_ as described below"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:75
+#: ../../build/doc/vrp_bin_packing.rst:61
 msgid "bin_capacity"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:76
-#: ../../build/doc/vrp_bin_packing.rst:92
-#: ../../build/doc/vrp_bin_packing.rst:123
-#: ../../build/doc/vrp_bin_packing.rst:126
+#: ../../build/doc/vrp_bin_packing.rst:62
+#: ../../build/doc/vrp_bin_packing.rst:78
+#: ../../build/doc/vrp_bin_packing.rst:109
+#: ../../build/doc/vrp_bin_packing.rst:112
 #: ../../build/doc/or_tools-category.rst:14
 #: ../../build/doc/or_tools-category.rst:17
 msgid "**ANY-INTEGER**"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:77
+#: ../../build/doc/vrp_bin_packing.rst:63
 msgid "Maximum Capacity of the bin."
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:80
+#: ../../build/doc/vrp_bin_packing.rst:66
 msgid "Optional Parameters"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:89
+#: ../../build/doc/vrp_bin_packing.rst:75
 msgid "Default"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:91
+#: ../../build/doc/vrp_bin_packing.rst:77
 msgid "``max_rows``"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:93
+#: ../../build/doc/vrp_bin_packing.rst:79
 msgid ":math:`100000`"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:94
+#: ../../build/doc/vrp_bin_packing.rst:80
 msgid "Maximum items(rows) to fetch from bin_packing_data table."
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:96
-#: ../../build/doc/vrp_bin_packing.rst:129
+#: ../../build/doc/vrp_bin_packing.rst:82
+#: ../../build/doc/vrp_bin_packing.rst:115
 #: ../../build/doc/or_tools-category.rst:20
 msgid "Where:"
 msgstr ""
@@ -234,17 +150,17 @@ msgstr ""
 msgid "ANY-INTEGER"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:98
-#: ../../build/doc/vrp_bin_packing.rst:131
+#: ../../build/doc/vrp_bin_packing.rst:84
+#: ../../build/doc/vrp_bin_packing.rst:117
 #: ../../build/doc/or_tools-category.rst:22
 msgid "``SMALLINT``, ``INTEGER``, ``BIGINT``"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:101
+#: ../../build/doc/vrp_bin_packing.rst:87
 msgid "Inner Queries"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:104
+#: ../../build/doc/vrp_bin_packing.rst:90
 msgid "Weights SQL"
 msgstr ""
 
@@ -252,7 +168,7 @@ msgstr ""
 msgid "A ``SELECT`` statement that returns the following columns:"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:125
+#: ../../build/doc/vrp_bin_packing.rst:111
 #: ../../build/doc/or_tools-category.rst:13
 msgid "``id``"
 msgstr ""
@@ -269,27 +185,27 @@ msgstr ""
 msgid "Weight of the item."
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:112
+#: ../../build/doc/vrp_bin_packing.rst:98
 msgid "Result Columns"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:122
+#: ../../build/doc/vrp_bin_packing.rst:108
 msgid "``bin``"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:124
+#: ../../build/doc/vrp_bin_packing.rst:110
 msgid "Integer to uniquely identify a bin."
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:127
+#: ../../build/doc/vrp_bin_packing.rst:113
 msgid "Indentifier of an item in the ``bin``."
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:134
+#: ../../build/doc/vrp_bin_packing.rst:120
 msgid "Example"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:141
+#: ../../build/doc/vrp_bin_packing.rst:127
 msgid "See Also"
 msgstr ""
 
@@ -301,14 +217,14 @@ msgstr ""
 msgid "`OR-Tools: Google OR-Tools <https://developers.google.com/optimization>`__"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:148
+#: ../../build/doc/vrp_bin_packing.rst:134
 msgid "Indices and tables"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:149
+#: ../../build/doc/vrp_bin_packing.rst:135
 msgid ":ref:`genindex`"
 msgstr ""
 
-#: ../../build/doc/vrp_bin_packing.rst:150
+#: ../../build/doc/vrp_bin_packing.rst:136
 msgid ":ref:`search`"
 msgstr ""
