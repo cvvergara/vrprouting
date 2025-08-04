@@ -40,11 +40,11 @@ permissions:
 
 env:
     release: Release
+    os: ubuntu-latest
 
 jobs:
   check-documentation:
     name: documentation
-    runs-on: ubuntu-latest
 
     strategy:
         fail-fast: false
@@ -77,31 +77,28 @@ jobs:
           if git diff --name-only HEAD^ HEAD | grep -q "^locale/${{ matrix.language }}" ; then  echo "PROCESS=true" >> $GITHUB_ENV; echo "CHK_LINK=true" >> $GITHUB_ENV; exit 0; fi
 
       - name: Get postgres version
+        if: env.PROCESS == 'true'
         run: |
           sudo service postgresql start
-          pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
-          echo "PGVER=${pgver}" >> $GITHUB_ENV
+          PGVER=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
+          echo "PGVER=${PGVER}" >> $GITHUB_ENV
           echo "PGPORT=5432" >> $GITHUB_ENV
 
-      - name: Add PostgreSQL APT repository
-        run: |
-          sudo apt-get install curl ca-certificates gnupg
-          curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ \
-            $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-
       - name: Install python
+        if: env.PROCESS == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
       - name: Install dependencies
+        if: env.PROCESS == 'true'
         run: |
           sudo apt-get update
+
+          # Basic dependencies
           sudo apt-get install -y \
             postgresql-${PGVER} \
-            postgresql-server-dev-${PGVER} \
-            postgresql-plpython3-${PGVER}
+            postgresql-server-dev-${PGVER}
 
           # documentation dependencies
           sudo apt-get install -y \
@@ -111,6 +108,7 @@ jobs:
             sphinx-intl
 
       - name: Install Google OR-Tools
+        if: env.PROCESS == 'true'
         run: |
           sudo pip install --root=/ ortools==9.10.4067
 
@@ -122,7 +120,7 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
               -DSPHINX_LINKCHECK=ON ..
 
-      - name: Build
+      - name: Build Documentation
         if: env.PROCESS == 'true'
         run: |
           cd build
