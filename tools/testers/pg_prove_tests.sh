@@ -34,13 +34,13 @@ fi
 PGUSER=$1
 PGPORT=$2
 PGDATABASE="___pgorpy___pgtap___"
-VERSION=$(grep pgORpy CMakeLists.txt | awk '{print $3}')
+VERSION=$(grep VRPROUTING CMakeLists.txt | awk '{print $3}')
 
 pushd ./tools/testers/ > /dev/null || exit 1
 
 dropdb --if-exists -U "${PGUSER}" -p "${PGPORT}" "${PGDATABASE}"
 createdb -U "${PGUSER}" -p "${PGPORT}" "${PGDATABASE}"
-bash setup_db.sh "${PGPORT}" "${PGDATABASE}" "${PGUSER}" "${VERSION}"
+bash setup_db.sh "${PGPORT}" "${PGDATABASE}" "${PGUSER}"
 
 popd > /dev/null || exit 1
 
