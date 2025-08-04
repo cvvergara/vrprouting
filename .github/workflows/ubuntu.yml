@@ -48,21 +48,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: 'Raise Priority for apt.postgresql.org'
+      - name: Get postgres version
         run: |
-          cat << EOF >> ./pgdg.pref
-          Package: *
-          Pin: release o=apt.postgresql.org
-          Pin-Priority: 600
-          EOF
-          sudo mv ./pgdg.pref /etc/apt/preferences.d/
-          sudo apt update
+          sudo service postgresql start
+          pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
+          echo "PGVER=${pgver}" >> $GITHUB_ENV
+          PGP=5433
+          if [ "${{ matrix.psql }}" == "${pgver}" ]; then PGP=5432; fi
+          echo "PGPORT=${PGP}" >> $GITHUB_ENV
+          echo "PGBIN=/usr/lib/postgresql/${{ matrix.psql }}/bin" >> $GITHUB_ENV
+          echo "PGINC=/usr/include/postgresql/${{ matrix.psql }}/server" >> $GITHUB_ENV
 
       - name: Add PostgreSQL APT repository
         run: |
-          sudo apt-get purge postgresql-*
-          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg-testing main ${{ matrix.psql }}" > /etc/apt/sources.list.d/pgdg.list'
-          curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
+          sudo apt-get install curl ca-certificates gnupg
+          curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ \
+            $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 
       - name: Install python
         uses: actions/setup-python@v5
