@@ -25,31 +25,59 @@
 
 set -e
 
-if [ "$#" -ne 2 ]; then
-    echo "Illegal number of parameters $#"
-    echo "Parameters: <user> <port>"
-    exit 1
+PGDATABASE="___vrp___test___"
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -U)
+      PGUSER=(-U "$2")
+      shift
+      shift
+      ;;
+    -d)
+      PGDATABASE="$2"
+      shift
+      shift
+      ;;
+    -c|--clean)
+      CLEANDB=YES
+      shift
+      ;;
+    -p)
+      PGPORT=(-p "$2")
+      shift
+      shift
+      ;;
+    -*)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+    *)
+        POSITIONAL_ARGS+=("$1") # save positional arg
+        shift # past argument
+        ;;
+  esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
+
+echo PGUSER= "${PGUSER[@]}"
+echo PGPORT= "${PGPORT[@]}"
+echo PGDATABASE= "${PGDATABASE}"
+echo CLEANDB= "${CLEANDB}"
+
+if [ -n "${CLEANDB}" ]; then
+    echo "Recreating database ${PGDATABASE}"
+    dropdb --if-exists "${PGPORT[@]}" "${PGUSER[@]}" "${PGDATABASE}"
+    createdb "${PGPORT[@]}" "${PGUSER[@]}" "${PGDATABASE}"
 fi
 
-PGUSER=$1
-PGPORT=$2
-PGDATABASE="___pgorpy___pgtap___"
-VERSION=$(grep VRPROUTING CMakeLists.txt | awk '{print $3}')
+cd ./tools/testers/
+psql "${PGPORT[@]}" "${PGUSER[@]}" -d "${PGDATABASE}" -X -q -v ON_ERROR_STOP=1 --pset pager=off -f setup_db.sql
 
-pushd ./tools/testers/ > /dev/null || exit 1
+pg_prove --failures --recurse "${PGPORT[@]}" "${PGUSER[@]}" -d "${PGDATABASE}" ../../pgtap/
 
-dropdb --if-exists -U "${PGUSER}" -p "${PGPORT}" "${PGDATABASE}"
-createdb -U "${PGUSER}" -p "${PGPORT}" "${PGDATABASE}"
-bash setup_db.sh "${PGPORT}" "${PGDATABASE}" "${PGUSER}" "${VERSION}"
-
-popd > /dev/null || exit 1
-
-echo "Starting pgtap tests"
-
-PGOPTIONS="-c client_min_messages=WARNING" pg_prove --failures --recurse \
-    -S on_error_rollback=off \
-    -S on_error_stop=true \
-    -P format=unaligned \
-    -P tuples_only=true \
-    -P pager=off \
-    -p "${PGPORT}" -d "${PGDATABASE}" -U "${PGUSER}" pgtap
+# database wont be removed unless script does not fails
+if [ -n "$CLEANDB" ]; then
+    dropdb --if-exists "${PGPORT[@]}" "${PGUSER[@]}" "${PGDATABASE}"
+fi

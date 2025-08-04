@@ -427,7 +427,6 @@ sub createTestDB {
 
     mysystem("$psql $connopts -c \"$encoding DROP EXTENSION IF EXISTS vrprouting CASCADE\"  $DBNAME");
     mysystem("$psql $connopts -c \"$encoding CREATE EXTENSION vrprouting CASCADE\"  $DBNAME");
-    mysystem("$psql $connopts -c \"$encoding CREATE EXTENSION IF NOT EXISTS plpython3u \" $DBNAME");
 
     # print database information
     print `$psql $connopts -c "select version();" postgres `, "\n";

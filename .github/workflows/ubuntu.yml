@@ -74,8 +74,8 @@ jobs:
             libtap-parser-sourcehandler-pgtap-perl \
             postgresql-${{ matrix.psql }} \
             postgresql-${{ matrix.psql }}-pgtap \
-            postgresql-plpython3-${{ matrix.psql }} \
-            postgresql-server-dev-${{ matrix.psql }}
+            postgresql-server-dev-${{ matrix.psql }} \
+            postgresql-plpython3-${{ matrix.psql }}
 
       - name: Install Google OR-Tools
         run: |
@@ -86,26 +86,30 @@ jobs:
           export PATH=/usr/lib/postgresql/${{ matrix.psql }}/bin:$PATH
           PGBIN="/usr/lib/postgresql/${{ matrix.psql }}/bin"
           PGINC="/usr/include/postgresql/${{ matrix.psql }}/server"
+          echo "PGPORT=5432" >> $GITHUB_ENV
           mkdir build
           cd build
-          cmake -DPOSTGRESQL_VERSION=${{ matrix.psql }} \
-              -DCMAKE_BUILD_TYPE=${{ matrix.release }} \
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }} \
               -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} ..
 
       - name: Build
         run: |
           cd build
-          make -j 4
           sudo make install
 
-      - name: Run pgtap tests
+      - name: Create superuser
         run: |
           sudo service postgresql start
           export PG_RUNNER_USER=`whoami`
-          export PGPORT=5432
           sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS \"${PG_RUNNER_USER}\";"
           sudo -u postgres psql -p ${PGPORT} -c "DROP ROLE IF EXISTS \"${PG_RUNNER_USER}\";"
           sudo -u postgres psql -p ${PGPORT} -c "CREATE ROLE \"${PG_RUNNER_USER}\" WITH LOGIN SUPERUSER;"
           sudo -u postgres psql -p ${PGPORT} -c "CREATE DATABASE \"${PG_RUNNER_USER}\";"
+          echo "PG_RUNNER_USER=${PG_RUNNER_USER}" >> $GITHUB_ENV
 
-          bash ./tools/testers/pg_prove_tests.sh ${PG_RUNNER_USER} ${PGPORT}
+      - name: pgTap test
+        run: |
+          sudo service postgresql start
+          psql -c "CREATE DATABASE ___vrp___test___;"
+          bash ./tools/testers/pg_prove_tests.sh -U ${PG_RUNNER_USER} -p ${PGPORT} -d ___vrp___test___
+
