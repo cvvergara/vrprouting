@@ -27,9 +27,11 @@ sub Usage {
     die "Usage: notes2news.pl (from the root of the repository or pre-commit hook)\n";
 }
 
+my $ROOT = '';
+$ROOT = "../../" if $0 !~ /script/;
 my $DEBUG = '';
-my $in_file = "doc/general/release_notes.rst";
-my $out_file = "NEWS.md";
+my $in_file = $ROOT . "doc/general/release_notes.rst";
+my $out_file = $ROOT . "NEWS.md";
 
 my $ofh;
 open($ofh, ">$out_file") || die "ERROR: failed to open '$out_file' for write! : $!\n";
@@ -46,28 +48,17 @@ my $skipping = 1;
 my $file = '';
 my $start = '';
 my $end = '';
+my $blank = 0;
 while (my $line = <$ifh>) {
-    next if $skipping and $line !~ /^vrpRouting/;
+    next if $skipping and $line !~ /^pgORpy/;
     $skipping = 0;
 
     next if $line =~ /contents|:local:|:depth:|\*\*\*\*\*\*\*|\=\=\=\=\=\=\=|\-\-\-\-\-\-\-|\+\+\+\+\+\+\+\+/;
 
-    $line =~ s/[\|]+//g;
-    $line =~ s/($check)/$conversions{$1}/go;
-
-    # Handling the headers
-    if ($line =~ m/^vrpRouting [0-9]$/i) {
-        print $ofh "# $line";
+    if ($line eq "\n") {
+        ++$blank;
         next;
-    };
-    if ($line =~ m/^vrpRouting [0-9].[0-9]$/i) {
-        print $ofh "## $line";
-        next;
-    };
-    if ($line =~ m/^vrpRouting [0-9].[0-9].[0-9] Release Notes$/i) {
-        print $ofh "### $line";
-        next;
-    };
+    }
 
     # get include filename
     if ($line =~ /include/) {
@@ -80,8 +71,9 @@ while (my $line = <$ifh>) {
             sub{
                 -f $_ && $_ =~ /$file/
                 && push @wanted_files,$File::Find::name
-            }, "doc"
+            }, $ROOT . "doc"
         );
+        die "ERROR: file '$file' not found" if ! @wanted_files;
         foreach(@wanted_files){
             print "wanted: $_\n" if $DEBUG;
         }
@@ -107,10 +99,35 @@ while (my $line = <$ifh>) {
         $end = $line;
         print "--->      $file from $start to $end \n" if $DEBUG;
         find_stuff($file, $start, $end);
+        $blank = 0;
         next;
     }
 
+    if ($blank >= 1) {
+        print $ofh "\n";
+        $blank = 0;
+    }
 
+    $line =~ s/[\|]+//g;
+    $line =~ s/($check)/$conversions{$1}/go;
+
+    # Handling the headers
+    if ($line =~ m/^pgORpy [0-9]$/i) {
+        print $ofh "# $line";
+        next;
+    };
+    if ($line =~ m/^pgORpy [0-9].[0-9]$/i) {
+        print $ofh "## $line";
+        next;
+    };
+    if ($line =~ m/^pgORpy [0-9].[0-9].[0-9] Release Notes$/i) {
+        print $ofh "### $line";
+        next;
+    };
+
+    # Convert :pr: & issue to markdown
+    $line =~ s/:pr:`([^<]+?)`/\[#$1\](https:\/\/github.com\/pgRouting\/pgORpy\/pull\/$1)/g;
+    $line =~ s/:issue:`([^<]+?)`/\[#$1\](https:\/\/github.com\/pgRouting\/pgORpy\/issues\/$1)/g;
 
     # convert urls to markdown
     $line =~ s/`([^<]+?)\s*<([^>]+)>`_*/\[$1\]($2)/g;
@@ -121,11 +138,10 @@ while (my $line = <$ifh>) {
     # convert rubric to bold
     $line =~ s/^\.\. rubric::\s*(.+)$/**$1**/;
 
-    next if $line =~ /^\.\. _changelog/;
-
     print $ofh $line;
 }
 
+print $ofh "-----";
 
 close($ifh);
 close($ofh);
@@ -150,7 +166,7 @@ sub find_stuff {
 }
 
 sub get_substitutions {
-    my $file = "doc/conf.py.in";
+    my $file = $ROOT . "doc/conf.py.in";
     my $mstart = "rst_epilog";
     my $mend = "epilog_end";
     print "get_substitutions $file from $mstart to $mend \n" if $DEBUG;
