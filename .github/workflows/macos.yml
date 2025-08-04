@@ -5,6 +5,13 @@ on:
   push:
     paths:
       - '.github/workflows/macos.yml'
+      - 'sql/**'
+      - 'pgtap/**'
+      - 'tools/testers/**'
+      - 'CMakeLists.txt'
+
+    branches-ignore:
+      - 'gh-pages'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
