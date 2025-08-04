@@ -3,10 +3,10 @@ BEGIN
 SET client_min_messages TO NOTICE;
 SET
 /* -- q1 */
-SELECT version, library FROM vrp_full_version();
- version |     library
----------+-----------------
- 0.1.0   | pgortools-0.1.0
+SELECT * FROM por_full_version();
+ version | or_tools
+---------+-----------
+ 0.0.0   | 9.10.4067
 (1 row)
 
 /* -- q2 */

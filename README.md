@@ -1,6 +1,8 @@
-# pgOrtools - Vehicle Routing problems on PostgreSQL
+# pgORpy - making accesible or-tools on the database
 
-[![Join the chat at https://gitter.im/pgRouting/pgrouting](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pgRouting/pgrouting?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at
+https://gitter.im/pgRouting/pgrouting](https://badges.gitter.im/Join%20Chat.svg)](https://app.gitter.im/#/room/#pgrouting:osgeo.org)
+[Join discourse](https://discourse.osgeo.org/c/pgrouting/15)
 
 ## STATUS
 
@@ -10,81 +12,62 @@
 * The *develop* branch has the development of the next minor/major release
 
 For the complete list of releases go to:
-https://github.com/pgRouting/pgrouting/releases
-
+https://github.com/pgRouting/pgorpy/releases
 
 ## LINKS
 
 * https://pgrouting.org/
-* https://vrp.pgrouting.org/
-* https://github.com/pgRouting/pgortools
+* https://pgorpy.pgrouting.org/
+* https://github.com/pgRouting/pgorpy
 
 ## STATUS
 
-Status of the project can be found [here](https://github.com/pgRouting/pgortools/wiki#status)
+Status of the project can be found [here](https://github.com/pgRouting/pgorpy/wiki#status)
 
 
 ## INTRODUCTION
 
-pgOrtools extends the pgRouting/PostGIS/PostgreSQL geospatial database to provide algorithms for Vehicle Routing Problems.
-It requires VROOM as a dependency for building and computing the VRP solution. This release is compatible with VROOM version 1.12.0
+pgORpy extends the pgRouting/PostGIS/PostgreSQL geospatial database to provide OR-tools functionaily on the PostgreSQL
+database.
 
 This library is under development and currently contains the following functions:
 
-* `vrp_onedepot`
-* `vrp_pgr_pickdelivereuclidean`
-* `vrp_pgr_pickdeliver`
-* `vrp_vroom`
-* `vrp_vroomJobs`
-* `vrp_vroomShipments`
+* `por_knapsack`
+* `por_bin_packing`
+* `por_multiple_knapsack`
 
-The detailed steps for installation can be found [here](https://vrp.pgrouting.org/latest/en/installation.html).
+The detailed steps for installation can be found [here](https://pgorpy.pgrouting.org/latest/en/installation.html).
 
 ## REQUIREMENTS
 
 Building requirements
 --------------------
 * Perl
-* C and C++ compilers with C++17 standard support
-* Postgresql >= TBD
-* CMake >= 3.12
+* Postgresql not on EOL
+* CMake >= 3.17
 * Sphinx > 4.0.0
-* VROOM >= 1.12.0
 * ortools == 9.10.4067
 
-User's requirements
---------------------
-
-* PostGIS
-* pgRouting
-
-## COMPILATION
+## Building
 
 For Linux
 
 	mkdir build
 	cd build
-	cmake  ..
-	make
+	cmake ..
 	sudo make install
 
-Build with documentation (requires [Sphinx](http://sphinx-doc.org/))
+## Using
 
-	cmake -DWITH_DOC=ON ..
-    make doc
-
-Postgresql
+Create the extension
 
 	createdb mydatabase
-	psql mydatabase -c "CREATE EXTENSION pgortools CASCADE"
+	psql mydatabase -c "CREATE EXTENSION pgorpy CASCADE"
 
-## USAGE
+## Documentation
 
-See online documentation: https://vrp.pgrouting.org/latest/en/index.html
+See online documentation: https://pgorpy.pgrouting.org/latest/en/index.html
 
 ## LICENSE
 
-* GPLv2-or-later
-* Boost under Boost license (see LICENSE_1_0.txt)
-
-
+* [GPLv2-or-later](https://github.com/pgrouting/pgorpy/blob/main/LICENSE.md)

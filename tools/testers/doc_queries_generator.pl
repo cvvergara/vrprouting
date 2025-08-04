@@ -33,7 +33,7 @@ use File::Find ();
 use File::Basename;
 use Data::Dumper;
 use Time::HiRes qw(gettimeofday tv_interval);
-use Getopt::Long;
+use Getopt::Long qw(:config no_auto_abbrev);
 
 $Data::Dumper::Sortkeys = 1;
 
@@ -75,7 +75,7 @@ sub HelpMessage {
     " --data                - only install the sampledata.\n" .
     " [-l|--level] NOTICE   - client_min_messages value. Defaults to $LEVEL. other values can be WARNING, DEBUG3, etc\n" .
     " [-c|--clean]          - dropdb before running.\n" .
-    " --doccumentation|doc  - Generate documentation examples. LEVEL is set to NOTICE\n" .
+    " --documentation|doc  - Generate documentation examples. LEVEL is set to NOTICE\n" .
     " --help                - Show this help\n";
 }
 
@@ -98,7 +98,7 @@ my $opts = GetOptions(
     'alg=s' => \$alg,
     'venv=s' => \$VENV,
 
-    'verbose' => \$VERBOSE,
+    'verbose|v' => \$VERBOSE,
     'data' => \$DATA,
     'clean' => \$CLEAN,
     'force' => \$FORCE,
