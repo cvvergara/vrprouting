@@ -133,7 +133,6 @@ jobs:
           ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}"
 
       - name: pgTap test
-        if: ${{ false }}
         run: |
           sudo service postgresql start
           psql -c "CREATE DATABASE ___vrp___test___;"
