@@ -4,10 +4,8 @@ on:
   workflow_dispatch:
 
 env:
-    postgis: 3
     release: Release
     os: ubuntu-latest
-    vroom: 1.12.0
 
 permissions:
   contents: write
@@ -39,22 +37,6 @@ jobs:
           echo "PGVER=${PGVER}" >> $GITHUB_ENV
           echo "PGPORT=5432" >> $GITHUB_ENV
 
-      - name: 'Raise Priority for apt.postgresql.org'
-        run: |
-          cat << EOF >> ./pgdg.pref
-          Package: *
-          Pin: release o=apt.postgresql.org
-          Pin-Priority: 600
-          EOF
-          sudo mv ./pgdg.pref /etc/apt/preferences.d/
-          sudo apt update
-
-      - name: Add PostgreSQL APT repository
-        run: |
-          sudo apt-get purge postgresql-*
-          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg-testing main ${{ matrix.psql }}" > /etc/apt/sources.list.d/pgdg.list'
-          curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
-
       - name: Install python
         uses: actions/setup-python@v5
         with:
@@ -63,60 +45,33 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          # vrpRouting dependencies
+
+          # Basic dependencies
           sudo apt-get install -y \
             postgresql-${PGVER} \
             postgresql-server-dev-${PGVER}
-          # vroom dependencies
-          sudo apt-get install libssl-dev libasio-dev libglpk-dev
+
           # documentation dependencies
-          sudo apt-get install -y graphviz doxygen
-          pip install -r requirements.txt
+          sudo apt-get install -y \
+            graphviz \
+            python3-sphinx \
+            python3-sphinx-bootstrap-theme
 
       - name: Install Google OR-Tools
         run: |
           sudo pip install --root=/ ortools==9.10.4067
 
-      - name: Cache VROOM
-        id: cache-vroom
-        uses: actions/cache@v4
-        env:
-          cache-name: vroom
-        with:
-          path: vroom-${{ env.vroom }}
-          key: ${{ env.os }}-${{ env.cache-name }}-${{ env.vroom }}
-
-      - name: Checkout VROOM
-        if: steps.cache-vroom.outputs.cache-hit != 'true'
-        uses: actions/checkout@v4
-        with:
-          path: vroom-${{ env.vroom }}
-          repository: VROOM-Project/vroom
-          ref: "v${{ env.vroom }}"
-          submodules: true
-
-      - name: Build VROOM
-        if: steps.cache-vroom.outputs.cache-hit != 'true'
-        run: |
-          # Probably this step is not needed because I dont think we need to build vrprouting
-          cd vroom-${{ env.vroom }}/src
-          USE_ROUTING=false make shared
-
       - name: Configure
         run: |
-          export PATH=/usr/lib/postgresql/${PGVER}/bin:$PATH
-          VROOM=$(pwd)/vroom-${{ env.vroom }}
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
-                -DDOC_USE_BOOTSTRAP=ON -DWITH_DOC=ON -DBUILD_DOXY=ON \
-                -DVROOM_INSTALL_PATH=${VROOM} ..
+                -DDOC_USE_BOOTSTRAP=ON -DWITH_DOC=ON ..
 
       - name: Build
         run: |
           cd build
           make doc
-          make doxy
 
       - name: Initialize mandatory git config
         run: |
@@ -142,22 +97,3 @@ jobs:
           git rebase origin/gh-pages
           git push origin gh-pages
           git checkout @{-2}
-
-      - name: Update Developers Documentation
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [[ "${{ env.BRANCH }}" == "main" ]]; then
-            FOLDER_NAME="main"
-          elif [[ "${{ env.BRANCH }}" == "develop" ]]; then
-            FOLDER_NAME="dev"
-          fi
-          git checkout gh-pages
-          rm -rf doxy/${FOLDER_NAME}
-          cp -r build/doxygen/html doxy/${FOLDER_NAME}
-          git add doxy/${FOLDER_NAME}
-          git diff-index --quiet HEAD || git commit -m "Update developers documentation for ${PROJECT_VERSION} (${{ env.BRANCH }}): commit ${{ env.GIT_HASH }}"
-          git fetch origin
-          git rebase origin/gh-pages
-          git push origin gh-pages
-          git checkout @{-1}

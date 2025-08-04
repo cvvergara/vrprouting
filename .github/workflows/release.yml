@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
 
 env:
-    postgis: 3
     release: Release
     os: ubuntu-latest
     vroom: 1.12.0
@@ -18,8 +17,7 @@ jobs:
         fail-fast: false
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -32,9 +30,9 @@ jobs:
         run: |
           sudo service postgresql start
           PGVER=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
-          PROJECT_VERSION=$(grep -Po '(?<=project\(VRPROUTING VERSION )[^;]+' CMakeLists.txt)
           echo "PGVER=${PGVER}" >> $GITHUB_ENV
           echo "PGPORT=5432" >> $GITHUB_ENV
+          PROJECT_VERSION=$(grep -Po '(?<=project\(VRPROUTING VERSION )[^;]+' CMakeLists.txt)
           echo "PROJECT_VERSION=${PROJECT_VERSION}" >> $GITHUB_ENV
           echo "TAG_NAME=v${PROJECT_VERSION}" >> $GITHUB_ENV
 
@@ -45,22 +43,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 'Raise Priority for apt.postgresql.org'
-        run: |
-          cat << EOF >> ./pgdg.pref
-          Package: *
-          Pin: release o=apt.postgresql.org
-          Pin-Priority: 600
-          EOF
-          sudo mv ./pgdg.pref /etc/apt/preferences.d/
-          sudo apt update
-
-      - name: Add PostgreSQL APT repository
-        run: |
-          sudo apt-get purge postgresql-*
-          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg-testing main ${{ matrix.psql }}" > /etc/apt/sources.list.d/pgdg.list'
-          curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
-
       - name: Install python
         uses: actions/setup-python@v5
         with:
@@ -69,62 +51,33 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
+
+          # Basic dependencies
           sudo apt-get install -y \
             postgresql-${PGVER} \
-            postgresql-${PGVER}-postgis-${{ env.postgis }} \
-            postgresql-${PGVER}-postgis-${{ env.postgis }}-scripts \
-            postgresql-server-dev-${PGVER} \
-            postgresql-plpython3-${PGVER}
-          # vroom dependencies
-          sudo apt-get install libssl-dev libasio-dev libglpk-dev
+            postgresql-server-dev-${PGVER}
+
+          # documentation dependencies
+          sudo apt-get install -y \
+            graphviz \
+            python3-sphinx \
+            python3-sphinx-bootstrap-theme
 
       - name: Install Google OR-Tools
         run: |
           sudo pip install --root=/ ortools==9.10.4067
 
-      - name: Cache VROOM
-        id: cache-vroom
-        uses: actions/cache@v4
-        env:
-          cache-name: vroom
-        with:
-          path: vroom-${{ env.vroom }}
-          key: ${{ env.os }}-${{ env.cache-name }}-${{ env.vroom }}
-
-      - name: Checkout VROOM
-        if: steps.cache-vroom.outputs.cache-hit != 'true'
-        uses: actions/checkout@v4
-        with:
-          path: vroom-${{ env.vroom }}
-          repository: VROOM-Project/vroom
-          ref: "v${{ env.vroom }}"
-          submodules: true
-
-      - name: Build VROOM
-        if: steps.cache-vroom.outputs.cache-hit != 'true'
-        run: |
-          # Probably this step is not needed because I dont think we need to build vrprouting
-          cd vroom-${{ env.vroom }}/src
-          USE_ROUTING=false make shared
-
       - name: Configure
         run: |
-          export PATH=/usr/lib/postgresql/${PGVER}/bin:$PATH
-          VROOM=$(pwd)/vroom-${{ env.vroom }}
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
-                -DDOC_USE_BOOTSTRAP=ON -DWITH_DOC=ON -DBUILD_DOXY=ON \
-                -DVROOM_INSTALL_PATH=${VROOM} ..
+                -DDOC_USE_BOOTSTRAP=ON -DWITH_DOC=ON -DBUILD_DOXY=ON ..
 
       - name: Build
         run: |
           cd build
           make doc
-          make doxy
-          # I dont think it needs to be built
-          #make -j 4
-          #sudo make install
 
       - name: Update Users Documentation
         run: |
