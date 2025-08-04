@@ -195,9 +195,6 @@ foreach (subdir ${PROJECT_DOC_DIRECTORIES})
     add_subdirectory("../docqueries/${subdir}" "build/doc/${subdir}")
 endforeach()
 
-add_subdirectory("images")
-
-
 configure_file("../tools/testers/sampledata.sql" "${PGR_DOCUMENTATION_SOURCE_DIR}/sampledata/sampledata.sql")
 
 

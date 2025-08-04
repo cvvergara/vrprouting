@@ -18,25 +18,6 @@
 OR-Tools - Category (Experimental)
 ===============================================================================
 
-.. include:: experimental.rst
-   :start-after: begin-warn-expr
-   :end-before: end-warn-expr
-
-
-.. contents::
-
-.. rubric:: Functions
-
-.. toctree::
-  :maxdepth: 1
-
-  vrp_knapsack
-  vrp_multiple_knapsack
-  vrp_bin_packing
-
-
-Synopsis
--------------------------------------------------------------------------------
 
 OR-Tools is an open source software suite for optimization, tuned for tackling
 the world's toughest problems in vehicle routing, flows, integer and linear
