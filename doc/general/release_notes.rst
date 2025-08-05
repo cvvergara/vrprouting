@@ -45,7 +45,7 @@ on Github.
 
 * por_bin_backing
 
-  .. include:: por_bin_backing.rst
+  .. include:: por_bin_packing.rst
      :start-after: Version 0.0.1
      :end-before: Description
 
