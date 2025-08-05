@@ -1,10 +1,9 @@
-name: Update Website
+name: Website
 
 on:
   workflow_dispatch:
 
 env:
-    postgis: 3
     release: Release
     os: ubuntu-latest
 
@@ -34,45 +33,45 @@ jobs:
       - name: Get postgres version
         run: |
           sudo service postgresql start
-          pgver=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
-          echo "PGVER=${pgver}" >> $GITHUB_ENV
+          PGVER=$(psql --version | grep -Po '(?<=psql \(PostgreSQL\) )[^;]+(?=\.\d+ \()')
+          echo "PGVER=${PGVER}" >> $GITHUB_ENV
           echo "PGPORT=5432" >> $GITHUB_ENV
-
-      - name: Add PostgreSQL APT repository
-        run: |
-          sudo apt-get install curl ca-certificates gnupg
-          curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ \
-            $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 
       - name: Install python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
           sudo apt-get update
-          # pgOrtools dependencies
+
+          # Basic dependencies
           sudo apt-get install -y \
             postgresql-${PGVER} \
             postgresql-server-dev-${PGVER}
+
           # documentation dependencies
-          sudo apt-get install -y graphviz doxygen
-          pip install -r requirements.txt
+          sudo apt-get install -y \
+            graphviz \
+            python3-sphinx \
+            python3-sphinx-bootstrap-theme
+
+      - name: Install Google OR-Tools
+        run: |
+          sudo pip install --root=/ ortools==9.10.4067
 
       - name: Configure
         run: |
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
-              -DWITH_DOC=ON -DDOC_USE_BOOTSTRAP=ON -DBUILD_DOXY=ON ..
+                -DDOC_USE_BOOTSTRAP=ON -DWITH_DOC=ON ..
 
       - name: Build
         run: |
           cd build
           make doc
-          make doxy
 
       - name: Initialize mandatory git config
         run: |
@@ -98,24 +97,3 @@ jobs:
           git rebase origin/gh-pages
           git push origin gh-pages
           git checkout @{-2}
-
-      - name: Update Developers Documentation
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [[ "${{ env.BRANCH }}" == "main" ]]; then
-            FOLDER_NAME="main"
-          elif [[ "${{ env.BRANCH }}" == "develop" ]]; then
-            FOLDER_NAME="dev"
-          fi
-          git checkout gh-pages
-          rm -rf doxy/${FOLDER_NAME}
-          cp -r build/doxygen/html doxy/${FOLDER_NAME}
-          git add doxy/${FOLDER_NAME}
-          git diff-index --quiet HEAD || git commit -m "Update developers documentation for ${PROJECT_VERSION} (${{ env.BRANCH }}): commit ${{ env.GIT_HASH }}"
-          git fetch origin
-          git rebase origin/gh-pages
-          git push origin gh-pages
-          git checkout @{-1}
-
-

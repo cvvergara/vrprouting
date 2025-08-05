@@ -79,9 +79,6 @@ jobs:
             libtap-parser-sourcehandler-pgtap-perl \
             postgresql-${PGVER} \
             postgresql-${PGVER}-pgtap \
-            postgresql-${PGVER}-postgis-${{ env.postgis }} \
-            postgresql-${PGVER}-postgis-${{ env.postgis }}-scripts \
-            postgresql-${PGVER}-pgrouting \
             postgresql-server-dev-${PGVER} \
             postgresql-plpython3-${PGVER}
 
