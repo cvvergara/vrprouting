@@ -4,7 +4,7 @@ SET client_min_messages TO NOTICE;
 SET
 /* -- example_start */
 SELECT *
-FROM vrp_multiple_knapsack($$SELECT id, weight, cost FROM ortools.multiple_knapsack$$, ARRAY[100,100,100,100,100]);
+FROM por_multiple_knapsack($$SELECT id, weight, cost FROM ortools.multiple_knapsack$$, ARRAY[100,100,100,100,100]);
  knapsack | id
 ----------+----
         1 |  2

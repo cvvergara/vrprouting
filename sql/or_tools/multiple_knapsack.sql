@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 
 --v4.0
-CREATE OR REPLACE FUNCTION vrp_multiple_knapsack(
+CREATE OR REPLACE FUNCTION por_multiple_knapsack(
   inner_query TEXT, -- weights_cost SQL
   capacities INTEGER[], -- ARRAY of Knapsack Capacities
   max_rows INTEGER = 100000 -- Maximum number of rows to be fetched. Default value is 100000.
@@ -124,12 +124,12 @@ AS $$
   # end of the program
 $$ LANGUAGE plpython3u VOLATILE;
 
--- SELECT * FROM vrp_multiple_knapsack('SELECT id, weight, cost FROM multiple_knapsack_data', ARRAY[100,100,100,100,100]);
+-- SELECT * FROM por_multiple_knapsack('SELECT id, weight, cost FROM multiple_knapsack_data', ARRAY[100,100,100,100,100]);
 
 -- COMMENTS
 
-COMMENT ON FUNCTION vrp_multiple_knapsack(TEXT, INTEGER[], INTEGER)
-IS 'vrp_multiple_knapsack
+COMMENT ON FUNCTION por_multiple_knapsack(TEXT, INTEGER[], INTEGER)
+IS 'por_multiple_knapsack
 - Documentation:
-  - ${PROJECT_DOC_LINK}/vrp_multiple_knapsack.html
+  - ${PROJECT_DOC_LINK}/por_multiple_knapsack.html
 ';

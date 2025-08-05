@@ -64,8 +64,8 @@ BEGIN
     RETURN;
   END IF;
 
-  -- vrp_knapsack
-  fn := 'vrp_knapsack';
+  -- por_knapsack
+  fn := 'por_knapsack';
   inner_query_table := 'knapsack_data';
   start_sql := '';
   rest_sql := ', 15)';
@@ -74,8 +74,8 @@ BEGIN
   RETURN QUERY SELECT test_anyInteger(fn, inner_query_table, start_sql, rest_sql, params, 'weight');
   RETURN QUERY SELECT test_anyInteger(fn, inner_query_table, start_sql, rest_sql, params, 'cost');
 
-  -- vrp_multiple_knapsack
-  fn := 'vrp_multiple_knapsack';
+  -- por_multiple_knapsack
+  fn := 'por_multiple_knapsack';
   inner_query_table := 'multiple_knapsack_data';
   start_sql := '';
   rest_sql := ', ARRAY[100,100,100,100,100])';
@@ -85,7 +85,7 @@ BEGIN
   RETURN QUERY SELECT test_anyInteger(fn, inner_query_table, start_sql, rest_sql, params, 'cost');
 
   -- bin_packing
-  fn := 'vrp_bin_packing';
+  fn := 'por_bin_packing';
   inner_query_table := 'bin_packing_data';
   start_sql := '';
   rest_sql := ', 100)';

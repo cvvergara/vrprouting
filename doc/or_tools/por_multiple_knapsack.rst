@@ -12,7 +12,7 @@
 
 |
 
-vrp_multiple_knapsack - Experimental
+por_multiple_knapsack - Experimental
 ===============================================================================
 
 .. rubric:: Availability
@@ -36,7 +36,7 @@ Signatures
 .. admonition:: \ \
    :class: signatures
 
-   | vrp_multiple_knapsack(`Weight Costs SQL`_, capacities, [,``max_rows``])
+   | por_multiple_knapsack(`Weight Costs SQL`_, capacities, [,``max_rows``])
    | RETURNS SET OF (knapsack, id)
    | OR EMPTY SET
 

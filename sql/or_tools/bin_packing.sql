@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 
 -- v0.4
-CREATE OR REPLACE FUNCTION vrp_bin_packing(
+CREATE OR REPLACE FUNCTION por_bin_packing(
   inner_query TEXT, -- weights SQL
   bin_capacity INTEGER, -- Bin Capacity
   max_rows INTEGER = 100000 -- Maximum number of rows to be fetched. Default is value = 100000.
@@ -131,8 +131,8 @@ AS $$
 
 $$ LANGUAGE plpython3u VOLATILE;
 
-COMMENT ON FUNCTION vrp_bin_packing(TEXT, INTEGER, INTEGER)
-IS 'vrp_bin_packing
+COMMENT ON FUNCTION por_bin_packing(TEXT, INTEGER, INTEGER)
+IS 'por_bin_packing
 - Documentation:
-  - ${PROJECT_DOC_LINK}/vrp_bin_packing.html
+  - ${PROJECT_DOC_LINK}/por_bin_packing.html
 ';

@@ -12,7 +12,7 @@
 
 |
 
-vrp_bin_packing - Experimental
+por_bin_packing - Experimental
 ===============================================================================
 
 .. rubric:: Availability
@@ -40,7 +40,7 @@ Signatures
 .. admonition:: \ \
    :class: signatures
 
-   | vrp_bin_packing(`Weights SQL`_, bin_capacity, [``max_rows``])
+   | por_bin_packing(`Weights SQL`_, bin_capacity, [``max_rows``])
    | Returns set of (bin_number, item_id)
    | OR EMPTY SET
 

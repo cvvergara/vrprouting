@@ -67,16 +67,16 @@ Utilities
 OR-tools
 -------------------------------------------------------------------------------
 
-- :doc:`vrp_bin_packing`
-- :doc:`vrp_knapsack`
-- :doc:`vrp_multiple_knapsack`
+- :doc:`por_bin_packing`
+- :doc:`por_knapsack`
+- :doc:`por_multiple_knapsack`
 
 .. toctree::
    :hidden:
 
-   vrp_bin_packing
-   vrp_knapsack
-   vrp_multiple_knapsack
+   por_bin_packing
+   por_knapsack
+   por_multiple_knapsack
 
 Release Notes
 ===============================================================================
