@@ -46,7 +46,7 @@ Building requirements
 * Postgresql not on EOL
 * CMake >= 3.17
 * Sphinx > 4.0.0
-* ortools == 9.10.4067
+* OR-tools == 9.10.4067
 
 ## Building
 

@@ -1,5 +1,4 @@
 BEGIN;
-SET search_path TO 'ortools', 'public';
 
 SELECT CASE WHEN min_version('0.3.0') THEN plan (15) ELSE plan(1) END;
 

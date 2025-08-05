@@ -23,24 +23,21 @@ $BODY$;
 
 -- activate_python_end
 
-DROP SCHEMA IF EXISTS ortools CASCADE;
-CREATE SCHEMA ortools;
-
-CREATE TABLE ortools.bin_packing(
+CREATE TABLE bin_packing(
   id INTEGER,
   weight INTEGER);
 
-INSERT INTO ortools.bin_packing(id, weight)
+INSERT INTO bin_packing(id, weight)
 VALUES
 (1, 48), (2, 30), (3, 19), (4, 36), (5, 36), (6, 27), (7, 42), (8, 42), (9, 36), (10, 24), (11, 30);
 
 
-CREATE TABLE ortools.knapsack(
+CREATE TABLE knapsack(
   id INTEGER,
   weight INTEGER,
   cost INTEGER);
 
-INSERT INTO ortools.knapsack(id, weight, cost)
+INSERT INTO knapsack(id, weight, cost)
 VALUES
 (1, 12, 4),
 (2, 2, 2),
@@ -48,12 +45,12 @@ VALUES
 (4, 4, 10),
 (5, 1, 2);
 
-CREATE TABLE ortools.multiple_knapsack(
+CREATE TABLE multiple_knapsack(
   id INTEGER,
   weight INTEGER,
   cost INTEGER);
 
-INSERT INTO ortools.multiple_knapsack(id, weight, cost)
+INSERT INTO multiple_knapsack(id, weight, cost)
 VALUES
 (1, 48, 10),
 (2, 30, 30),

@@ -1,5 +1,5 @@
 BEGIN;
-SET search_path TO 'ortools', 'public';
+
 SET client_min_messages TO ERROR;
 SELECT plan(18);
 
@@ -14,7 +14,7 @@ non_empty_args INTEGER[];
 BEGIN
     -- por_knapsack
     params = ARRAY[
-    '$$SELECT * FROM ortools.knapsack$$',
+    '$$SELECT * FROM knapsack$$',
     'capacity => 15',
     'max_rows => 100000'
     ]::TEXT[];
@@ -34,7 +34,7 @@ BEGIN
 
     --por_multiple_knapsack
     params = ARRAY[
-    '$$SELECT * FROM ortools.multiple_knapsack$$',
+    '$$SELECT * FROM multiple_knapsack$$',
     'capacities => ARRAY[100,100,100,100,100]',
     'max_rows => 100000'
     ]::TEXT[];
@@ -54,7 +54,7 @@ BEGIN
 
     -- bin_packing
     params = ARRAY[
-    '$$SELECT * FROM ortools.bin_packing$$',
+    '$$SELECT * FROM bin_packing$$',
     'bin_capacity => 100',
     'max_rows => 100000'
     ]::TEXT[];
