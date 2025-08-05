@@ -89,17 +89,16 @@ jobs:
             postgresql-server-dev-${PGVER} \
             postgresql-plpython3-${PGVER}
 
-
       - name: Install Google OR-Tools
         run: |
-          sudo pip install --root=/  ortools==9.10.4067
+          sudo pip install --root=/ ortools==9.10.4067
 
       - name: Configure and build
         run: |
           export PATH=/usr/lib/postgresql/${PGVER}/bin:$PATH
           mkdir build
           cd build
-          cmake -DBUILD_HTML=OFF -DCMAKE_BUILD_TYPE=${{ env.release }} ..
+          cmake -DSPHINX_HTML=OFF -DCMAKE_BUILD_TYPE=${{ env.release }} ..
           sudo make install
 
       - name: Test signature is up to date

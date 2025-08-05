@@ -29,7 +29,6 @@ permissions:
 
 env:
     os: ubuntu-latest
-    vroom: 1.12.0
 
 jobs:
   build:
@@ -88,17 +87,13 @@ jobs:
         run: |
           sudo pip install --root=/ ortools==9.10.4067
 
-      - name: Configure
+      - name: Configure and build
         run: |
           export PATH=/usr/lib/postgresql/${PGVER}/bin:$PATH
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }} \
-                -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} ..
-
-      - name: Build
-        run: |
-          cd build
+                -DSPHINX_HTML=OFF -DPOSTGRESQL_BIN=${PGBIN} ..
           sudo make install
 
       - name: Create superuser
