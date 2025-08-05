@@ -14,7 +14,7 @@ non_empty_args INTEGER[];
 BEGIN
     -- por_knapsack
     params = ARRAY[
-    '$$SELECT * FROM ortools.knapsack_data$$',
+    '$$SELECT * FROM ortools.knapsack$$',
     'capacity => 15',
     'max_rows => 100000'
     ]::TEXT[];
@@ -34,7 +34,7 @@ BEGIN
 
     --por_multiple_knapsack
     params = ARRAY[
-    '$$SELECT * FROM ortools.multiple_knapsack_data$$',
+    '$$SELECT * FROM ortools.multiple_knapsack$$',
     'capacities => ARRAY[100,100,100,100,100]',
     'max_rows => 100000'
     ]::TEXT[];
@@ -54,7 +54,7 @@ BEGIN
 
     -- bin_packing
     params = ARRAY[
-    '$$SELECT * FROM ortools.bin_packing_data$$',
+    '$$SELECT * FROM ortools.bin_packing$$',
     'bin_capacity => 100',
     'max_rows => 100000'
     ]::TEXT[];
