@@ -19,4 +19,3 @@ string(REGEX REPLACE ":issue:`([0-9]+)`" "`#\\1 <https://github.com/pgRouting/pg
 file(WRITE ${PGR_DOCUMENTATION_SOURCE_DIR}/release_notes.rst "${FILE_CONTENTS}")
 
 set(PROJECT_DOC_FILES ${PROJECT_DOC_FILES} ${LOCAL_DOC_FILES} PARENT_SCOPE)
-
