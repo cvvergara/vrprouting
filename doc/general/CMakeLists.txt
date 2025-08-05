@@ -6,6 +6,7 @@ SET(LOCAL_FILES
   release_notes.rst
   support.rst
   sampledata.rst
+  or_tools-category.rst
 )
 
 foreach (f ${LOCAL_FILES})

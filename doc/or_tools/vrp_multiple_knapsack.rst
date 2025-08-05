@@ -1,39 +1,26 @@
 ..
    ****************************************************************************
-    vrpRouting Manual
-    Copyright(c) vrpRouting Contributors
+    pgORpy Manual
+    Copyright(c) pgORpy Contributors
     This documentation is licensed under a Creative Commons Attribution-Share
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
    ****************************************************************************
 
+.. index::
+   single: Knapsack problems ; por_multiple_knapsack
+   single: multiple_knapsack
 
 |
-
-* `Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 <https://vrp.pgrouting.org/v0>`__
-* Supported Versions
-  `Latest <https://vrp.pgrouting.org/latest/en/vrp_oneDepot.html>`__
-  (`v0 <https://vrp.pgrouting.org/v0/en/vrp_oneDepot.html>`__)
 
 vrp_multiple_knapsack - Experimental
 ===============================================================================
 
-.. include:: experimental.rst
-   :start-after: begin-warn-expr
-   :end-before: end-warn-expr
-
 .. rubric:: Availability
 
-Version 0.4.1
+.. rubric:: Version 0.0.1
 
+* New function
 * Support for or-tools v9.10.4067
-
-Version 0.4.0
-
-* New **experimental** function
-
-  * vrp_knapsack
-
-
 
 Description
 -------------------------------------------------------------------------------

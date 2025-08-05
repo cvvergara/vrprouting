@@ -40,6 +40,7 @@ General
     introduction
     installation
     support
+    or_tools-category
 
 - :doc:`sampledata` that is used in the examples of this manual.
 
@@ -62,6 +63,20 @@ Utilities
 
    por_version
    por_full_version
+
+OR-tools
+-------------------------------------------------------------------------------
+
+- :doc:`vrp_bin_packing`
+- :doc:`vrp_knapsack`
+- :doc:`vrp_multiple_knapsack`
+
+.. toctree::
+   :hidden:
+
+   vrp_bin_packing
+   vrp_knapsack
+   vrp_multiple_knapsack
 
 Release Notes
 ===============================================================================
