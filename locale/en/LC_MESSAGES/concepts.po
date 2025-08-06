@@ -17,48 +17,59 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.10.3\n"
 
-msgid "``por_knapsack``"
+msgid "Concepts"
 msgstr ""
 
-msgid "Availability"
+msgid "Contents"
 msgstr ""
 
-msgid "Version 0.0.1"
-msgstr ""
-
-msgid "New function"
-msgstr ""
-
-msgid "Support for or-tools v9.10.4067"
-msgstr ""
-
-msgid "Description"
+msgid "Synopsis"
 msgstr ""
 
 msgid ""
-"The knapsack problem is a problem in combinatorial optimization: Given a "
-"set of items, each with a weight and a value, Determine the number of "
-"each item to include in a collection so that the total weight is less "
-"than or equal to a given limit and the total value is as large as "
-"possible"
+"OR-Tools is an open source software suite for optimization, tuned for "
+"tackling the world's toughest problems in vehicle routing, flows, integer"
+" and linear programming, and constraint programming."
 msgstr ""
 
-msgid "Signatures"
+msgid "OR-Tools can solve"
 msgstr ""
 
-msgid "\\ \\"
+msgid "VR (Vehicle Routing)"
 msgstr ""
 
-msgid "por_knapsack(`Weight Costs SQL`_, capacity, [``max_rows``])"
+msgid "Scheduling"
 msgstr ""
 
-msgid "RETURNS SET OF (item_id)"
+msgid "Bin Packing"
 msgstr ""
 
-msgid "OR EMPTY SET"
+msgid "Currently only Bin Packing problems can be solved with OR-Tools in pgORpy."
 msgstr ""
 
-msgid "Parameters"
+msgid "Terminologies"
+msgstr ""
+
+msgid ""
+"**weight**: For each item, a positive integer weight is associated with "
+"it."
+msgstr ""
+
+msgid ""
+"**cost**: For each item, a positive integer cost(value) is associated "
+"with it."
+msgstr ""
+
+msgid "**capacity**: Maximum storage capacity of a knapsack or a bin."
+msgstr ""
+
+msgid "Inner Queries"
+msgstr ""
+
+msgid "Weight Costs SQL"
+msgstr ""
+
+msgid "A ``SELECT`` statement that returns the following columns:"
 msgstr ""
 
 msgid "Column"
@@ -67,37 +78,28 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-msgid "`Weight Costs SQL`_"
+msgid "Description"
 msgstr ""
 
-msgid "``TEXT``"
-msgstr ""
-
-msgid "`Weight Costs SQL`_ as described below."
-msgstr ""
-
-msgid "capacity"
+msgid "``id``"
 msgstr ""
 
 msgid "**ANY-INTEGER**"
 msgstr ""
 
-msgid "Maximum Capacity of the knapsack."
+msgid "Unique identifier of the item."
 msgstr ""
 
-msgid "Optional Parameters"
+msgid "``weight``"
 msgstr ""
 
-msgid "Default"
+msgid "Weight of the item."
 msgstr ""
 
-msgid "``max_rows``"
+msgid "``cost``"
 msgstr ""
 
-msgid ":math:`100000`"
-msgstr ""
-
-msgid "Maximum items(rows) to fetch from knapsack_data table."
+msgid "Cost of the item."
 msgstr ""
 
 msgid "Where:"
@@ -109,28 +111,18 @@ msgstr ""
 msgid "``SMALLINT``, ``INTEGER``, ``BIGINT``"
 msgstr ""
 
-msgid "Inner Queries"
+msgid "Weights SQL"
 msgstr ""
 
-msgid "Weight Costs SQL"
-msgstr ""
-
-msgid "Result Columns"
-msgstr ""
-
-msgid "``id``"
-msgstr ""
-
-msgid "``INTEGER``"
-msgstr ""
-
-msgid "Indentifier of an item in the knapsack."
-msgstr ""
-
-msgid "Example"
+msgid "Identifier of the item."
 msgstr ""
 
 msgid "See Also"
+msgstr ""
+
+msgid ""
+"`Wikipedia: Bin Packing problems "
+"<https://en.wikipedia.org/wiki/Bin_packing_problem>`__"
 msgstr ""
 
 msgid "`OR-Tools: Google OR-Tools <https://developers.google.com/optimization>`__"

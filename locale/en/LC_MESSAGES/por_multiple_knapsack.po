@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pgORpy v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-05 20:47+0000\n"
+"POT-Creation-Date: 2025-08-06 04:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.10.3\n"
 
-msgid "por_multiple_knapsack - Experimental"
+msgid "``por_multiple_knapsack``"
 msgstr ""
 
 msgid "Availability"
@@ -108,33 +108,6 @@ msgstr ""
 msgid "Weight Costs SQL"
 msgstr ""
 
-msgid "``id``"
-msgstr ""
-
-msgid "Unique identifier of the item."
-msgstr ""
-
-msgid "``weight``"
-msgstr ""
-
-msgid "Weight of the item."
-msgstr ""
-
-msgid "``cost``"
-msgstr ""
-
-msgid "Cost of the item."
-msgstr ""
-
-msgid "Where:"
-msgstr ""
-
-msgid "ANY-INTEGER"
-msgstr ""
-
-msgid "``SMALLINT``, ``INTEGER``, ``BIGINT``"
-msgstr ""
-
 msgid "Result Columns"
 msgstr ""
 
@@ -147,6 +120,9 @@ msgstr ""
 msgid "Indentifier of the knapsack."
 msgstr ""
 
+msgid "``id``"
+msgstr ""
+
 msgid "Indentifier of an item in the ``knapsack``."
 msgstr ""
 
@@ -154,14 +130,6 @@ msgid "Example"
 msgstr ""
 
 msgid "See Also"
-msgstr ""
-
-msgid ""
-"`Wikipedia: Bin Packing problems "
-"<https://en.wikipedia.org/wiki/Bin_packing_problem>`__"
-msgstr ""
-
-msgid "`OR-Tools: Google OR-Tools <https://developers.google.com/optimization>`__"
 msgstr ""
 
 msgid "Indices and tables"

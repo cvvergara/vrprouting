@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pgORpy v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-05 20:47+0000\n"
+"POT-Creation-Date: 2025-08-06 04:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,7 +40,7 @@ msgstr ""
 msgid ":doc:`sampledata` that is used in the examples of this manual."
 msgstr ""
 
-msgid "Functions"
+msgid ":doc:`functions`"
 msgstr ""
 
 msgid "Utilities"
@@ -64,7 +64,31 @@ msgstr ""
 msgid ":doc:`por_multiple_knapsack`"
 msgstr ""
 
-msgid "Release Notes"
+msgid ":doc:`release_notes`"
+msgstr ""
+
+msgid "pgORpy 0.0.1 Release Notes"
+msgstr ""
+
+msgid "To see all issues & pull requests closed by this release see the `Git closed milestone for 0.0.1 <https://github.com/pgRouting/pgorpy/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.0.1%22>`_ on Github."
+msgstr ""
+
+msgid "Version functions"
+msgstr ""
+
+msgid "por_bin_backing"
+msgstr ""
+
+msgid "New function"
+msgstr ""
+
+msgid "Support for or-tools v9.10.4067"
+msgstr ""
+
+msgid "por_knapsack"
+msgstr ""
+
+msgid "por_multiple_knapsack"
 msgstr ""
 
 msgid "Indices and tables"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pgORpy v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-05 20:47+0000\n"
+"POT-Creation-Date: 2025-08-06 04:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.10.3\n"
 
-msgid "por_bin_packing - Experimental"
+msgid "``por_bin_packing``"
 msgstr ""
 
 msgid "Availability"
@@ -120,21 +120,6 @@ msgstr ""
 msgid "Weights SQL"
 msgstr ""
 
-msgid "A ``SELECT`` statement that returns the following columns:"
-msgstr ""
-
-msgid "``id``"
-msgstr ""
-
-msgid "Identifier of the item."
-msgstr ""
-
-msgid "``weight``"
-msgstr ""
-
-msgid "Weight of the item."
-msgstr ""
-
 msgid "Result Columns"
 msgstr ""
 
@@ -144,6 +129,9 @@ msgstr ""
 msgid "Integer to uniquely identify a bin."
 msgstr ""
 
+msgid "``id``"
+msgstr ""
+
 msgid "Indentifier of an item in the ``bin``."
 msgstr ""
 
@@ -151,14 +139,6 @@ msgid "Example"
 msgstr ""
 
 msgid "See Also"
-msgstr ""
-
-msgid ""
-"`Wikipedia: Bin Packing problems "
-"<https://en.wikipedia.org/wiki/Bin_packing_problem>`__"
-msgstr ""
-
-msgid "`OR-Tools: Google OR-Tools <https://developers.google.com/optimization>`__"
 msgstr ""
 
 msgid "Indices and tables"
