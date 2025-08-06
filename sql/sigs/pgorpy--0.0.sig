@@ -1,2 +1,5 @@
 por_full_version()
 por_version()
+por_bin_packing(text,integer,integer)
+por_knapsack(text,integer,integer)
+por_multiple_knapsack(text,integer[],integer)
