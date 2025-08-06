@@ -1,4 +1,11 @@
 #!/bin/bash
+# /*PGR-GNU*****************************************************************
+#
+# License: GNU General Public License v2.0
+# Copyright (c) 2025 pgORpy developers
+# Mail: project@pgrouting.org
+#
+# ********************************************************************PGR-GNU*/
 
 set -e
 

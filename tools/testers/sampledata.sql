@@ -1,10 +1,5 @@
-/* ****************************************************************************
-    pgORpy Manual
-    Copyright(c) pgORpy Contributors
-
-    This documentation is licensed under a Creative Commons Attribution-Share
-    Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
-****************************************************************************/
+-- CopyRight(c) pgRouting developers
+-- Creative Commons Attribution-Share Alike 3.0 License : https://creativecommons.org/licenses/by-sa/3.0/
 
 -- activate_python_start
 CREATE OR REPLACE PROCEDURE activate_python_venv(venv text)

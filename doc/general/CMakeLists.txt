@@ -1,13 +1,13 @@
 
 SET(LOCAL_FILES
+  concepts.rst
+  functions.rst
   index.rst
   introduction.rst
   installation.rst
   release_notes.rst
   support.rst
   sampledata.rst
-  concepts.rst
-  functions.rst
 )
 
 foreach (f ${LOCAL_FILES})
