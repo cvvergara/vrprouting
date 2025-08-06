@@ -13,7 +13,7 @@ Release Notes
 ===============================================================================
 
 To see the full list of changes check the list of `Git commits
-<https://github.com/pgRouting/pgORpy/commits>`_ on Github.
+<https://github.com/pgRouting/pgorpy/commits>`_ on Github.
 
 .. contents:: Mayors
    :local:
@@ -32,6 +32,8 @@ pgORpy 0.0
 .. contents:: Contents
    :local:
    :depth: 1
+
+.. current
 
 pgORpy 0.0.1 Release Notes
 -------------------------------------------------------------------------------

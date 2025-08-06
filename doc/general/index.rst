@@ -40,7 +40,7 @@ General
     introduction
     installation
     support
-    or_tools-category
+    concepts
 
 - :doc:`sampledata` that is used in the examples of this manual.
 
@@ -49,39 +49,27 @@ General
 
    sampledata
 
-Functions
+:doc:`functions`
 ===============================================================================
 
-Utilities
--------------------------------------------------------------------------------
-
-- :doc:`por_version`
-- :doc:`por_full_version`
+.. include:: functions.rst
+   :start-after: functions_start
+   :end-before: functions_end
 
 .. toctree::
    :hidden:
 
-   por_version
-   por_full_version
+   functions
 
-OR-tools
--------------------------------------------------------------------------------
+:doc:`release_notes`
+===============================================================================
 
-- :doc:`por_bin_packing`
-- :doc:`por_knapsack`
-- :doc:`por_multiple_knapsack`
+.. include:: release_notes.rst
+   :start-after: current
+   :end-before: pgORpy 0.0.0
 
 .. toctree::
    :hidden:
-
-   por_bin_packing
-   por_knapsack
-   por_multiple_knapsack
-
-Release Notes
-===============================================================================
-
-.. toctree::
 
    release_notes
 

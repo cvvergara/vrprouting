@@ -12,7 +12,7 @@
 
 |
 
-por_bin_packing - Experimental
+``por_bin_packing``
 ===============================================================================
 
 .. rubric:: Availability

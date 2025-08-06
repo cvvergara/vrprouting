@@ -13,9 +13,12 @@ var titles = [
 
 
 var newpages = [
-    {v: '0.0', pages: [ 'index', 'introduction', 'installation', 'support',
-        'por_version', 'por_full_version', 'official', 'release_notes',
-        'sampledata' ] },
+    {v: '0.0', pages: [
+        'concepts', 'index', 'installation', 'introduction', 'release_notes',
+        'sampledata', 'support',
+        'por_bin_packing', 'por_knapsack', 'por_multiple_knapsack',
+        'por_full_version', 'por_version'
+    ] },
 ];
 
 var filesArr = [ ];
@@ -59,7 +62,7 @@ function get_history(name, lang) {
     prepare();
     var data = get(name);
     var title = get_titles(titles, lang);
-    var home = `<a class="reference external" href="https://pgORpy.pgrouting.org/`;
+    var home = `<a class="reference external" href="https://pgorpy.pgrouting.org/`;
     var validlang = lang;
 
     var result;

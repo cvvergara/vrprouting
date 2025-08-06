@@ -12,7 +12,7 @@
 
 |
 
-por_multiple_knapsack - Experimental
+``por_multiple_knapsack``
 ===============================================================================
 
 .. rubric:: Availability
