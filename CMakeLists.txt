@@ -77,7 +77,7 @@ execute_process(
 
 message(STATUS "ORTOOLS_VERSION_FOUND=${ORTOOLS_VERSION_FOUND}")
 
-if (NOT ${ORTOOLS_VERSION} EQUAL ${ORTOOLS_VERSION_FOUND})
+if (NOT "${ORTOOLS_VERSION}" EQUAL "${ORTOOLS_VERSION_FOUND}")
   message(WARNING "The python \"ortools\" package version ${ORTOOLS_VERSION} is not installed.")
 
 endif()
