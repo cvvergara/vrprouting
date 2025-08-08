@@ -1,19 +1,18 @@
 ..
    ****************************************************************************
-    pgOrtools Manual
-    Copyright(c) pgOrtools Contributors
-
+    pgORpy Manual
+    Copyright(c) pgORpy Contributors
     This documentation is licensed under a Creative Commons Attribution-Share
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
    ****************************************************************************
 
 .. index::
-   single: Knapsack problems ; por_knapsack
-   single: knapsack
+   single: Knapsack problems ; por_multiple_knapsack
+   single: multiple_knapsack
 
 |
 
-vrp_knapsack - Experimental
+``por_multiple_knapsack``
 ===============================================================================
 
 .. rubric:: Availability
@@ -26,11 +25,10 @@ vrp_knapsack - Experimental
 Description
 -------------------------------------------------------------------------------
 
-The knapsack problem is a problem in combinatorial optimization:
-Given a set of items, each with a weight and a value,
-Determine the number of each item to include in a collection
-so that the total weight is less than or equal to a given limit and the total
-value is as large as possible
+The multiple knapsack problem is a problem in combinatorial optimization:
+it is a more general verison of the classic knapsack problem where instead of a
+single knapsack, you will be given multiple knapsacks and your goal is maximise the total
+value of packed items in all knapsacks.
 
 Signatures
 -------------------------------------------------------------------------------
@@ -38,8 +36,8 @@ Signatures
 .. admonition:: \ \
    :class: signatures
 
-   | vrp_knapsack(`Weight Costs SQL`_, capacity, [``max_rows``])
-   | RETURNS SET OF (item_id)
+   | por_multiple_knapsack(`Weight Costs SQL`_, capacities, [,``max_rows``])
+   | RETURNS SET OF (knapsack, id)
    | OR EMPTY SET
 
 Parameters
@@ -55,10 +53,10 @@ Parameters
      - Description
    * - `Weight Costs SQL`_
      - ``TEXT``
-     - `Weight Costs SQL`_ as described below.
-   * - capacity
-     - **ANY-INTEGER**
-     - Maximum Capacity of the knapsack.
+     - `Weight Costs SQL`_ as described below
+   * - capacities
+     - ``ARRAY[`` **ANY-INTEGER** ``]``
+     - An array describing the capacity of each knapsack.
 
 Optional Parameters
 ...............................................................................
@@ -75,11 +73,7 @@ Optional Parameters
    * - ``max_rows``
      - **ANY-INTEGER**
      - :math:`100000`
-     - Maximum items(rows) to fetch from knapsack_data table.
-
-Where:
-
-:ANY-INTEGER: ``SMALLINT``, ``INTEGER``, ``BIGINT``
+     - Maximum items(rows) to fetch from bin_packing_data table.
 
 Inner Queries
 -------------------------------------------------------------------------------
@@ -87,7 +81,7 @@ Inner Queries
 Weight Costs SQL
 ...............................................................................
 
-.. include:: or_tools-category.rst
+.. include:: concepts.rst
    :start-after: weight_costs_start
    :end-before: weight_costs_end
 
@@ -102,25 +96,26 @@ Result Columns
    * - Column
      - Type
      - Description
+   * - ``knapsak``
+     - ``INTEGER``
+     - Indentifier of the knapsack.
    * - ``id``
      - ``INTEGER``
-     - Indentifier of an item in the knapsack.
-
-Where:
-
-:ANY-INTEGER: ``SMALLINT``, ``INTEGER``, ``BIGINT``
+     - Indentifier of an item in the ``knapsack``.
 
 Example
 -------------------------------------------------------------------------------
 
-.. literalinclude:: knapsack.queries
+.. literalinclude:: multiple_knapsack.queries
    :start-after: -- example_start
    :end-before: -- example_end
 
 See Also
 -------------------------------------------------------------------------------
 
-* `OR-Tools: Google OR-Tools <https://developers.google.com/optimization>`__
+.. include:: concepts.rst
+   :start-after: see_also_start
+   :end-before: see_also_end
 
 .. rubric:: Indices and tables
 

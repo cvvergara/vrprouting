@@ -1,18 +1,19 @@
 ..
    ****************************************************************************
-    pgOrtools Manual
-    Copyright(c) pgOrtools Contributors
+    pgORpy Manual
+    Copyright(c) pgORpy Contributors
 
     This documentation is licensed under a Creative Commons Attribution-Share
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
    ****************************************************************************
 
 .. index::
-   single: bin_packing
+   single: Knapsack problems ; por_knapsack
+   single: knapsack
 
 |
 
-vrp_bin_packing - Experimental
+``por_knapsack``
 ===============================================================================
 
 .. rubric:: Availability
@@ -25,23 +26,20 @@ vrp_bin_packing - Experimental
 Description
 -------------------------------------------------------------------------------
 
-The bin packing problem is an optimization problem, in which
-items of different sizes must be packed into a finite number of bins or containers,
-each of a fixed given capacity, in a way that minimizes the number of bins used.
-The problem has many applications, such as filling up containers, loading trucks with weight capacity constraints,
-creating file backups in media and technology mapping in FPGA semiconductor chip design.
-
+The knapsack problem is a problem in combinatorial optimization:
+Given a set of items, each with a weight and a value,
+Determine the number of each item to include in a collection
+so that the total weight is less than or equal to a given limit and the total
+value is as large as possible
 
 Signatures
 -------------------------------------------------------------------------------
 
-.. rubric:: Summary
-
 .. admonition:: \ \
    :class: signatures
 
-   | vrp_bin_packing(`Weights SQL`_, bin_capacity, [``max_rows``])
-   | Returns set of (bin_number, item_id)
+   | por_knapsack(`Weight Costs SQL`_, capacity, [``max_rows``])
+   | RETURNS SET OF (item_id)
    | OR EMPTY SET
 
 Parameters
@@ -55,12 +53,12 @@ Parameters
    * - Column
      - Type
      - Description
-   * - `Weights SQL`_
+   * - `Weight Costs SQL`_
      - ``TEXT``
-     - `Weights SQL`_ as described below
-   * - bin_capacity
+     - `Weight Costs SQL`_ as described below.
+   * - capacity
      - **ANY-INTEGER**
-     - Maximum Capacity of the bin.
+     - Maximum Capacity of the knapsack.
 
 Optional Parameters
 ...............................................................................
@@ -77,7 +75,7 @@ Optional Parameters
    * - ``max_rows``
      - **ANY-INTEGER**
      - :math:`100000`
-     - Maximum items(rows) to fetch from bin_packing_data table.
+     - Maximum items(rows) to fetch from knapsack_data table.
 
 Where:
 
@@ -86,13 +84,12 @@ Where:
 Inner Queries
 -------------------------------------------------------------------------------
 
-Weights SQL
+Weight Costs SQL
 ...............................................................................
 
-
-.. include:: or_tools-category.rst
-   :start-after: weights_start
-   :end-before: weights_end
+.. include:: concepts.rst
+   :start-after: weight_costs_start
+   :end-before: weight_costs_end
 
 Result Columns
 -------------------------------------------------------------------------------
@@ -105,12 +102,9 @@ Result Columns
    * - Column
      - Type
      - Description
-   * - ``bin``
-     - **ANY-INTEGER**
-     - Integer to uniquely identify a bin.
    * - ``id``
-     - **ANY-INTEGER**
-     - Indentifier of an item in the ``bin``.
+     - ``INTEGER``
+     - Indentifier of an item in the knapsack.
 
 Where:
 
@@ -119,16 +113,14 @@ Where:
 Example
 -------------------------------------------------------------------------------
 
-.. literalinclude:: bin_packing.queries
+.. literalinclude:: knapsack.queries
    :start-after: -- example_start
    :end-before: -- example_end
 
 See Also
 -------------------------------------------------------------------------------
 
-.. include:: or_tools-category.rst
-   :start-after: see_also_start
-   :end-before: see_also_end
+* `OR-Tools: Google OR-Tools <https://developers.google.com/optimization>`__
 
 .. rubric:: Indices and tables
 

@@ -1,18 +1,18 @@
 ..
    ****************************************************************************
-    pgOrtools Manual
-    Copyright(c) pgOrtools Contributors
+    pgORpy Manual
+    Copyright(c) pgORpy Contributors
+
     This documentation is licensed under a Creative Commons Attribution-Share
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
    ****************************************************************************
 
 .. index::
-   single: Knapsack problems ; por_multiple_knapsack
-   single: multiple_knapsack
+   single: bin_packing
 
 |
 
-vrp_multiple_knapsack - Experimental
+``por_bin_packing``
 ===============================================================================
 
 .. rubric:: Availability
@@ -25,19 +25,23 @@ vrp_multiple_knapsack - Experimental
 Description
 -------------------------------------------------------------------------------
 
-The multiple knapsack problem is a problem in combinatorial optimization:
-it is a more general verison of the classic knapsack problem where instead of a
-single knapsack, you will be given multiple knapsacks and your goal is maximise the total
-value of packed items in all knapsacks.
+The bin packing problem is an optimization problem, in which
+items of different sizes must be packed into a finite number of bins or containers,
+each of a fixed given capacity, in a way that minimizes the number of bins used.
+The problem has many applications, such as filling up containers, loading trucks with weight capacity constraints,
+creating file backups in media and technology mapping in FPGA semiconductor chip design.
+
 
 Signatures
 -------------------------------------------------------------------------------
 
+.. rubric:: Summary
+
 .. admonition:: \ \
    :class: signatures
 
-   | vrp_multiple_knapsack(`Weight Costs SQL`_, capacities, [,``max_rows``])
-   | RETURNS SET OF (knapsack, id)
+   | por_bin_packing(`Weights SQL`_, bin_capacity, [``max_rows``])
+   | Returns set of (bin_number, item_id)
    | OR EMPTY SET
 
 Parameters
@@ -51,12 +55,12 @@ Parameters
    * - Column
      - Type
      - Description
-   * - `Weight Costs SQL`_
+   * - `Weights SQL`_
      - ``TEXT``
-     - `Weight Costs SQL`_ as described below
-   * - capacities
-     - ``ARRAY[`` **ANY-INTEGER** ``]``
-     - An array describing the capacity of each knapsack.
+     - `Weights SQL`_ as described below
+   * - bin_capacity
+     - **ANY-INTEGER**
+     - Maximum Capacity of the bin.
 
 Optional Parameters
 ...............................................................................
@@ -75,15 +79,20 @@ Optional Parameters
      - :math:`100000`
      - Maximum items(rows) to fetch from bin_packing_data table.
 
+Where:
+
+:ANY-INTEGER: ``SMALLINT``, ``INTEGER``, ``BIGINT``
+
 Inner Queries
 -------------------------------------------------------------------------------
 
-Weight Costs SQL
+Weights SQL
 ...............................................................................
 
-.. include:: or_tools-category.rst
-   :start-after: weight_costs_start
-   :end-before: weight_costs_end
+
+.. include:: concepts.rst
+   :start-after: weights_start
+   :end-before: weights_end
 
 Result Columns
 -------------------------------------------------------------------------------
@@ -96,24 +105,28 @@ Result Columns
    * - Column
      - Type
      - Description
-   * - ``knapsak``
-     - ``INTEGER``
-     - Indentifier of the knapsack.
+   * - ``bin``
+     - **ANY-INTEGER**
+     - Integer to uniquely identify a bin.
    * - ``id``
-     - ``INTEGER``
-     - Indentifier of an item in the ``knapsack``.
+     - **ANY-INTEGER**
+     - Indentifier of an item in the ``bin``.
+
+Where:
+
+:ANY-INTEGER: ``SMALLINT``, ``INTEGER``, ``BIGINT``
 
 Example
 -------------------------------------------------------------------------------
 
-.. literalinclude:: multiple_knapsack.queries
+.. literalinclude:: bin_packing.queries
    :start-after: -- example_start
    :end-before: -- example_end
 
 See Also
 -------------------------------------------------------------------------------
 
-.. include:: or_tools-category.rst
+.. include:: concepts.rst
    :start-after: see_also_start
    :end-before: see_also_end
 

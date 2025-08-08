@@ -21,8 +21,3 @@ Function to activate python on a local environment
 .. literalinclude:: ../../tools/testers/sampledata.sql
    :start-after: -- activate_python_start
    :end-before: -- activate_python_end
-
-Sample data
-
-.. literalinclude:: ../../tools/testers/sampledata.sql
-   :start-after: -- activate_python_end

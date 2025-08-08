@@ -9,6 +9,8 @@
 
 |
 
+.. _index:
+
 *******************************************************************************
 Table of Contents
 *******************************************************************************
@@ -38,7 +40,7 @@ General
     introduction
     installation
     support
-    or_tools-category
+    concepts
 
 - :doc:`sampledata` that is used in the examples of this manual.
 
@@ -47,39 +49,27 @@ General
 
    sampledata
 
-Functions
+:doc:`functions`
 ===============================================================================
 
-Utilities
--------------------------------------------------------------------------------
-
-* :doc:`vrp_version` - Get pgORpy's version information.
-* :doc:`vrp_full_version` - Get pgORpy's details of version.
+.. include:: functions.rst
+   :start-after: functions_start
+   :end-before: functions_end
 
 .. toctree::
    :hidden:
 
-   vrp_version
-   vrp_full_version
+   functions
 
-OR-tools
--------------------------------------------------------------------------------
+:doc:`release_notes`
+===============================================================================
 
-- :doc:`vrp_bin_packing`
-- :doc:`vrp_knapsack`
-- :doc:`vrp_multiple_knapsack`
+.. include:: release_notes.rst
+   :start-after: current
+   :end-before: pgORpy 0.0.0
 
 .. toctree::
    :hidden:
-
-   vrp_bin_packing
-   vrp_knapsack
-   vrp_multiple_knapsack
-
-Release Notes
-===============================================================================
-
-.. toctree::
 
    release_notes
 

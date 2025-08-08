@@ -1,7 +1,7 @@
 ..
    ****************************************************************************
-    vrpRouting Manual
-    Copyright(c) vrpRouting Contributors
+    pgORpy Manual
+    Copyright(c) pgORpy Contributors
 
     This documentation is licensed under a Creative Commons Attribution-Share
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
@@ -9,15 +9,13 @@
 
 |
 
-* `Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 <https://vrp.pgrouting.org/v0>`__
-* Supported Versions
-  `Latest <https://vrp.pgrouting.org/latest/en/vroom-category.html>`__
-  (`v0 <https://vrp.pgrouting.org/v0/en/vroom-category.html>`__)
-
-
-OR-Tools - Category (Experimental)
+Concepts
 ===============================================================================
 
+.. contents::
+
+Synopsis
+-------------------------------------------------------------------------------
 
 OR-Tools is an open source software suite for optimization, tuned for tackling
 the world's toughest problems in vehicle routing, flows, integer and linear
@@ -29,7 +27,7 @@ OR-Tools can solve
 - Scheduling
 - Bin Packing
 
-Currently only Bin Packing problems can be solved with OR-Tools in vrpRouting.
+Currently only Bin Packing problems can be solved with OR-Tools in pgORpy.
 
 Terminologies
 ...............................................................................
