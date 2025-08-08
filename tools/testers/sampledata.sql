@@ -2,6 +2,10 @@
 -- Creative Commons Attribution-Share Alike 3.0
 -- License : https://creativecommons.org/licenses/by-sa/3.0/
 
+DROP TABLE IF EXISTS bin_packing;
+DROP TABLE IF EXISTS knapsack;
+DROP TABLE IF EXISTS multiple_knapsack;
+
 -- activate_python_start
 CREATE OR REPLACE PROCEDURE activate_python_venv(venv text)
 LANGUAGE plpython3u AS
