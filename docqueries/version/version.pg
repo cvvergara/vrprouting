@@ -1,7 +1,6 @@
+-- CopyRight(c) pgRouting developers
+-- Creative Commons Attribution-Share Alike 3.0 License : https://creativecommons.org/licenses/by-sa/3.0/
 
---------------------------------------------------------------------------------
---                vrp_version
---------------------------------------------------------------------------------
 /* -- q1 */
-SELECT vrp_version();
+SELECT por_version();
 /* -- q2 */

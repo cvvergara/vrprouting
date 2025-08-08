@@ -22,15 +22,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 
 --v0.0
-CREATE FUNCTION vrp_version()
+CREATE FUNCTION por_version()
 RETURNS TEXT AS
 $BODY$
   SELECT '${PROJECT_VERSION}${PROJECT_VERSION_DEV}'::TEXT;
 $BODY$
 LANGUAGE sql IMMUTABLE;
 
-COMMENT ON FUNCTION vrp_version() IS
-'vrp_version
+COMMENT ON FUNCTION por_version() IS
+'por_version
 - Documentation
-  - ${PROJECT_DOC_LINK}/vrp_version.html
+  - ${PROJECT_DOC_LINK}/por_version.html
 ';

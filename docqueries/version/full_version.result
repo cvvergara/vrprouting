@@ -3,7 +3,7 @@ BEGIN
 SET client_min_messages TO NOTICE;
 SET
 /* -- q1 */
-SELECT * FROM vrp_full_version();
+SELECT * FROM por_full_version();
  version | or_tools
 ---------+-----------
  0.0.0   | 9.10.4067

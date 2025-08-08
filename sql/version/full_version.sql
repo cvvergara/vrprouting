@@ -1,10 +1,7 @@
 /*PGR-GNU*****************************************************************
 
-Copyright (c) 2019 pgRouting developers
+Copyright (c) 2025 pgRouting developers
 Mail: project@pgrouting.org
-
-Developer:
-Copyright (c) 2019 Celia Virginia Vergara Castillo
 
 ------
 
@@ -25,15 +22,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 
 --v0.0
-CREATE FUNCTION vrp_full_version(OUT version TEXT, OUT or_tools TEXT)
+CREATE FUNCTION por_full_version(OUT version TEXT, OUT or_tools TEXT)
 RETURNS RECORD AS
 $BODY$
   SELECT '${PROJECT_VERSION}${PROJECT_VERSION_DEV}'::TEXT, '${ORTOOLS_VERSION}'::TEXT;
 $BODY$
-LANGUAGE SQL IMMUTABLE;
+LANGUAGE sql IMMUTABLE;
 
-COMMENT ON FUNCTION vrp_full_version() IS
-'vrp_full_version
+COMMENT ON FUNCTION por_full_version() IS
+'por_full_version
 - Documentation
-  - ${PROJECT_DOC_LINK}/vrp_full_version.html
+  - ${PROJECT_DOC_LINK}/por_full_version.html
 ';
