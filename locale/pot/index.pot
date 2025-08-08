@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vrpRouting v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-04 17:33+0000\n"
+"POT-Creation-Date: 2025-08-08 22:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -57,11 +57,11 @@ msgid "Utilities"
 msgstr ""
 
 #: ../../build/doc/index.rst:56
-msgid ":doc:`vrp_version` - Get pgORpy's version information."
+msgid ":doc:`por_version` - Get pgORpy's version information."
 msgstr ""
 
 #: ../../build/doc/index.rst:57
-msgid ":doc:`vrp_full_version` - Get pgORpy's details of version."
+msgid ":doc:`por_full_version` - Get pgORpy's details of version."
 msgstr ""
 
 #: ../../build/doc/index.rst:66
@@ -69,15 +69,15 @@ msgid "OR-tools"
 msgstr ""
 
 #: ../../build/doc/index.rst:68
-msgid ":doc:`vrp_bin_packing`"
+msgid ":doc:`por_bin_packing`"
 msgstr ""
 
 #: ../../build/doc/index.rst:69
-msgid ":doc:`vrp_knapsack`"
+msgid ":doc:`por_knapsack`"
 msgstr ""
 
 #: ../../build/doc/index.rst:70
-msgid ":doc:`vrp_multiple_knapsack`"
+msgid ":doc:`por_multiple_knapsack`"
 msgstr ""
 
 #: ../../build/doc/index.rst:80
