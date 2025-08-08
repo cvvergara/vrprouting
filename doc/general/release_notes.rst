@@ -45,12 +45,12 @@ on Github.
 
 * por_version
 
-  .. include:: vrp_version.rst
+  .. include:: por_version.rst
      :start-after: Version 0.0.0
      :end-before: Description
 
 * por_full_version
 
-  .. include:: vrp_full_version.rst
+  .. include:: por_full_version.rst
      :start-after: Version 0.0.0
      :end-before: Description

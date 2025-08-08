@@ -1,8 +1,8 @@
 
 SET(LOCAL_FILES
-    vrp_version.rst
-    vrp_full_version.rst
-    )
+  por_version.rst
+  por_full_version.rst
+)
 
 foreach (f ${LOCAL_FILES})
     configure_file(${f} "${PGR_DOCUMENTATION_SOURCE_DIR}/${f}")

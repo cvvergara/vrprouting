@@ -72,7 +72,7 @@ Column             Type       Description
 
 .. rubric:: See also
 
-* :doc:`vrp_version`
+* :doc:`por_version`
 
 .. rubric:: Indices and tables
 

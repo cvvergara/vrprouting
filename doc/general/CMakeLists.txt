@@ -1,13 +1,13 @@
 
 SET(LOCAL_FILES
-    index.rst
-    introduction.rst
-    installation.rst
-    release_notes.rst
-    sampledata.rst
-    support.rst
-    or_tools-category.rst
-    )
+  index.rst
+  introduction.rst
+  installation.rst
+  release_notes.rst
+  sampledata.rst
+  support.rst
+  concepts.rst
+)
 
 foreach (f ${LOCAL_FILES})
     configure_file(${f} "${PGR_DOCUMENTATION_SOURCE_DIR}/${f}")

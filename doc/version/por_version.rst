@@ -62,7 +62,7 @@ Result Columns
 
 .. rubric:: See Also
 
-* :doc:`vrp_full_version`
+* :doc:`por_full_version`
 
 .. rubric:: Indices and tables
 

@@ -90,7 +90,7 @@ Weights SQL
 ...............................................................................
 
 
-.. include:: or_tools-category.rst
+.. include:: concepts.rst
    :start-after: weights_start
    :end-before: weights_end
 
@@ -126,7 +126,7 @@ Example
 See Also
 -------------------------------------------------------------------------------
 
-.. include:: or_tools-category.rst
+.. include:: concepts.rst
    :start-after: see_also_start
    :end-before: see_also_end
 

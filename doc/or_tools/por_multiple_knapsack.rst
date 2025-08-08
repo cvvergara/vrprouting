@@ -81,7 +81,7 @@ Inner Queries
 Weight Costs SQL
 ...............................................................................
 
-.. include:: or_tools-category.rst
+.. include:: concepts.rst
    :start-after: weight_costs_start
    :end-before: weight_costs_end
 
@@ -113,7 +113,7 @@ Example
 See Also
 -------------------------------------------------------------------------------
 
-.. include:: or_tools-category.rst
+.. include:: concepts.rst
    :start-after: see_also_start
    :end-before: see_also_end
 
