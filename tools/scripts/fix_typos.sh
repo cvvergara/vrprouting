@@ -47,7 +47,6 @@ if ! test -d fix_typos; then
     cd .. || exit 1
 fi
 
-EXCLUDED_FILES="*/code_linter/*"
 EXCLUDED_FILES="$EXCLUDED_FILES,*/fix_typos/*"
 EXCLUDED_FILES="$EXCLUDED_FILES,*/.git/*"
 EXCLUDED_FILES="$EXCLUDED_FILES,*/build/*"

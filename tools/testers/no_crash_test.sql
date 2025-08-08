@@ -1,3 +1,10 @@
+/*PGR-GNU*****************************************************************
+
+License: GNU General Public License v2.0
+Copyright (c) 2025 pgORpy developers
+Mail: project@pgrouting.org
+
+ ********************************************************************PGR-GNU*/
 
 CREATE OR REPLACE FUNCTION public.no_crash_test(func TEXT, params TEXT[], subs TEXT[],
                                                 error_messages TEXT[] DEFAULT ARRAY[]::TEXT[],
