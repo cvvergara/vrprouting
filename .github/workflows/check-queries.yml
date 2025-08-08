@@ -98,6 +98,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
+            libtap-parser-sourcehandler-pgtap-perl \
             postgresql-${PGVER} \
             postgresql-${PGVER}-pgtap \
             postgresql-server-dev-${PGVER} \
@@ -150,3 +151,10 @@ jobs:
           git diff
 
           ./tools/testers/doc_queries_generator.pl -pgport "${PGPORT}"
+          ./tools/testers/pg_prove_tests.sh -U ${PG_RUNNER_USER} -p ${PGPORT} -d ___vrp___test___
+
+      - name: pgTap test
+        run: |
+          sudo service postgresql start
+          psql -c "CREATE DATABASE ___vrp___pgtap___;"
+          bash ./tools/testers/pg_prove_tests.sh -U ${PG_RUNNER_USER} -p ${PGPORT} -d ___vrp___pgtap___
