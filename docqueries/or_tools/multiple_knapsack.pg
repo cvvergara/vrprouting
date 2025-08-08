@@ -1,4 +1,7 @@
+-- CopyRight(c) pgRouting developers
+-- Creative Commons Attribution-Share Alike 3.0 License : https://creativecommons.org/licenses/by-sa/3.0/
+
 /* -- example_start */
 SELECT *
-FROM vrp_multiple_knapsack($$SELECT id, weight, cost FROM ortools.multiple_knapsack$$, ARRAY[100,100,100,100,100]);
+FROM por_multiple_knapsack($$SELECT id, weight, cost FROM multiple_knapsack$$, ARRAY[100,100,100,100,100]);
 /* -- example_end */
