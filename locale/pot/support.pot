@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.4.2
+# Copyright (C) vrpRouting Contributors - Version v0.0.0
 # This file is distributed under the same license as the vrpRouting package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.4.2\n"
+"Project-Id-Version: vrpRouting v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-04 01:37+0000\n"
+"POT-Creation-Date: 2025-08-08 23:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,114 +16,114 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../../build/doc/support.rst:13
+#: ../../build/doc/support.rst:11
 msgid "Support"
 msgstr ""
 
-#: ../../build/doc/support.rst:15
-msgid "vrpRouting community support is available through the `pgRouting website <https://pgrouting.org/support.html>`_, `documentation <https://vrp.pgrouting.org>`_, tutorials, mailing lists and others."
+#: ../../build/doc/support.rst:13
+msgid "Support is available through the `pgRouting website <https://pgrouting.org/support.html>`_, `documentation <https://pgorpy.pgrouting.org>`_, tutorials, mailing lists and others."
 msgstr ""
 
-#: ../../build/doc/support.rst:19
-msgid "If you’re looking for :ref:`commercial support <support_commercial>`, find below a list of companies providing vrpRouting development and consulting services."
+#: ../../build/doc/support.rst:17
+msgid "If you’re looking for `commercial support`_, find below a list of companies providing pgORpy development and consulting services."
 msgstr ""
 
-#: ../../build/doc/support.rst:24
+#: ../../build/doc/support.rst:22
 msgid "Reporting Problems"
 msgstr ""
 
-#: ../../build/doc/support.rst:26
-msgid "Bugs are reported and managed in an `issue tracker <https://github.com/pgRouting/vrprouting/issues>`_. Please follow these steps:"
+#: ../../build/doc/support.rst:24
+msgid "Bugs are reported and managed in an `issue tracker <https://github.com/pgRouting/pgorpy/issues>`_. Please follow these steps:"
 msgstr ""
 
-#: ../../build/doc/support.rst:30
+#: ../../build/doc/support.rst:28
 msgid "Search the tickets to see if your problem has already been reported. If so, add any extra context you might have found, or at least indicate that you too are having the problem. This will help us prioritize common issues."
 msgstr ""
 
-#: ../../build/doc/support.rst:33
-msgid "If your problem is unreported, create a `new issue <https://github.com/pgRouting/vrprouting/issues/new>`__ for it."
+#: ../../build/doc/support.rst:31
+msgid "If your problem is unreported, create a `new issue <https://github.com/pgRouting/pgorpy/issues/new>`__ for it."
 msgstr ""
 
-#: ../../build/doc/support.rst:35
+#: ../../build/doc/support.rst:33
 msgid "In your report include explicit instructions to replicate your issue. The best tickets include the exact SQL necessary to replicate a problem."
 msgstr ""
 
+#: ../../build/doc/support.rst:35
+msgid "For the versions where you can replicate the problem, note the operating system and version of pgORpy and PostgreSQL."
+msgstr ""
+
 #: ../../build/doc/support.rst:37
-msgid "If you can test older versions of PostGIS for your problem, please do. On your ticket, note the earliest version the problem appears."
-msgstr ""
-
-#: ../../build/doc/support.rst:39
-msgid "For the versions where you can replicate the problem, note the operating system and version of vrpRouting, pgRouting, PostGIS and PostgreSQL."
-msgstr ""
-
-#: ../../build/doc/support.rst:41
 msgid "It is recommended to use the following wrapper on the problem to pin point the step that is causing the problem."
 msgstr ""
 
-#: ../../build/doc/support.rst:53
-msgid "Mailing List and GIS StackExchange"
+#: ../../build/doc/support.rst:49
+msgid "Discurse and GIS StackExchange"
 msgstr ""
 
-#: ../../build/doc/support.rst:55
-msgid "There are two mailing lists for vrpRouting hosted on OSGeo mailing list server which are of pgRouting:"
+#: ../../build/doc/support.rst:51
+msgid "There are two discourse categories for pgRouting products hosted on OSGeo discourse. which are of pgRouting:"
+msgstr ""
+
+#: ../../build/doc/support.rst:54
+msgid "For general questions and topics about how to use pgorpy:"
+msgstr ""
+
+#: ../../build/doc/support.rst:56
+msgid "pgRouting-users discourse category: https://discourse.osgeo.org/c/pgrouting/pgrouting-users"
 msgstr ""
 
 #: ../../build/doc/support.rst:58
-msgid "User category: https://discourse.osgeo.org/c/pgrouting/pgrouting-users"
+msgid "For questions about development of pgorpy:"
 msgstr ""
 
-#: ../../build/doc/support.rst:59
-msgid "Developer category: https://discourse.osgeo.org/c/pgrouting/pgrouting-dev"
+#: ../../build/doc/support.rst:60
+msgid "pgRouting-dev discourse category: https://discourse.osgeo.org/c/pgrouting/pgrouting-dev"
 msgstr ""
 
-#: ../../build/doc/support.rst:61
-msgid "For general questions and topics about how to use vrpRouting, please write to the user mailing list."
+#: ../../build/doc/support.rst:62
+msgid "Subscribe: https://discourse.osgeo.org/g/pgrouting-dev"
 msgstr ""
 
-#: ../../build/doc/support.rst:63
-msgid "You can also ask at `GIS StackExchange <https://gis.stackexchange.com/>`_ and tag the question with ``vrprouting``. Find all questions tagged with ``vrprouting`` under https://gis.stackexchange.com/questions/tagged/vrprouting or subscribe to the `vrpRouting questions feed <https://gis.stackexchange.com/feeds/tag?tagnames=vrprouting&sort=newest>`_."
-msgstr ""
-
-#: ../../build/doc/support.rst:72
+#: ../../build/doc/support.rst:65
 msgid "Commercial Support"
 msgstr ""
 
-#: ../../build/doc/support.rst:74
-msgid "For users who require professional support, development and consulting services, consider contacting any of the following organizations, which have significantly contributed to the development of vrpRouting:"
+#: ../../build/doc/support.rst:67
+msgid "For users who require professional support, development and consulting services, consider contacting any of the following organizations, which have significantly contributed to the development of pgORpy:"
 msgstr ""
 
-#: ../../build/doc/support.rst:81
+#: ../../build/doc/support.rst:74
 msgid "**Company**"
 msgstr ""
 
-#: ../../build/doc/support.rst:82
+#: ../../build/doc/support.rst:75
 msgid "**Offices in**"
 msgstr ""
 
-#: ../../build/doc/support.rst:83
+#: ../../build/doc/support.rst:76
 msgid "**Website**"
 msgstr ""
 
-#: ../../build/doc/support.rst:84
-msgid "Erosion"
+#: ../../build/doc/support.rst:77
+msgid "Erosion developers"
 msgstr ""
 
-#: ../../build/doc/support.rst:85
+#: ../../build/doc/support.rst:78
 msgid "Mexico"
 msgstr ""
 
-#: ../../build/doc/support.rst:86
-msgid "https://www.erosion.dev"
+#: ../../build/doc/support.rst:79
+msgid "https://erosion.dev"
 msgstr ""
 
-#: ../../build/doc/support.rst:87
+#: ../../build/doc/support.rst:80
 msgid "Paragon Corporation"
 msgstr ""
 
-#: ../../build/doc/support.rst:88
+#: ../../build/doc/support.rst:81
 msgid "United States"
 msgstr ""
 
-#: ../../build/doc/support.rst:89
+#: ../../build/doc/support.rst:82
 msgid "https://www.paragoncorporation.com"
 msgstr ""

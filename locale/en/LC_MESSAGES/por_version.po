@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vrpRouting v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 22:53+0000\n"
+"POT-Creation-Date: 2025-08-08 23:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,57 +17,44 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.10.3\n"
 
-#: ../../build/doc/por_version.rst:12
-msgid ""
-"`Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 "
-"<https://vrp.pgrouting.org/v0>`__"
-msgstr ""
-
-#: ../../build/doc/por_version.rst:13
-msgid ""
-"Supported Versions `Latest "
-"<https://vrp.pgrouting.org/latest/en/vrp_version.html>`__ (`v0 "
-"<https://vrp.pgrouting.org/v0/en/vrp_version.html>`__)"
+#: ../../build/doc/por_version.rst:16
+msgid "``por_version``"
 msgstr ""
 
 #: ../../build/doc/por_version.rst:18
-msgid "vrp_version"
+msgid "``por_version`` - Get pgORpy version."
 msgstr ""
 
-#: ../../build/doc/por_version.rst:20
-msgid "``vrp_version`` — Get the only the version"
-msgstr ""
-
-#: ../../build/doc/por_version.rst:23
+#: ../../build/doc/por_version.rst:21
 msgid "Availability"
 msgstr ""
 
-#: ../../build/doc/por_version.rst:24
+#: ../../build/doc/por_version.rst:23
 msgid "Version 0.0.0"
 msgstr ""
 
-#: ../../build/doc/por_version.rst:26
-msgid "New **Official** function"
+#: ../../build/doc/por_version.rst:24
+msgid "Official function"
 msgstr ""
 
-#: ../../build/doc/por_version.rst:31 ../../build/doc/por_version.rst:57
+#: ../../build/doc/por_version.rst:27 ../../build/doc/por_version.rst:50
 msgid "Description"
 msgstr ""
 
-#: ../../build/doc/por_version.rst:33
-msgid "Returns vrpRouting version information."
+#: ../../build/doc/por_version.rst:29
+msgid "Gets the pgORpy version information."
 msgstr ""
 
-#: ../../build/doc/por_version.rst:39
+#: ../../build/doc/por_version.rst:32
 msgid "Signatures"
 msgstr ""
 
-#: ../../build/doc/por_version.rst:41
+#: ../../build/doc/por_version.rst:34
 msgid "\\ \\"
 msgstr ""
 
 #: ../../build/doc/por_version.rst
-msgid "pgr_version()"
+msgid "por_version()"
 msgstr ""
 
 #: ../../build/doc/por_version.rst
@@ -78,43 +65,43 @@ msgstr ""
 msgid "Example"
 msgstr ""
 
-#: ../../build/doc/por_version.rst:47
-msgid "vrpRouting Version for this documentatoin"
+#: ../../build/doc/por_version.rst:40
+msgid "The version for this documentation."
 msgstr ""
 
-#: ../../build/doc/por_version.rst:54
+#: ../../build/doc/por_version.rst:47
 msgid "Result Columns"
 msgstr ""
 
-#: ../../build/doc/por_version.rst:57
+#: ../../build/doc/por_version.rst:50
 msgid "Type"
 msgstr ""
 
-#: ../../build/doc/por_version.rst:59
+#: ../../build/doc/por_version.rst:52
 msgid "``TEXT``"
 msgstr ""
 
-#: ../../build/doc/por_version.rst:59
-msgid "vrpRouting version"
+#: ../../build/doc/por_version.rst:52
+msgid "pgORpy version"
 msgstr ""
 
-#: ../../build/doc/por_version.rst:64
+#: ../../build/doc/por_version.rst:56
 msgid "See Also"
 msgstr ""
 
-#: ../../build/doc/por_version.rst:65
+#: ../../build/doc/por_version.rst:57
 msgid ":doc:`por_full_version`"
 msgstr ""
 
-#: ../../build/doc/por_version.rst:68
+#: ../../build/doc/por_version.rst:60
 msgid "Indices and tables"
 msgstr ""
 
-#: ../../build/doc/por_version.rst:69
+#: ../../build/doc/por_version.rst:61
 msgid ":ref:`genindex`"
 msgstr ""
 
-#: ../../build/doc/por_version.rst:70
+#: ../../build/doc/por_version.rst:62
 msgid ":ref:`search`"
 msgstr ""
 

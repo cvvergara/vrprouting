@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vrpRouting v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-04 17:33+0000\n"
+"POT-Creation-Date: 2025-08-08 23:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgid "Release Notes"
 msgstr ""
 
 #: ../../build/doc/release_notes.rst:15
-msgid "To see the full list of changes check the list of `Git commits <https://github.com/pgRouting/pgORpy/commits>`_ on Github."
+msgid "To see the full list of changes check the list of `Git commits <https://github.com/pgRouting/pgorpy/commits>`_ on Github."
 msgstr ""
 
 #: ../../build/doc/release_notes.rst:20
@@ -44,30 +44,60 @@ msgstr ""
 msgid "Contents"
 msgstr ""
 
-#: ../../build/doc/release_notes.rst:37
+#: ../../build/doc/release_notes.rst:39
+msgid "pgORpy 0.0.1 Release Notes"
+msgstr ""
+
+#: ../../build/doc/release_notes.rst:41
+msgid "To see all issues & pull requests closed by this release see the `Git closed milestone for 0.0.1 <https://github.com/pgRouting/pgorpy/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.0.1%22>`_ on Github."
+msgstr ""
+
+#: ../../build/doc/release_notes.rst:47
+#: ../../build/doc/release_notes.rst:75
+msgid "Version functions"
+msgstr ""
+
+#: ../../build/doc/release_notes.rst:48
+msgid "por_bin_backing"
+msgstr ""
+
+#: ../../build/doc/por_bin_packing.rst:3
+#: ../../build/doc/por_knapsack.rst:3
+#: ../../build/doc/por_multiple_knapsack.rst:3
+msgid "New function"
+msgstr ""
+
+#: ../../build/doc/por_bin_packing.rst:4
+#: ../../build/doc/por_knapsack.rst:4
+#: ../../build/doc/por_multiple_knapsack.rst:4
+msgid "Support for or-tools v9.10.4067"
+msgstr ""
+
+#: ../../build/doc/release_notes.rst:54
+msgid "por_knapsack"
+msgstr ""
+
+#: ../../build/doc/release_notes.rst:60
+msgid "por_multiple_knapsack"
+msgstr ""
+
+#: ../../build/doc/release_notes.rst:67
 msgid "pgORpy 0.0.0 Release Notes"
 msgstr ""
 
-#: ../../build/doc/release_notes.rst:39
-msgid "To see all issues & pull requests closed by this release see the `Git closed milestone for 0.0.0 <https://github.com/pgRouting/vrprouting/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.0.0%22>`_ on Github."
+#: ../../build/doc/release_notes.rst:69
+msgid "To see all issues & pull requests closed by this release see the `Git closed milestone for 0.0.0 <https://github.com/pgRouting/pgorpy/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.0.0%22>`_ on Github."
 msgstr ""
 
-#: ../../build/doc/release_notes.rst:45
-msgid "New functions"
-msgstr ""
-
-#: ../../build/doc/release_notes.rst:46
+#: ../../build/doc/release_notes.rst:76
 msgid "por_version"
 msgstr ""
 
-#: ../../build/doc/vrp_version.rst:3
-msgid "New **Official** function"
+#: ../../build/doc/por_full_version.rst:3
+#: ../../build/doc/por_version.rst:3
+msgid "Official function"
 msgstr ""
 
-#: ../../build/doc/release_notes.rst:52
+#: ../../build/doc/release_notes.rst:82
 msgid "por_full_version"
-msgstr ""
-
-#: ../../build/doc/vrp_full_version.rst:3
-msgid "New **official** function"
 msgstr ""

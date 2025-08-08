@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vrpRouting v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 22:53+0000\n"
+"POT-Creation-Date: 2025-08-08 23:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../../build/doc/por_knapsack.rst:17
-msgid "vrp_knapsack - Experimental"
+msgid "``por_knapsack``"
 msgstr ""
 
 #: ../../build/doc/por_knapsack.rst:20
@@ -57,7 +57,7 @@ msgid "\\ \\"
 msgstr ""
 
 #: ../../build/doc/por_knapsack.rst:0
-msgid "vrp_knapsack(`Weight Costs SQL`_, capacity, [``max_rows``])"
+msgid "por_knapsack(`Weight Costs SQL`_, capacity, [``max_rows``])"
 msgstr ""
 
 #: ../../build/doc/por_knapsack.rst:0

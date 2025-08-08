@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vrpRouting v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 22:53+0000\n"
+"POT-Creation-Date: 2025-08-08 23:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Generated-By: Babel 2.10.3\n"
 
 #: ../../build/doc/por_bin_packing.rst:16
-msgid "vrp_bin_packing - Experimental"
+msgid "``por_bin_packing``"
 msgstr ""
 
 #: ../../build/doc/por_bin_packing.rst:19
@@ -68,7 +68,7 @@ msgid "\\ \\"
 msgstr ""
 
 #: ../../build/doc/por_bin_packing.rst
-msgid "vrp_bin_packing(`Weights SQL`_, bin_capacity, [``max_rows``])"
+msgid "por_bin_packing(`Weights SQL`_, bin_capacity, [``max_rows``])"
 msgstr ""
 
 #: ../../build/doc/por_bin_packing.rst
