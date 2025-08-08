@@ -65,12 +65,6 @@ DECLARE
   inner_query_table TEXT;
   params TEXT[];
 BEGIN
-  IF NOT min_version('0.3.0') THEN
-    RETURN QUERY
-    SELECT skip(1, 'Function is modified on 0.3.0');
-    RETURN;
-  END IF;
-
   -- por_knapsack
   fn := 'por_knapsack';
   inner_query_table := 'knapsack_data';
