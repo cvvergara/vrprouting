@@ -16,52 +16,43 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Concepts"
+msgid "``por_multiple_knapsack``"
 msgstr ""
 
-msgid "Contents"
+msgid "Availability"
 msgstr ""
 
-msgid "Synopsis"
+msgid "Version 0.0.1"
 msgstr ""
 
-msgid "OR-Tools is an open source software suite for optimization, tuned for tackling the world's toughest problems in vehicle routing, flows, integer and linear programming, and constraint programming."
+msgid "New function"
 msgstr ""
 
-msgid "OR-Tools can solve"
+msgid "Support for or-tools v9.10.4067"
 msgstr ""
 
-msgid "VR (Vehicle Routing)"
+msgid "Description"
 msgstr ""
 
-msgid "Scheduling"
+msgid "The multiple knapsack problem is a problem in combinatorial optimization: it is a more general verison of the classic knapsack problem where instead of a single knapsack, you will be given multiple knapsacks and your goal is maximise the total value of packed items in all knapsacks."
 msgstr ""
 
-msgid "Bin Packing"
+msgid "Signatures"
 msgstr ""
 
-msgid "Currently only Bin Packing problems can be solved with OR-Tools in pgORpy."
+msgid "\\ \\"
 msgstr ""
 
-msgid "Terminologies"
+msgid "por_multiple_knapsack(`Weight Costs SQL`_, capacities, [,``max_rows``])"
 msgstr ""
 
-msgid "**weight**: For each item, a positive integer weight is associated with it."
+msgid "RETURNS SET OF (knapsack, id)"
 msgstr ""
 
-msgid "**cost**: For each item, a positive integer cost(value) is associated with it."
+msgid "OR EMPTY SET"
 msgstr ""
 
-msgid "**capacity**: Maximum storage capacity of a knapsack or a bin."
-msgstr ""
-
-msgid "Inner Queries"
-msgstr ""
-
-msgid "Weight Costs SQL"
-msgstr ""
-
-msgid "A ``SELECT`` statement that returns the following columns:"
+msgid "Parameters"
 msgstr ""
 
 msgid "Column"
@@ -70,13 +61,49 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-msgid "Description"
+msgid "`Weight Costs SQL`_"
 msgstr ""
 
-msgid "``id``"
+msgid "``TEXT``"
+msgstr ""
+
+msgid "`Weight Costs SQL`_ as described below"
+msgstr ""
+
+msgid "capacities"
+msgstr ""
+
+msgid "``ARRAY[`` **ANY-INTEGER** ``]``"
+msgstr ""
+
+msgid "An array describing the capacity of each knapsack."
+msgstr ""
+
+msgid "Optional Parameters"
+msgstr ""
+
+msgid "Default"
+msgstr ""
+
+msgid "``max_rows``"
 msgstr ""
 
 msgid "**ANY-INTEGER**"
+msgstr ""
+
+msgid ":math:`100000`"
+msgstr ""
+
+msgid "Maximum items(rows) to fetch from bin_packing_data table."
+msgstr ""
+
+msgid "Inner Queries"
+msgstr ""
+
+msgid "Weight Costs SQL"
+msgstr ""
+
+msgid "``id``"
 msgstr ""
 
 msgid "Unique identifier of the item."
@@ -103,10 +130,22 @@ msgstr ""
 msgid "``SMALLINT``, ``INTEGER``, ``BIGINT``"
 msgstr ""
 
-msgid "Weights SQL"
+msgid "Result Columns"
 msgstr ""
 
-msgid "Identifier of the item."
+msgid "``knapsak``"
+msgstr ""
+
+msgid "``INTEGER``"
+msgstr ""
+
+msgid "Indentifier of the knapsack."
+msgstr ""
+
+msgid "Indentifier of an item in the ``knapsack``."
+msgstr ""
+
+msgid "Example"
 msgstr ""
 
 msgid "See Also"

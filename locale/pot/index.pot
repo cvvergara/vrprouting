@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.0.0
-# This file is distributed under the same license as the vrpRouting package.
+# Copyright (C) pgORpy Contributors - Version v0.0.0
+# This file is distributed under the same license as the pgORpy package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.0.0\n"
+"Project-Id-Version: pgORpy v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-04 17:33+0000\n"
+"POT-Creation-Date: 2025-08-08 10:45-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,82 +16,86 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../../build/doc/index.rst:14
 msgid "Table of Contents"
 msgstr ""
 
-#: ../../build/doc/index.rst:16
 msgid "pgORpy brings to the database Operations Research tools from `OR-tools <https://developers.google.com/optimization>`__"
 msgstr ""
 
-#: ../../build/doc/index.rst:19
 msgid "This is the manual for pgORpy |release|."
 msgstr ""
 
-#: ../../build/doc/index.rst:-1
 msgid "Creative Commons Attribution-Share Alike 3.0 License"
 msgstr ""
 
-#: ../../build/doc/index.rst:25
 msgid "The pgORpy Manual is licensed under a `Creative Commons Attribution-Share Alike 3.0 License <https://creativecommons.org/licenses/by-sa/3.0/>`__."
 msgstr ""
 
-#: ../../build/doc/index.rst:28
 msgid "Feel free to use this documentation material any way you like, but we ask that you attribute credit to the pgORpy project and wherever possible, a link back to https://pgrouting.org."
 msgstr ""
 
-#: ../../build/doc/index.rst:33
 msgid "General"
 msgstr ""
 
-#: ../../build/doc/index.rst:43
 msgid ":doc:`sampledata` that is used in the examples of this manual."
 msgstr ""
 
-#: ../../build/doc/index.rst:51
-msgid "Functions"
+msgid ":doc:`functions`"
 msgstr ""
 
-#: ../../build/doc/index.rst:54
 msgid "Utilities"
 msgstr ""
 
-#: ../../build/doc/index.rst:56
-msgid ":doc:`vrp_version` - Get pgORpy's version information."
+msgid ":doc:`por_version`"
 msgstr ""
 
-#: ../../build/doc/index.rst:57
-msgid ":doc:`vrp_full_version` - Get pgORpy's details of version."
+msgid ":doc:`por_full_version`"
 msgstr ""
 
-#: ../../build/doc/index.rst:66
 msgid "OR-tools"
 msgstr ""
 
-#: ../../build/doc/index.rst:68
-msgid ":doc:`vrp_bin_packing`"
+msgid ":doc:`por_bin_packing`"
 msgstr ""
 
-#: ../../build/doc/index.rst:69
-msgid ":doc:`vrp_knapsack`"
+msgid ":doc:`por_knapsack`"
 msgstr ""
 
-#: ../../build/doc/index.rst:70
-msgid ":doc:`vrp_multiple_knapsack`"
+msgid ":doc:`por_multiple_knapsack`"
 msgstr ""
 
-#: ../../build/doc/index.rst:80
-msgid "Release Notes"
+msgid ":doc:`release_notes`"
 msgstr ""
 
-#: ../../build/doc/index.rst:87
+msgid "pgORpy 0.0.1 Release Notes"
+msgstr ""
+
+msgid "To see all issues & pull requests closed by this release see the `Git closed milestone for 0.0.1 <https://github.com/pgRouting/pgorpy/issues?utf8=%E2%9C%93&q=milestone%3A%22Release%200.0.1%22>`_ on Github."
+msgstr ""
+
+msgid "Version functions"
+msgstr ""
+
+msgid "por_bin_backing"
+msgstr ""
+
+msgid "New function"
+msgstr ""
+
+msgid "Support for or-tools v9.10.4067"
+msgstr ""
+
+msgid "por_knapsack"
+msgstr ""
+
+msgid "por_multiple_knapsack"
+msgstr ""
+
 msgid "Indices and tables"
 msgstr ""
 
-#: ../../build/doc/index.rst:88
 msgid ":ref:`genindex`"
 msgstr ""
 
-#: ../../build/doc/index.rst:89
 msgid ":ref:`search`"
 msgstr ""

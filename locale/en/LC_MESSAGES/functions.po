@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pgORpy v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-06 13:53-0600\n"
+"POT-Creation-Date: 2025-08-08 10:45-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -19,15 +19,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-msgid "Sample Data"
+msgid "Functions"
 msgstr ""
 
-msgid ""
-"The documentation provides very simple example queries based on a small "
-"sample network. To be able to execute the sample queries, run the "
-"following SQL commands to create a table with a small network data set."
+msgid "Utilities"
 msgstr ""
 
-msgid "Function to activate python on a local environment"
+msgid ":doc:`por_version`"
+msgstr ""
+
+msgid ":doc:`por_full_version`"
+msgstr ""
+
+msgid "OR-tools"
+msgstr ""
+
+msgid ":doc:`por_bin_packing`"
+msgstr ""
+
+msgid ":doc:`por_knapsack`"
+msgstr ""
+
+msgid ":doc:`por_multiple_knapsack`"
+msgstr ""
+
+msgid "Indices and tables"
+msgstr ""
+
+msgid ":ref:`genindex`"
+msgstr ""
+
+msgid ":ref:`search`"
 msgstr ""
 
