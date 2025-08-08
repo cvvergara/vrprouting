@@ -1,7 +1,7 @@
 ..
    ****************************************************************************
-    pgOrtools Manual
-    Copyright(c) pgOrtools Contributors
+    pgORpy Manual
+    Copyright(c) pgORpy Contributors
 
     This documentation is licensed under a Creative Commons Attribution-Share
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
@@ -13,7 +13,7 @@
 
 |
 
-vrp_knapsack - Experimental
+``por_knapsack``
 ===============================================================================
 
 .. rubric:: Availability
@@ -38,7 +38,7 @@ Signatures
 .. admonition:: \ \
    :class: signatures
 
-   | vrp_knapsack(`Weight Costs SQL`_, capacity, [``max_rows``])
+   | por_knapsack(`Weight Costs SQL`_, capacity, [``max_rows``])
    | RETURNS SET OF (item_id)
    | OR EMPTY SET
 

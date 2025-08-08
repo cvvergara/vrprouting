@@ -1,39 +1,32 @@
 ..
    ****************************************************************************
-    vrpRouting Manual
-    Copyright(c) vrpRouting Contributors
+    pgORpy Manual
+    Copyright(c) pgORpy Contributors
 
     This documentation is licensed under a Creative Commons Attribution-Share
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
    ****************************************************************************
 
+.. index::
+   single: version
+
 |
 
-* `Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 <https://vrp.pgrouting.org/v0>`__
-* Supported Versions
-  `Latest <https://vrp.pgrouting.org/latest/en/vrp_version.html>`__
-  (`v0 <https://vrp.pgrouting.org/v0/en/vrp_version.html>`__)
-
-vrp_version
+``por_version``
 ===============================================================================
 
-``vrp_version`` — Get the only the version
+``por_version`` - Get pgORpy version.
 
 .. rubric:: Availability
 
-Version 0.0.0
+.. rubric:: Version 0.0.0
 
-* New **Official** function
-
-
+* Official function
 
 Description
 -------------------------------------------------------------------------------
 
-Returns vrpRouting version information.
-
-.. index::
-    single: version
+Gets the pgORpy version information.
 
 Signatures
 -------------------------------------------------------------------------------
@@ -41,10 +34,10 @@ Signatures
 .. admonition:: \ \
    :class: signatures
 
-   | pgr_version()
+   | por_version()
    | RETURNS ``TEXT``
 
-:Example: vrpRouting Version for this documentatoin
+:Example: The version for this documentation.
 
 .. literalinclude:: version.queries
    :start-after: -- q1
@@ -56,9 +49,8 @@ Result Columns
 =========== ===============================
  Type       Description
 =========== ===============================
-``TEXT``    vrpRouting version
+``TEXT``    pgORpy version
 =========== ===============================
-
 
 .. rubric:: See Also
 

@@ -1,43 +1,32 @@
 ..
    ****************************************************************************
-    vrpRouting Manual
-    Copyright(c) vrpRouting Contributors
+    pgORpy Manual
+    Copyright(c) pgORpy Contributors
 
     This documentation is licensed under a Creative Commons Attribution-Share
     Alike 3.0 License: https://creativecommons.org/licenses/by-sa/3.0/
    ****************************************************************************
 
+.. index::
+   single: full_version
+
 |
 
-* `Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 <https://vrp.pgrouting.org/v0>`__
-* Supported Versions:
-  `Latest <https://vrp.pgrouting.org/latest/en/vrp_full_version.html>`__
-  (`v0 <https://vrp.pgrouting.org/v0/en/vrp_full_version.html>`__)
-
-vrp_full_version
+``por_full_version``
 ===============================================================================
 
-``vrp_full_version`` — Get the details of vrpRouting version information.
+``por_full_version`` - Get versions used for building pgORpy.
 
 .. rubric:: Availability
 
-Version 0.4.1
+.. rubric:: Version 0.0.0
 
-* Boost removed from the result columns
-
-
-Version 0.0.0
-
-* New **official** function
-
+* Official function
 
 Description
 -------------------------------------------------------------------------------
 
-Get the details of vrpRouting version information
-
-.. index::
-    single: full_version
+Returns pgORpy version information and or-tools version used.
 
 Signatures
 -------------------------------------------------------------------------------
@@ -45,10 +34,10 @@ Signatures
 .. admonition:: \ \
    :class: signatures
 
-   | pgr_full_version()
-   | RETURNS ``(version, build_type, compile_date, library, system, PostgreSQL, compiler, hash)``
+   | por_full_version()
+   | RETURNS ``TEXT``
 
-:Example: Get the version installed for this documentation.
+:Example: The versions for this documentation
 
 .. literalinclude:: full_version.queries
    :start-after: -- q1
@@ -57,20 +46,14 @@ Signatures
 Result Columns
 -------------------------------------------------------------------------------
 
-================  =========== ===============================
-Column             Type       Description
-================  =========== ===============================
-``version``       ``TEXT``    vrpRouting version
-``build_type``    ``TEXT``    The Build type
-``compile_date``  ``TEXT``    Compilation date
-``library``       ``TEXT``    Library name and version
-``system``        ``TEXT``    Operative system
-``postgreSQL``    ``TEXT``    pgsql used
-``compiler``      ``TEXT``    Compiler and version
-``hash``          ``TEXT``    Git hash of vrpRouting build
-================  =========== ===============================
+==========  =========== ===============================
+ column      Type       Description
+==========  =========== ===============================
+ version     ``TEXT``    pgORpy version
+ or-tools    ``TEXT``    OR-tools version
+==========  =========== ===============================
 
-.. rubric:: See also
+.. rubric:: See Also
 
 * :doc:`por_version`
 
