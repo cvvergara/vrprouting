@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 =pod
 
-Copyright (c) 2015 pgRouting developers
+Copyright (c) 2025 pgORpy developers
 Mail: project@pgrouting.org
 
 ------
