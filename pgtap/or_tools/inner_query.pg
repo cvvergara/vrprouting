@@ -1,7 +1,6 @@
 BEGIN;
-SET search_path TO 'ortools', 'public';
 
-SELECT CASE WHEN min_version('0.3.0') THEN plan (48) ELSE plan(1) END;
+SELECT plan(48);
 
 CREATE OR REPLACE FUNCTION test_value(fn TEXT, inner_query_table TEXT, start_sql TEXT, rest_sql TEXT, params TEXT[], parameter TEXT, accept TEXT[], reject TEXT[])
 RETURNS SETOF TEXT AS
@@ -58,11 +57,6 @@ DECLARE
   inner_query_table TEXT;
   params TEXT[];
 BEGIN
-  IF NOT min_version('0.3.0') THEN
-    RETURN QUERY
-    SELECT skip(1, 'Function is modified on 0.3.0');
-    RETURN;
-  END IF;
 
   -- vrp_knapsack
   fn := 'vrp_knapsack';

@@ -1,18 +1,11 @@
 BEGIN;
-SET search_path TO 'ortools', 'public';
 
-SELECT CASE WHEN min_version('0.3.0') THEN plan (15) ELSE plan(1) END;
+SELECT plan(15);
 
 CREATE OR REPLACE FUNCTION types_check()
 RETURNS SETOF TEXT AS
 $BODY$
 BEGIN
-
-  IF NOT min_version('0.3.0') THEN
-    RETURN QUERY
-    SELECT skip(1, 'Function is modified on 0.3.0');
-    RETURN;
-  END IF;
 
   -- vrp_knapsack
   RETURN QUERY
