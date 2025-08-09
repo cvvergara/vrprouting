@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: vrpRouting v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 23:39+0000\n"
+"POT-Creation-Date: 2025-08-09 04:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -131,7 +131,7 @@ msgid ":math:`100000`"
 msgstr ""
 
 #: ../../build/doc/por_knapsack.rst:78
-msgid "Maximum items(rows) to fetch from knapsack_data table."
+msgid "Maximum items(rows) to fetch from knapsack table."
 msgstr ""
 
 #: ../../build/doc/por_knapsack.rst:80
