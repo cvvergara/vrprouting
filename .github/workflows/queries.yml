@@ -14,12 +14,13 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - '.github/workflows/check-queries.yml'
+      - '.github/workflows/queries.yml'
       - 'sql/**'
       - 'docqueries/**'
       - 'tools/testers/**'
       - 'CMakeLists.txt'
       - 'tools/scripts/get_signatures.sh'
+      - 'tools/testers/doc_queries_generator.pl'
 
     branches-ignore:
       - 'gh-pages'
@@ -28,7 +29,7 @@ on:
 
   pull_request:
     paths:
-      - '.github/workflows/check-queries.yml'
+      - '.github/workflows/queries.yml'
       - 'sql/**'
       - 'docqueries/**'
       - 'tools/testers/**'

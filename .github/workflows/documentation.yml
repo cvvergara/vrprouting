@@ -119,7 +119,7 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
-                -DWITH_DOC=ON -DLINKCHECK=ON ..
+                -DSPHINX_LINKCHECK=ON ..
 
       - name: Build Documentation
         if: env.PROCESS == 'true'

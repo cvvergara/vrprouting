@@ -82,7 +82,7 @@ jobs:
           mkdir build
           cd build
           cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
-                -DWITH_DOC=ON -DLOCALE=ON ..
+                -SPHINX_DLOCALE=ON ..
 
       - name: Build the locale files
         run: |

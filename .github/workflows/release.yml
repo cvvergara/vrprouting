@@ -73,8 +73,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ env.release }} \
-                -DDOC_USE_BOOTSTRAP=ON -DWITH_DOC=ON -DBUILD_DOXY=ON ..
+          cmake -DCMAKE_BUILD_TYPE=${{ env.release }} ..
 
       - name: Build
         run: |
@@ -87,7 +86,7 @@ jobs:
           git checkout -b gh-pages
           PROJECT_MAJOR="v${PROJECT_VERSION%%.*}"
           rm -rf ${PROJECT_MAJOR}
-          cp -r build/doc/html ${PROJECT_MAJOR}
+          cp -r build/doc/_html ${PROJECT_MAJOR}
           git add ${PROJECT_MAJOR}
           git diff-index --quiet HEAD || git commit -m "Update users documentation for ${PROJECT_VERSION} (tag ${TAG_NAME})"
           git fetch origin

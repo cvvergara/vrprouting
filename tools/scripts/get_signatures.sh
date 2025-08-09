@@ -1,4 +1,11 @@
 #!/bin/bash
+# /*PGR-GNU*****************************************************************
+#
+# License: GNU General Public License v2.0
+# Copyright (c) 2025 pgORpy developers
+# Mail: project@pgrouting.org
+#
+# ********************************************************************PGR-GNU*/
 
 set -e
 
@@ -14,7 +21,7 @@ fi
 VERSION=$(grep -Po '(?<=project\(VRPROUTING VERSION )[^;]+' CMakeLists.txt)
 MINOR=${VERSION%.*}
 
-DB_NAME="____sigs_routing____"
+DB_NAME="___por__signatures___"
 DIR="sql/sigs"
 
 # DB_ARGS are the remaining of the arguments
