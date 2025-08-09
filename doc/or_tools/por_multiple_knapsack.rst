@@ -73,7 +73,7 @@ Optional Parameters
    * - ``max_rows``
      - **ANY-INTEGER**
      - :math:`100000`
-     - Maximum items(rows) to fetch from bin_packing_data table.
+     - Maximum items(rows) to fetch from bin_packing table.
 
 Inner Queries
 -------------------------------------------------------------------------------

@@ -75,7 +75,7 @@ Optional Parameters
    * - ``max_rows``
      - **ANY-INTEGER**
      - :math:`100000`
-     - Maximum items(rows) to fetch from knapsack_data table.
+     - Maximum items(rows) to fetch from knapsack table.
 
 Where:
 
