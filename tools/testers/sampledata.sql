@@ -2,6 +2,10 @@
 -- Creative Commons Attribution-Share Alike 3.0
 -- License : https://creativecommons.org/licenses/by-sa/3.0/
 
+DROP TABLE IF EXISTS bin_packing;
+DROP TABLE IF EXISTS knapsack;
+DROP TABLE IF EXISTS multiple_knapsack;
+
 -- activate_python_start
 CREATE OR REPLACE PROCEDURE activate_python_venv(venv text)
 LANGUAGE plpython3u AS
@@ -29,37 +33,23 @@ VALUES
 
 
 CREATE TABLE knapsack(
-  id INTEGER,
+  id SERIAL,
   weight INTEGER,
   cost INTEGER);
 
-INSERT INTO knapsack(id, weight, cost)
+INSERT INTO knapsack(weight, cost)
 VALUES
-(1, 12, 4),
-(2, 2, 2),
-(3, 1, 1),
-(4, 4, 10),
-(5, 1, 2);
+(12, 4), (2, 2), (1, 1), (4, 10), (1, 2);
 
 CREATE TABLE multiple_knapsack(
-  id INTEGER,
+  id SERIAL,
   weight INTEGER,
   cost INTEGER);
 
-INSERT INTO multiple_knapsack(id, weight, cost)
+INSERT INTO multiple_knapsack(weight, cost)
 VALUES
-(1, 48, 10),
-(2, 30, 30),
-(3, 42, 25),
-(4, 36, 50),
-(5, 36, 35),
-(6, 48, 30),
-(7, 42, 15),
-(8, 42, 40),
-(9, 36, 30),
-(10, 24, 35),
-(11, 30, 45),
-(12, 30, 10),
-(13, 42, 20),
-(14, 36, 30),
-(15, 36, 25);
+(48, 10), (30, 30), (42, 25),
+(36, 50), (36, 35), (48, 30),
+(42, 15), (42, 40), (36, 30),
+(24, 35), (30, 45), (30, 10),
+(42, 20), (36, 30), (36, 25);
