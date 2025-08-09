@@ -10,6 +10,7 @@ name: Check queries
 # using
 # - postgres installed version on actions
 
+
 on:
   workflow_dispatch:
   push:

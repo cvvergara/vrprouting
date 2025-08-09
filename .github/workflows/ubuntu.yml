@@ -6,6 +6,7 @@ name: Build for Ubuntu
 # - When changes on data or testing scripts (tools/testers)
 # - When the way the build changes (CMakeLists.txt)
 # - On request
+#
 
 on:
   workflow_dispatch:
