@@ -18,7 +18,7 @@ if [  "$1" = "--help" ] ; then
     exit 0
 fi
 
-VERSION=$(grep -Po '(?<=project\(VRPROUTING VERSION )[^;]+' CMakeLists.txt)
+VERSION=$(grep -Po '(?<=project\(pgORpy VERSION )[^;]+' CMakeLists.txt)
 MINOR=${VERSION%.*}
 
 DB_NAME="___por__signatures___"
@@ -27,14 +27,14 @@ DIR="sql/sigs"
 # DB_ARGS are the remaining of the arguments
 read -ra DB_ARGS <<< "$*"
 
-FILE="$DIR/vrprouting--$MINOR.sig"
+FILE="$DIR/pgorpy--$MINOR.sig"
 
 dropdb --if-exists "${DB_ARGS[@]}" "$DB_NAME"
 createdb "${DB_ARGS[@]}" "$DB_NAME"
 
 psql  "${DB_ARGS[@]}"  "$DB_NAME" <<EOF
 SET client_min_messages = WARNING;
-CREATE EXTENSION vrprouting WITH VERSION '$VERSION' CASCADE;
+CREATE EXTENSION pgorpy WITH VERSION '$VERSION' CASCADE;
 EOF
 
-psql "${DB_ARGS[@]}" "$DB_NAME" -c '\dx+ vrprouting' -A | grep '^function' | cut -d ' ' -f2- | sort -d > "$FILE"
+psql "${DB_ARGS[@]}" "$DB_NAME" -c '\dx+ pgorpy' -A | grep '^function' | cut -d ' ' -f2- | sort -d > "$FILE"

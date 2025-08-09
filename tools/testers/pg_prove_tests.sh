@@ -9,8 +9,8 @@
 
 set -e
 
-PGDATABASE="___por___test___"
-VERSION=$(grep 'VRPROUTING VERSION' CMakeLists.txt | awk '{print $3}')
+PGDATABASE="___pgorpy___pgtap___"
+VERSION=$(grep pgORpy CMakeLists.txt | awk '{print $3}')
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -51,11 +51,9 @@ echo PGPORT= "${PGPORT[@]}"
 echo PGDATABASE= "${PGDATABASE}"
 echo CLEANDB= "${CLEANDB}"
 
-if [ -n "${CLEANDB}" ]; then
-    echo "Recreating database ${PGDATABASE}"
-    dropdb --if-exists "${PGPORT[@]}" "${PGUSER[@]}" "${PGDATABASE}"
-    createdb "${PGPORT[@]}" "${PGUSER[@]}" "${PGDATABASE}"
-fi
+
+dropdb --if-exists "${PGUSER[@]}" "${PGPORT[@]}" "${PGDATABASE}"
+createdb "${PGUSER[@]}" "${PGPORT[@]}" "${PGDATABASE}"
 
 pushd ./tools/testers/ > /dev/null || exit 1
 bash setup_db.sh "${PGPORT[1]}" "${PGDATABASE}" "${PGUSER[1]}" "${VERSION}"
@@ -63,7 +61,7 @@ popd > /dev/null || exit 1
 
 echo "Starting pgtap tests"
 
-PGOPTIONS="-c client_min_messages=WARNING" pg_prove --failures -q --recurse \
+PGOPTIONS="-c client_min_messages=WARNING" pg_prove --failures --quiet --recurse \
     -S on_error_rollback=off \
     -S on_error_stop=true \
     -P format=unaligned \

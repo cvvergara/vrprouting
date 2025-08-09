@@ -1,8 +1,6 @@
 /*PGR-GNU*****************************************************************
 
-FILE: __FILENAME__
-
-Copyright (c) 2015 pgRouting developers
+Copyright (c) ${YEAR} pgORpy developers
 Mail: project@pgrouting.org
 
 ------
@@ -22,6 +20,4 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
-\echo Use "CREATE EXTENSION vrprouting" to load this file. \quit
-
-
+\echo Use "CREATE EXTENSION ${PROJECT_NAME_LOWER}" to load this file. \quit
