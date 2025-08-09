@@ -23,7 +23,7 @@ PGFLAGS="$*"
 echo "----------------------------------------------------"
 echo "-----------  taptest of:  $DIR"
 echo "----------------------------------------------------"
-PGDATABASE="___vrp___taptest___"
+PGDATABASE="___por___taptest___"
 
 dropdb  "${PGFLAGS[@]}" --if-exists "${PGDATABASE}"
 createdb "${PGFLAGS[@]}" "${PGDATABASE}"

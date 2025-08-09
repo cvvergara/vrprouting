@@ -39,7 +39,7 @@ import sphinx_bootstrap_theme
 
 # -- General configuration -----------------------------------------------------
 
-needs_sphinx = '3.4.3'
+needs_sphinx = '4.0.0'
 
 extensions = [
         'sphinx.ext.todo',
@@ -52,34 +52,32 @@ extensions = [
 autosectionlabel_prefix_document = True
 graphviz_dot='neato'
 
-templates_path = ["_templates"]
-
-
-source_suffix = '.rst'
-master_doc = 'index'
-project = u'vrpRouting'
-copyright = u'vrpRouting Contributors - Version @PROJECT_FULL_VERSION@'
-
-
+project = u'pgORpy'
+copyright = u'pgORpy Contributors - Version @PROJECT_FULL_VERSION@'
 version = '@PROJECT_FULL_VERSION@'
 release = '@PROJECT_FULL_VERSION@'
 language = 'en'
+master_doc = 'index'
+
+
+templates_path = ["_templates"]
 locale_dirs = ['@CMAKE_SOURCE_DIR@/locale/']
-#gettext_compact = False
-
-
-exclude_patterns = [
-    'doc/build',
-    ]
-
-
+source_suffix = {
+        '.rst': 'restructuredtext',
+        }
+exclude_patterns = [ ]
 add_module_names = False
-
-
-show_authors = False
-
-
 pygments_style = 'sphinx'
+
+
+# -- Options for internationalization ---------------------------------------------------
+
+gettext_allow_fuzzy_translations = False
+gettext_location = False
+gettext_uuid = False
+gettext_auto_build = True
+#For example: gettext_additional_targets = ['literal-block','raw','index','doctest-block']
+gettext_additional_targets = []
 
 
 
@@ -150,7 +148,7 @@ man_show_urls = False
 
 texinfo_documents = [
   ('index', 'pgORpy', u'pgORpy Manual',
-   u'pgORpy Contributors', 'pgORpyDocumentation', 'Acces OR-tools from the database.',
+   u'pgORpy Contributors', 'pgORpyDocumentation', 'Access to OR-tools from the database.',
    'Miscellaneous'),
 ]
 

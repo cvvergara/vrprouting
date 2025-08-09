@@ -9,7 +9,7 @@
 
 set -e
 
-PGDATABASE="___vrp___test___"
+PGDATABASE="___por___test___"
 VERSION=$(grep 'VRPROUTING VERSION' CMakeLists.txt | awk '{print $3}')
 
 while [[ $# -gt 0 ]]; do

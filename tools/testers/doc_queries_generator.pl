@@ -37,7 +37,7 @@ my $DEBUG = 0;
 my $DEBUG1 = 0;
 my $FORCE = 0;
 
-my $DBNAME = "___vrp___test___";
+my $DBNAME = "___por___test___";
 my $DBUSER;
 my $DBHOST;
 my $DBPORT;
@@ -404,7 +404,7 @@ sub createTestDB {
 
     # print database information
     print `$psql $connopts -c "select version();" postgres `, "\n";
-    print `$psql $connopts -c "select vrp_full_version();" $DBNAME `, "\n";
+    print `$psql $connopts -c "select por_full_version();" $DBNAME `, "\n";
 }
 
 sub version_greater_eq {

@@ -2,7 +2,7 @@ image: gcc
 
 
 variables:
-  POSTGRES_DB: ___vrp___test___
+  POSTGRES_DB: ___por___test___
   POSTGRES_USER: root
   POSTGRES_PASSWORD: "runner"
   PGIS_VER: 3

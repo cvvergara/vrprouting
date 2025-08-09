@@ -69,11 +69,11 @@ msgid "Reference"
 msgstr ""
 
 #: ../../build/doc/index.rst:66
-msgid ":doc:`vrp_version` - Get vrpRouting's version information."
+msgid ":doc:`por_version` - Get vrpRouting's version information."
 msgstr ""
 
 #: ../../build/doc/index.rst:67
-msgid ":doc:`vrp_full_version` - Get vrpRouting's details of version."
+msgid ":doc:`por_full_version` - Get vrpRouting's details of version."
 msgstr ""
 
 #: ../../build/doc/index.rst:77

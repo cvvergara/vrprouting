@@ -140,7 +140,7 @@ jobs:
       - name: Test documentation queries are up to date
         run: |
           sudo service postgresql start
-          psql -c "CREATE DATABASE ___vrp___test___;"
+          psql -c "CREATE DATABASE ___por___test___;"
           TESTDIRS="version"
           for d in ${TESTDIRS}
           do
