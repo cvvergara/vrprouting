@@ -1,3 +1,11 @@
+/*PGR-GNU*****************************************************************
+
+License: GNU General Public License v2.0
+Copyright (c) 2025 pgORpy developers
+Mail: project@pgrouting.org
+
+ ********************************************************************PGR-GNU*/
+
 BEGIN;
 
 SELECT plan(48);
@@ -11,6 +19,7 @@ DECLARE
   p TEXT;
   type_name TEXT;
 BEGIN
+
   start_sql = 'SELECT * FROM ' || fn || '(' || start_sql || '$$ SELECT ';
   FOREACH p IN ARRAY params
   LOOP
@@ -32,6 +41,7 @@ BEGIN
     RETURN query SELECT throws_ok(query, 38000);
   END LOOP;
 END;
+
 $BODY$ LANGUAGE plpgsql;
 
 

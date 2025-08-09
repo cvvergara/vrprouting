@@ -1,3 +1,6 @@
+-- CopyRight(c) pgRouting developers
+-- Creative Commons Attribution-Share Alike 3.0 License : https://creativecommons.org/licenses/by-sa/3.0/
+
 /* -- example_start */
 SELECT *
 FROM por_bin_packing($$SELECT id, weight FROM bin_packing$$, 100);

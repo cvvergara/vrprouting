@@ -1,6 +1,14 @@
+/*PGR-GNU*****************************************************************
+
+License: GNU General Public License v2.0
+Copyright (c) 2025 pgORpy developers
+Mail: project@pgrouting.org
+
+ ********************************************************************PGR-GNU*/
+
 BEGIN;
 
-SELECT plan (18);
+SELECT plan(18);
 
 CREATE OR REPLACE FUNCTION no_crash()
 RETURNS SETOF TEXT AS
