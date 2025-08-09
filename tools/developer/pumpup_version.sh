@@ -14,7 +14,7 @@ WHAT_NEXT=$1
 # bash tools/developer/pumpup_version.sh minor
 
 
-OLD_VERSION=$(grep -Po '(?<=project\(VRPROUTING VERSION )[^;]+' CMakeLists.txt)
+OLD_VERSION=$(grep -Po '(?<=project\(pgORpy VERSION )[^;]+' CMakeLists.txt)
 KIND=$(grep -Po '(?<=set\(PROJECT_VERSION_DEV )[^;]+\"\)' CMakeLists.txt)
 echo "KIND=${KIND}"
 KIND=$(echo "${KIND}" | awk -F'"' '{print $2}')
@@ -74,7 +74,7 @@ echo "pumpup from ${OLD_VERSION}${KIND} to ${NEW_VERSION}${NEW_KIND}"
 # --------------------------------------------
 
 # set version to new version
-perl -pi -e 's/project\(VRPROUTING VERSION (.*)$/project\(VRPROUTING VERSION '"${NEW_VERSION}"'/g' CMakeLists.txt
+perl -pi -e 's/project\(pgORpy VERSION (.*)$/project\(VRPROUTING VERSION '"${NEW_VERSION}"'/g' CMakeLists.txt
 perl -pi -e 's/set\(PROJECT_VERSION_DEV(.*)$/set\(PROJECT_VERSION_DEV "'"${NEW_KIND}"'"\)/g'  CMakeLists.txt
 perl -pi -e 's/OLD_SIGNATURES$/OLD_SIGNATURES\n    '"${OLD_VERSION}"'/g' CMakeLists.txt
 if [ "${WHAT_NEXT}" != "micro" ]

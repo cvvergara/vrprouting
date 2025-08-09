@@ -25,16 +25,16 @@ msgstr ""
 msgid "Instructions for downloading and installing binaries for different Operative systems instructions and additional notes and corrections not included in this documentation can be found in `Installation wiki <https://github.com/pgRouting/vrprouting/wiki/Notes-on-Download%2C-Installation-and-building-pgORpy>`__"
 msgstr ""
 
-msgid "VRPROUTING is an extension for PostgreSQL."
+msgid "pgORpy is an extension for PostgreSQL."
 msgstr ""
 
 msgid "There is no package for vrprouting."
 msgstr ""
 
-msgid "Get the VRPROUTING sources"
+msgid "Get the pgORpy sources"
 msgstr ""
 
-msgid "The VRPROUTING latest release can be found in https://github.com/pgRouting/vrprouting/releases/latest"
+msgid "The pgORpy latest release can be found in https://github.com/pgRouting/vrprouting/releases/latest"
 msgstr ""
 
 msgid "To get this release:"
@@ -58,13 +58,13 @@ msgstr ""
 msgid "Once vrprouting is installed, it needs to be enabled in each individual database you want to use it in."
 msgstr ""
 
-msgid "VRPROUTING is an extension and depends on `plpython3u <https://www.postgresql.org/docs/current/plpython.html>`__ Enable `plpython3u` before enabling VRPROUTING in the database."
+msgid "pgORpy is an extension and depends on `plpython3u <https://www.postgresql.org/docs/current/plpython.html>`__ Enable `plpython3u` before enabling VRPROUTING in the database."
 msgstr ""
 
 msgid "Upgrading the database"
 msgstr ""
 
-msgid "When the database has an old version of VRPROUTING then an upgrade is needed."
+msgid "When the database has an old version of pgORpy then an upgrade is needed."
 msgstr ""
 
 msgid "See also"
