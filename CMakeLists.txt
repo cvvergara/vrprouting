@@ -24,12 +24,7 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-
-#---------------------------------------------
-#---------------------------------------------
-#---------------------------------------------
-
-project(VRPROUTING VERSION 0.0.0
+project(pgORpy VERSION 0.0.0
 )
 set(PROJECT_VERSION_DEV "")
 string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
@@ -39,19 +34,15 @@ set(OLD_SIGNATURES
 )
 
 
-include(pgr/BuildType)
-include(pgr/GitInfo)
-include(pgr/Version)
+set(CMAKE_BUILD_TYPE "Release")
+include(Version)
 
 option(PROJECT_DEBUG "Set ON|OFF to get more output" OFF)
-
-add_definitions(-DPROJECT_VERSION="v${PROJECT_VERSION}${PROJECT_VERSION_DEV}")
-set(PROJECT_LIB_NAME "${PROJECT_NAME_LOWER}-${PROJECT_LIB_VERSION}")
 
 #=============================================
 # Set the working directories
 #=============================================
-include(pgr/Configure)
+include(Configure)
 
 
 #---------------------------------------------
@@ -59,6 +50,7 @@ include(pgr/Configure)
 #---------------------------------------------
 set(SPHINX_MINIMUM_VERSION "4.0.0")
 set(POSTGRESQL_MINIMUM_VERSION "12.0")
+set(PYTHON_VERSION "3.12")
 set(ORTOOLS_VERSION "9.10.4067")
 string(TIMESTAMP YEAR "%Y")
 
@@ -71,6 +63,24 @@ message(STATUS "POSTGRESQL_MINIMUM_VERSION=${POSTGRESQL_MINIMUM_VERSION}")
 # Finding prerequisites
 #-----------------------------------------------------------------------------
 find_package(Perl REQUIRED)
+find_package(Python ${PYTHON_VERSION} EXACT REQUIRED)
+
+# set Python_ROOT_DIR to define the root directory of a Python installation.
+message(STATUS "Python_FOUND=${Python_FOUND}")
+message(STATUS "Python_EXECUTABLE=${Python_EXECUTABLE}")
+
+execute_process(
+  COMMAND ${Python_EXECUTABLE} -c "import ortools; print(ortools.__version__)"
+  OUTPUT_VARIABLE ORTOOLS_VERSION_FOUND
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+message(STATUS "ORTOOLS_VERSION_FOUND=${ORTOOLS_VERSION_FOUND}")
+
+if (NOT "${ORTOOLS_VERSION}" EQUAL "${ORTOOLS_VERSION_FOUND}")
+  message(WARNING "The python \"ortools\" package version ${ORTOOLS_VERSION} is not installed.")
+
+endif()
 
 #---------------------------------------------
 # PostgreSQL
