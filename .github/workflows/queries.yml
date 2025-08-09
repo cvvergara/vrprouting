@@ -112,12 +112,7 @@ jobs:
           export PATH=/usr/lib/postgresql/${PGVER}/bin:$PATH
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.release }} \
-                -DPostgreSQL_INCLUDE_DIR=${PGINC} -DPOSTGRESQL_BIN=${PGBIN} ..
-
-      - name: Build
-        run: |
-          cd build
+          cmake -DSPHINX_HTML=OFF -DCMAKE_BUILD_TYPE=${{ env.release }} ..
           sudo make install
 
       - name: Create superuser
@@ -133,9 +128,10 @@ jobs:
       - name: Test signature is up to date
         run: |
           sudo service postgresql start
-          psql -c "CREATE DATABASE ____sigs_routing____;"
+          sudo -u postgres createdb -p ${PGPORT}  ___por__signatures___
+          sudo -u postgres psql -p ${PGPORT} -c "CREATE ROLE runner SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN" -d ___por__signatures___
           tools/scripts/get_signatures.sh -p ${PGPORT}
-          git diff sql/sigs/*.sig
+          git diff --name-only sql/sigs/*.sig
           git diff --exit-code --quiet sql/sigs/*.sig
 
       - name: Test documentation queries are up to date

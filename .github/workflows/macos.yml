@@ -71,4 +71,4 @@ jobs:
           export PATH=$(brew --prefix)/Cellar/perl/$(perl -e 'print substr($^V, 1)')/bin:$PATH
           pg_ctl -D $(brew --prefix)/var/postgresql@14 start
           createuser -s postgres
-          bash ./tools/testers/pg_prove_tests.sh postgres 5432
+          bash ./tools/testers/pg_prove_tests.sh -U postgres -p 5432

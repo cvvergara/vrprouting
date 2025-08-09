@@ -26,7 +26,7 @@ do
         # ignoring any signature changes made on v0
         if [ "$mayor1" == 0 ]; then continue; fi
 
-        missing+=$(diff "vrprouting--$s1.sig" "vrprouting--$s2.sig" | grep '<')
+        missing+=$(comm -23 "pgorpy--$s1.sig" "pgorpy--$s2.sig")
     done
 done
 
