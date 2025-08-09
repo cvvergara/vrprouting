@@ -190,6 +190,7 @@ message(STATUS "PGR_DOCUMENTATION_BUILD_DIR = ${PGR_DOCUMENTATION_BUILD_DIR}")
 #---------------------------------------------
 # Adding documentation directories
 #---------------------------------------------
+add_subdirectory(general)
 foreach (subdir ${PROJECT_DOC_DIRECTORIES})
     add_subdirectory("${subdir}")
     add_subdirectory("../docqueries/${subdir}" "build/doc/${subdir}")

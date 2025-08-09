@@ -20,12 +20,12 @@ $BODY$;
 -- activate_python_end
 
 CREATE TABLE bin_packing(
-  id INTEGER,
+  id SERIAL,
   weight INTEGER);
 
-INSERT INTO bin_packing(id, weight)
+INSERT INTO bin_packing(weight)
 VALUES
-(1, 48), (2, 30), (3, 19), (4, 36), (5, 36), (6, 27), (7, 42), (8, 42), (9, 36), (10, 24), (11, 30);
+(48), (30), (19), (36), (36), (27), (42), (42), (36), (24), (30);
 
 
 CREATE TABLE knapsack(
