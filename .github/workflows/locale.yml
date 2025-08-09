@@ -25,13 +25,11 @@ permissions:
 env:
     release: Release
     os: ubuntu-latest
-    vroom: 1.12.0
 
 jobs:
   update-locale:
     name: Update Locale
     runs-on: ubuntu-latest
-
     strategy:
         fail-fast: false
 

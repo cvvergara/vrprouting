@@ -1,7 +1,7 @@
 #!/bin/bash
 # ------------------------------------------------------------------------------
-# vrpRouting Scripts
-# Copyright(c) vrpRouting Contributors
+# pgORpy Scripts
+# Copyright(c) pgORpy Contributors
 #
 # Remove all the obsolete entries, i.e. lines starting with #~ from .po files
 # ------------------------------------------------------------------------------
@@ -13,4 +13,3 @@ for file in locale/en/LC_MESSAGES/*.po; do
         git add "$file"
     fi
 done
-

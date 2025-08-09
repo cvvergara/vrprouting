@@ -2,25 +2,24 @@ name: Check queries
 
 # This action runs:
 # - When this file changes
-# - When changes on code (sql)
+# - When changes on code (src, include, sql)
 # - When changes on data or testing scripts (tools/testers)
 # - When the way the build changes (CMakeLists.txt)
 # - On request
 #
 # using
-# - the postgres installed version
+# - postgres installed version on actions
 
 on:
   workflow_dispatch:
   push:
     paths:
       - '.github/workflows/check-queries.yml'
-      - 'src/**'
-      - 'include/**'
       - 'sql/**'
       - 'docqueries/**'
       - 'tools/testers/**'
       - 'CMakeLists.txt'
+      - 'tools/scripts/get_signatures.sh'
 
     branches-ignore:
       - 'gh-pages'
@@ -30,12 +29,12 @@ on:
   pull_request:
     paths:
       - '.github/workflows/check-queries.yml'
-      - 'src/**'
-      - 'include/**'
       - 'sql/**'
       - 'docqueries/**'
       - 'tools/testers/**'
       - 'CMakeLists.txt'
+      - 'tools/scripts/get_signatures.sh'
+      - './tools/testers/doc_queries_generator.pl'
 
     branches-ignore:
       - 'gh-pages'
@@ -48,12 +47,12 @@ permissions:
   contents: read
 
 env:
+    release: Release
     os: ubuntu-latest
-    vroom: 1.12.0
 
 jobs:
   build:
-    name: Queries
+    name: Check Queries
     runs-on: ubuntu-latest
 
     strategy:
@@ -107,7 +106,7 @@ jobs:
         run: |
           sudo pip install --root=/ ortools==9.10.4067
 
-      - name: Configure
+      - name: Configure and build
         run: |
           export PATH=/usr/lib/postgresql/${PGVER}/bin:$PATH
           mkdir build

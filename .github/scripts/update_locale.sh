@@ -2,7 +2,7 @@
 # ------------------------------------------------------------------------------
 # /*PGR-GNU*****************************************************************
 # File: update_locale.sh
-# Copyright (c) 2021 pgRouting developers
+# Copyright (c) 2025 pgORpy developers
 # Mail: project@pgrouting.org
 # ------
 # This program is free software; you can redistribute it and/or modify
@@ -18,8 +18,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 # ********************************************************************PGR-GNU*/
 # ------------------------------------------------------------------------------
-
-
 
 DIR=$(git rev-parse --show-toplevel)
 

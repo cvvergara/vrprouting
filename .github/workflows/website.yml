@@ -14,7 +14,9 @@ jobs:
   update-website:
     name: Update Website
     runs-on: ubuntu-latest
-    if: ${{ github.repository_owner == 'pgRouting' }}
+    # disbale action, we need a: pgorpy.pgrouting.org
+    if: ${{ false }}
+    #if: ${{ github.repository_owner == 'pgRouting' }}
     strategy:
         fail-fast: false
 
@@ -90,7 +92,7 @@ jobs:
           git checkout origin/gh-pages
           git checkout -b gh-pages
           rm -rf ${FOLDER_NAME}
-          cp -r build/doc/html ${FOLDER_NAME}
+          cp -r build/doc/_build/html ${FOLDER_NAME}
           git add ${FOLDER_NAME}
           git diff-index --quiet HEAD || git commit -m "Update users documentation for ${PROJECT_VERSION} (${{ env.BRANCH }}): commit ${{ env.GIT_HASH }}"
           git fetch origin

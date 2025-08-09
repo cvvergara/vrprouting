@@ -6,8 +6,9 @@
 DIR=$(git rev-parse --show-toplevel)/sql/sigs
 
 pushd "${DIR}" > /dev/null || exit
+
 # For bash, uses temporary files
-mapfile -t SIGNATURES < <(git ls-files "*.sig" | perl -pe 's/vrprouting--(.*)\.sig/$1/')
+mapfile -t SIGNATURES < <(git ls-files "*.sig" | perl -pe 's/(.*)--(.*)\.sig/$2/')
 
 for s1 in "${SIGNATURES[@]}"
 do
@@ -31,8 +32,8 @@ done
 
 popd > /dev/null || exit
 
-#mylicensecheck doc
 error=0
+
 if [[ $missing ]]; then
   echo " ****************************************************"
   echo " *** Found removed signatures"
@@ -42,4 +43,3 @@ if [[ $missing ]]; then
 fi
 
 exit $error
-
