@@ -11,7 +11,7 @@ subs TEXT[];
 error_messages TEXT[];
 non_empty_args INTEGER[];
 BEGIN
-    -- vrp_knapsack
+    -- por_knapsack
     params = ARRAY[
     '$$SELECT * FROM knapsack$$',
     'capacity => 15',
@@ -29,9 +29,9 @@ BEGIN
     ]::TEXT[];
     non_empty_args = ARRAY[0, 1, 2, 3]::INTEGER[];
 
-    RETURN QUERY SELECT * FROM no_crash_test('vrp_knapsack', params, subs, error_messages, non_empty_args);
+    RETURN QUERY SELECT * FROM no_crash_test('por_knapsack', params, subs, error_messages, non_empty_args);
 
-    --vrp_multiple_knapsack
+    --por_multiple_knapsack
     params = ARRAY[
     '$$SELECT * FROM multiple_knapsack$$',
     'capacities => ARRAY[100,100,100,100,100]',
@@ -49,7 +49,7 @@ BEGIN
     ]::TEXT[];
     non_empty_args = ARRAY[0, 1, 2, 3]::INTEGER[];
 
-    RETURN QUERY SELECT * FROM no_crash_test('vrp_multiple_knapsack', params, subs, error_messages, non_empty_args);
+    RETURN QUERY SELECT * FROM no_crash_test('por_multiple_knapsack', params, subs, error_messages, non_empty_args);
 
     -- bin_packing
     params = ARRAY[
@@ -69,7 +69,7 @@ BEGIN
     ]::TEXT[];
     non_empty_args = ARRAY[0, 1, 2, 3]::INTEGER[];
 
-    RETURN QUERY SELECT * FROM no_crash_test('vrp_bin_packing', params, subs, error_messages, non_empty_args);
+    RETURN QUERY SELECT * FROM no_crash_test('por_bin_packing', params, subs, error_messages, non_empty_args);
 END
 $BODY$
 LANGUAGE plpgsql VOLATILE;

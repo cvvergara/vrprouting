@@ -409,7 +409,7 @@ sub createTestDB {
 
     # print database information
     print `$psql $connopts -c "select version();" postgres `, "\n";
-    print `$psql $connopts -c "select vrp_full_version();" $DBNAME `, "\n";
+    print `$psql $connopts -c "select por_full_version();" $DBNAME `, "\n";
 }
 
 sub version_greater_eq {

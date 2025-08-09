@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  ********************************************************************PGR-GNU*/
 
 -- v0.4
-CREATE OR REPLACE FUNCTION vrp_knapsack(
+CREATE OR REPLACE FUNCTION por_knapsack(
   inner_query TEXT, -- weights_cost SQL
   capacity INTEGER, -- Knapsack Capacity
   max_rows INTEGER = 100000 -- Maximum number of rows to be fetched. Default is 100000.
@@ -104,8 +104,8 @@ AS $$
 
 $$ LANGUAGE plpython3u VOLATILE;
 
-COMMENT ON FUNCTION vrp_knapsack(TEXT, INTEGER, INTEGER)
-IS 'vrp_knapsack
+COMMENT ON FUNCTION por_knapsack(TEXT, INTEGER, INTEGER)
+IS 'por_knapsack
 - Documentation:
-  - ${PROJECT_DOC_LINK}/vrp_knapsack.html
+  - ${PROJECT_DOC_LINK}/por_knapsack.html
 ';

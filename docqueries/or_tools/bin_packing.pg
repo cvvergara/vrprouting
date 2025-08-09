@@ -1,4 +1,4 @@
 /* -- example_start */
 SELECT *
-FROM vrp_bin_packing($$SELECT id, weight FROM bin_packing$$, 100);
+FROM por_bin_packing($$SELECT id, weight FROM bin_packing$$, 100);
 /* -- example_end */
