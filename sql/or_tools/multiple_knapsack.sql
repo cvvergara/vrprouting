@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
---v4.0
+--v0.0
 CREATE OR REPLACE FUNCTION por_multiple_knapsack(
   inner_query TEXT, -- weights_cost SQL
   capacities INTEGER[], -- ARRAY of Knapsack Capacities

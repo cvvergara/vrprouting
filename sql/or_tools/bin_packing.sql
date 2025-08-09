@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
  ********************************************************************PGR-GNU*/
 
--- v0.4
+-- v0.0
 CREATE OR REPLACE FUNCTION por_bin_packing(
   inner_query TEXT, -- weights SQL
   bin_capacity INTEGER, -- Bin Capacity
