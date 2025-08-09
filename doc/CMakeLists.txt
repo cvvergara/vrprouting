@@ -1,11 +1,3 @@
-#
-# Find Sphinx
-# Find Sphinx executable to build documentation
-# Source: https://ericscottbarr.com/blog/2012/03/sphinx-and-cmake-beautiful-documentation-for-c-projects/
-#
-# Daniel Kastl 03/2013
-#
-
 #---------------------------------------------
 # Checking for prerequisites
 #---------------------------------------------
@@ -97,7 +89,9 @@ foreach (subdir ${PROJECT_DOC_DIRECTORIES} "general")
   endif()
 endforeach()
 
+
 configure_file("../tools/testers/sampledata.sql" "${PGR_DOCUMENTATION_SOURCE_DIR}/sampledata/sampledata.sql")
+
 
 add_subdirectory("_static")
 add_subdirectory("_templates")

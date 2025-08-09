@@ -17,27 +17,15 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 2
 
-# C++ files want space indentation
-[*.{c,h,cpp,hpp,inl}]
-indent_style = space
-indent_size = 4
-
 # Makefiles want tab indentation
 [Makefile]
 indent_style = tab
 indent_size = 8
+tab_width = 8
 
 # YML files want space indentation
 [*.yml]
 indent_style = space
-
-[.github/workflow/*.yml]
-indent_style = space
-indent_size = 2
-end_of_line = lf
-charset = utf-8
-trim_trailing_whitespace = true
-insert_final_newline = true
 
 # CMake configuration files
 [{CMakeLists.txt,*.cmake}]
@@ -49,7 +37,7 @@ indent_style = space
 indent_size = 3
 indent_style = space
 
-# RST files
+# HTML files
 [*.html]
 indent_size = 2
 indent_style = space
