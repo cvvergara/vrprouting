@@ -1,217 +1,171 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.4.2
-# This file is distributed under the same license as the vrpRouting package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+# Copyright (C) pgORpy Contributors - Version v0.0.0
+# This file is distributed under the same license as the pgORpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.0.0\n"
+"Project-Id-Version: pgORpy v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 23:39+0000\n"
+"POT-Creation-Date: 2025-08-06 13:53-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.10.3\n"
+"Generated-By: Babel 2.17.0\n"
 
-#: ../../build/doc/installation.rst:11
 msgid "Installation"
 msgstr ""
 
-#: ../../build/doc/installation.rst:13
 msgid "Contents"
 msgstr ""
 
-#: ../../build/doc/installation.rst:15
 msgid ""
 "Instructions for downloading and installing binaries for different "
 "Operative systems instructions and additional notes and corrections not "
 "included in this documentation can be found in `Installation wiki "
-"<https://github.com/pgRouting/vrprouting/wiki/Notes-on-Download%2C-"
+"<https://github.com/pgRouting/pgorpy/wiki/Notes-on-Download%2C-"
 "Installation-and-building-pgORpy>`__"
 msgstr ""
 
-#: ../../build/doc/installation.rst:20
-msgid "VRPROUTING is an extension for PostgreSQL."
+msgid "pgORpy is an extension for PostgreSQL."
 msgstr ""
 
-#: ../../build/doc/installation.rst:22
-msgid "There is no package for vrprouting."
+msgid "There is no package for pgorpy."
 msgstr ""
 
-#: ../../build/doc/installation.rst:25
-msgid "Get the VRPROUTING sources"
+msgid "Get the pgORpy sources"
 msgstr ""
 
-#: ../../build/doc/installation.rst:27
 msgid ""
-"The VRPROUTING latest release can be found in "
-"https://github.com/pgRouting/vrprouting/releases/latest"
+"The pgORpy latest release can be found in "
+"https://github.com/pgRouting/pgorpy/releases/latest"
 msgstr ""
 
-#: ../../build/doc/installation.rst:30
 msgid "To get this release:"
 msgstr ""
 
-#: ../../build/doc/installation.rst:33
 msgid "Download the repository"
 msgstr ""
 
-#: ../../build/doc/installation.rst:42
 msgid "Download this release"
 msgstr ""
 
-#: ../../build/doc/installation.rst:48
 msgid "Extract the tarball."
 msgstr ""
 
-#: ../../build/doc/installation.rst:56
 msgid "Build the extension."
 msgstr ""
 
-#: ../../build/doc/installation.rst:66
 msgid "Enabling and upgrading in the database"
 msgstr ""
 
-#: ../../build/doc/installation.rst:68
 msgid ""
-"Once vrprouting is installed, it needs to be enabled in each individual "
+"Once pgorpy is installed, it needs to be enabled in each individual "
 "database you want to use it in."
 msgstr ""
 
-#: ../../build/doc/installation.rst:71
 msgid ""
-"VRPROUTING is an extension and depends on `plpython3u "
+"pgORpy is an extension and depends on `plpython3u "
 "<https://www.postgresql.org/docs/current/plpython.html>`__ Enable "
-"`plpython3u` before enabling VRPROUTING in the database."
+"`plpython3u` before enabling pgORpy in the database."
 msgstr ""
 
-#: ../../build/doc/installation.rst:80
 msgid "Upgrading the database"
 msgstr ""
 
-#: ../../build/doc/installation.rst:81
-msgid ""
-"When the database has an old version of VRPROUTING then an upgrade is "
-"needed."
+msgid "When the database has an old version of pgORpy then an upgrade is needed."
 msgstr ""
 
-#: ../../build/doc/installation.rst:89
 msgid "See also"
 msgstr ""
 
-#: ../../build/doc/installation.rst:90
 msgid "https://www.postgresql.org/docs/current/sql-createextension.html"
 msgstr ""
 
-#: ../../build/doc/installation.rst:91
 msgid "https://www.postgresql.org/docs/current/sql-alterextension.html"
 msgstr ""
 
-#: ../../build/doc/installation.rst:95
 msgid "Dependencies"
 msgstr ""
 
-#: ../../build/doc/installation.rst:97
 msgid "Make sure that the following dependencies are met:"
 msgstr ""
 
-#: ../../build/doc/installation.rst:99
 msgid "Postgresql version >= 12.0"
 msgstr ""
 
-#: ../../build/doc/installation.rst:100
 msgid "CMake >=  3.17"
 msgstr ""
 
-#: ../../build/doc/installation.rst:101
 msgid "OR-tools == 9.10.4067"
 msgstr ""
 
-#: ../../build/doc/installation.rst:102
 msgid "PostgreSQL extension `plpython3u`"
 msgstr ""
 
-#: ../../build/doc/installation.rst:104
 msgid "This example is for PostgreSQL 12.0"
 msgstr ""
 
-#: ../../build/doc/installation.rst:115
 msgid "optional dependencies"
 msgstr ""
 
-#: ../../build/doc/installation.rst:116
 msgid "For user's documentation:"
 msgstr ""
 
-#: ../../build/doc/installation.rst:118
 msgid "Sphinx > 4.0.0"
 msgstr ""
 
-#: ../../build/doc/installation.rst:119
 msgid "sphinx-bootstrap-theme"
 msgstr ""
 
-#: ../../build/doc/installation.rst:130
 msgid "Example: Installing dependencies on linux"
 msgstr ""
 
-#: ../../build/doc/installation.rst:131
 msgid "For developers:"
 msgstr ""
 
-#: ../../build/doc/installation.rst:133
 msgid "Tests are done on CI, and these are used on CI:"
 msgstr ""
 
-#: ../../build/doc/installation.rst:144
 msgid "Configurable variables"
 msgstr ""
 
-#: ../../build/doc/installation.rst:147
 msgid "To see the variables that can be configured"
 msgstr ""
 
-#: ../../build/doc/installation.rst:154
 msgid "Testing"
 msgstr ""
 
-#: ../../build/doc/installation.rst:156
 msgid "Currently there is no :code:`make test` and testing is done as follows"
 msgstr ""
 
-#: ../../build/doc/installation.rst:158
-msgid "The following instructions start from *path/to/vrprouting/*"
+msgid "The following instructions start from *path/to/pgorpy/*"
 msgstr ""
 
-#: ../../build/doc/installation.rst:161 ../../build/doc/installation.rst:169
 msgid "Compare the documentation results"
 msgstr ""
 
-#: ../../build/doc/installation.rst:162
-msgid "This will create the database `___vrprouting_generator___`"
+msgid "This will create the database `___pgorpy_generator___`"
 msgstr ""
 
-#: ../../build/doc/installation.rst:170
-msgid "This will create the database `___vrprouting___pgtap___`"
+msgid "This will create the database `___pgorpy___pgtap___`"
 msgstr ""
 
-#: ../../build/doc/installation.rst:177
 msgid "See Also"
 msgstr ""
 
-#: ../../build/doc/installation.rst:180
 msgid "Indices and tables"
 msgstr ""
 
-#: ../../build/doc/installation.rst:181
 msgid ":ref:`genindex`"
 msgstr ""
 
-#: ../../build/doc/installation.rst:182
 msgid ":ref:`search`"
 msgstr ""
 

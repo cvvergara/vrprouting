@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.0.0
-# This file is distributed under the same license as the vrpRouting package.
+# Copyright (C) pgORpy Contributors - Version v0.0.0
+# This file is distributed under the same license as the pgORpy package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.0.0\n"
+"Project-Id-Version: pgORpy v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 23:39+0000\n"
+"POT-Creation-Date: 2025-08-08 10:45-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,163 +16,113 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../../build/doc/concepts.rst:13
 msgid "Concepts"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:15
 msgid "Contents"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:18
 msgid "Synopsis"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:20
 msgid "OR-Tools is an open source software suite for optimization, tuned for tackling the world's toughest problems in vehicle routing, flows, integer and linear programming, and constraint programming."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:24
 msgid "OR-Tools can solve"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:26
 msgid "VR (Vehicle Routing)"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:27
 msgid "Scheduling"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:28
 msgid "Bin Packing"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:30
 msgid "Currently only Bin Packing problems can be solved with OR-Tools in pgORpy."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:33
 msgid "Terminologies"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:35
 msgid "**weight**: For each item, a positive integer weight is associated with it."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:36
 msgid "**cost**: For each item, a positive integer cost(value) is associated with it."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:37
 msgid "**capacity**: Maximum storage capacity of a knapsack or a bin."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:40
 msgid "Inner Queries"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:43
 msgid "Weight Costs SQL"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:45
-#: ../../build/doc/concepts.rst:78
 msgid "A ``SELECT`` statement that returns the following columns:"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:54
-#: ../../build/doc/concepts.rst:85
 msgid "Column"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:55
-#: ../../build/doc/concepts.rst:86
 msgid "Type"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:56
-#: ../../build/doc/concepts.rst:87
 msgid "Description"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:57
-#: ../../build/doc/concepts.rst:88
 msgid "``id``"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:58
-#: ../../build/doc/concepts.rst:61
-#: ../../build/doc/concepts.rst:64
-#: ../../build/doc/concepts.rst:89
-#: ../../build/doc/concepts.rst:92
 msgid "**ANY-INTEGER**"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:59
 msgid "Unique identifier of the item."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:60
-#: ../../build/doc/concepts.rst:91
 msgid "``weight``"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:62
-#: ../../build/doc/concepts.rst:93
 msgid "Weight of the item."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:63
 msgid "``cost``"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:65
 msgid "Cost of the item."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:67
-#: ../../build/doc/concepts.rst:95
 msgid "Where:"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:0
 msgid "ANY-INTEGER"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:69
-#: ../../build/doc/concepts.rst:97
 msgid "``SMALLINT``, ``INTEGER``, ``BIGINT``"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:74
 msgid "Weights SQL"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:90
 msgid "Identifier of the item."
 msgstr ""
 
-#: ../../build/doc/concepts.rst:102
 msgid "See Also"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:106
 msgid "`Wikipedia: Bin Packing problems <https://en.wikipedia.org/wiki/Bin_packing_problem>`__"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:107
 msgid "`OR-Tools: Google OR-Tools <https://developers.google.com/optimization>`__"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:112
 msgid "Indices and tables"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:113
 msgid ":ref:`genindex`"
 msgstr ""
 
-#: ../../build/doc/concepts.rst:114
 msgid ":ref:`search`"
 msgstr ""

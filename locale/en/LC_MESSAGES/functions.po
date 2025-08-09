@@ -1,63 +1,54 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) vrpRouting Contributors - Version v0.0.0
-# This file is distributed under the same license as the vrpRouting package.
+# Copyright (C) pgORpy Contributors - Version v0.0.0
+# This file is distributed under the same license as the pgORpy package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: vrpRouting v0.0.0\n"
+"Project-Id-Version: pgORpy v0.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 23:39+0000\n"
+"POT-Creation-Date: 2025-08-08 10:45-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.10.3\n"
+"Generated-By: Babel 2.17.0\n"
 
-#: ../../build/doc/functions.rst:14
 msgid "Functions"
 msgstr ""
 
-#: ../../build/doc/functions.rst:19
 msgid "Utilities"
 msgstr ""
 
-#: ../../build/doc/functions.rst:21
 msgid ":doc:`por_version`"
 msgstr ""
 
-#: ../../build/doc/functions.rst:22
 msgid ":doc:`por_full_version`"
 msgstr ""
 
-#: ../../build/doc/functions.rst:31
 msgid "OR-tools"
 msgstr ""
 
-#: ../../build/doc/functions.rst:33
 msgid ":doc:`por_bin_packing`"
 msgstr ""
 
-#: ../../build/doc/functions.rst:34
 msgid ":doc:`por_knapsack`"
 msgstr ""
 
-#: ../../build/doc/functions.rst:35
 msgid ":doc:`por_multiple_knapsack`"
 msgstr ""
 
-#: ../../build/doc/functions.rst:47
 msgid "Indices and tables"
 msgstr ""
 
-#: ../../build/doc/functions.rst:48
 msgid ":ref:`genindex`"
 msgstr ""
 
-#: ../../build/doc/functions.rst:49
 msgid ":ref:`search`"
 msgstr ""
 
