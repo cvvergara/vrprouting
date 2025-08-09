@@ -29,14 +29,14 @@ msgid ""
 "Instructions for downloading and installing binaries for different "
 "Operative systems instructions and additional notes and corrections not "
 "included in this documentation can be found in `Installation wiki "
-"<https://github.com/pgRouting/vrprouting/wiki/Notes-on-Download%2C-"
+"<https://github.com/pgRouting/pgorpy/wiki/Notes-on-Download%2C-"
 "Installation-and-building-pgORpy>`__"
 msgstr ""
 
 msgid "pgORpy is an extension for PostgreSQL."
 msgstr ""
 
-msgid "There is no package for vrprouting."
+msgid "There is no package for pgorpy."
 msgstr ""
 
 msgid "Get the pgORpy sources"
@@ -44,7 +44,7 @@ msgstr ""
 
 msgid ""
 "The pgORpy latest release can be found in "
-"https://github.com/pgRouting/vrprouting/releases/latest"
+"https://github.com/pgRouting/pgorpy/releases/latest"
 msgstr ""
 
 msgid "To get this release:"
@@ -66,7 +66,7 @@ msgid "Enabling and upgrading in the database"
 msgstr ""
 
 msgid ""
-"Once vrprouting is installed, it needs to be enabled in each individual "
+"Once pgorpy is installed, it needs to be enabled in each individual "
 "database you want to use it in."
 msgstr ""
 
@@ -147,16 +147,16 @@ msgstr ""
 msgid "Currently there is no :code:`make test` and testing is done as follows"
 msgstr ""
 
-msgid "The following instructions start from *path/to/vrprouting/*"
+msgid "The following instructions start from *path/to/pgorpy/*"
 msgstr ""
 
 msgid "Compare the documentation results"
 msgstr ""
 
-msgid "This will create the database `___vrprouting_generator___`"
+msgid "This will create the database `___pgorpy_generator___`"
 msgstr ""
 
-msgid "This will create the database `___vrprouting___pgtap___`"
+msgid "This will create the database `___pgorpy___pgtap___`"
 msgstr ""
 
 msgid "See Also"

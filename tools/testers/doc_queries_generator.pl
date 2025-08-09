@@ -399,8 +399,8 @@ sub createTestDB {
     #TODO put as parameter
     my $encoding = "SET client_encoding TO 'UTF8';";
 
-    mysystem("$psql $connopts -c \"$encoding DROP EXTENSION IF EXISTS vrprouting CASCADE\"  $DBNAME");
-    mysystem("$psql $connopts -c \"$encoding CREATE EXTENSION vrprouting CASCADE\"  $DBNAME");
+    mysystem("$psql $connopts -c \"$encoding DROP EXTENSION IF EXISTS pgorpy CASCADE\"  $DBNAME");
+    mysystem("$psql $connopts -c \"$encoding CREATE EXTENSION pgorpy CASCADE\"  $DBNAME");
 
     # print database information
     print `$psql $connopts -c "select version();" postgres `, "\n";

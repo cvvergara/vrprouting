@@ -74,7 +74,7 @@ echo "pumpup from ${OLD_VERSION}${KIND} to ${NEW_VERSION}${NEW_KIND}"
 # --------------------------------------------
 
 # set version to new version
-perl -pi -e 's/project\(pgORpy VERSION (.*)$/project\(VRPROUTING VERSION '"${NEW_VERSION}"'/g' CMakeLists.txt
+perl -pi -e 's/project\(pgORpy VERSION (.*)$/project\(pgORpy VERSION '"${NEW_VERSION}"'/g' CMakeLists.txt
 perl -pi -e 's/set\(PROJECT_VERSION_DEV(.*)$/set\(PROJECT_VERSION_DEV "'"${NEW_KIND}"'"\)/g'  CMakeLists.txt
 perl -pi -e 's/OLD_SIGNATURES$/OLD_SIGNATURES\n    '"${OLD_VERSION}"'/g' CMakeLists.txt
 if [ "${WHAT_NEXT}" != "micro" ]
@@ -93,8 +93,8 @@ fi
 
 if [ "${WHAT_NEXT}" != "micro" ]
 then
-    cp -f "sql/sigs/vrprouting--${MAYOR}.${MINOR}.sig" "sql/sigs/vrprouting--${NEW_MAYOR}.${NEW_MINOR}.sig"
-    git add "sql/sigs/vrprouting--${MAYOR}.${NEW_MINOR}.sig"
+    cp -f "sql/sigs/pgorpy--${MAYOR}.${MINOR}.sig" "sql/sigs/pgorpy--${NEW_MAYOR}.${NEW_MINOR}.sig"
+    git add "sql/sigs/pgorpy--${MAYOR}.${NEW_MINOR}.sig"
 fi
 
 # --------------------------------------------

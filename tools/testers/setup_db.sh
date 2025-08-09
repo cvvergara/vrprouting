@@ -17,7 +17,7 @@ PGUSER="$3"
 VERSION="$4"
 
 PGOPTIONS='-c client_min_messages=WARNING' psql -U "${PGUSER}" -p "${PGPORT}"  -d "${PGDATABASE}" -X -q --set ON_ERROR_STOP=1 --pset pager=off \
-    -c "CREATE EXTENSION IF NOT EXISTS pgtap; CREATE EXTENSION IF NOT EXISTS vrprouting WITH VERSION '${VERSION}' CASCADE;"
+    -c "CREATE EXTENSION IF NOT EXISTS pgtap; CREATE EXTENSION IF NOT EXISTS pgorpy WITH VERSION '${VERSION}' CASCADE;"
 
 PGOPTIONS='-c client_min_messages=WARNING' psql -U "${PGUSER}" -p "${PGPORT}" -d "${PGDATABASE}" -X -q --set ON_ERROR_STOP=1 --pset pager=off \
     -f "${DIR}/sampledata.sql" \
