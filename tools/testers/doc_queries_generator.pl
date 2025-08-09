@@ -19,6 +19,8 @@ use File::Find ();
 use File::Basename;
 use Data::Dumper;
 use Time::HiRes qw(gettimeofday tv_interval);
+use Getopt::Long qw(:config no_auto_abbrev);
+
 $Data::Dumper::Sortkeys = 1;
 
 # for the convenience of &wanted calls, including -eval statements:
@@ -28,122 +30,90 @@ use vars qw/*name *dir *prune/;
 *prune  = *File::Find::prune;
 
 # TODO automatically get min requirement from CMakeLists.txt
+my $PROJECT='pgorpy';
 my $POSGRESQL_MIN_VERSION = '12';
 my $DOCUMENTATION = 0;
-my $INTERNAL_TESTS = 0;
+my $DATA = 0;
 my $VERBOSE = 0;
-my $DRYRUN = 0;
-my $DEBUG = 0;
-my $DEBUG1 = 0;
+my $LEVEL = "NOTICE";
 my $FORCE = 0;
 
-my $DBNAME = "___por___test___";
-my $DBUSER;
-my $DBHOST;
-my $DBPORT;
+my $DBNAME = "___".$PROJECT."_generator___";
+my $DBUSER = "";
+my $DBHOST = "";
+my $DBPORT = "";
+my $POSGRES_VER = "";
+my $alg = '';
+my $VENV = '';
+my $psql = '';
 
-sub Usage {
+sub HelpMessage {
     die "Usage: doc_queries_generator.pl -pgver vpg -pgisver vpgis -psql /path/to/psql\n" .
+    " --alg 'dir'           - directory to select which algorithm subdirs to test\n" .
     " --pgver version       - postgresql version\n" .
     " [-d|--dbname] name    - database name (default '$DBNAME')\n" .
     " [-h|--host] host      - postgresql host or socket directory to use\n" .
     " [-p|--port] port      - postgresql port to use\n" .
     " [-U|--username] name  - postgresql user role to use\n" .
-    " --postgis version     - postgis version (default: found)\n" .
-    " --pgrouting version   - pgrouting version (default: found)\n" .
-    " -psql /path/to/psql   - optional path to psql\n" .
-    " -py venv              - python environment\n" .
-    " -v                    - verbose messages for small debuging\n" .
-    " -dbg                  - use when CMAKE_BUILD_TYPE = DEBUG\n" .
-    " -debug                - verbose messages for debuging(enter twice for more)\n" .
-    " -debug1               - DEBUG1 messages (for timing reports)\n" .
-    " -ignorenotice         - ignore NOTICE statements when reporting failures\n" .
-    " -alg 'dir'            - directory to select which algorithm subdirs to test\n" .
-    " -documentation        - ONLY generate documentation examples\n" .
-    " -force                - Force tests for unsupported versions >= 9.1 of postgreSQL \n" .
-    " --help                - help\n";
+    " --psql /path/to/psql  - optional path to psql\n" .
+    " --py VENV             - python environment\n" .
+    " [-v|--verbose]        - verbose messages of the execution\n" .
+    " --data                - only install the sampledata.\n" .
+    " [-l|--level] NOTICE   - client_min_messages value. Defaults to $LEVEL. other values can be WARNING, DEBUG3, etc\n" .
+    " [-c|--clean]          - dropdb before running.\n" .
+    " --documentation|doc  - Generate documentation examples. LEVEL is set to NOTICE\n" .
+    " --help                - Show this help\n";
 }
 
 print "RUNNING: doc_queries_generator.pl " . join(" ", @ARGV) . "\n";
 
-my ($POSGRES_VER, $postgis_ver, $pgrouting_ver, $psql);
-my $alg = '';
 my @testpath = ("docqueries/");
 my @test_directory = ();
-my $clean;
+my $CLEAN = '';
 my $ignore;
-my $venv = '';
 
+my $opts = GetOptions(
+    'dbname=s' => \$DBNAME,
+    'host|h=s' => \$DBHOST,
+    'port|p=i' => \$DBPORT,
+    'username|U=s' => \$DBUSER,
+    'pgver=s' => \$POSGRES_VER,
+    'psql=s' => \$psql,
+    'level=s' => \$LEVEL,
 
-while (my $a = shift @ARGV) {
-    if ( $a eq '--pgver') {
-        $POSGRES_VER   = shift @ARGV || Usage();
-    } elsif ( $a =~ '--dbname | -d') {
-        $DBNAME   = shift @ARGV || Usage();
-    } elsif ($a eq '--host | -h') {
-        $DBHOST = shift @ARGV || Usage();
-    } elsif ($a =~ '--port|-p') {
-        $DBPORT = shift @ARGV || Usage();
-    } elsif ($a =~ '--username|-U') {
-        $DBUSER = shift @ARGV || Usage();
-    } elsif ($a eq '--postgis') {
-        $postgis_ver = shift @ARGV || Usage();
-        $postgis_ver = " VERSION '$postgis_ver'";
-    } elsif ($a eq '--pgrouting') {
-        $pgrouting_ver = shift @ARGV || Usage();
-        $pgrouting_ver = " VERSION '$pgrouting_ver'";
-    } elsif ($a eq '-alg') {
-        $alg = shift @ARGV || Usage();
-        @testpath = ("docqueries/$alg");
-    } elsif ($a eq '-psql') {
-        $psql = shift @ARGV || Usage();
-        die "'$psql' is not executable!\n" unless -x $psql;
-    } elsif ($a eq '--help') {
-        Usage();
-    } elsif ($a eq '-venv') {
-        $venv = shift @ARGV || Usage();
-    } elsif ($a eq '-ignorenotice') {
-        $ignore = 1;
-    } elsif ($a =~ /^-debug1$/i) {
-        $DEBUG1 = 1;
-    } elsif ($a =~ /^-debug$/i) {
-        $DEBUG++;
-        $VERBOSE = 1;
-    } elsif ($a =~ /^-v/i) {
-        $VERBOSE = 1;
-    } elsif ($a =~ /^-force/i) {
-        $FORCE = 1;
-    } elsif ($a =~ /^-doc(umentation)?/i) {
-        $DOCUMENTATION = 1;
-    } elsif ($a =~ /^-dbg/i) {
-        $INTERNAL_TESTS = 1; #directory internalQueryTests is also tested
-    } else {
-        warn "Error: unknown option '$a'\n";
-        Usage();
-    }
-}
+    'alg=s' => \$alg,
+    'venv=s' => \$VENV,
+
+    'verbose|v' => \$VERBOSE,
+    'data' => \$DATA,
+    'clean' => \$CLEAN,
+    'force' => \$FORCE,
+    "help" => sub { HelpMessage() },
+    'documentation|doc=s' => \$DOCUMENTATION,
+);
+
+die "An option is wrong" unless $opts;
+
+$alg =~ s/docqueries//;
+@testpath = ("docqueries/$alg");
+if ($psql ne '') {
+    die "'$psql' is not executable!\n" unless -x $psql;
+};
+
+# documentation gets NOTICE
+$LEVEL = "NOTICE" if $DOCUMENTATION;
 
 my $connopts = "";
-$connopts .= " -U $DBUSER" if defined $DBUSER;
-$connopts .= " -h $DBHOST" if defined $DBHOST;
-$connopts .= " -p $DBPORT" if defined $DBPORT;
-
-$POSGRES_VER = '' if ! $POSGRES_VER;
-$postgis_ver = '' if ! $postgis_ver;
-$pgrouting_ver = '' if ! $pgrouting_ver;
-
-mysystem("dropdb --if-exists $connopts $DBNAME");
+$connopts .= " -U $DBUSER" if $DBUSER;
+$connopts .= " -h $DBHOST" if $DBHOST;
+$connopts .= " -p $DBPORT" if $DBPORT;
+print "connection options '$connopts'\n" if $VERBOSE;
 
 %main::tests = ();
-
-# SET of configuration file names
 my @cfgs = ();
-my %stats = (z_pass=>0, z_fail=>0, z_crash=>0);
-my $TMP = "/tmp/pgr-test-runner-$$";
-my $TMP2 = "/tmp/pgr-test-runner-$$-2";
-my $TMP3 = "/tmp/pgr-test-runner-$$-3";
-my $nopyA = "/tmp/pgr-test-runner-$$-4";
-my $nopyE = "/tmp/pgr-test-runner-$$-5";
+my %stats = (z_pass=>0, z_fail=>0, z_crash=>0, RunTimeTotal=>0);
+my $TMP = "/tmp/other-commands-$$";
+my $TMP2 = "/tmp/compare-result-$$";
 
 if (! $psql) {
     $psql = findPsql() || die "ERROR: can not find psql, specify it on the command line.\n";
@@ -159,20 +129,22 @@ if (length($psql)) {
 print "Operative system found: $OS\n";
 
 
-# Traverse desired filesystems
-# Find the configuration files and put them in order
+createTestDB($DBNAME);
+
+# Load the sample data & any other relevant data files
+mysystem("$psql $connopts -A -t -q -f tools/testers/sampledata.sql $DBNAME >> $TMP2 2>\&1 ");
+
+if ($DATA) {exit 0;};
+
+# Find the desired queries files
 File::Find::find({wanted => \&want_tests}, @testpath);
-@cfgs = sort @cfgs;
+
+die "Error: no queries files found. Run this command from the top path of pgORpy repository!\n" unless @cfgs;
 
 
-
-exit "Error: no test files found!\n" unless @cfgs;
-
-createTestDB();
-
-
+# cfgs = SET of configuration file names
 # c  one file in cfgs
-# print join("\n",@cfgs),"\n";
+print join("\n",@cfgs),"\n" if $VERBOSE;
 for my $c (@cfgs) {
     my $found = 0;
 
@@ -183,208 +155,181 @@ for my $c (@cfgs) {
 
     print Data::Dumper->Dump([\%main::tests],['test']) if $VERBOSE;
 
-    if ($main::tests{any} && !$DOCUMENTATION) {
-        push @{$stats{$c}}, run_test($c, $main::tests{any});
-        $found++;
-    }
-    elsif ($main::tests{any}{documentation} && $DOCUMENTATION) {
-        push @{$stats{$c}}, run_test($c, $main::tests{any});
-        $found++;
-    }
+    run_test($c, $main::tests{any});
+    $found++;
 
     if (! $found) {
-        $stats{$c} = "No tests were found for '$POSGRES_VER-$postgis_ver'!";
+        $stats{$c} = "No files found for '$c'!";
     }
 }
-
 
 print Data::Dumper->Dump([\%stats], ['stats']);
 
 unlink $TMP;
 unlink $TMP2;
-unlink $TMP3;
 
 if ($stats{z_crash} > 0 || $stats{z_fail} > 0) {
-#if ($stats{z_crash} > 0) {
     exit 1;  # signal we had failures
 }
 
-exit 0;      # signal we passed all the tests
+# SUCCESS: comparison passed or generated results completed
+exit 0;
 
 
-# t  contents of array that has keys comment, data and test
+# file  one file in cfgs
+# t  contents of array that has keys: comment, data and test
 sub run_test {
-    # c  one configuration file
-    my $c = shift;
-    # t  array of configuration variables within the configuration file
+    my $confFile = shift;
     my $t = shift;
 
-    my %res = ();
+    my $dir = dirname($confFile);
 
-    my $dir = dirname($c);
-
-    # capture the comment
-    $res{comment} = $t->{comment} if $t->{comment};
-
-
-    # refresh the database each time it enters a new directory
-    mysystem("$psql $connopts -A -t -q -f tools/testers/sampledata.sql $DBNAME >> $TMP2 2>\&1 ");
-
-    # process data for the tests (if any)
-    for my $data_file (@{$t->{data}}) {
-        mysystem("$psql $connopts -A -t -q -f '$dir/$data_file' $DBNAME >> $TMP2 2>\&1 ");
+    # There is data to load relative to the directory
+    for my $datafile (@{$t->{data}}) {
+        mysystem("$psql $connopts -A -t -q -f '$dir/$datafile' $DBNAME >> $TMP2 2>\&1 ");
     }
 
-    if ($DOCUMENTATION) {
-        for my $test_file_name (@{$t->{documentation}}) {
-            process_single_test($test_file_name, $dir, $t->{activate}, \%res);
-            my $cmd = q(perl -pi -e 's/[ \t]+$//');
-            $cmd .= " $dir/$test_file_name.result";
-            mysystem( $cmd );
+    for my $file (@{$t->{files}}) {
+        process_single_test($file, $dir, $DBNAME);
+    }
+
+    # Just in case but its not used for operating system keys
+    if ($OS =~/msys/ || $OS=~/MSW/ || $OS =~/cygwin/) {
+        for my $x (@{$t->{windows}}) {
+            process_single_test($x, $dir, $DBNAME)
+        }
+    } elsif ($OS=~/Mac/ ||  $OS=~/dar/) {
+        for my $x (@{$t->{macos}}) {
+            process_single_test($x, $dir, $DBNAME)
         }
     } else {
-        for my $test_file_name (@{$t->{tests}}) {
-            process_single_test($test_file_name, $dir, $t->{activate}, \%res)
+        for my $x (@{$t->{linux}}) {
+            process_single_test($x, $dir, $DBNAME)
         }
     }
-
-    return \%res;
 }
 
-sub process_single_test{
-    my $test_file_name = shift;
-    my $dir = shift;
-    my $activate = shift;
-    my $res = shift;
+# file: file to be processed. Example: version.pg
+# dir: path of the file. Example: docqueries/version/
+# database: the database name: Example: "___$PROJECT_generator___"
+# Each query will use clean data
 
-    my $test_file = "$dir/$test_file_name.pg";
-    my $result_file = "$dir/$test_file_name.result";
-    print "Processing test: $test_file";
+sub process_single_test{
+    my $file = shift;
+    my $dir = shift;
+    my $database = shift;
+
+    (my $filename = $file) =~ s/((\.[^.\s]+)+)$//;
+    my $inputFile = "$dir/$file";
+    my $resultsFile = "$dir/$filename.result";
+
+    print "Processing $inputFile";
     my $t0 = [gettimeofday];
 
+    # Load the sample data & any other relevant data files
+    mysystem("$psql $connopts -A -t -q -f tools/testers/sampledata.sql $DBNAME >> $TMP2 2>\&1 ");
 
-    my $level = "NOTICE";
-    $level = "WARNING" if $ignore;
-    $level = "DEBUG3" if $DEBUG1;
-
-
-    if ($DOCUMENTATION) {
-        open(PSQL, "|$psql $connopts --set='VERBOSITY terse' -e $DBNAME > $TMP 2>\&1 ") || do {
-            $res->{"$test_file"} = "FAILED: could not open connection to db : $!";
-            $stats{z_fail}++;
-            return;
-        };
-    } else {
-        open(PSQL, "|$psql $connopts  --set='VERBOSITY terse' -e $DBNAME > $TMP 2>\&1 ") || do {
-            $res->{"$dir/$test_file_name.pg"} = "FAILED: could not open connection to db : $!";
-            $stats{z_fail}++;
-            return;
-        };
-    }
-
-    # Read the test file
-    open(TIN, "$test_file") || do {
-        $res->{"$test_file"} = "FAILED: could not open '$test_file' : $!";
+    # QIN = queries input file
+    open(QIN, "$inputFile") || do {
+        print "\tFAILED: could not open '$inputFile \n";
+        $stats{"$inputFile"} = "FAILED: could not open '$inputFile' : $!";
         $stats{z_fail}++;
         return;
     };
-    my @d = ();
-    @d = <TIN>;
-    #closes the input file
-    close(TIN);
 
 
-    # Process the test file
-    print PSQL "BEGIN;\n";
-    print PSQL "SET client_min_messages TO $level;\n";
-    # this function is on sample data
-    if ($activate) {
-        print PSQL "CALL activate_python_venv('$venv');" if $venv;
+    # Processing is handled kinda like a file
+    # Where the commands are stored on PSQL file
+    # When the PSQL is closed is when everything gets executed
+
+    # Connect to the database with PSQL
+    if ($DOCUMENTATION) {
+        # For rewriting the results files
+        # Do the rewrite or store FAILURE
+        open(PSQL, "|$psql $connopts --set='VERBOSITY terse' -e $database > $resultsFile 2>\&1 ") || do {
+            $stats{"$inputFile"} = "FAILED: could not open connection to db : $!";
+            $stats{z_fail}++;
+            next;
+        };
+    } else {
+        # For comparing the result
+        # Create temp file with current results
+        open(PSQL, "|$psql $connopts  --set='VERBOSITY terse' -e $database > $TMP 2>\&1 ") || do {
+            $stats{"$inputFile"} = "FAILED: could not open connection to db : $!";
+            $stats{z_fail}++;
+            next;
+        };
     }
-    print PSQL @d;
+
+    # Read the whole (input) file into the array @d
+    my @queries = ();
+    @queries = <QIN>;
+
+    print PSQL "BEGIN;\n";
+    print PSQL "SET client_min_messages TO $LEVEL;\n";
+
+    # prints the whole file stored in @queries
+    print PSQL @queries;
     print PSQL "\nROLLBACK;";
 
     # executes everything
     close(PSQL);
 
+    #closes the input file
+    close(QIN);
+
+    my $runTime = tv_interval($t0, [gettimeofday]);
+    print "\tRun time: $runTime";
+    $stats{RunTimeTotal} += $runTime;
+
     if ($DOCUMENTATION) {
-        if ($activate) {
-            # removes local information about the python virtual environment
-            mysystem("grep -v activate_python_venv '$TMP'  > $TMP2");
-            mysystem("grep -v CALL '$TMP2'  > $result_file");
-        } else {
-            mysystem("cp $TMP  $result_file");
-        }
-
-        print "\trun time: " . tv_interval($t0, [gettimeofday]) . "\n";
+        # convert tabs to spaces
+        print "\n";
+        my $cmd = q(perl -pi -e 's/[ \t]+$//');
+        $cmd .= " $resultsFile";
+        mysystem( $cmd );
         return;
     }
 
-    if (! -f "$result_file") {
-        $res->{"$test_file"} = "\nFAILED: result file missing : $!";
+    if (! -f "$resultsFile") {
+        $stats{"$inputFile"} = "\nFAILED: '$resultsFile` file missing : $!";
         $stats{z_fail}++;
-        return;
+        next;
     }
 
+    # diff ignore white spaces when comparing
+    my $originalDiff = `diff -w '$resultsFile' '$TMP' `;
 
-    my $actual_results = $TMP2;
-    my $expected_results = $TMP3;
-
-    if ($ignore) {
-        # ignoring NOTICE
-        mysystem("grep -v NOTICE         '$TMP' | grep -v '^CONTEXT:' | grep -v '^PL/pgSQL function' | grep -v '^COPY' > $actual_results");
-        mysystem("grep -v NOTICE '$result_file' | grep -v '^CONTEXT:' | grep -v '^PL/pgSQL function' | grep -v '^COPY' > $expected_results");
-    } elsif ($DEBUG1) {
-        # ignore CONTEXT lines
-        mysystem("grep -v '^CONTEXT:'         '$TMP' | grep -v '^PL/pgSQL function' | grep -v '^COPY' > $actual_results");
-        mysystem("grep -v '^CONTEXT:' '$result_file' | grep -v '^PL/pgSQL function' | grep -v '^COPY' > $expected_results");
-    } else {
-        mysystem("grep -v '^COPY'         '$TMP' | grep -v 'psql:tools' > $actual_results");
-        mysystem("grep -v '^COPY' '$result_file' | grep -v 'psql:tools' > $expected_results");
-    }
-
-    if ($activate) {
-        mysystem("grep -v activate_python_venv '$actual_results' | grep -v 'CALL' > $nopyA");
-        mysystem("cp $nopyA $actual_results");
-    }
-
-    # Use diff -w to ignore white space differences like \r vs \r\n
-    my $diff = `diff -w '$expected_results' '$actual_results' `;
-
-    #removing leading blanks and trailing blanks
-    $diff =~ s/^\s*|\s*$//g;
-
-    if ($diff =~ /connection to server was lost/) {
-        $res->{"$test_file"} = "CRASHED SERVER: $diff";
+    #looks for removing leading blanks and trailing blanks
+    $originalDiff =~ s/^\s*|\s*$//g;
+    if ($originalDiff =~ /connection to server was lost/) {
+        # when the server crashed
+        $stats{"$inputFile"} = "CRASHED SERVER: $originalDiff";
         $stats{z_crash}++;
         # allow the server some time to recover from the crash
-        warn "CRASHED SERVER: '$test_file', sleeping 20 sec ...\n";
+        warn "CRASHED SERVER: '$inputFile', sleeping 20 ...\n";
         sleep 20;
-    }
-
-    print "\ttest run time: " . tv_interval($t0, [gettimeofday]);
-
-    #if the diff has 0 length then everything was the same, so here we detect changes
-    if (length($diff)) {
-        $res->{"$test_file"} = "FAILED: $diff";
-        $stats{z_fail}++ unless $DEBUG1;
-        print "\tFAIL\n";
+    } elsif (length($originalDiff)) {
+        # Things changed print the diff
+        $stats{"$inputFile"} = "FAILED: $originalDiff";
+        $stats{z_fail}++ unless $LEVEL ne "NOTICE";
+        print "\t FAIL\n";
     } else {
-        $res->{"$test_file"} = "PASS";
         $stats{z_pass}++;
-        print "\tPASS\n";
+        print "\t PASS\n";
     }
 }
 
 sub createTestDB {
+    print "-> createTestDB\n" if $VERBOSE;
+
+    dropTestDB() if $CLEAN && dbExists();
+
     my $template;
     my $dbver = getServerVersion();
     my $dbshare = getSharePath($dbver);
 
-    if ($DEBUG) {
-        print "-- DBVERSION: $dbver\n";
-        print "-- DBSHARE: $dbshare\n";
-    }
+    print "-- DBVERSION: $dbver\n-- DBSHARE: $dbshare\n" if $VERBOSE;
 
     die "
     Unsupported postgreSQL version $dbver
@@ -392,19 +337,31 @@ sub createTestDB {
     Use -force to force the tests\n"
     unless version_greater_eq($dbver, $POSGRESQL_MIN_VERSION) or ($FORCE);
 
+    # Create a database
     mysystem("createdb $connopts $DBNAME") if not dbExists();
-    die "ERROR: could not create database'$DBNAME'!\n" unless dbExists();
+    die "ERROR: Failed to create database '$DBNAME'!\n" unless dbExists();
 
+    my $encoding = '';
+    if ($OS =~ /msys/ || $OS =~ /MSWin/) {
+        $encoding = "SET client_encoding TO 'UTF8';";
+    }
 
-    #TODO put as parameter
-    my $encoding = "SET client_encoding TO 'UTF8';";
+    mysystem("$psql $connopts -c \"DROP EXTENSION IF EXISTS $PROJECT\" $DBNAME ");
 
-    mysystem("$psql $connopts -c \"$encoding DROP EXTENSION IF EXISTS pgorpy CASCADE\"  $DBNAME");
-    mysystem("$psql $connopts -c \"$encoding CREATE EXTENSION pgorpy CASCADE\"  $DBNAME");
+    print "Installing $PROJECT extension\n" if $VERBOSE;
+    mysystem("$psql $connopts -c \"CREATE EXTENSION $PROJECT CASCADE\" $DBNAME");
 
-    # print database information
-    print `$psql $connopts -c "select version();" postgres `, "\n";
+    # Verify $PROJECT extension was installed
+
+    my $pgrv = `$psql $connopts -c "select por_version()" $DBNAME`;
+    die "ERROR: failed to install $PROJECT into the database!\n" unless $pgrv;
+
+    print `$psql $connopts -c "select version();" $DBNAME `, "\n";
     print `$psql $connopts -c "select por_full_version();" $DBNAME `, "\n";
+}
+
+sub dropTestDB {
+    mysystem("dropdb $connopts $DBNAME");
 }
 
 sub version_greater_eq {
@@ -431,6 +388,8 @@ sub version_greater_eq {
 
 
 sub getServerVersion {
+    print "-> getServerVersion\n" if $VERBOSE;
+
     my $v = `$psql $connopts -q -t -c "select version()" postgres`;
     print "$psql $connopts -q -t -c \"select version()\" postgres\n    # RETURNED: $v\n" if $VERBOSE;
     if ($v =~ m/PostgreSQL (\d+(\.\d+)?)/) {
@@ -493,8 +452,8 @@ sub getSharePath {
 
 sub mysystem {
     my $cmd = shift;
-    print "$cmd\n" if $VERBOSE || $DRYRUN;
-    system($cmd) unless $DRYRUN;
+    print "$cmd\n" if $VERBOSE;
+    system($cmd);
 }
 
 sub want_tests {
