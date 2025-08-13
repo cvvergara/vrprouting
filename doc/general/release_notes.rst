@@ -74,15 +74,7 @@ on Github.
   * vrp_knapsack
   * vrp_multiple_knapsack
 
-    .. include:: vrp_bin_packing.rst
-       :start-after: Version 0.4.1
-       :end-before: Version
-
 * vrp_oneDepot
-
-  .. include:: vrp_oneDepot.rst
-     :start-after: Version 0.4.1
-     :end-before: Version
 
 .. rubric:: Removal of Boost on the build
 

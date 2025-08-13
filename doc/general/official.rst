@@ -9,39 +9,20 @@
 
 |
 
-* `Documentation <https://vrp.pgrouting.org/>`__ → `vrpRouting v0 <https://vrp.pgrouting.org/v0>`__
-* Supported Versions
-  `Latest <https://vrp.pgrouting.org/latest/en/official.html>`__
-  (`0 <https://vrp.pgrouting.org/v0/en/official.html>`__)
-
-Oficial functions
+Functions
 *******************************************************************************
 
 Function Families
 ===============================================================================
 
-
-
-Version
--------------------------------------------------------------------------------
-
-.. toctree::
-   :maxdepth: 1
-
-   vrp_version
-   vrp_full_version
-
-
-
-Functions by categories
-===============================================================================
-
-Version
--------------------------------------------------------------------------------
-
 * :doc:`vrp_version` - Get vrpRouting's version information.
 * :doc:`vrp_full_version` - Get vrpRouting's details of version.
 
+.. toctree::
+   :hidden:
+
+   vrp_version
+   vrp_full_version
 
 .. rubric:: Indices and tables
 

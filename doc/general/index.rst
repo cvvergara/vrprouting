@@ -63,14 +63,6 @@ Pgrouting Concepts
 
 .. rubric:: Reference
 
-* :doc:`vrp_version` - Get vrpRouting's version information.
-* :doc:`vrp_full_version` - Get vrpRouting's details of version.
-
-.. toctree::
-   :hidden:
-
-   vrp_version
-   vrp_full_version
 
 
 Official functions
@@ -80,8 +72,6 @@ Official functions
    :maxdepth: 3
 
    official
-
-
 
 
 Available functions but not official vrpRouting functions
