@@ -87,12 +87,6 @@ jobs:
           echo "PGVER=${PGVER}" >> $GITHUB_ENV
           echo "PGPORT=5432" >> $GITHUB_ENV
 
-      - name: Install python
-        if: env.PROCESS == 'true'
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
       - name: Install dependencies
         if: env.PROCESS == 'true'
         run: |
