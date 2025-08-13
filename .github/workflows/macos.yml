@@ -5,6 +5,10 @@ on:
   push:
     paths:
       - '.github/workflows/macos.yml'
+      - 'sql/**'
+      - 'pgtap/**'
+      - 'tools/testers/**'
+      - 'CMakeLists.txt'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -22,10 +26,10 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
-        fail-fast: false
-        matrix:
-          release: [Debug, Release]
-          os: [macos-latest]
+      fail-fast: false
+      matrix:
+        release: [Debug, Release]
+        os: [macos-latest, macos-14]
 
     steps:
       - uses: actions/checkout@v4
@@ -37,29 +41,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew install postgis pgrouting asio glpk rapidjson
-
-      - name: Cache pgtap
-        id: cache-pgtap
-        uses: actions/cache@v4
-        with:
-          path: ./pgTapExtension/
-          key: ${{ matrix.os }}-pgtap-${{ hashFiles('**/packages*.txt') }}
-
-      - name: Checkout pgtap
-        if: steps.cache-pgtap.outputs.cache-hit != 'true'
-        uses: actions/checkout@v4
-        with:
-          repository: theory/pgtap
-          path: ./pgTapExtension/
-
-      - name: Install pgTAP
-        if: steps.cache-pgtap.outputs.cache-hit != 'true'
-        run: |
-          cd ./pgTapExtension/
-          make -j 4
-          sudo make install
-          cpan TAP::Parser::SourceHandler::pgTAP
+          brew install postgresql@14 postgis pgrouting asio glpk rapidjson
 
       - name: Configure
         run: |
@@ -70,9 +52,17 @@ jobs:
       - name: Build
         run: |
           cd build
-          make -j 4
-          sudo make
-          sudo make install
+          make -j
+          make install
+
+      - name: Install pgTAP
+        run: |
+          git clone https://github.com/theory/pgtap.git pgTapExtension
+          cd pgTapExtension
+          make -j
+          make install
+          cpan TAP::Parser::SourceHandler::pgTAP
+          ln -s $(find `brew --prefix` -name pg_prove) symlink it into $(brew --prefix)/bin
 
       - name: Unpack data
         if: false
@@ -80,26 +70,9 @@ jobs:
           cd tools/testers
           tar -xf matrix_new_values.tar.gz
 
-      - name: Create superuser
-        if: false
+      - name: Test
         run: |
-          export PATH=/usr/local/Cellar/perl/$(perl -e 'print substr($^V, 1)')/bin:$PATH
-          pg_ctl -D /usr/local/var/postgres start
-          export PG_RUNNER_USER=`whoami`
-          sudo -u postgres psql -p ${PGPORT} -c "DROP DATABASE IF EXISTS \"${PG_RUNNER_USER}\";"
-          sudo -u postgres psql -p ${PGPORT} -c "DROP ROLE IF EXISTS \"${PG_RUNNER_USER}\";"
-          sudo -u postgres psql -p ${PGPORT} -c "CREATE ROLE \"${PG_RUNNER_USER}\" WITH LOGIN SUPERUSER;"
-          sudo -u postgres psql -p ${PGPORT} -c "CREATE DATABASE \"${PG_RUNNER_USER}\";"
-          echo "PG_RUNNER_USER=${PG_RUNNER_USER}" >> $GITHUB_ENV
-
-      - name: Test documentation queries are up to date
-        if: false
-        run: |
-          export PATH=/usr/local/Cellar/perl/$(perl -e 'print substr($^V, 1)')/bin:$PATH
-          pg_ctl -D /usr/local/var/postgres start
+          export PATH=$(brew --prefix)/Cellar/perl/$(perl -e 'print substr($^V, 1)')/bin:$PATH
+          pg_ctl -D $(brew --prefix)/var/postgresql@14 start
           createuser -s postgres
-          createdb ___vrp___test___
-          cd tools/testers
-          psql -p 5432 -U postgres -d ___vrp___test___ -X -q -v ON_ERROR_STOP=1 --pset pager=off -f setup_db.sql
-          psql -p 5432 -U postgres -d ___vrp___test___ -c "SELECT * FROM pgr_full_version();"
-          pg_prove --failures --quiet --recurse --ext .sql -p 5432 -d ___vrp___test___ -U postgres ../../pgtap/
+          #bash ./tools/testers/pg_prove_tests.sh -U postgres -p 5432
