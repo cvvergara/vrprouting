@@ -6,4 +6,3 @@ relocatable = true
 requires = 'plpgsql'
 requires = 'postgis'
 requires = 'pgrouting'
-requires = 'plpython3u'

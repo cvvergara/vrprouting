@@ -15,9 +15,6 @@ SET client_min_messages = WARNING;
 
 CREATE EXTENSION IF NOT EXISTS pgtap;
 CREATE EXTENSION IF NOT EXISTS vrprouting CASCADE;
-CREATE EXTENSION IF NOT EXISTS postgis;
-CREATE EXTENSION IF NOT EXISTS pgrouting;
-CREATE EXTENSION IF NOT EXISTS plpython3u;
 
 BEGIN;
 
@@ -27,9 +24,6 @@ BEGIN;
     \i solomon_100_rc101.data.sql
     \i no_crash_test.sql
     \i general_pgtap_tests.sql
-    \i vroomdata.sql
-    \i ortoolsdata.sql
     \i functions.sql
-    \i solomon_100_rc101.data.sql
 
 END;
