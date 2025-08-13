@@ -38,16 +38,7 @@ on Github.
   * vrp_knapsack
   * vrp_multiple_knapsack
 
-  
-  * Support for or-tools v9.10.4067
-  
-
 * vrp_oneDepot
-
-  
-  * Code fix
-  * Result columns changed
-  
 
 **Removal of Boost on the build**
 
